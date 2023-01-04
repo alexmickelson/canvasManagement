@@ -1,0 +1,6 @@
+{
+  "cucumberautocomplete.steps": [
+    "./Management.Gherkin/**/*.cs"
+  
+  ]
+}
