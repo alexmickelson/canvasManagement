@@ -64,7 +64,4 @@ public class CanvasService
       .TrimStart('<')
       .Replace(" ", "")
       .Replace(BaseUrl, "");
-
-
-
 }
