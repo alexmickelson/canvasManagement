@@ -33,4 +33,18 @@ public class SemesterPlannerTests
 
     semester.Months.Count().Should().Be(2);
   }
+  [Test]
+  public void TestNewPlannerHandlesTermsThatWrapYears()
+  {
+    var canvasTerm = new EnrollmentTermModel(
+      Id: 1,
+      Name: "one",
+      StartAt: new DateTime(2022, 12, 1),
+      EndAt: new DateTime(2023, 1, 1)
+    );
+
+    var semester = new SemesterPlanner(canvasTerm);
+
+    semester.Months.Count().Should().Be(2);
+  }
 }
