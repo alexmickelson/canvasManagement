@@ -1,18 +1,15 @@
-using System.Collections.Generic;
 
 
+namespace CanvasModel.OutcomeResults;
+public class OutcomeRollupModel
+{
 
-namespace Model.OutcomeResults {
-    
-    public class OutcomeRollupModel {
-        
-        [JsonPropertyName("scores")]
-        public IEnumerable<OutcomeRollupScoreModel>? Scores { get; set; }
-        
-        [JsonPropertyName("name")]
-        public string Name { get; set; }
-        
-        [JsonPropertyName("links")]
-        public OutcomeRollupLinksModel Links { get; set; }
-    }
+  [JsonPropertyName("scores")]
+  public IEnumerable<OutcomeRollupScoreModel>? Scores { get; set; }
+
+  [JsonPropertyName("name")]
+  public string Name { get; set; }
+
+  [JsonPropertyName("links")]
+  public OutcomeRollupLinksModel Links { get; set; }
 }

@@ -1,15 +1,10 @@
-using System.Collections.Generic;
+namespace CanvasModel.OutcomeResults;
+public struct OutcomePathModel
+{
 
+  [JsonPropertyName("id")]
+  public ulong Id { get; set; }
 
-
-namespace Model.OutcomeResults {
-    
-    public struct OutcomePathModel {
-        
-        [JsonPropertyName("id")]
-        public ulong Id { get; set; }
-        
-        [JsonPropertyName("parts")]
-        public IEnumerable<OutcomePathPartModel>? Parts { get; set; }
-    }
+  [JsonPropertyName("parts")]
+  public IEnumerable<OutcomePathPartModel>? Parts { get; set; }
 }

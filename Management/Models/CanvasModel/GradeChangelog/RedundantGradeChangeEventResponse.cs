@@ -1,11 +1,8 @@
-using System.Collections.Generic;
 
+namespace CanvasModel.GradeChangelog;
+public class RedundantGradeChangeEventResponse
+{
 
-namespace Model.GradeChangelog {
-    
-    public class RedundantGradeChangeEventResponse {
-        
-        [JsonPropertyName("events")]
-        public IEnumerable<GradeChangeEventModel> Events { get; set; }
-    }
+  [JsonPropertyName("events")]
+  public IEnumerable<GradeChangeEventModel> Events { get; set; }
 }

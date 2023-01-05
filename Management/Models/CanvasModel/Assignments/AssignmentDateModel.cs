@@ -1,28 +1,26 @@
 using System;
 
 
-namespace Model.Assignments
+namespace CanvasModel.Assignments;
+
+public class AssignmentDateModel
 {
 
-  public class AssignmentDateModel
-  {
+  [JsonPropertyName("id")]
+  public ulong? Id { get; set; }
 
-    [JsonPropertyName("id")]
-    public ulong? Id { get; set; }
+  [JsonPropertyName("base")]
+  public bool? Base { get; set; }
 
-    [JsonPropertyName("base")]
-    public bool? Base { get; set; }
+  [JsonPropertyName("title")]
+  public string Title { get; set; }
 
-    [JsonPropertyName("title")]
-    public string Title { get; set; }
+  [JsonPropertyName("due_at")]
+  public DateTime? DueAt { get; set; }
 
-    [JsonPropertyName("due_at")]
-    public DateTime? DueAt { get; set; }
+  [JsonPropertyName("unlock_at")]
+  public DateTime? UnlockAt { get; set; }
 
-    [JsonPropertyName("unlock_at")]
-    public DateTime? UnlockAt { get; set; }
-
-    [JsonPropertyName("lock_at")]
-    public DateTime? LockAt { get; set; }
-  }
+  [JsonPropertyName("lock_at")]
+  public DateTime? LockAt { get; set; }
 }
