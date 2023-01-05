@@ -1,0 +1,9 @@
+
+###
+GET https://snow.instructure.com/api/v1/account_calendars
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+###
+GET https://snow.instructure.com/api/v1/accounts/10/terms
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+

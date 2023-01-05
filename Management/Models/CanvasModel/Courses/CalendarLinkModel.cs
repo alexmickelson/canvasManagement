@@ -1,8 +1,5 @@
-
-
 namespace CanvasModel.Courses;
-public struct CalendarLinkModel
-{
-  [JsonPropertyName("ics")]
-  public string Ics { get; set; }
-}
+public record CalendarLinkModel
+(
+  [property: JsonPropertyName("ics")] string Ics
+);
