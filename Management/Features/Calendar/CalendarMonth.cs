@@ -1,8 +1,7 @@
 public class CalendarMonth
 {
-  private DateOnly firstDay { get; }
-  private int year { get => firstDay.Year; }
-  private int month { get => firstDay.Month; }
+  public int Year { get; }
+  public int Month { get; }
   public IEnumerable<IEnumerable<int?>> Weeks
   {
     get =>
@@ -17,10 +16,10 @@ public class CalendarMonth
     get
     {
       var weeks = new List<List<DateTime?>>();
-      var weeksInMonth = WeeksInMonth(year, month);
-      var daysInMonth = DateTime.DaysInMonth(year, month);
+      var weeksInMonth = WeeksInMonth(Year, Month);
+      var daysInMonth = DateTime.DaysInMonth(Year, Month);
 
-      var firstDayOfMonth = new DateTime(year, month, 1).DayOfWeek;
+      var firstDayOfMonth = new DateTime(Year, Month, 1).DayOfWeek;
 
       var currentDay = 1;
       for (int i = 0; i < weeksInMonth; i++)
@@ -36,7 +35,7 @@ public class CalendarMonth
             }
             else
             {
-              thisWeek.Add(new DateTime(year, month, currentDay));
+              thisWeek.Add(new DateTime(Year, Month, currentDay));
               currentDay++;
             }
           }
@@ -47,7 +46,7 @@ public class CalendarMonth
           {
             if (currentDay <= daysInMonth)
             {
-              thisWeek.Add(new DateTime(year, month, currentDay));
+              thisWeek.Add(new DateTime(Year, Month, currentDay));
               currentDay++;
             }
             else
@@ -77,7 +76,7 @@ public class CalendarMonth
 
   public CalendarMonth(int year, int month)
   {
-    firstDay = new DateOnly(year, month, 1);
-
+    Year = year;
+    Month = month;
   }
 }
