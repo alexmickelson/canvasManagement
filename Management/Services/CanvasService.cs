@@ -18,7 +18,10 @@ public class CanvasService
     var url = $"accounts/10/terms";
 
     var request = new RestRequest(url);
-    var terms = await PaginatedRequest<EnrollmentTermModel>(request);
+    var termResponses = await PaginatedRequest<RedundantEnrollmentTermsResponse>(request);
+    var terms = termResponses
+      .Select(r => r.EnrollmentTerms)
+      .SelectMany(s => s).ToArray();
     return terms;
   }
 
@@ -26,20 +29,20 @@ public class CanvasService
   {
     var requestCount = 1;
     request.AddQueryParameter("per_page", "100");
-    IEnumerable<T> returnData = new T[] { };
-    RestResponse<T[]> response = await webRequestor.GetAsync<T>(request);
-    returnData = returnData.Concat(response.Data);
-
-    var nextUrl = getNextUrl(response);
+    RestResponse<T> response = await webRequestor.GetAsync<T>(request);
+    var returnData = response.Data != null
+      ? new T[] { response.Data }
+      : new T[] { };
+    var nextUrl = getNextUrl(response.Headers);
 
     while (nextUrl is not null)
     {
       requestCount += 1;
-      var nextRequest = new RestRequest(nextUrl);
+      RestRequest nextRequest = new RestRequest(nextUrl);
       var nextResponse = await webRequestor.GetAsync<T>(nextRequest);
       if (nextResponse.Data is not null)
-        returnData = returnData.Concat(nextResponse.Data);
-      nextUrl = getNextUrl(nextResponse);
+        returnData = returnData.Append(nextResponse.Data).ToArray();
+      nextUrl = getNextUrl(nextResponse.Headers);
     }
 
     System.Console.WriteLine($"Requesting {typeof(T)} took {requestCount} requests");
@@ -48,7 +51,7 @@ public class CanvasService
   }
 
 
-  private static string? getNextUrl<T>(RestResponse<T[]> response) => response.Headers?
+  private static string? getNextUrl(IEnumerable<HeaderParameter>? headers) => headers?
       .ToList()
       .Find(h => h.Name == "Link")?
       .Value?

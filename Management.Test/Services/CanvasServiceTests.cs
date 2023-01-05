@@ -33,7 +33,6 @@ public class CanvasServiceTests
     var canvasTerms = await service.GetTerms();
 
     canvasTerms.Should().BeEquivalentTo(expectedTerms);
-
   }
 
 }

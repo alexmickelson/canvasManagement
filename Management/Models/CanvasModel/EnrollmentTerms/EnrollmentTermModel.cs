@@ -1,6 +1,6 @@
 namespace CanvasModel.EnrollmentTerms;
 
-record EnrollmentTermModel
+public record EnrollmentTermModel
 (
   [property: JsonPropertyName("id")] ulong Id,
   [property: JsonPropertyName("name")] string Name,
@@ -14,7 +14,7 @@ record EnrollmentTermModel
     Dictionary<string, EnrollmentTermDateOverrideModel>? Overrides = null
 );
 
-record EnrollmentTermDateOverrideModel
+public record EnrollmentTermDateOverrideModel
 (
   [property: JsonPropertyName("start_at")] DateTime? StartAt = null,
   [property: JsonPropertyName("end_at")] DateTime? EndAt = null
