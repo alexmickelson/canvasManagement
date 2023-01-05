@@ -66,7 +66,7 @@ public record ActivityStreamObjectModel
   bool? UserHasPosted = null,
 
   [property: JsonPropertyName("root_discussion_entries")]
-  object RootDiscussionEntries = null,
+  object? RootDiscussionEntries = null,
 
   [property: JsonPropertyName("discussion_topic_id")]
   ulong? DiscussionTopicId = null,

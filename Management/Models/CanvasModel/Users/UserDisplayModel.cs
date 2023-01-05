@@ -8,6 +8,9 @@ public record UserDisplayModel
   [property: JsonPropertyName("html_url")]
   string HtmlUrl,
 
+  [property: JsonPropertyName("anonymous_id")]
+  string AnonymousId,
+
   [property: JsonPropertyName("id")]
   ulong? Id = null,
 
@@ -18,8 +21,5 @@ public record UserDisplayModel
   string? DisplayName = null,
 
   [property: JsonPropertyName("pronouns")]
-  string? Pronouns = null,
-
-  [property: JsonPropertyName("anonymous_id")]
-  string AnonymousId = null
+  string? Pronouns = null
 );

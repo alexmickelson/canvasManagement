@@ -29,6 +29,9 @@ public record SubmissionModel
   [property: JsonPropertyName("workflow_state")]
   string WorkflowState,
 
+  [property: JsonPropertyName("late_policy_status")]
+  string LatePolicyStatus,
+
   [property: JsonPropertyName("assignment")]
   AssignmentModel? Assignment = null,
 
@@ -73,9 +76,6 @@ public record SubmissionModel
 
   [property: JsonPropertyName("missing")]
   bool? Missing = null,
-
-  [property: JsonPropertyName("late_policy_status")]
-  string LatePolicyStatus = null,
 
   [property: JsonPropertyName("points_deducted")]
   double? PointsDeducted = null,

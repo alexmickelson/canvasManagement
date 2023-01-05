@@ -2,7 +2,6 @@ namespace CanvasModel.Users;
 
 public record PageViewModel
 (
-
   [property: JsonPropertyName("id")]
   string Id,
 
@@ -30,6 +29,15 @@ public record PageViewModel
   [property: JsonPropertyName("links")]
   PageViewLinksModel Links,
 
+  [property: JsonPropertyName("user_agent")]
+  string UserAgent,
+
+  [property: JsonPropertyName("http_method")]
+  string HttpMethod,
+
+  [property: JsonPropertyName("remote_ip")]
+  string RemoteIp,
+
   [property: JsonPropertyName("interaction_seconds")]
   decimal? InteractionSeconds = null,
 
@@ -39,15 +47,7 @@ public record PageViewModel
   [property: JsonPropertyName("render_time")]
   double? RenderTime = null,
 
-  [property: JsonPropertyName("user_agent")]
-  string UserAgent = null,
 
   [property: JsonPropertyName("participated")]
-  bool? Participated = null,
-
-  [property: JsonPropertyName("http_method")]
-  string HttpMethod = null,
-
-  [property: JsonPropertyName("remote_ip")]
-  string RemoteIp = null
+  bool? Participated = null
 );

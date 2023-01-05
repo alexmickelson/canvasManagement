@@ -5,7 +5,6 @@ public class CanvasService
 {
   private const string BaseUrl = "https://snow.instructure.com/api/v1/";
   private readonly IWebRequestor webRequestor;
-  private RestClient client;
   private string courseid { get; }
   public CanvasService(IWebRequestor webRequestor)
   {

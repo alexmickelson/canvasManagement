@@ -6,13 +6,12 @@ public class WebRequestor : IWebRequestor
   private string token;
   private RestClient client;
   private string courseid { get; }
-  public WebRequestor(RestClient client)
+  public WebRequestor()
   {
-    // token = Environment.GetEnvironmentVariable("CANVAS_TOKEN");
-    // client = new RestClient(BaseUrl);
-    // client.AddDefaultHeader("Authorization", $"Bearer {token}");
+    token = Environment.GetEnvironmentVariable("CANVAS_TOKEN") ?? throw new Exception("CANVAS_TOKEN not in environment");
+    client = new RestClient(BaseUrl);
+    client.AddDefaultHeader("Authorization", $"Bearer {token}");
 
-    this.client = client;
     courseid = "774898";
   }
   public async Task<RestResponse<T[]>> GetManyAsync<T>(RestRequest request)
