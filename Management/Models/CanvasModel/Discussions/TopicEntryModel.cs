@@ -1,48 +1,40 @@
-using System;
-using System.Collections.Generic;
-
-
-
-
 namespace CanvasModel.Discussions;
-public class TopicEntryModel
-{
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+public record TopicEntryModel
+(
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("user_id")]
-  public ulong UserId { get; set; }
+  [property: JsonPropertyName("user_id")]
+  ulong UserId,
 
-  [JsonPropertyName("editor_id")]
-  public ulong? EditorId { get; set; }
+  [property: JsonPropertyName("user_name")]
+  string UserName,
 
-  [JsonPropertyName("user_name")]
-  public string UserName { get; set; }
+  [property: JsonPropertyName("message")]
+  string Message,
 
-  [JsonPropertyName("message")]
-  public string Message { get; set; }
+  [property: JsonPropertyName("read_state")]
+  string ReadState,
 
-  [JsonPropertyName("read_state")]
-  public string ReadState { get; set; }
+  [property: JsonPropertyName("forced_read_state")]
+  bool ForcedReadState,
 
-  [JsonPropertyName("forced_read_state")]
-  public bool ForcedReadState { get; set; }
+  [property: JsonPropertyName("created_at")]
+  DateTime CreatedAt,
 
-  [JsonPropertyName("created_at")]
-  public DateTime CreatedAt { get; set; }
+  [property: JsonPropertyName("editor_id")]
+  ulong? EditorId = null,
 
-  [JsonPropertyName("updated_at")]
-  public DateTime? UpdatedAt { get; set; }
+  [property: JsonPropertyName("updated_at")]
+  DateTime? UpdatedAt = null,
 
-  [JsonPropertyName("attachment")]
-  public FileAttachmentModel? Attachment { get; set; }
+  [property: JsonPropertyName("attachment")]
+  FileAttachmentModel? Attachment = null,
 
-  [JsonPropertyName("recent_replies")]
-  public IEnumerable<TopicReplyModel>? RecentReplies { get; set; }
+  [property: JsonPropertyName("recent_replies")]
+  IEnumerable<TopicReplyModel>? RecentReplies = null,
 
-  [JsonPropertyName("has_more_replies")]
-  public bool? HasMoreReplies { get; set; }
-
-
-}
+  [property: JsonPropertyName("has_more_replies")]
+  bool? HasMoreReplies = null
+);

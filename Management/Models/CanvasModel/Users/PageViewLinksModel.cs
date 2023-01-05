@@ -1,24 +1,19 @@
-
-
-
 namespace CanvasModel.Users;
-public class PageViewLinksModel
-{
 
-  [JsonPropertyName("user")]
-  public ulong User { get; set; }
+public record PageViewLinksModel
+(
+  [property: JsonPropertyName("user")]
+  ulong User,
 
-  [JsonPropertyName("context")]
-  public ulong? Context { get; set; }
+  [property: JsonPropertyName("context")]
+  ulong? Context = null,
 
-  [JsonPropertyName("asset")]
-  public ulong? Asset { get; set; }
+  [property: JsonPropertyName("asset")]
+  ulong? Asset = null,
 
-  [JsonPropertyName("real_user")]
-  public ulong? RealUser { get; set; }
+  [property: JsonPropertyName("real_user")]
+  ulong? RealUser = null,
 
-  [JsonPropertyName("account")]
-  public ulong? Account { get; set; }
-
-
-}
+  [property: JsonPropertyName("account")]
+  ulong? Account = null
+);

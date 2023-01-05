@@ -1,18 +1,16 @@
-
-
 namespace CanvasModel.Assignments;
-public class RubricRatingModel
-{
 
-  [JsonPropertyName("points")]
-  public double Points { get; set; }
+public record RubricRatingModel
+(
+  [property: JsonPropertyName("points")]
+  double Points,
 
-  [JsonPropertyName("id")]
-  public string Id { get; set; }
+  [property: JsonPropertyName("id")]
+  string Id,
 
-  [JsonPropertyName("description")]
-  public string Description { get; set; }
+  [property: JsonPropertyName("description")]
+  string Description,
 
-  [JsonPropertyName("long_description")]
-  public string LongDescription { get; set; }
-}
+  [property: JsonPropertyName("long_description")]
+  string LongDescription
+);

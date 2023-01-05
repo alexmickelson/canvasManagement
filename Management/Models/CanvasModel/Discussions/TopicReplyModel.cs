@@ -1,34 +1,28 @@
-using System;
-
-
-
 namespace CanvasModel.Discussions;
-public class TopicReplyModel
-{
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+public record TopicReplyModel
+(
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("user_id")]
-  public ulong UserId { get; set; }
+  [property: JsonPropertyName("user_id")]
+  ulong UserId,
 
-  [JsonPropertyName("editor_id")]
-  public ulong? EditorId { get; set; }
+  [property: JsonPropertyName("user_name")]
+  string UserName,
 
-  [JsonPropertyName("user_name")]
-  public string UserName { get; set; }
+  [property: JsonPropertyName("message")]
+  string Message,
 
-  [JsonPropertyName("message")]
-  public string Message { get; set; }
+  [property: JsonPropertyName("read_state")]
+  string ReadState,
 
-  [JsonPropertyName("read_state")]
-  public string ReadState { get; set; }
+  [property: JsonPropertyName("created_at")]
+  DateTime CreatedAt,
 
-  [JsonPropertyName("forced_read_state")]
-  public bool? ForcedReadState { get; set; }
+  [property: JsonPropertyName("editor_id")]
+  ulong? EditorId = null,
 
-  [JsonPropertyName("created_at")]
-  public DateTime CreatedAt { get; set; }
-
-
-}
+  [property: JsonPropertyName("forced_read_state")]
+  bool? ForcedReadState = null
+);

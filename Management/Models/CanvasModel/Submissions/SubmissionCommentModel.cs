@@ -1,30 +1,29 @@
 using CanvasModel.Users;
 
 namespace CanvasModel.Submissions;
-public class SubmissionCommentModel
-{
+public record SubmissionCommentModel
+(
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+  [property: JsonPropertyName("author_id")]
+  ulong AuthorId,
 
-  [JsonPropertyName("author_id")]
-  public ulong AuthorId { get; set; }
+  [property: JsonPropertyName("author_name")]
+  string AuthorName,
 
-  [JsonPropertyName("author_name")]
-  public string AuthorName { get; set; }
+  [property: JsonPropertyName("author")]
+  UserDisplayModel Author,
 
-  [JsonPropertyName("author")]
-  public UserDisplayModel Author { get; set; }
+  [property: JsonPropertyName("comment")]
+  string Comment,
 
-  [JsonPropertyName("comment")]
-  public string Comment { get; set; }
+  [property: JsonPropertyName("created_at")]
+  DateTime CreatedAt,
 
-  [JsonPropertyName("created_at")]
-  public DateTime CreatedAt { get; set; }
+  [property: JsonPropertyName("edited_at")]
+  DateTime? EditedAt = null,
 
-  [JsonPropertyName("edited_at")]
-  public DateTime? EditedAt { get; set; }
-
-  [JsonPropertyName("media_comment")]
-  public MediaCommentModel? MediaComment { get; set; }
-}
+  [property: JsonPropertyName("media_comment")]
+  MediaCommentModel? MediaComment = null
+);

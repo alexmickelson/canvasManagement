@@ -3,90 +3,89 @@ using CanvasModel.Courses;
 using CanvasModel.Users;
 
 namespace CanvasModel.Submissions;
-public class SubmissionModel
-{
+public record SubmissionModel
+(
+  [property: JsonPropertyName("assignment_id")]
+  ulong AssignmentId,
 
-  [JsonPropertyName("assignment_id")]
-  public ulong AssignmentId { get; set; }
+  [property: JsonPropertyName("grade")]
+  string Grade,
 
-  [JsonPropertyName("assignment")]
-  public AssignmentModel? Assignment { get; set; }
+  [property: JsonPropertyName("html_url")]
+  string HtmlUrl,
 
-  [JsonPropertyName("course")]
-  public CourseModel? Course { get; set; }
+  [property: JsonPropertyName("preview_url")]
+  string PreviewUrl,
 
-  [JsonPropertyName("attempt")]
-  public uint? Attempt { get; set; }
+  [property: JsonPropertyName("submission_type")]
+  string SubmissionType,
 
-  [JsonPropertyName("body")]
-  public string? Body { get; set; }
+  [property: JsonPropertyName("user_id")]
+  ulong UserId,
 
-  [JsonPropertyName("grade")]
-  public string Grade { get; set; }
+  [property: JsonPropertyName("user")]
+  UserModel User,
 
-  [JsonPropertyName("grade_matches_current_submission")]
-  public bool? GradeMatchesCurrentSubmission { get; set; }
+  [property: JsonPropertyName("workflow_state")]
+  string WorkflowState,
 
-  [JsonPropertyName("html_url")]
-  public string HtmlUrl { get; set; }
+  [property: JsonPropertyName("assignment")]
+  AssignmentModel? Assignment = null,
 
-  [JsonPropertyName("preview_url")]
-  public string PreviewUrl { get; set; }
+  [property: JsonPropertyName("course")]
+  CourseModel? Course = null,
 
-  [JsonPropertyName("score")]
-  public decimal? Score { get; set; }
+  [property: JsonPropertyName("attempt")]
+  uint? Attempt = null,
 
-  [JsonPropertyName("submission_comments")]
-  public IEnumerable<SubmissionCommentModel>? SubmissionComments { get; set; }
+  [property: JsonPropertyName("body")]
+  string? Body = null,
 
-  [JsonPropertyName("submission_type")]
-  public string SubmissionType { get; set; }
+  [property: JsonPropertyName("grade_matches_current_submission")]
+  bool? GradeMatchesCurrentSubmission = null,
 
-  [JsonPropertyName("submitted_at")]
-  public DateTime? SubmittedAt { get; set; }
+  [property: JsonPropertyName("score")]
+  decimal? Score = null,
 
-  [JsonPropertyName("url")]
-  public string? Url { get; set; }
+  [property: JsonPropertyName("submission_comments")]
+  IEnumerable<SubmissionCommentModel>? SubmissionComments = null,
 
-  [JsonPropertyName("user_id")]
-  public ulong UserId { get; set; }
+  [property: JsonPropertyName("submitted_at")]
+  DateTime? SubmittedAt = null,
 
-  [JsonPropertyName("grader_id")]
-  public long? GraderId { get; set; } // why can this be negative???
+  [property: JsonPropertyName("url")]
+  string? Url = null,
 
-  [JsonPropertyName("graded_at")]
-  public DateTime? GradedAt { get; set; }
+  [property: JsonPropertyName("grader_id")]
+  long? GraderId = null,
 
-  [JsonPropertyName("user")]
-  public UserModel User { get; set; }
+  [property: JsonPropertyName("graded_at")]
+  DateTime? GradedAt = null,
 
-  [JsonPropertyName("late")]
-  public bool? Late { get; set; }
+  [property: JsonPropertyName("late")]
+  bool? Late = null,
 
-  [JsonPropertyName("assignment_visible")]
-  public bool? AssignmentVisible { get; set; }
+  [property: JsonPropertyName("assignment_visible")]
+  bool? AssignmentVisible = null,
 
-  [JsonPropertyName("excused")]
-  public bool? Excused { get; set; }
+  [property: JsonPropertyName("excused")]
+  bool? Excused = null,
 
-  [JsonPropertyName("missing")]
-  public bool? Missing { get; set; }
+  [property: JsonPropertyName("missing")]
+  bool? Missing = null,
 
-  [JsonPropertyName("late_policy_status")]
-  public string LatePolicyStatus { get; set; }
+  [property: JsonPropertyName("late_policy_status")]
+  string LatePolicyStatus = null,
 
-  [JsonPropertyName("points_deducted")]
-  public double? PointsDeducted { get; set; }
+  [property: JsonPropertyName("points_deducted")]
+  double? PointsDeducted = null,
 
-  [JsonPropertyName("seconds_late")]
-  public double? SecondsLate { get; set; }
+  [property: JsonPropertyName("seconds_late")]
+  double? SecondsLate = null,
 
-  [JsonPropertyName("workflow_state")]
-  public string WorkflowState { get; set; }
+  [property: JsonPropertyName("extra_attempts")]
+  uint? ExtraAttempts = null,
 
-  [JsonPropertyName("extra_attempts")]
-  public uint? ExtraAttempts { get; set; }
-
-  [JsonPropertyName("anonymous_id")]
-  public string? AnonymousId { get; set; }
-}
+  [property: JsonPropertyName("anonymous_id")]
+  string? AnonymousId = null
+);

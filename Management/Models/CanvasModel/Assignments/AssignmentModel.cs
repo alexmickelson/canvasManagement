@@ -1,212 +1,209 @@
-using System;
-using System.Collections.Generic;
-
-
 using CanvasModel.Discussions;
 using CanvasModel.Submissions;
 
 namespace CanvasModel.Assignments;
-public class AssignmentModel
-{
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+public record AssignmentModel
+(
 
-  [JsonPropertyName("name")]
-  public string Name { get; set; }
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("description")]
-  public string Description { get; set; }
+  [property: JsonPropertyName("name")]
+  string Name,
 
-  [JsonPropertyName("created_at")]
-  public DateTime CreatedAt { get; set; }
+  [property: JsonPropertyName("description")]
+  string Description,
 
-  [JsonPropertyName("updated_at")]
-  public DateTime? UpdatedAt { get; set; }
+  [property: JsonPropertyName("created_at")]
+  DateTime CreatedAt,
 
-  [JsonPropertyName("due_at")]
-  public DateTime? DueAt { get; set; }
+  [property: JsonPropertyName("has_overrides")]
+  bool HasOverrides,
 
-  [JsonPropertyName("lock_at")]
-  public DateTime? LockAt { get; set; }
+  [property: JsonPropertyName("course_id")]
+  ulong CourseId,
 
-  [JsonPropertyName("unlock_at")]
-  public DateTime? UnlockAt { get; set; }
+  [property: JsonPropertyName("html_url")]
+  string HtmlUrl,
 
-  [JsonPropertyName("has_overrides")]
-  public bool HasOverrides { get; set; }
+  [property: JsonPropertyName("submissions_download_url")]
+  string SubmissionsDownloadUrl,
 
-  [JsonPropertyName("all_dates")]
-  public IEnumerable<AssignmentDateModel>? AllDates { get; set; }
+  [property: JsonPropertyName("assignment_group_id")]
+  ulong AssignmentGroupId,
 
-  [JsonPropertyName("course_id")]
-  public ulong CourseId { get; set; }
+  [property: JsonPropertyName("due_date_required")]
+  bool DueDateRequired,
 
-  [JsonPropertyName("html_url")]
-  public string HtmlUrl { get; set; }
+  [property: JsonPropertyName("max_name_length")]
+  uint MaxNameLength,
 
-  [JsonPropertyName("submissions_download_url")]
-  public string SubmissionsDownloadUrl { get; set; }
+  [property: JsonPropertyName("peer_reviews")]
+  bool PeerReviews,
 
-  [JsonPropertyName("assignment_group_id")]
-  public ulong AssignmentGroupId { get; set; }
+  [property: JsonPropertyName("automatic_peer_reviews")]
+  bool AutomaticPeerReviews,
 
-  [JsonPropertyName("due_date_required")]
-  public bool DueDateRequired { get; set; }
+  [property: JsonPropertyName("position")]
+  ulong Position,
 
-  [JsonPropertyName("allowed_extensions")]
-  public IEnumerable<string>? AllowedExtensions { get; set; }
+  [property: JsonPropertyName("grading_type")]
+  string GradingType,
 
-  [JsonPropertyName("max_name_length")]
-  public uint MaxNameLength { get; set; }
+  [property: JsonPropertyName("published")]
+  bool Published,
 
-  [JsonPropertyName("turnitin_enabled")]
-  public bool? TurnitinEnabled { get; set; }
+  [property: JsonPropertyName("unpublishable")]
+  bool Unpublishable,
 
-  [JsonPropertyName("vericite_enabled")]
-  public bool? VeriCiteEnabled { get; set; }
+  [property: JsonPropertyName("only_visible_to_overrides")]
+  bool OnlyVisibleToOverrides,
 
-  [JsonPropertyName("turnitin_settings")]
-  public TurnitinSettingsModel? TurnitinSettings { get; set; }
+  [property: JsonPropertyName("locked_for_user")]
+  bool LockedForUser,
 
-  [JsonPropertyName("grade_group_students_individually")]
-  public bool? GradeGroupStudentsIndividually { get; set; }
+  [property: JsonPropertyName("moderated_grading")]
+  bool ModeratedGrading,
 
-  [JsonPropertyName("external_tool_tag_attributes")]
-  public ExternalToolTagAttributesModel? ExternalToolTagAttributes { get; set; }
+  [property: JsonPropertyName("grader_count")]
+  uint GraderCount,
 
-  [JsonPropertyName("peer_reviews")]
-  public bool PeerReviews { get; set; }
+  [property: JsonPropertyName("allowed_attempts")]
+  int AllowedAttempts,
 
-  [JsonPropertyName("automatic_peer_reviews")]
-  public bool AutomaticPeerReviews { get; set; }
+  [property: JsonPropertyName("submission_types")]
+  IEnumerable<string> SubmissionTypes,
 
-  [JsonPropertyName("peer_review_count")]
-  public uint? PeerReviewCount { get; set; }
+  [property: JsonPropertyName("updated_at")]
+  DateTime? UpdatedAt = null,
 
-  [JsonPropertyName("peer_reviews_assign_at")]
-  public DateTime? PeerReviewsAssignAt { get; set; }
+  [property: JsonPropertyName("due_at")]
+  DateTime? DueAt = null,
 
-  [JsonPropertyName("intra_group_peer_reviews")]
-  public bool? IntraGroupPeerReviews { get; set; }
+  [property: JsonPropertyName("lock_at")]
+  DateTime? LockAt = null,
 
-  [JsonPropertyName("group_category_id")]
-  public ulong? GroupCategoryId { get; set; }
+  [property: JsonPropertyName("unlock_at")]
+  DateTime? UnlockAt = null,
 
-  [JsonPropertyName("needs_grading_count")]
-  public uint? NeedsGradingCount { get; set; }
+  [property: JsonPropertyName("all_dates")]
+  IEnumerable<AssignmentDateModel>? AllDates = null,
 
-  [JsonPropertyName("needs_grading_count_be_section")]
-  public IEnumerable<NeedsGradingCountModel>? NeedsGradingCountBySection { get; set; }
+  [property: JsonPropertyName("allowed_extensions")]
+  IEnumerable<string>? AllowedExtensions = null,
 
-  [JsonPropertyName("position")]
-  public ulong Position { get; set; }
+  [property: JsonPropertyName("turnitin_enabled")]
+  bool? TurnitinEnabled = null,
 
-  [JsonPropertyName("post_to_sis")]
-  public bool? PostToSis { get; set; }
+  [property: JsonPropertyName("vericite_enabled")]
+  bool? VeriCiteEnabled = null,
 
-  [JsonPropertyName("integration_id")]
-  public string? IntegrationId { get; set; }
+  [property: JsonPropertyName("turnitin_settings")]
+  TurnitinSettingsModel? TurnitinSettings = null,
 
-  [JsonPropertyName("integration_data")]
-  public object? IntegrationData { get; set; }
+  [property: JsonPropertyName("grade_group_students_individually")]
+  bool? GradeGroupStudentsIndividually = null,
 
-  [JsonPropertyName("muted")]
-  public bool? Muted { get; set; }
+  [property: JsonPropertyName("external_tool_tag_attributes")]
+  ExternalToolTagAttributesModel? ExternalToolTagAttributes = null,
 
-  [JsonPropertyName("points_possible")]
-  public double? PointsPossible { get; set; }
+  [property: JsonPropertyName("peer_review_count")]
+  uint? PeerReviewCount = null,
 
-  [JsonPropertyName("submission_types")]
-  public IEnumerable<string> SubmissionTypes { get; set; }
+  [property: JsonPropertyName("peer_reviews_assign_at")]
+  DateTime? PeerReviewsAssignAt = null,
 
-  [JsonPropertyName("has_submitted_submissions")]
-  public bool? HasSubmittedSubmissions { get; set; }
+  [property: JsonPropertyName("intra_group_peer_reviews")]
+  bool? IntraGroupPeerReviews = null,
 
-  [JsonPropertyName("grading_type")]
-  public string GradingType { get; set; }
+  [property: JsonPropertyName("group_category_id")]
+  ulong? GroupCategoryId = null,
 
-  [JsonPropertyName("grading_standard_id")]
-  public ulong? GradingStandardId { get; set; }
+  [property: JsonPropertyName("needs_grading_count")]
+  uint? NeedsGradingCount = null,
 
-  [JsonPropertyName("published")]
-  public bool Published { get; set; }
+  [property: JsonPropertyName("needs_grading_count_be_section")]
+  IEnumerable<NeedsGradingCountModel>? NeedsGradingCountBySection = null,
 
-  [JsonPropertyName("unpublishable")]
-  public bool Unpublishable { get; set; }
+  [property: JsonPropertyName("post_to_sis")]
+  bool? PostToSis = null,
 
-  [JsonPropertyName("only_visible_to_overrides")]
-  public bool OnlyVisibleToOverrides { get; set; }
+  [property: JsonPropertyName("integration_id")]
+  string? IntegrationId = null,
 
-  [JsonPropertyName("locked_for_user")]
-  public bool LockedForUser { get; set; }
+  [property: JsonPropertyName("integration_data")]
+  object? IntegrationData = null,
 
-  [JsonPropertyName("lock_info")]
-  public LockInfoModel? LockInfo { get; set; }
+  [property: JsonPropertyName("muted")]
+  bool? Muted = null,
 
-  [JsonPropertyName("lock_explanation")]
-  public string? LockExplanation { get; set; }
+  [property: JsonPropertyName("points_possible")]
+  double? PointsPossible = null,
 
-  [JsonPropertyName("quiz_id")]
-  public ulong? QuizId { get; set; }
+  [property: JsonPropertyName("has_submitted_submissions")]
+  bool? HasSubmittedSubmissions = null,
 
-  [JsonPropertyName("anonymous_submissions")]
-  public bool? AnonymousSubmissions { get; set; }
+  [property: JsonPropertyName("grading_standard_id")]
+  ulong? GradingStandardId = null,
 
-  [JsonPropertyName("discussion_topic")]
-  public DiscussionTopicModel? DiscussionTopic { get; set; }
+  [property: JsonPropertyName("lock_info")]
+  LockInfoModel? LockInfo = null,
 
-  [JsonPropertyName("freeze_on_copy")]
-  public bool? FreezeOnCopy { get; set; }
+  [property: JsonPropertyName("lock_explanation")]
+  string? LockExplanation = null,
 
-  [JsonPropertyName("frozen")]
-  public bool? Frozen { get; set; }
+  [property: JsonPropertyName("quiz_id")]
+  ulong? QuizId = null,
 
-  [JsonPropertyName("frozen_attributes")]
-  public IEnumerable<string>? FrozenAttributes { get; set; }
+  [property: JsonPropertyName("anonymous_submissions")]
+  bool? AnonymousSubmissions = null,
 
-  [JsonPropertyName("submission")]
-  public SubmissionModel? Submission { get; set; }
+  [property: JsonPropertyName("discussion_topic")]
+  DiscussionTopicModel? DiscussionTopic = null,
 
-  [JsonPropertyName("use_rubric_for_grading")]
-  public bool? UseRubricForGrading { get; set; }
+  [property: JsonPropertyName("freeze_on_copy")]
+  bool? FreezeOnCopy = null,
 
-  [JsonPropertyName("rubric_settings")]
-  public object? RubricSettings { get; set; } // again, docs give no concrete type.
+  [property: JsonPropertyName("frozen")]
+  bool? Frozen = null,
 
-  [JsonPropertyName("rubric")]
-  public IEnumerable<RubricCriteriaModel>? Rubric { get; set; }
+  [property: JsonPropertyName("frozen_attributes")]
+  IEnumerable<string>? FrozenAttributes = null,
 
-  [JsonPropertyName("assignment_visibility")]
-  public IEnumerable<ulong>? AssignmentVisibility { get; set; }
+  [property: JsonPropertyName("submission")]
+  SubmissionModel? Submission = null,
 
-  [JsonPropertyName("overrides")]
-  public IEnumerable<AssignmentOverrideModel>? Overrides { get; set; }
+  [property: JsonPropertyName("use_rubric_for_grading")]
+  bool? UseRubricForGrading = null,
 
-  [JsonPropertyName("omit_from_final_grade")]
-  public bool? OmitFromFinalGrade { get; set; }
+  [property: JsonPropertyName("rubric_settings")]
+  object? RubricSettings = null,
 
-  [JsonPropertyName("moderated_grading")]
-  public bool ModeratedGrading { get; set; }
+  [property: JsonPropertyName("rubric")]
+  IEnumerable<RubricCriteriaModel>? Rubric = null,
 
-  [JsonPropertyName("grader_count")]
-  public uint GraderCount { get; set; }
+  [property: JsonPropertyName("assignment_visibility")]
+  IEnumerable<ulong>? AssignmentVisibility = null,
 
-  [JsonPropertyName("final_grader_id")]
-  public ulong? FinalGraderId { get; set; }
+  [property: JsonPropertyName("overrides")]
+  IEnumerable<AssignmentOverrideModel>? Overrides = null,
 
-  [JsonPropertyName("grader_comments_visible_to_graders")]
-  public bool? GraderCommentsVisibleToGraders { get; set; }
+  [property: JsonPropertyName("omit_from_final_grade")]
+  bool? OmitFromFinalGrade = null,
 
-  [JsonPropertyName("graders_anonymous_to_graders")]
-  public bool? GradersAnonymousToGraders { get; set; }
+  [property: JsonPropertyName("final_grader_id")]
+  ulong? FinalGraderId = null,
 
-  [JsonPropertyName("grader_names_anonymous_to_final_grader")]
-  public bool? GraderNamesVisibleToFinalGrader { get; set; }
+  [property: JsonPropertyName("grader_comments_visible_to_graders")]
+  bool? GraderCommentsVisibleToGraders = null,
 
-  [JsonPropertyName("anonymous_grading")]
-  public bool? AnonymousGrading { get; set; }
+  [property: JsonPropertyName("graders_anonymous_to_graders")]
+  bool? GradersAnonymousToGraders = null,
 
-  [JsonPropertyName("allowed_attempts")]
-  public int AllowedAttempts { get; set; }
-}
+  [property: JsonPropertyName("grader_names_anonymous_to_final_grader")]
+  bool? GraderNamesVisibleToFinalGrader = null,
+
+  [property: JsonPropertyName("anonymous_grading")]
+  bool? AnonymousGrading = null
+);

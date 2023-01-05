@@ -1,115 +1,111 @@
-using System;
-using System.Collections.Generic;
-
 using CanvasModel.Users;
 
-
 namespace CanvasModel.Discussions;
-public class DiscussionTopicModel
-{
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+public record DiscussionTopicModel
+(
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("title")]
-  public string Title { get; set; }
+  [property: JsonPropertyName("title")]
+  string Title,
 
-  [JsonPropertyName("message")]
-  public string Message { get; set; }
+  [property: JsonPropertyName("message")]
+  string Message,
 
-  [JsonPropertyName("html_url")]
-  public string HtmlUrl { get; set; }
+  [property: JsonPropertyName("html_url")]
+  string HtmlUrl,
 
-  [JsonPropertyName("posted_at")]
-  public DateTime? PostedAt { get; set; }
+  [property: JsonPropertyName("read_state")]
+  string ReadState,
 
-  [JsonPropertyName("last_reply_at")]
-  public DateTime? LastReplyAt { get; set; }
+  [property: JsonPropertyName("subscription_hold")]
+  string SubscriptionHold,
 
-  [JsonPropertyName("require_initial_post")]
-  public bool? RequireInitialPost { get; set; }
+  [property: JsonPropertyName("assignment_id")]
+  int AssignmentId,
 
-  [JsonPropertyName("user_can_see_posts")]
-  public bool? UserCanSeePosts { get; set; }
+  [property: JsonPropertyName("lock_explanation")]
+  string LockExplanation,
 
-  [JsonPropertyName("discussion_subentry_count")]
-  public uint? DiscussionSubentryCount { get; set; }
+  [property: JsonPropertyName("user_name")]
+  string UserName,
 
-  [JsonPropertyName("read_state")]
-  public string ReadState { get; set; }
+  [property: JsonPropertyName("topic_children")]
+  IEnumerable<uint> TopicChildren,
 
-  [JsonPropertyName("unread_count")]
-  public uint? UnreadCount { get; set; }
+  [property: JsonPropertyName("podcast_url")]
+  string PodcastUrl,
 
-  [JsonPropertyName("subscribed")]
-  public bool? Subscribed { get; set; }
+  [property: JsonPropertyName("discussion_type")]
+  string DiscussionType,
 
-  [JsonPropertyName("subscription_hold")]
-  public string SubscriptionHold { get; set; }
+  [property: JsonPropertyName("attachments")]
+  IEnumerable<FileAttachmentModel> Attachments,
 
-  [JsonPropertyName("assignment_id")]
-  public int AssignmentId { get; set; }
+  [property: JsonPropertyName("permissions")]
+  Dictionary<string, bool> Permissions,
 
-  [JsonPropertyName("delayed_post_at")]
-  public DateTime? DelayedPostAt { get; set; }
+  [property: JsonPropertyName("author")]
+  UserDisplayModel Author,
 
-  [JsonPropertyName("published")]
-  public bool? Published { get; set; }
+  [property: JsonPropertyName("unread_count")]
+  uint? UnreadCount = null,
 
-  [JsonPropertyName("lock_at")]
-  public DateTime? LockAt { get; set; }
+  [property: JsonPropertyName("subscribed")]
+  bool? Subscribed = null,
 
-  [JsonPropertyName("locked")]
-  public bool? Locked { get; set; }
+  [property: JsonPropertyName("posted_at")]
+  DateTime? PostedAt = null,
 
-  [JsonPropertyName("pinned")]
-  public bool? Pinned { get; set; }
+  [property: JsonPropertyName("last_reply_at")]
+  DateTime? LastReplyAt = null,
 
-  [JsonPropertyName("locked_for_user")]
-  public bool? LockedForUser { get; set; }
+  [property: JsonPropertyName("require_initial_post")]
+  bool? RequireInitialPost = null,
 
-  [JsonPropertyName("lock_info")]
-  public object LockInfo { get; set; }
+  [property: JsonPropertyName("user_can_see_posts")]
+  bool? UserCanSeePosts = null,
 
-  [JsonPropertyName("lock_explanation")]
-  public string LockExplanation { get; set; }
+  [property: JsonPropertyName("discussion_subentry_count")]
+  uint? DiscussionSubentryCount = null,
 
-  [JsonPropertyName("user_name")]
-  public string UserName { get; set; }
+  [property: JsonPropertyName("delayed_post_at")]
+  DateTime? DelayedPostAt = null,
 
-  [JsonPropertyName("topic_children")]
-  public IEnumerable<uint> TopicChildren { get; set; }
+  [property: JsonPropertyName("published")]
+  bool? Published = null,
 
-  [JsonPropertyName("group_topic_children")]
-  public object GroupTopicChildren { get; set; }
+  [property: JsonPropertyName("lock_at")]
+  DateTime? LockAt = null,
 
-  [JsonPropertyName("root_topic_id")]
-  public ulong? RootTopicId { get; set; }
+  [property: JsonPropertyName("locked")]
+  bool? Locked = null,
 
-  [JsonPropertyName("podcast_url")]
-  public string PodcastUrl { get; set; }
+  [property: JsonPropertyName("pinned")]
+  bool? Pinned = null,
 
-  [JsonPropertyName("discussion_type")]
-  public string DiscussionType { get; set; }
+  [property: JsonPropertyName("locked_for_user")]
+  bool? LockedForUser = null,
 
-  [JsonPropertyName("group_category_id")]
-  public ulong? GroupCategoryId { get; set; }
+  [property: JsonPropertyName("lock_info")]
+  object? LockInfo = null,
 
-  [JsonPropertyName("attachments")]
-  public IEnumerable<FileAttachmentModel> Attachments { get; set; }
+  [property: JsonPropertyName("group_topic_children")]
+  object? GroupTopicChildren = null,
 
-  [JsonPropertyName("permissions")]
-  public Dictionary<string, bool> Permissions { get; set; }
+  [property: JsonPropertyName("root_topic_id")]
+  ulong? RootTopicId = null,
 
-  [JsonPropertyName("allow_rating")]
-  public bool? AllowRating { get; set; }
+  [property: JsonPropertyName("group_category_id")]
+  ulong? GroupCategoryId = null,
 
-  [JsonPropertyName("only_graders_can_rate")]
-  public bool? OnlyGradersCanRate { get; set; }
+  [property: JsonPropertyName("allow_rating")]
+  bool? AllowRating = null,
 
-  [JsonPropertyName("sort_by_rating")]
-  public bool? SortByRating { get; set; }
+  [property: JsonPropertyName("only_graders_can_rate")]
+  bool? OnlyGradersCanRate = null,
 
-  [JsonPropertyName("author")]
-  public UserDisplayModel Author { get; set; }
-}
+  [property: JsonPropertyName("sort_by_rating")]
+  bool? SortByRating = null
+);

@@ -1,23 +1,19 @@
-using System;
-
-
-
 namespace CanvasModel.Assignments;
-public class LockInfoModel
-{
 
-  [JsonPropertyName("asset_string")]
-  public string AssetString { get; set; }
+public record LockInfoModel
+(
+  [property: JsonPropertyName("asset_string")]
+  string AssetString,
 
-  [JsonPropertyName("unlock_at")]
-  public DateTime? UnlockAt { get; set; }
+  [property: JsonPropertyName("unlock_at")]
+  DateTime? UnlockAt = null,
 
-  [JsonPropertyName("lock_at")]
-  public DateTime? LockAt { get; set; }
+  [property: JsonPropertyName("lock_at")]
+  DateTime? LockAt = null,
 
-  [JsonPropertyName("context_module")]
-  public object? ContextModule { get; set; }
+  [property: JsonPropertyName("context_module")]
+  object? ContextModule = null,
 
-  [JsonPropertyName("manually_locked")]
-  public bool? ManuallyLocked { get; set; }
-}
+  [property: JsonPropertyName("manually_locked")]
+  bool? ManuallyLocked = null
+);

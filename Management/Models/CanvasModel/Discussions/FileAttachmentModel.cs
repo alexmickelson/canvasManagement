@@ -1,21 +1,16 @@
-
-
-
 namespace CanvasModel.Discussions;
-public class FileAttachmentModel
-{
 
-  [JsonPropertyName("content_type")]
-  public string ContentType { get; set; }
+public record FileAttachmentModel
+(
+  [property: JsonPropertyName("content_type")]
+  string ContentType,
 
-  [JsonPropertyName("url")]
-  public string Url { get; set; }
+  [property: JsonPropertyName("url")]
+  string Url,
 
-  [JsonPropertyName("filename")]
-  public string Filename { get; set; }
+  [property: JsonPropertyName("filename")]
+  string Filename,
 
-  [JsonPropertyName("display_name")]
-  public string DisplayName { get; set; }
-
-
-}
+  [property: JsonPropertyName("display_name")]
+  string DisplayName
+);

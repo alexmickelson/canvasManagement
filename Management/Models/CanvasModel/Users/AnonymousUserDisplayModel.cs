@@ -1,15 +1,10 @@
-
-
-
 namespace CanvasModel.Users;
-public class AnonymousUserDisplayModel
-{
 
-  [JsonPropertyName("anonymous_id")]
-  public string AnonymousId { get; set; }
+public record AnonymousUserDisplayModel
+(
+  [property: JsonPropertyName("anonymous_id")]
+  string AnonymousId,
 
-  [JsonPropertyName("avatar_image_url")]
-  public string AvatarImageUrl { get; set; }
-
-
-}
+  [property: JsonPropertyName("avatar_image_url")]
+  string AvatarImageUrl
+);

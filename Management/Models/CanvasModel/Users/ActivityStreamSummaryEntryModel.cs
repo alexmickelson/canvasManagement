@@ -2,17 +2,14 @@
 
 
 namespace CanvasModel.Users;
-public class ActivityStreamSummaryEntryModel
-{
+public record ActivityStreamSummaryEntryModel
+(
+  [property: JsonPropertyName("type")]
+  string Type,
 
-  [JsonPropertyName("type")]
-  public string Type { get; set; }
+  [property: JsonPropertyName("unread_count")]
+  uint UnreadCount,
 
-  [JsonPropertyName("unread_count")]
-  public uint UnreadCount { get; set; }
-
-  [JsonPropertyName("count")]
-  public uint Count { get; set; }
-
-
-}
+  [property: JsonPropertyName("count")]
+  uint Count
+);

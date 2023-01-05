@@ -1,29 +1,25 @@
-
-
-
-
 namespace CanvasModel.Users;
-public class UserDisplayModel
-{
 
-  [JsonPropertyName("id")]
-  public ulong? Id { get; set; }
+public record UserDisplayModel
+(
+  [property: JsonPropertyName("avatar_image_url")]
+  string AvatarImageUrl,
 
-  [JsonPropertyName("short_name")]
-  public string? ShortName { get; set; }
+  [property: JsonPropertyName("html_url")]
+  string HtmlUrl,
 
-  [JsonPropertyName("display_name")]
-  public string? DisplayName { get; set; }
+  [property: JsonPropertyName("id")]
+  ulong? Id = null,
 
-  [JsonPropertyName("avatar_image_url")]
-  public string AvatarImageUrl { get; set; }
+  [property: JsonPropertyName("short_name")]
+  string? ShortName = null,
 
-  [JsonPropertyName("html_url")]
-  public string HtmlUrl { get; set; }
+  [property: JsonPropertyName("display_name")]
+  string? DisplayName = null,
 
-  [JsonPropertyName("pronouns")]
-  public string? Pronouns { get; set; }
+  [property: JsonPropertyName("pronouns")]
+  string? Pronouns = null,
 
-  [JsonPropertyName("anonymous_id")]
-  public string AnonymousId { get; set; }
-}
+  [property: JsonPropertyName("anonymous_id")]
+  string AnonymousId = null
+);

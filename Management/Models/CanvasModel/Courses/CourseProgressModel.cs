@@ -1,20 +1,16 @@
-using System;
-
-
 
 namespace CanvasModel.Courses;
-public class CourseProgressModel
-{
+public record CourseProgressModel
+(
+  [property: JsonPropertyName("requirement_count")] 
+  uint? RequirementCount = null,
+  
+  [property: JsonPropertyName("requirement_completed_count")] 
+  uint? RequirementCompletedCount = null,
 
-  [JsonPropertyName("requirement_count")]
-  public uint? RequirementCount { get; set; }
+  [property: JsonPropertyName("next_requirement_url")] 
+  string? NextRequirementUrl = null,
 
-  [JsonPropertyName("requirement_completed_count")]
-  public uint? RequirementCompletedCount { get; set; }
-
-  [JsonPropertyName("next_requirement_url")]
-  public string? NextRequirementUrl { get; set; }
-
-  [JsonPropertyName("completed_at")]
-  public DateTime? CompletedAt { get; set; }
-}
+  [property: JsonPropertyName("completed_at")] 
+  DateTime? CompletedAt = null
+);

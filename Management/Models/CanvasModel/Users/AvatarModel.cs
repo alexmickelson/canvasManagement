@@ -1,33 +1,28 @@
-
-
-
 namespace CanvasModel.Users;
-public class AvatarModel
-{
 
-  [JsonPropertyName("type")]
-  public string Type { get; set; }
+public record AvatarModel
+(
+  [property: JsonPropertyName("type")]
+  string Type,
 
-  [JsonPropertyName("url")]
-  public string Url { get; set; }
+  [property: JsonPropertyName("url")]
+  string Url,
 
-  [JsonPropertyName("token")]
-  public string Token { get; set; }
+  [property: JsonPropertyName("token")]
+  string Token,
 
-  [JsonPropertyName("display_name")]
-  public string DisplayName { get; set; }
+  [property: JsonPropertyName("display_name")]
+  string DisplayName,
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("content_type")]
-  public string ContentType { get; set; }
+  [property: JsonPropertyName("content_type")]
+  string ContentType,
 
-  [JsonPropertyName("filename")]
-  public string Filename { get; set; }
+  [property: JsonPropertyName("filename")]
+  string Filename,
 
-  [JsonPropertyName("size")]
-  public ulong Size { get; set; }
-
-
-}
+  [property: JsonPropertyName("size")]
+  ulong Size
+);

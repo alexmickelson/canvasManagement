@@ -1,18 +1,17 @@
-
-
 namespace CanvasModel.Users;
-public class ShortUserModel
-{
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+public record ShortUserModel
+(
 
-  [JsonPropertyName("display_name")]
-  public string DisplayName { get; set; }
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("avatar_image_url")]
-  public string AvatarImageUrl { get; set; }
+  [property: JsonPropertyName("display_name")]
+  string DisplayName,
 
-  [JsonPropertyName("html_url")]
-  public string HtmlUrl { get; set; }
-}
+  [property: JsonPropertyName("avatar_image_url")]
+  string AvatarImageUrl,
+
+  [property: JsonPropertyName("html_url")]
+  string HtmlUrl
+);

@@ -1,12 +1,6 @@
-
-
 namespace CanvasModel.Courses;
-public class ShortCourseModel
-{
-
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
-
-  [JsonPropertyName("name")]
-  public string Name { get; set; }
-}
+public record ShortCourseModel
+(
+  [property: JsonPropertyName("id")] ulong Id,
+  [property: JsonPropertyName("name")] string Name
+);

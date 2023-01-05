@@ -1,36 +1,30 @@
-using System.Collections.Generic;
-
-
-
 namespace CanvasModel.Assignments;
 
-public class RubricCriteriaModel
-{
+public record RubricCriteriaModel
+(
+  [property: JsonPropertyName("id")]
+  string Id,
 
-  [JsonPropertyName("points")]
-  public double? Points { get; set; }
+  [property: JsonPropertyName("description")]
+  string Description,
 
-  [JsonPropertyName("id")]
-  public string Id { get; set; }
+  [property: JsonPropertyName("long_description")]
+  string LongDescription,
 
-  [JsonPropertyName("learning_outcome_id")]
-  public string? LearningOutcomeId { get; set; }
+  [property: JsonPropertyName("points")]
+  double? Points,
+  [property: JsonPropertyName("learning_outcome_id")]
+  string? LearningOutcomeId,
 
-  [JsonPropertyName("vendor_guid")]
-  public string? VendorGuid { get; set; }
+  [property: JsonPropertyName("vendor_guid")]
+  string? VendorGuid,
 
-  [JsonPropertyName("description")]
-  public string Description { get; set; }
+  [property: JsonPropertyName("criterion_use_range")]
+  bool? CriterionUseRange = null,
 
-  [JsonPropertyName("long_description")]
-  public string LongDescription { get; set; }
+  [property: JsonPropertyName("ratings")]
+  IEnumerable<RubricRatingModel>? Ratings = null,
 
-  [JsonPropertyName("criterion_use_range")]
-  public bool? CriterionUseRange { get; set; }
-
-  [JsonPropertyName("ratings")]
-  public IEnumerable<RubricRatingModel>? Ratings { get; set; }
-
-  [JsonPropertyName("ignore_for_scoring")]
-  public bool? IgnoreForScoring { get; set; }
-}
+  [property: JsonPropertyName("ignore_for_scoring")]
+  bool? IgnoreForScoring = null
+);

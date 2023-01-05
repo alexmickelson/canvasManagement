@@ -1,151 +1,53 @@
-using System;
-using System.Collections.Generic;
-
-
 using CanvasModel.Enrollments;
 
 namespace CanvasModel.Courses;
-public class CourseModel
-{
-
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
-
-  [JsonPropertyName("sis_course_id")]
-  public string SisCourseId { get; set; }
-
-  [JsonPropertyName("uuid")]
-  public string Uuid { get; set; }
-
-  [JsonPropertyName("integration_id")]
-  public string IntegrationId { get; set; }
-
-  [JsonPropertyName("sis_import_id")]
-  public ulong? SisImportId { get; set; }
-
-  [JsonPropertyName("name")]
-  public string Name { get; set; }
-
-  [JsonPropertyName("course_code")]
-  public string CourseCode { get; set; }
-
-  [JsonPropertyName("workflow_state")]
-  public string WorkflowState { get; set; }
-
-  [JsonPropertyName("account_id")]
-  public ulong AccountId { get; set; }
-
-  [JsonPropertyName("root_account_id")]
-  public ulong RootAccountId { get; set; }
-
-  [JsonPropertyName("enrollment_term_id")]
-  public ulong EnrollmentTermId { get; set; }
-
-  [JsonPropertyName("grading_standard_id")]
-  public ulong? GradingStandardId { get; set; }
-
-  [JsonPropertyName("created_at")]
-  public DateTime CreatedAt { get; set; }
-
-  [JsonPropertyName("start_at")]
-  public DateTime? StartAt { get; set; }
-
-  [JsonPropertyName("end_at")]
-  public DateTime? EndAt { get; set; }
-
-  [JsonPropertyName("locale")]
-  public string Locale { get; set; }
-
-  [JsonPropertyName("enrollments")]
-  public IEnumerable<EnrollmentModel>? Enrollments { get; set; }
-
-  [JsonPropertyName("total_students")]
-  public ulong? TotalStudents { get; set; }
-
-  [JsonPropertyName("calendar")]
-  public CalendarLinkModel Calendar { get; set; }
-
-  [JsonPropertyName("default_view")]
-  public string DefaultView { get; set; }
-
-  [JsonPropertyName("syllabus_body")]
-  public string SyllabusBody { get; set; }
-
-  [JsonPropertyName("needs_grading_count")]
-  public uint? NeedsGradingCount { get; set; }
-
-  [JsonPropertyName("term")]
-  public TermModel? Term { get; set; }
-
-  [JsonPropertyName("course_progress")]
-  public CourseProgressModel? CourseProgress { get; set; }
-
-  [JsonPropertyName("apply_assignment_group_weights")]
-  public bool? ApplyAssignmentGroupWeights { get; set; }
-
-  [JsonPropertyName("permissions")]
-  public Dictionary<string, bool> Permissions { get; set; }
-
-  [JsonPropertyName("is_public")]
-  public bool? IsPublic { get; set; }
-
-  [JsonPropertyName("is_public_to_auth_users")]
-  public bool? IsPublicToAuthUsers { get; set; }
-
-  [JsonPropertyName("public_syllabus")]
-  public bool? PublicSyllabus { get; set; }
-
-  [JsonPropertyName("public_syllabus_to_auth")]
-  public bool? PublicSyllabusToAuth { get; set; }
-
-  [JsonPropertyName("public_description")]
-  public string? PublicDescription { get; set; }
-
-  [JsonPropertyName("storage_quota_mb")]
-  public ulong StorageQuotaMb { get; set; }
-
-  [JsonPropertyName("storage_quota_used_mb")]
-  public ulong StorageQuotaUsedMb { get; set; }
-
-  [JsonPropertyName("hide_final_grades")]
-  public bool? HideFinalGrades { get; set; }
-
-  [JsonPropertyName("license")]
-  public string License { get; set; }
-
-  [JsonPropertyName("allow_student_assignment_edits")]
-  public bool? AllowStudentAssignmentEdits { get; set; }
-
-  [JsonPropertyName("allow_wiki_comments")]
-  public bool? AllowWikiComments { get; set; }
-
-  [JsonPropertyName("allow_student_forum_attachments")]
-  public bool? AllowStudentForumAttachments { get; set; }
-
-  [JsonPropertyName("open_enrollment")]
-  public bool? OpenEnrollment { get; set; }
-
-  [JsonPropertyName("self_enrollment")]
-  public bool? SelfEnrollment { get; set; }
-
-  [JsonPropertyName("restrict_enrollments_to_courses")]
-  public bool? RestrictEnrollmentsToCourseDates { get; set; }
-
-  [JsonPropertyName("course_format")]
-  public string CourseFormat { get; set; }
-
-  [JsonPropertyName("access_restricted_by_date")]
-  public bool? AccessRestrictedByDate { get; set; }
-
-  [JsonPropertyName("time_zone")]
-  public string TimeZone { get; set; }
-
-  [JsonPropertyName("blueprint")]
-  public bool? Blueprint { get; set; }
-
-  [JsonPropertyName("blueprint_restrictions")]
-  public Dictionary<string, bool>? BlueprintRestrictions { get; set; }
-
-  [JsonPropertyName("blueprint_restrictions_by_object_type")]
-  public Dictionary<string, Dictionary<string, bool>>? BlueprintRestrictionsByObjectType { get; set; }
-}
+public record CourseModel
+(
+  [property: JsonPropertyName("id")] ulong Id,
+  [property: JsonPropertyName("sis_course_id")] string SisCourseId,
+  [property: JsonPropertyName("uuid")] string Uuid,
+  [property: JsonPropertyName("integration_id")] string IntegrationId,
+  [property: JsonPropertyName("name")] string Name,
+  [property: JsonPropertyName("course_code")] string CourseCode,
+  [property: JsonPropertyName("workflow_state")] string WorkflowState,
+  [property: JsonPropertyName("account_id")] ulong AccountId,
+  [property: JsonPropertyName("root_account_id")] ulong RootAccountId,
+  [property: JsonPropertyName("enrollment_term_id")] ulong EnrollmentTermId,
+  [property: JsonPropertyName("created_at")] DateTime CreatedAt,
+  [property: JsonPropertyName("locale")] string Locale,
+  [property: JsonPropertyName("calendar")] CalendarLinkModel Calendar,
+  [property: JsonPropertyName("default_view")] string DefaultView,
+  [property: JsonPropertyName("syllabus_body")] string SyllabusBody,
+  [property: JsonPropertyName("permissions")] Dictionary<string, bool> Permissions,
+  [property: JsonPropertyName("storage_quota_mb")] ulong StorageQuotaMb,
+  [property: JsonPropertyName("storage_quota_used_mb")] ulong StorageQuotaUsedMb,
+  [property: JsonPropertyName("license")] string License,
+  [property: JsonPropertyName("course_format")] string CourseFormat,
+  [property: JsonPropertyName("time_zone")] string TimeZone,
+  [property: JsonPropertyName("sis_import_id")] ulong? SisImportId = null,
+  [property: JsonPropertyName("grading_standard_id")] ulong? GradingStandardId = null,
+  [property: JsonPropertyName("start_at")] DateTime? StartAt = null,
+  [property: JsonPropertyName("end_at")] DateTime? EndAt = null,
+  [property: JsonPropertyName("enrollments")] IEnumerable<EnrollmentModel>? Enrollments = null,
+  [property: JsonPropertyName("total_students")] ulong? TotalStudents = null,
+  [property: JsonPropertyName("needs_grading_count")] uint? NeedsGradingCount = null,
+  [property: JsonPropertyName("term")] TermModel? Term = null,
+  [property: JsonPropertyName("course_progress")] CourseProgressModel? CourseProgress = null,
+  [property: JsonPropertyName("apply_assignment_group_weights")] bool? ApplyAssignmentGroupWeights = null,
+  [property: JsonPropertyName("is_public")] bool? Is= null,
+  [property: JsonPropertyName("is_public_to_auth_users")] bool? IsPublicToAuthUsers = null,
+  [property: JsonPropertyName("public_syllabus")] bool? PublicSyllabus = null,
+  [property: JsonPropertyName("public_syllabus_to_auth")] bool? PublicSyllabusToAuth = null,
+  [property: JsonPropertyName("public_description")] string? PublicDescription = null,
+  [property: JsonPropertyName("hide_final_grades")] bool? HideFinalGrades = null,
+  [property: JsonPropertyName("allow_student_assignment_edits")] bool? AllowStudentAssignmentEdits = null,
+  [property: JsonPropertyName("allow_wiki_comments")] bool? AllowWikiComments = null,
+  [property: JsonPropertyName("allow_student_forum_attachments")] bool? AllowStudentForumAttachments = null,
+  [property: JsonPropertyName("open_enrollment")] bool? OpenEnrollment = null,
+  [property: JsonPropertyName("self_enrollment")] bool? SelfEnrollment = null,
+  [property: JsonPropertyName("restrict_enrollments_to_courses")] bool? RestrictEnrollmentsToCourseDates = null,
+  [property: JsonPropertyName("access_restricted_by_date")] bool? AccessRestrictedByDate = null,
+  [property: JsonPropertyName("blueprint")] bool? Blueprint = null,
+  [property: JsonPropertyName("blueprint_restrictions")] Dictionary<string, bool>? BlueprintRestrictions = null,
+  [property: JsonPropertyName("blueprint_restrictions_by_object_type")] Dictionary<string, Dictionary<string, bool>>? BlueprintRestrictionsByObjectType = null
+);

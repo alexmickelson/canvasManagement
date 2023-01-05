@@ -1,48 +1,46 @@
-
-
 namespace CanvasModel.Courses;
-public class CourseSettingsModel
-{
+public record CourseSettingsModel
+(
 
-  [JsonPropertyName("allow_final_grade_override")]
-  public bool AllowFinalGradeOverride { get; set; }
+  [property: JsonPropertyName("allow_final_grade_override")]
+  bool AllowFinalGradeOverride,
 
-  [JsonPropertyName("allow_student_discussion_topics")]
-  public bool AllowStudentDiscussionTopics { get; set; }
+  [property: JsonPropertyName("allow_student_discussion_topics")]
+  bool AllowStudentDiscussionTopics,
 
-  [JsonPropertyName("allow_student_forum_attachments")]
-  public bool AllowStudentForumAttachments { get; set; }
+  [property: JsonPropertyName("allow_student_forum_attachments")]
+  bool AllowStudentForumAttachments,
 
-  [JsonPropertyName("allow_student_discussion_editing")]
-  public bool AllowStudentDiscussionEditing { get; set; }
+  [property: JsonPropertyName("allow_student_discussion_editing")]
+  bool AllowStudentDiscussionEditing,
 
-  [JsonPropertyName("grading_standard_enabled")]
-  public bool GradingStandardEnabled { get; set; }
+  [property: JsonPropertyName("grading_standard_enabled")]
+  bool GradingStandardEnabled,
 
-  [JsonPropertyName("grading_standard_id")]
-  public ulong? GradingStandardId { get; set; }
+  [property: JsonPropertyName("allow_student_organized_groups")]
+  bool AllowStudentOrganizedGroups,
 
-  [JsonPropertyName("allow_student_organized_groups")]
-  public bool AllowStudentOrganizedGroups { get; set; }
+  [property: JsonPropertyName("hide_final_groups")]
+  bool HideFinalGrades,
 
-  [JsonPropertyName("hide_final_groups")]
-  public bool HideFinalGrades { get; set; }
+  [property: JsonPropertyName("hide_distributor_graphs")]
+  bool HideDistributionGraphs,
 
-  [JsonPropertyName("hide_distributor_graphs")]
-  public bool HideDistributionGraphs { get; set; }
+  [property: JsonPropertyName("lock_all_announcements")]
+  bool LockAllAnnouncements,
 
-  [JsonPropertyName("lock_all_announcements")]
-  public bool LockAllAnnouncements { get; set; }
+  [property: JsonPropertyName("restrict_student_past_view")]
+  bool RestrictStudentPastView,
 
-  [JsonPropertyName("restrict_student_past_view")]
-  public bool RestrictStudentPastView { get; set; }
+  [property: JsonPropertyName("restrict_student_future_view")]
+  bool RestrictStudentFutureView,
 
-  [JsonPropertyName("restrict_student_future_view")]
-  public bool RestrictStudentFutureView { get; set; }
+  [property: JsonPropertyName("show_announcements_on_home_page")]
+  bool ShowAnnouncementsOnHomePage,
 
-  [JsonPropertyName("show_announcements_on_home_page")]
-  public bool ShowAnnouncementsOnHomePage { get; set; }
+  [property: JsonPropertyName("home_page_announcements_limit")]
+  long HomePageAnnouncementLimit,
 
-  [JsonPropertyName("home_page_announcements_limit")]
-  public long HomePageAnnouncementLimit { get; set; }
-}
+  [property: JsonPropertyName("grading_standard_id")]
+  ulong? GradingStandardId = null
+);

@@ -1,18 +1,13 @@
-
-
-
 namespace CanvasModel.Users;
-public class CourseNicknameModel
-{
 
-  [JsonPropertyName("course_id")]
-  public ulong CourseId { get; set; }
+public record CourseNicknameModel
+(
+  [property: JsonPropertyName("course_id")]
+  ulong CourseId,
 
-  [JsonPropertyName("name")]
-  public string Name { get; set; }
+  [property: JsonPropertyName("name")]
+  string Name,
 
-  [JsonPropertyName("nickname")]
-  public string Nickname { get; set; }
-
-
-}
+  [property: JsonPropertyName("nickname")]
+  string Nickname
+);

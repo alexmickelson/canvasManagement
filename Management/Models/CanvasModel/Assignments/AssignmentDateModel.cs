@@ -1,26 +1,22 @@
-using System;
-
-
 namespace CanvasModel.Assignments;
 
-public class AssignmentDateModel
-{
+public record AssignmentDateModel
+(
+  [property: JsonPropertyName("title")]
+  string Title,
 
-  [JsonPropertyName("id")]
-  public ulong? Id { get; set; }
+  [property: JsonPropertyName("id")]
+  ulong? Id = null,
 
-  [JsonPropertyName("base")]
-  public bool? Base { get; set; }
+  [property: JsonPropertyName("base")]
+  bool? Base = null,
 
-  [JsonPropertyName("title")]
-  public string Title { get; set; }
+  [property: JsonPropertyName("due_at")]
+  DateTime? DueAt = null,
 
-  [JsonPropertyName("due_at")]
-  public DateTime? DueAt { get; set; }
+  [property: JsonPropertyName("unlock_at")]
+  DateTime? UnlockAt = null,
 
-  [JsonPropertyName("unlock_at")]
-  public DateTime? UnlockAt { get; set; }
-
-  [JsonPropertyName("lock_at")]
-  public DateTime? LockAt { get; set; }
-}
+  [property: JsonPropertyName("lock_at")]
+  DateTime? LockAt = null
+);

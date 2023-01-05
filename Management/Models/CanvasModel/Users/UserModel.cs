@@ -1,59 +1,56 @@
 using CanvasModel.Enrollments;
 
 namespace CanvasModel.Users;
-public class UserModel
-{
+public record UserModel
+(
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+  [property: JsonPropertyName("name")]
+  string Name,
 
-  [JsonPropertyName("name")]
-  public string Name { get; set; }
+  [property: JsonPropertyName("sortable_name")]
+  string SortableName,
 
-  [JsonPropertyName("sortable_name")]
-  public string SortableName { get; set; }
+  [property: JsonPropertyName("short_name")]
+  string ShortName,
 
-  [JsonPropertyName("short_name")]
-  public string ShortName { get; set; }
+  [property: JsonPropertyName("sis_user_id")]
+  string SisUserId,
 
-  [JsonPropertyName("sis_user_id")]
-  public string SisUserId { get; set; }
+  [property: JsonPropertyName("integration_id")]
+  string IntegrationId,
 
-  [JsonPropertyName("sis_import_id")]
-  public ulong? SisImportId { get; set; }
+  [property: JsonPropertyName("login_id")]
+  string LoginId,
 
-  [JsonPropertyName("integration_id")]
-  public string IntegrationId { get; set; }
+  [property: JsonPropertyName("avatar_url")]
+  string AvatarUrl,
 
-  [JsonPropertyName("login_id")]
-  public string LoginId { get; set; }
+  [property: JsonPropertyName("enrollments")]
+  List<EnrollmentModel> Enrollments,
 
-  [JsonPropertyName("avatar_url")]
-  public string AvatarUrl { get; set; }
+  [property: JsonPropertyName("email")]
+  string Email,
 
-  [JsonPropertyName("enrollments")]
-  public List<EnrollmentModel> Enrollments { get; set; }
+  [property: JsonPropertyName("locale")]
+  string Locale,
 
-  [JsonPropertyName("email")]
-  public string Email { get; set; }
+  [property: JsonPropertyName("effective_locale")]
+  string EffectiveLocale,
 
-  [JsonPropertyName("locale")]
-  public string Locale { get; set; }
+  [property: JsonPropertyName("time_zone")]
+  string TimeZone,
 
-  [JsonPropertyName("effective_locale")]
-  public string EffectiveLocale { get; set; }
+  [property: JsonPropertyName("bio")]
+  string Bio,
 
-  [JsonPropertyName("last_login")]
-  public DateTime? LastLogin { get; set; }
+  [property: JsonPropertyName("permissions")]
+  Dictionary<string, bool> Permissions,
 
-  [JsonPropertyName("time_zone")]
-  public string TimeZone { get; set; }
+  [property: JsonPropertyName("sis_import_id")]
+  ulong? SisImportId = null,
 
-  [JsonPropertyName("bio")]
-  public string Bio { get; set; }
-
-  [JsonPropertyName("permissions")]
-  public Dictionary<string, bool> Permissions { get; set; }
-
-
-}
+  [property: JsonPropertyName("last_login")]
+  DateTime? LastLogin = null
+);

@@ -1,15 +1,13 @@
-
-
 namespace CanvasModel.Assignments;
-public class ExternalToolTagAttributesModel
-{
 
-  [JsonPropertyName("url")]
-  public string Url { get; set; }
+public record ExternalToolTagAttributesModel
+(
+  [property: JsonPropertyName("url")]
+  string Url,
 
-  [JsonPropertyName("new_tab")]
-  public bool? NewTab { get; set; }
+  [property: JsonPropertyName("resource_link_id")]
+  string ResourceLinkId,
 
-  [JsonPropertyName("resource_link_id")]
-  public string ResourceLinkId { get; set; }
-}
+  [property: JsonPropertyName("new_tab")]
+  bool? NewTab = null
+);

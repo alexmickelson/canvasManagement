@@ -1,42 +1,38 @@
-using System;
-using System.Collections.Generic;
-
-
-
 namespace CanvasModel.Assignments;
-public class AssignmentOverrideModel
-{
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+public record AssignmentOverrideModel
+(
 
-  [JsonPropertyName("assignment_id")]
-  public ulong AssignmentId { get; set; }
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("student_ids")]
-  public IEnumerable<ulong>? StudentIds { get; set; }
+  [property: JsonPropertyName("assignment_id")]
+  ulong AssignmentId,
 
-  [JsonPropertyName("group_id")]
-  public ulong? GroupId { get; set; }
+  [property: JsonPropertyName("course_section_ids")]
+  ulong CourseSectionId,
 
-  [JsonPropertyName("course_section_ids")]
-  public ulong CourseSectionId { get; set; }
+  [property: JsonPropertyName("title")]
+  string Title,
 
-  [JsonPropertyName("title")]
-  public string Title { get; set; }
+  [property: JsonPropertyName("student_ids")]
+  IEnumerable<ulong>? StudentIds = null,
 
-  [JsonPropertyName("due_at")]
-  public DateTime? DueAt { get; set; }
+  [property: JsonPropertyName("group_id")]
+  ulong? GroupId = null,
 
-  [JsonPropertyName("all_day")]
-  public bool? AllDay { get; set; }
+  [property: JsonPropertyName("due_at")]
+  DateTime? DueAt = null,
 
-  [JsonPropertyName("all_day_date")]
-  public DateTime? AllDayDate { get; set; }
+  [property: JsonPropertyName("all_day")]
+  bool? AllDay = null,
 
-  [JsonPropertyName("unlock_at")]
-  public DateTime? UnlockAt { get; set; }
+  [property: JsonPropertyName("all_day_date")]
+  DateTime? AllDayDate = null,
 
-  [JsonPropertyName("lock_at")]
-  public DateTime? LockAt { get; set; }
-}
+  [property: JsonPropertyName("unlock_at")]
+  DateTime? UnlockAt = null,
+
+  [property: JsonPropertyName("lock_at")]
+  DateTime? LockAt = null
+);

@@ -1,51 +1,46 @@
-
-
-
 namespace CanvasModel.Users;
-public class ProfileModel
-{
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+public record ProfileModel
+(
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("name")]
-  public string Name { get; set; }
+  [property: JsonPropertyName("name")]
+  string Name,
 
-  [JsonPropertyName("short_name")]
-  public string ShortName { get; set; }
+  [property: JsonPropertyName("short_name")]
+  string ShortName,
 
-  [JsonPropertyName("sortable_name")]
-  public string SortableName { get; set; }
+  [property: JsonPropertyName("sortable_name")]
+  string SortableName,
 
-  [JsonPropertyName("title")]
-  public string Title { get; set; }
+  [property: JsonPropertyName("title")]
+  string Title,
 
-  [JsonPropertyName("bio")]
-  public string Bio { get; set; }
+  [property: JsonPropertyName("bio")]
+  string Bio,
 
-  [JsonPropertyName("primary_email")]
-  public string PrimaryEmail { get; set; }
+  [property: JsonPropertyName("primary_email")]
+  string PrimaryEmail,
 
-  [JsonPropertyName("login_id")]
-  public string LoginId { get; set; }
+  [property: JsonPropertyName("login_id")]
+  string LoginId,
 
-  [JsonPropertyName("sis_user_id")]
-  public string SisUserId { get; set; }
+  [property: JsonPropertyName("sis_user_id")]
+  string SisUserId,
 
-  [JsonPropertyName("lti_user_id")]
-  public string LtiUserId { get; set; }
+  [property: JsonPropertyName("lti_user_id")]
+  string LtiUserId,
 
-  [JsonPropertyName("avatar_url")]
-  public string AvatarUrl { get; set; }
+  [property: JsonPropertyName("avatar_url")]
+  string AvatarUrl,
 
-  [JsonPropertyName("calendar")]
-  public object Calendar { get; set; }
+  [property: JsonPropertyName("calendar")]
+  object Calendar,
 
-  [JsonPropertyName("time_zone")]
-  public string TimeZone { get; set; }
+  [property: JsonPropertyName("time_zone")]
+  string TimeZone,
 
-  [JsonPropertyName("locale")]
-  public string Locale { get; set; }
-
-
-}
+  [property: JsonPropertyName("locale")]
+  string Locale
+);

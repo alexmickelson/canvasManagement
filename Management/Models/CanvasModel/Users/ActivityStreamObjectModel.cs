@@ -1,185 +1,163 @@
-
 using CanvasModel.Assignments;
 using CanvasModel.Courses;
 using CanvasModel.Submissions;
 
 namespace CanvasModel.Users;
-public class ActivityStreamObjectModel
-{
-  // General
-  [JsonPropertyName("created_at")]
-  public DateTime CreatedAt { get; set; }
+public record ActivityStreamObjectModel
+(
+  [property: JsonPropertyName("created_at")]
+  DateTime CreatedAt,
 
-  [JsonPropertyName("updated_at")]
-  public DateTime? UpdatedAt { get; set; }
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+  [property: JsonPropertyName("title")]
+  string Title,
 
-  [JsonPropertyName("title")]
-  public string Title { get; set; }
+  [property: JsonPropertyName("message")]
+  string Message,
 
-  [JsonPropertyName("message")]
-  public string Message { get; set; }
+  [property: JsonPropertyName("type")]
+  string Type,
 
-  [JsonPropertyName("type")]
-  public string Type { get; set; }
+  [property: JsonPropertyName("read_state")]
+  bool ReadState,
 
-  [JsonPropertyName("read_state")]
-  public bool ReadState { get; set; }
+  [property: JsonPropertyName("context_type")]
+  string ContextType,
 
-  [JsonPropertyName("context_type")]
-  public string ContextType { get; set; }
+  [property: JsonPropertyName("html_url")]
+  string HtmlUrl,
 
-  [JsonPropertyName("course_id")]
-  public ulong? CourseId { get; set; }
+  [property: JsonPropertyName("notification_category")]
+  string NotificationCategory,
 
-  [JsonPropertyName("group_id")]
-  public ulong? GroupId { get; set; }
+  [property: JsonPropertyName("grade")]
+  string Grade,
 
-  [JsonPropertyName("html_url")]
-  public string HtmlUrl { get; set; }
+  [property: JsonPropertyName("preview_url")]
+  string PreviewUrl,
 
-  // Type = DiscussionTopic | Announcement
+  [property: JsonPropertyName("submission_type")]
+  string SubmissionType,
 
-  [JsonPropertyName("total_root_discussion_entries")]
-  public uint? TotalRootDiscussionEntries { get; set; }
+  [property: JsonPropertyName("late_policy_status")]
+  string LatePolicyStatus,
 
-  [JsonPropertyName("require_initial_post")]
-  public bool? RequireInitialPost { get; set; }
+  [property: JsonPropertyName("workflow_state")]
+  string WorkflowState,
 
-  [JsonPropertyName("user_has_posted")]
-  public bool? UserHasPosted { get; set; }
+  [property: JsonPropertyName("updated_at")]
+  DateTime? UpdatedAt = null,
 
-  [JsonPropertyName("root_discussion_entries")]
-  public object RootDiscussionEntries { get; set; } // todo this class/model
+  [property: JsonPropertyName("course_id")]
+  ulong? CourseId = null,
 
-  // Type = DiscussionTopic
+  [property: JsonPropertyName("group_id")]
+  ulong? GroupId = null,
 
-  [JsonPropertyName("discussion_topic_id")]
-  public ulong? DiscussionTopicId { get; set; }
+  [property: JsonPropertyName("total_root_discussion_entries")]
+  uint? TotalRootDiscussionEntries = null,
 
-  // Type = Announcement
+  [property: JsonPropertyName("require_initial_post")]
+  bool? RequireInitialPost = null,
 
-  [JsonPropertyName("announcement_id")]
-  public ulong? AnnouncementId { get; set; }
+  [property: JsonPropertyName("user_has_posted")]
+  bool? UserHasPosted = null,
 
-  // Type = Conversation
+  [property: JsonPropertyName("root_discussion_entries")]
+  object RootDiscussionEntries = null,
 
-  [JsonPropertyName("conversation_id")]
-  public ulong? ConversationId { get; set; }
+  [property: JsonPropertyName("discussion_topic_id")]
+  ulong? DiscussionTopicId = null,
 
-  [JsonPropertyName("private")]
-  public bool? Private { get; set; }
+  [property: JsonPropertyName("announcement_id")]
+  ulong? AnnouncementId = null,
 
-  [JsonPropertyName("participant_count")]
-  public uint? ParticipantCount { get; set; }
+  [property: JsonPropertyName("conversation_id")]
+  ulong? ConversationId = null,
 
-  // Type = Message
+  [property: JsonPropertyName("private")]
+  bool? Private = null,
 
-  [JsonPropertyName("message_id")]
-  public ulong? MessageId { get; set; }
+  [property: JsonPropertyName("participant_count")]
+  uint? ParticipantCount = null,
 
-  [JsonPropertyName("notification_category")]
-  public string NotificationCategory { get; set; }
+  [property: JsonPropertyName("message_id")]
+  ulong? MessageId = null,
 
-  // Type = Submission
+  [property: JsonPropertyName("assignment_id")]
+  ulong? AssignmentId = null,
 
-  [JsonPropertyName("assignment_id")]
-  public ulong? AssignmentId { get; set; }
+  [property: JsonPropertyName("assignment")]
+  AssignmentModel? Assignment = null,
 
-  [JsonPropertyName("assignment")]
-  public AssignmentModel? Assignment { get; set; }
+  [property: JsonPropertyName("course")]
+  CourseModel? Course = null,
 
-  [JsonPropertyName("course")]
-  public CourseModel? Course { get; set; }
+  [property: JsonPropertyName("attempt")]
+  uint? Attempt = null,
 
-  [JsonPropertyName("attempt")]
-  public uint? Attempt { get; set; }
+  [property: JsonPropertyName("body")]
+  string? Body = null,
 
-  [JsonPropertyName("body")]
-  public string? Body { get; set; }
+  [property: JsonPropertyName("grade_matches_current_submission")]
+  bool? GradeMatchesCurrentSubmission = null,
 
-  [JsonPropertyName("grade")]
-  public string Grade { get; set; }
+  [property: JsonPropertyName("score")]
+  decimal? Score = null,
 
-  [JsonPropertyName("grade_matches_current_submission")]
-  public bool? GradeMatchesCurrentSubmission { get; set; }
+  [property: JsonPropertyName("submission_comments")]
+  IEnumerable<SubmissionCommentModel>? SubmissionComments = null,
 
-  [JsonPropertyName("preview_url")]
-  public string PreviewUrl { get; set; }
+  [property: JsonPropertyName("submitted_at")]
+  DateTime? SubmittedAt = null,
 
-  [JsonPropertyName("score")]
-  public decimal? Score { get; set; }
+  [property: JsonPropertyName("url")]
+  string? Url = null,
 
-  [JsonPropertyName("submission_comments")]
-  public IEnumerable<SubmissionCommentModel>? SubmissionComments { get; set; }
+  [property: JsonPropertyName("user_id")]
+  ulong? UserId = null,
 
-  [JsonPropertyName("submission_type")]
-  public string SubmissionType { get; set; }
+  [property: JsonPropertyName("grader_id")]
+  long? GraderId = null,
 
-  [JsonPropertyName("submitted_at")]
-  public DateTime? SubmittedAt { get; set; }
+  [property: JsonPropertyName("graded_at")]
+  DateTime? GradedAt = null,
 
-  [JsonPropertyName("url")]
-  public string? Url { get; set; }
+  [property: JsonPropertyName("user")]
+  UserModel? User = null,
 
-  [JsonPropertyName("user_id")]
-  public ulong? UserId { get; set; }
+  [property: JsonPropertyName("late")]
+  bool? Late = null,
 
-  [JsonPropertyName("grader_id")]
-  public long? GraderId { get; set; } // why can this be negative???
+  [property: JsonPropertyName("assignment_visible")]
+  bool? AssignmentVisible = null,
 
-  [JsonPropertyName("graded_at")]
-  public DateTime? GradedAt { get; set; }
+  [property: JsonPropertyName("excused")]
+  bool? Excused = null,
 
-  [JsonPropertyName("user")]
-  public UserModel? User { get; set; }
+  [property: JsonPropertyName("missing")]
+  bool? Missing = null,
 
-  [JsonPropertyName("late")]
-  public bool? Late { get; set; }
+  [property: JsonPropertyName("points_deducted")]
+  double? PointsDeducted = null,
 
-  [JsonPropertyName("assignment_visible")]
-  public bool? AssignmentVisible { get; set; }
+  [property: JsonPropertyName("seconds_late")]
+  double? SecondsLate = null,
 
-  [JsonPropertyName("excused")]
-  public bool? Excused { get; set; }
+  [property: JsonPropertyName("extra_attempts")]
+  uint? ExtraAttempts = null,
 
-  [JsonPropertyName("missing")]
-  public bool? Missing { get; set; }
+  [property: JsonPropertyName("anonymous_id")]
+  string? AnonymousId = null,
 
-  [JsonPropertyName("late_policy_status")]
-  public string LatePolicyStatus { get; set; }
+  [property: JsonPropertyName("web_conference_id")]
+  ulong? WebConferenceId = null,
 
-  [JsonPropertyName("points_deducted")]
-  public double? PointsDeducted { get; set; }
+  [property: JsonPropertyName("collaboration_id")]
+  ulong? CollaborationId = null,
 
-  [JsonPropertyName("seconds_late")]
-  public double? SecondsLate { get; set; }
-
-  [JsonPropertyName("workflow_state")]
-  public string WorkflowState { get; set; }
-
-  [JsonPropertyName("extra_attempts")]
-  public uint? ExtraAttempts { get; set; }
-
-  [JsonPropertyName("anonymous_id")]
-  public string? AnonymousId { get; set; }
-
-  // Type = Conference
-
-  [JsonPropertyName("web_conference_id")]
-  public ulong? WebConferenceId { get; set; }
-
-  // Type = Collaboration
-
-  [JsonPropertyName("collaboration_id")]
-  public ulong? CollaborationId { get; set; }
-
-  // Type = AssignmentRequest
-
-  [JsonPropertyName("assignment_request_id")]
-  public ulong? AssignmentRequestId { get; set; }
-
-
-}
+  [property: JsonPropertyName("assignment_request_id")]
+  ulong? AssignmentRequestId = null
+);

@@ -1,58 +1,53 @@
-using System;
-
-
-
 namespace CanvasModel.Users;
-public class PageViewModel
-{
 
-  [JsonPropertyName("id")]
-  public string Id { get; set; }
+public record PageViewModel
+(
 
-  [JsonPropertyName("app_name")]
-  public string AppName { get; set; }
+  [property: JsonPropertyName("id")]
+  string Id,
 
-  [JsonPropertyName("url")]
-  public string Url { get; set; }
+  [property: JsonPropertyName("app_name")]
+  string AppName,
 
-  [JsonPropertyName("context_type")]
-  public string ContextType { get; set; }
+  [property: JsonPropertyName("url")]
+  string Url,
 
-  [JsonPropertyName("asset_type")]
-  public string AssetType { get; set; }
+  [property: JsonPropertyName("context_type")]
+  string ContextType,
 
-  [JsonPropertyName("controller")]
-  public string Controller { get; set; }
+  [property: JsonPropertyName("asset_type")]
+  string AssetType,
 
-  [JsonPropertyName("action")]
-  public string Action { get; set; }
+  [property: JsonPropertyName("controller")]
+  string Controller,
 
-  [JsonPropertyName("interaction_seconds")]
-  public decimal? InteractionSeconds { get; set; }
+  [property: JsonPropertyName("action")]
+  string Action,
 
-  [JsonPropertyName("created_at")]
-  public DateTime CreatedAt { get; set; }
+  [property: JsonPropertyName("created_at")]
+  DateTime CreatedAt,
 
-  [JsonPropertyName("user_request")]
-  public bool? UserRequest { get; set; }
+  [property: JsonPropertyName("links")]
+  PageViewLinksModel Links,
 
-  [JsonPropertyName("render_time")]
-  public double? RenderTime { get; set; }
+  [property: JsonPropertyName("interaction_seconds")]
+  decimal? InteractionSeconds = null,
 
-  [JsonPropertyName("user_agent")]
-  public string UserAgent { get; set; }
+  [property: JsonPropertyName("user_request")]
+  bool? UserRequest = null,
 
-  [JsonPropertyName("participated")]
-  public bool? Participated { get; set; }
+  [property: JsonPropertyName("render_time")]
+  double? RenderTime = null,
 
-  [JsonPropertyName("http_method")]
-  public string HttpMethod { get; set; }
+  [property: JsonPropertyName("user_agent")]
+  string UserAgent = null,
 
-  [JsonPropertyName("remote_ip")]
-  public string RemoteIp { get; set; }
+  [property: JsonPropertyName("participated")]
+  bool? Participated = null,
 
-  [JsonPropertyName("links")]
-  public PageViewLinksModel Links { get; set; }
+  [property: JsonPropertyName("http_method")]
+  string HttpMethod = null,
 
-
-}
+  [property: JsonPropertyName("remote_ip")]
+  string RemoteIp = null
+);

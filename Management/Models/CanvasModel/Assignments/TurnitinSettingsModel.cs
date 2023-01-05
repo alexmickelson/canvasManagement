@@ -1,30 +1,28 @@
-
-
 namespace CanvasModel.Assignments;
-public class TurnitinSettingsModel
-{
 
-  [JsonPropertyName("originality_report_visibility")]
-  public string OriginalityReportVisibility { get; set; }
+public record TurnitinSettingsModel
+(
+  [property: JsonPropertyName("originality_report_visibility")]
+  string OriginalityReportVisibility,
 
-  [JsonPropertyName("s_paper_check")]
-  public bool SPaperCheck { get; set; }
+  [property: JsonPropertyName("s_paper_check")]
+  bool SPaperCheck,
 
-  [JsonPropertyName("internet_check")]
-  public bool InternetCheck { get; set; }
+  [property: JsonPropertyName("internet_check")]
+  bool InternetCheck,
 
-  [JsonPropertyName("journal_check")]
-  public bool JournalCheck { get; set; }
+  [property: JsonPropertyName("journal_check")]
+  bool JournalCheck,
 
-  [JsonPropertyName("exclude_biblio")]
-  public bool ExcludeBiblio { get; set; }
+  [property: JsonPropertyName("exclude_biblio")]
+  bool ExcludeBiblio,
 
-  [JsonPropertyName("exclude_quoted")]
-  public bool ExcludeQuoted { get; set; }
+  [property: JsonPropertyName("exclude_quoted")]
+  bool ExcludeQuoted,
 
-  [JsonPropertyName("exclude_small_matches_type")]
-  public bool? ExcludeSmallMatchesType { get; set; }
+  [property: JsonPropertyName("exclude_small_matches_type")]
+  bool? ExcludeSmallMatchesType = null,
 
-  [JsonPropertyName("exclude_small_matches_value")]
-  public uint? ExcludeSmallMatchesValue { get; set; }
-}
+  [property: JsonPropertyName("exclude_small_matches_value")]
+  uint? ExcludeSmallMatchesValue = null
+);

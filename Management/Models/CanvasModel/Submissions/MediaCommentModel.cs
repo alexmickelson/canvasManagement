@@ -1,21 +1,19 @@
-
-
 namespace CanvasModel.Submissions;
-public class MediaCommentModel
-{
+public record MediaCommentModel
+(
 
-  [JsonPropertyName("content-type")]
-  public string ContentType { get; set; }
+  [property: JsonPropertyName("content-type")]
+  string ContentType,
 
-  [JsonPropertyName("display_name")]
-  public string DisplayName { get; set; }
+  [property: JsonPropertyName("display_name")]
+  string DisplayName,
 
-  [JsonPropertyName("media_id")]
-  public string MediaId { get; set; }
+  [property: JsonPropertyName("media_id")]
+  string MediaId,
 
-  [JsonPropertyName("media_type")]
-  public string MediaType { get; set; }
+  [property: JsonPropertyName("media_type")]
+  string MediaType,
 
-  [JsonPropertyName("url")]
-  public string Url { get; set; }
-}
+  [property: JsonPropertyName("url")]
+  string Url
+);

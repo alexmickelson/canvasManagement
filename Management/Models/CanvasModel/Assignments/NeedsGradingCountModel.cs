@@ -1,12 +1,10 @@
-
-
 namespace CanvasModel.Assignments;
-public class NeedsGradingCountModel
-{
 
-  [JsonPropertyName("section_id")]
-  public string SectionId { get; set; }
+public record NeedsGradingCountModel
+(
+  [property: JsonPropertyName("section_id")]
+  string SectionId,
 
-  [JsonPropertyName("needs_grading_count")]
-  public uint NeedsGradingCount { get; set; }
-}
+  [property: JsonPropertyName("needs_grading_count")]
+  uint NeedsGradingCount
+);

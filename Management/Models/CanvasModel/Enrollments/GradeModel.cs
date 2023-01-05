@@ -2,33 +2,32 @@
 
 
 namespace CanvasModel.Enrollments;
-public class GradeModel
-{
+public record GradeModel
+(
+  [property: JsonPropertyName("html_url")]
+  string? HtmlUrl = null,
 
-  [JsonPropertyName("html_url")]
-  public string? HtmlUrl { get; set; }
+  [property: JsonPropertyName("current_grade")]
+  string? CurrentGrade = null,
 
-  [JsonPropertyName("current_grade")]
-  public string? CurrentGrade { get; set; }
+  [property: JsonPropertyName("final_grade")]
+  string? FinalGrade = null,
 
-  [JsonPropertyName("final_grade")]
-  public string? FinalGrade { get; set; }
+  [property: JsonPropertyName("current_score")]
+  string? CurrentScore = null,
 
-  [JsonPropertyName("current_score")]
-  public string? CurrentScore { get; set; }
+  [property: JsonPropertyName("final_score")]
+  string? FinalScore = null,
 
-  [JsonPropertyName("final_score")]
-  public string? FinalScore { get; set; }
+  [property: JsonPropertyName("unposted_current_grade")]
+  string? UnpostedCurrentGrade = null,
 
-  [JsonPropertyName("unposted_current_grade")]
-  public string? UnpostedCurrentGrade { get; set; }
+  [property: JsonPropertyName("unposted_final_grade")]
+  string? UnpostedFinalGrade = null,
 
-  [JsonPropertyName("unposted_final_grade")]
-  public string? UnpostedFinalGrade { get; set; }
+  [property: JsonPropertyName("unposted_current_score")]
+  string? UnpostedCurrentScore = null,
 
-  [JsonPropertyName("unposted_current_score")]
-  public string? UnpostedCurrentScore { get; set; }
-
-  [JsonPropertyName("unposted_final_score")]
-  public string? UnpostedFinalScore { get; set; }
-}
+  [property: JsonPropertyName("unposted_final_score")]
+  string? UnpostedFinalScore = null
+);

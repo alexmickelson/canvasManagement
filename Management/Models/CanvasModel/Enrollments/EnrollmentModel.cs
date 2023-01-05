@@ -1,135 +1,135 @@
 using CanvasModel.Users;
 
 namespace CanvasModel.Enrollments;
-public class EnrollmentModel
-{
+public record EnrollmentModel
+(
 
-  [JsonPropertyName("id")]
-  public ulong Id { get; set; }
+  [property: JsonPropertyName("id")]
+  ulong Id,
 
-  [JsonPropertyName("course_id")]
-  public ulong CourseId { get; set; }
+  [property: JsonPropertyName("course_id")]
+  ulong CourseId,
 
-  [JsonPropertyName("sis_course_id")]
-  public string? SisCourseId { get; set; }
+  [property: JsonPropertyName("enrollment_state")]
+  string EnrollmentState,
 
-  [JsonPropertyName("course_integration_id")]
-  public string? CourseIntegrationId { get; set; }
+  [property: JsonPropertyName("type")]
+  string Type,
 
-  [JsonPropertyName("course_section_id")]
-  public ulong? CourseSectionId { get; set; }
+  [property: JsonPropertyName("user_id")]
+  ulong UserId,
 
-  [JsonPropertyName("section_integration_id")]
-  public string? SectionIntegrationId { get; set; }
+  [property: JsonPropertyName("role")]
+  string Role,
 
-  [JsonPropertyName("sis_account_id")]
-  public string? SisAccountId { get; set; }
+  [property: JsonPropertyName("role_id")]
+  ulong RoleId,
 
-  [JsonPropertyName("sis_section_id")]
-  public string? SisSectionId { get; set; }
+  [property: JsonPropertyName("html_url")]
+  string HtmlUrl,
 
-  [JsonPropertyName("sis_user_id")]
-  public string? SisUserId { get; set; }
+  [property: JsonPropertyName("grades")]
+  GradeModel Grades,
 
-  [JsonPropertyName("enrollment_state")]
-  public string EnrollmentState { get; set; }
+  [property: JsonPropertyName("user")]
+  UserDisplayModel User,
 
-  [JsonPropertyName("limit_privileges_to_course_section")]
-  public bool? LimitPrivilegesToCourseSection { get; set; }
+  [property: JsonPropertyName("override_grade")]
+  string OverrideGrade,
 
-  [JsonPropertyName("sis_import_id")]
-  public ulong? SisImportId { get; set; }
+  [property: JsonPropertyName("sis_course_id")]
+  string? SisCourseId = null,
 
-  [JsonPropertyName("root_account_id")]
-  public ulong? RootAccountId { get; set; }
+  [property: JsonPropertyName("course_integration_id")]
+  string? CourseIntegrationId = null,
 
-  [JsonPropertyName("type")]
-  public string Type { get; set; }
+  [property: JsonPropertyName("course_section_id")]
+  ulong? CourseSectionId = null,
 
-  [JsonPropertyName("user_id")]
-  public ulong UserId { get; set; }
+  [property: JsonPropertyName("section_integration_id")]
+  string? SectionIntegrationId = null,
 
-  [JsonPropertyName("associated_user_id")]
-  public ulong? AssociatedUserId { get; set; }
+  [property: JsonPropertyName("sis_account_id")]
+  string? SisAccountId = null,
 
-  [JsonPropertyName("role")]
-  public string Role { get; set; }
+  [property: JsonPropertyName("sis_section_id")]
+  string? SisSectionId = null,
 
-  [JsonPropertyName("role_id")]
-  public ulong RoleId { get; set; }
+  [property: JsonPropertyName("sis_user_id")]
+  string? SisUserId = null,
 
-  [JsonPropertyName("created_at")]
-  public DateTime? CreatedAt { get; set; }
+  [property: JsonPropertyName("limit_privileges_to_course_section")]
+  bool? LimitPrivilegesToCourseSection = null,
 
-  [JsonPropertyName("updated_at")]
-  public DateTime? UpdatedAt { get; set; }
+  [property: JsonPropertyName("sis_import_id")]
+  ulong? SisImportId = null,
 
-  [JsonPropertyName("start_at")]
-  public DateTime? StartAt { get; set; }
+  [property: JsonPropertyName("root_account_id")]
+  ulong? RootAccountId = null,
 
-  [JsonPropertyName("end_at")]
-  public DateTime? EndAt { get; set; }
+  [property: JsonPropertyName("associated_user_id")]
+  ulong? AssociatedUserId = null,
 
-  [JsonPropertyName("last_activity_at")]
-  public DateTime? LastActivityAt { get; set; }
+  [property: JsonPropertyName("created_at")]
+  DateTime? CreatedAt = null,
 
-  [JsonPropertyName("last_attended_at")]
-  public DateTime? LastAttendedAt { get; set; }
+  [property: JsonPropertyName("updated_at")]
+  DateTime? UpdatedAt = null,
 
-  [JsonPropertyName("total_activity_time")]
-  public ulong? TotalActivityTime { get; set; }
+  [property: JsonPropertyName("start_at")]
+  DateTime? StartAt = null,
 
-  [JsonPropertyName("html_url")]
-  public string HtmlUrl { get; set; }
+  [property: JsonPropertyName("end_at")]
+  DateTime? EndAt = null,
 
-  [JsonPropertyName("grades")]
-  public GradeModel Grades { get; set; }
+  [property: JsonPropertyName("last_activity_at")]
+  DateTime? LastActivityAt = null,
 
-  [JsonPropertyName("user")]
-  public UserDisplayModel User { get; set; }
+  [property: JsonPropertyName("last_attended_at")]
+  DateTime? LastAttendedAt = null,
 
-  [JsonPropertyName("override_grade")]
-  public string OverrideGrade { get; set; }
+  [property: JsonPropertyName("total_activity_time")]
+  ulong? TotalActivityTime = null,
 
-  [JsonPropertyName("override_score")]
-  public decimal? OverrideScore { get; set; }
+  [property: JsonPropertyName("override_score")]
+  decimal? OverrideScore = null,
 
-  [JsonPropertyName("unposted_current_grade")]
-  public string? UnpostedCurrentGrade { get; set; }
+  [property: JsonPropertyName("unposted_current_grade")]
+  string? UnpostedCurrentGrade = null,
 
-  [JsonPropertyName("unposted_final_grade")]
-  public string? UnpostedFinalGrade { get; set; }
+  [property: JsonPropertyName("unposted_final_grade")]
+  string? UnpostedFinalGrade = null,
 
-  [JsonPropertyName("unposted_current_score")]
-  public string? UnpostedCurrentScore { get; set; }
+  [property: JsonPropertyName("unposted_current_score")]
+  string? UnpostedCurrentScore = null,
 
-  [JsonPropertyName("unposted_final_score")]
-  public string? UnpostedFinalScore { get; set; }
+  [property: JsonPropertyName("unposted_final_score")]
+  string? UnpostedFinalScore = null,
 
-  [JsonPropertyName("has_grading_periods")]
-  public bool? HasGradingPeriods { get; set; }
+  [property: JsonPropertyName("has_grading_periods")]
+  bool? HasGradingPeriods = null,
 
-  [JsonPropertyName("totals_for_all_grading_periods_option")]
-  public bool? TotalsForAllGradingPeriodsOption { get; set; }
+  [property: JsonPropertyName("totals_for_all_grading_periods_option")]
+  bool? TotalsForAllGradingPeriodsOption = null,
 
-  [JsonPropertyName("current_grading_period_title")]
-  public string? CurrentGradingPeriodTitle { get; set; }
+  [property: JsonPropertyName("current_grading_period_title")]
+  string? CurrentGradingPeriodTitle = null,
 
-  [JsonPropertyName("current_grading_period_id")]
-  public ulong? CurrentGradingPeriodId { get; set; }
+  [property: JsonPropertyName("current_grading_period_id")]
+  ulong? CurrentGradingPeriodId = null,
 
-  [JsonPropertyName("current_period_override_grade")]
-  public string? CurrentPeriodOverrideGrade { get; set; }
+  [property: JsonPropertyName("current_period_override_grade")]
+  string? CurrentPeriodOverrideGrade = null,
 
-  [JsonPropertyName("current_period_override_score")]
-  public decimal? CurrentPeriodOverrideScore { get; set; }
+  [property: JsonPropertyName("current_period_override_score")]
+  decimal? CurrentPeriodOverrideScore = null,
 
-  [JsonPropertyName("current_period_unposted_final_score")]
-  public decimal? CurrentPeriodUnpostedFinalScore { get; set; }
+  [property: JsonPropertyName("current_period_unposted_final_score")]
+  decimal? CurrentPeriodUnpostedFinalScore = null,
 
-  [JsonPropertyName("current_period_unposted_current_grade")]
-  public string? CurrentPeriodUnpostedCurrentGrade { get; set; }
+  [property: JsonPropertyName("current_period_unposted_current_grade")]
+  string? CurrentPeriodUnpostedCurrentGrade = null,
 
-  [JsonPropertyName("current_period_unposted_final_grade")]
-  public string? CurrentPeriodUnpostedFinalGrade { get; set; }
-}
+  [property: JsonPropertyName("current_period_unposted_final_grade")]
+  string? CurrentPeriodUnpostedFinalGrade = null
+);

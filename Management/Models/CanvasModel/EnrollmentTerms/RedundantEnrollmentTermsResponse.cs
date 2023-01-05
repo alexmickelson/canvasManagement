@@ -1,6 +1,6 @@
 
 namespace CanvasModel.EnrollmentTerms;
-public record RedundantEnrollmentTermsResponse
+record RedundantEnrollmentTermsResponse
 (
   [property: JsonPropertyName("enrollment_terms")] 
     IEnumerable<EnrollmentTermModel> EnrollmentTerms
