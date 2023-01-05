@@ -33,6 +33,7 @@ public class SemesterPlannerTests
 
     semester.Months.Count().Should().Be(2);
   }
+
   [Test]
   public void TestNewPlannerHandlesTermsThatWrapYears()
   {
@@ -47,4 +48,5 @@ public class SemesterPlannerTests
 
     semester.Months.Count().Should().Be(2);
   }
+
 }
