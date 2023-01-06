@@ -1,0 +1,23 @@
+@using CanvasModel.EnrollmentTerms
+
+
+@code
+{
+  [Parameter, EditorRequired]
+  public EnrollmentTermModel Term { get; set; } = default!;
+
+  private SemesterPlanner semester { get; set; } = default!;
+  protected override void OnParametersSet()
+  {
+    semester = new SemesterPlanner(Term);
+  }
+
+}
+
+@Term.Name
+
+@foreach (var month in semester.Months)
+{
+  <MonthDetail Month="month" />
+  <hr />
+}

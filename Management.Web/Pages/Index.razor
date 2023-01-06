@@ -1,9 +1,42 @@
 ﻿@page "/"
+@using CanvasModel.EnrollmentTerms
+@using Management.Web.Shared.Semester
+@inject ICanvasService canvasService
 
+@code
+{
+  private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
+  private ulong? selectedTermId { get; set; } = null;
+  private EnrollmentTermModel? selectedTerm 
+  { 
+    get => terms?.FirstOrDefault(t => t.Id == selectedTermId); 
+  }
+  protected override async Task OnInitializedAsync()
+  {
+    terms = await canvasService.GetCurrentTermsFor();
+  }
+
+}
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+@if (terms != null)
+{
+  <div class="row justify-content-center">
+  <div class="col-auto">
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <form>
+      <lablel for="termselect">Select Term:</lablel>
+      <select id="termselect" class="form-select" @bind="selectedTermId">
+        @foreach (var term in terms)
+          {
+            <option value="@term.Id">@term.Name</option>
+          }
+        </select>
+      </form>
+    </div>
+  </div>
+}
+@if (selectedTerm is not null)
+{
+  <SemesterDetail Term="selectedTerm" />
+}

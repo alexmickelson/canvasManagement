@@ -1,7 +1,14 @@
 using CanvasModel.Courses;
 using CanvasModel.EnrollmentTerms;
 using RestSharp;
-public class CanvasService
+
+public interface ICanvasService
+{
+  Task<IEnumerable<EnrollmentTermModel>> GetCurrentTermsFor(DateTime? _queryDate = null);
+  Task<IEnumerable<EnrollmentTermModel>> GetTerms();
+}
+
+public class CanvasService : ICanvasService
 {
   private const string BaseUrl = "https://snow.instructure.com/api/v1/";
   private readonly IWebRequestor webRequestor;
@@ -64,4 +71,19 @@ public class CanvasService
       .TrimStart('<')
       .Replace(" ", "")
       .Replace(BaseUrl, "");
+
+  public async Task<IEnumerable<EnrollmentTermModel>> GetCurrentTermsFor(DateTime? _queryDate = null)
+  {
+    DateTime queryDate = _queryDate ?? DateTime.Now;
+
+    var terms = await GetTerms();
+
+    var currentTerms = terms.Where(t =>
+      t.EndAt != null
+      && t.EndAt > queryDate
+      && t.EndAt < queryDate.AddYears(1)
+    ).Take(3);
+
+    return currentTerms;
+  }
 }

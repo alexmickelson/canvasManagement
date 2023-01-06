@@ -1,0 +1,26 @@
+
+@code
+{
+  [Parameter, EditorRequired]
+  public CalendarMonth Month { get; set; } = default!;
+}
+
+
+  <div class="row text-center fw-bold">
+      <div class="col">Saturday</div>
+      <div class="col">Monday</div>
+      <div class="col">Tuesday</div>
+      <div class="col">Wednesday</div>
+      <div class="col">Thursday</div>
+      <div class="col">Friday</div>
+      <div class="col">Saturday</div>
+  </div>
+@foreach(var week in Month.DaysByWeek)
+{
+  <div class="row m-3">
+    @foreach (var day in week)
+    {
+      <div class="col border rounded rounded-3 pb-5 m-1">@day?.Day</div>
+    }
+  </div>
+}
