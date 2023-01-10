@@ -7,29 +7,28 @@ public class SemesterPlannerTests
   [Test]
   public void TestCanCreatePlanner()
   {
-    var canvasTerm = new EnrollmentTermModel(
-      Id: 1,
-      Name: "one",
-      StartAt: new DateTime(2022, 1, 1),
-      EndAt: new DateTime(2022, 1, 2)
+
+    var config = new SemesterConfiguration(
+      StartDate: new DateTime(2022, 1, 1),
+      EndDate: new DateTime(2022, 1, 2),
+      new DayOfWeek[] { }
     );
 
-    var semester = new SemesterPlanner(canvasTerm);
+    var semester = new SemesterPlanner(config);
 
     semester.Months.Count().Should().Be(1);
   }
-  
+
   [Test]
   public void TestNewPlannerHasCorrectNumberOfMonths()
   {
-    var canvasTerm = new EnrollmentTermModel(
-      Id: 1,
-      Name: "one",
-      StartAt: new DateTime(2022, 1, 1),
-      EndAt: new DateTime(2022, 2, 1)
+    var config = new SemesterConfiguration(
+      StartDate: new DateTime(2022, 1, 1),
+      EndDate: new DateTime(2022, 2, 1),
+      new DayOfWeek[] { }
     );
 
-    var semester = new SemesterPlanner(canvasTerm);
+    var semester = new SemesterPlanner(config);
 
     semester.Months.Count().Should().Be(2);
   }
@@ -37,14 +36,13 @@ public class SemesterPlannerTests
   [Test]
   public void TestNewPlannerHandlesTermsThatWrapYears()
   {
-    var canvasTerm = new EnrollmentTermModel(
-      Id: 1,
-      Name: "one",
-      StartAt: new DateTime(2022, 12, 1),
-      EndAt: new DateTime(2023, 1, 1)
+    var config = new SemesterConfiguration(
+      StartDate: new DateTime(2022, 12, 1),
+      EndDate: new DateTime(2023, 1, 1),
+      new DayOfWeek[] { }
     );
 
-    var semester = new SemesterPlanner(canvasTerm);
+    var semester = new SemesterPlanner(config);
 
     semester.Months.Count().Should().Be(2);
   }
@@ -52,14 +50,13 @@ public class SemesterPlannerTests
   [Test]
   public void TestSemesterGetsCorrectMonths()
   {
-    var canvasTerm = new EnrollmentTermModel(
-      Id: 1,
-      Name: "one",
-      StartAt: new DateTime(2022, 1, 1),
-      EndAt: new DateTime(2022, 2, 1)
+    var config = new SemesterConfiguration(
+      StartDate: new DateTime(2022, 1, 1),
+      EndDate: new DateTime(2022, 2, 1),
+      new DayOfWeek[] { }
     );
 
-    var semester = new SemesterPlanner(canvasTerm);
+    var semester = new SemesterPlanner(config);
 
     semester.Months.First().Month.Should().Be(1);
     semester.Months.Last().Month.Should().Be(2);
@@ -69,14 +66,13 @@ public class SemesterPlannerTests
   [Test]
   public void TestMonthsCanWrapYears()
   {
-    var canvasTerm = new EnrollmentTermModel(
-      Id: 1,
-      Name: "one",
-      StartAt: new DateTime(2022, 12, 1),
-      EndAt: new DateTime(2023, 1, 1)
+    var config = new SemesterConfiguration(
+      StartDate: new DateTime(2022, 12, 1),
+      EndDate: new DateTime(2023, 1, 1),
+      new DayOfWeek[] { }
     );
 
-    var semester = new SemesterPlanner(canvasTerm);
+    var semester = new SemesterPlanner(config);
 
     semester.Months.First().Month.Should().Be(12);
     semester.Months.First().Year.Should().Be(2022);

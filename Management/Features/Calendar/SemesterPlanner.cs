@@ -3,10 +3,12 @@ using CanvasModel.EnrollmentTerms;
 public class SemesterPlanner
 {
   public IEnumerable<CalendarMonth> Months { get; }
-  public SemesterPlanner(EnrollmentTermModel canvasTerm)
+  public SemesterPlanner(SemesterConfiguration configuration)
   {
-    var start = canvasTerm.StartAt ?? throw new Exception($"Canvas Term must have a start date. Term: {canvasTerm.Id}");
-    var end = canvasTerm.EndAt ?? throw new Exception($"Canvas Term must have a end date. Term: {canvasTerm.Id}");
+    // var start = configuration.StartAt ?? throw new Exception($"Canvas Term must have a start date. Term: {configuration.Id}");
+    // var end = configuration.EndAt ?? throw new Exception($"Canvas Term must have a end date. Term: {configuration.Id}");
+    var start = configuration.StartDate;
+    var end = configuration.EndDate;
 
     var monthsInTerm =
       1 + ((end.Year - start.Year) * 12)
