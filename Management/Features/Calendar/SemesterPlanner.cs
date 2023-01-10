@@ -5,8 +5,6 @@ public class SemesterPlanner
   public IEnumerable<CalendarMonth> Months { get; }
   public SemesterPlanner(SemesterConfiguration configuration)
   {
-    // var start = configuration.StartAt ?? throw new Exception($"Canvas Term must have a start date. Term: {configuration.Id}");
-    // var end = configuration.EndAt ?? throw new Exception($"Canvas Term must have a end date. Term: {configuration.Id}");
     var start = configuration.StartDate;
     var end = configuration.EndDate;
 
