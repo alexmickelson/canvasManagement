@@ -5,7 +5,6 @@ public class ConfigurationTests
   [Test]
   public void TestCanCreateConfigFromTermAndDays()
   {
-
     DateTime startAt = new DateTime(2022, 1, 1);
     DateTime endAt = new DateTime(2022, 1, 2);
     var canvasTerm = new EnrollmentTermModel(
@@ -15,10 +14,13 @@ public class ConfigurationTests
       EndAt: endAt
     );
     var daysOfWeek = new DayOfWeek[] { DayOfWeek.Monday };
+    var management = new ConfigurationManagement();
+    management.SetConfiguration(canvasTerm, daysOfWeek);
+    var config = management.Configuration;
 
-    var config = ConfigurationManagement.CreateFromTerm(canvasTerm, daysOfWeek);
-    config.StartDate.Should().Be(startAt);
-    config.EndDate.Should().Be(endAt);
-    config.Days.Should().BeEquivalentTo(daysOfWeek);
+    if(config == null) Assert.Fail();
+    config!.StartDate.Should().Be(startAt);
+    config!.EndDate.Should().Be(endAt);
+    config!.Days.Should().BeEquivalentTo(daysOfWeek);
   }
 }

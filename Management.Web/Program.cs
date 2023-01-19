@@ -3,7 +3,6 @@ global using System.Text.Json;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
-using Management.Web.Data;
 using dotenv.net;
 
 DotEnv.Load();
@@ -13,9 +12,9 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddSingleton<IWebRequestor, WebRequestor>();
 builder.Services.AddSingleton<ICanvasService, CanvasService>();
+builder.Services.AddSingleton<IConfigurationManagement, ConfigurationManagement>();
 
 var app = builder.Build();
 

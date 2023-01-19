@@ -1,8 +1,8 @@
 using CanvasModel.EnrollmentTerms;
 
-public class ConfigurationManagement
+public class ConfigurationManagement : IConfigurationManagement
 {
-  public static SemesterConfiguration CreateFromTerm(
+  public void SetConfiguration(
     EnrollmentTermModel canvasTerm,
     DayOfWeek[] daysOfWeek
   )
@@ -10,10 +10,15 @@ public class ConfigurationManagement
     var start = canvasTerm.StartAt ?? throw new Exception($"Canvas Term must have a start date. Term: {canvasTerm.Name}");
     var end = canvasTerm.EndAt ?? throw new Exception($"Canvas Term must have a end date. Term: {canvasTerm.Name}");
 
-    return new SemesterConfiguration(
+    Configuration = new SemesterConfiguration(
       StartDate: start,
       EndDate: end,
       Days: daysOfWeek
     );
   }
+
+  public SemesterConfiguration? Configuration { get; private set; } = null;
+
+
+
 }

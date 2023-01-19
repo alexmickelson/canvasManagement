@@ -33,7 +33,8 @@
       if (weekDay != null)
       {
         DayOfWeek notNullDay = weekDay ?? default;
-        var totalClasses = Semester.Days.Contains(notNullDay) ? $"bg-light {baseClasses}" : baseClasses;
+        var dayInSemester = Semester.Days.Contains(notNullDay) && day < Semester.LastDay && day > Semester.FirstDay;
+        var totalClasses = dayInSemester ? $"bg-light {baseClasses}" : baseClasses;
         <div class="@totalClasses">@day?.Day</div>
       }
       else

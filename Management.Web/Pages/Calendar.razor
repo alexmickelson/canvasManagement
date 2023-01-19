@@ -1,15 +1,17 @@
+@page "/calendar"
 @using CanvasModel.EnrollmentTerms
+@using Management.Web.Shared.Semester
 
+@inject IConfigurationManagement configurationManagement
 
 @code
 {
-  [Parameter, EditorRequired]
-  public SemesterConfiguration Configuration { get; set; } = default!;
 
   private SemesterPlanner? semester { get; set; }
   protected override void OnParametersSet()
   {
-    semester = new SemesterPlanner(Configuration);
+    if (configurationManagement.Configuration != null)
+      semester = new SemesterPlanner(configurationManagement.Configuration);
   }
 
 }
