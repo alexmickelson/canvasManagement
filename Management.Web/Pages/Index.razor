@@ -7,10 +7,14 @@
 {
   private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
   private ulong? selectedTermId { get; set; } = null;
-  private EnrollmentTermModel? selectedTerm 
-  { 
-    get => terms?.FirstOrDefault(t => t.Id == selectedTermId); 
+  private EnrollmentTermModel? selectedTerm
+  {
+    get => terms?.FirstOrDefault(t => t.Id == selectedTermId);
   }
+  private List<DayOfWeek> days { get; set; } = new();
+  private bool saved { get; set; } = false;
+  private SemesterConfiguration? configuration { get; set; }
+
   protected override async Task OnInitializedAsync()
   {
     terms = await canvasService.GetCurrentTermsFor();
@@ -38,5 +42,40 @@
 }
 @if (selectedTerm is not null)
 {
-  <SemesterDetail Term="selectedTerm" />
+  <h5>Select Days Of Week</h5>
+  <div class="row m-3">
+  @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+    {
+      <div class="col">
+        <button class="@(
+              days.Contains(day) 
+              ? "btn btn-secondary" 
+              : "btn btn-outline-secondary"
+            )" @onclick="() => {
+              if(days.Contains(day))
+                days.Remove(day);
+              else
+                days.Add(day);
+            }" disabled="@saved">
+          @day
+        </button>
+      </div>
+
+    }
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <button @onclick="() => {
+          saved = true;
+          configuration = ConfigurationManagement.CreateFromTerm(selectedTerm, days.ToArray());
+        }" class="btn btn-primary" disabled="@saved">
+        Save
+      </button>
+    </div>
+  </div>
+}
+
+@if (configuration is not null)
+{
+  <SemesterDetail Configuration="configuration" />
 }

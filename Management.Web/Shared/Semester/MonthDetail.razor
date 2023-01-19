@@ -1,26 +1,45 @@
-
+@using System.Linq;
 @code
 {
   [Parameter, EditorRequired]
   public CalendarMonth Month { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public SemesterPlanner Semester { get; set; } = default!;
+  public DayOfWeek[] WeekDaysList { get => (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)); }
+
+  public string MonthName { get => Month?.DaysByWeek.First().FirstOrDefault(d => d != null)?.ToString("MMMM") ?? ""; }
 }
 
+<h3 class="text-center">
+  @MonthName
+</h3>
 
-  <div class="row text-center fw-bold">
-      <div class="col">Saturday</div>
-      <div class="col">Monday</div>
-      <div class="col">Tuesday</div>
-      <div class="col">Wednesday</div>
-      <div class="col">Thursday</div>
-      <div class="col">Friday</div>
-      <div class="col">Saturday</div>
-  </div>
-@foreach(var week in Month.DaysByWeek)
+<div class="row text-center fw-bold">
+  @foreach (DayOfWeek day in WeekDaysList)
+  {
+    <div class="@(Semester.Days.Contains(day) ? "col" : "col text-secondary")">@day</div>
+  }
+</div>
+
+@foreach (var week in Month.DaysByWeek)
 {
   <div class="row m-3">
-    @foreach (var day in week)
+  @foreach (var day in week)
     {
-      <div class="col border rounded rounded-3 pb-5 m-1">@day?.Day</div>
+
+      var baseClasses = "col border rounded rounded-3 pb-5 m-1";
+      DayOfWeek? weekDay = day?.DayOfWeek;
+      if (weekDay != null)
+      {
+        DayOfWeek notNullDay = weekDay ?? default;
+        var totalClasses = Semester.Days.Contains(notNullDay) ? $"bg-light {baseClasses}" : baseClasses;
+        <div class="@totalClasses">@day?.Day</div>
+      }
+      else
+      {
+        <div class="@baseClasses"></div>
+      }
     }
   </div>
 }

@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Management\Management.csproj" />
+    <ProjectReference Include="..\Management.Web\Management.Web.csproj" />
   </ItemGroup>
 
 </Project>

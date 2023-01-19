@@ -80,4 +80,18 @@ public class SemesterPlannerTests
     semester.Months.Last().Month.Should().Be(1);
     semester.Months.Last().Year.Should().Be(2023);
   }
+
+  [Test]
+  public void TestSemesterTracksDaysOfWeek()
+  {
+    DayOfWeek[] days = new DayOfWeek[] { DayOfWeek.Monday };
+    var config = new SemesterConfiguration(
+      StartDate: new DateTime(2022, 12, 1),
+      EndDate: new DateTime(2023, 1, 1),
+      days
+    );
+
+    var semester = new SemesterPlanner(config);
+    semester.Days.Should().BeEquivalentTo(days);
+  }
 }

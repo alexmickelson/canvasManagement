@@ -3,6 +3,7 @@ using CanvasModel.EnrollmentTerms;
 public class SemesterPlanner
 {
   public IEnumerable<CalendarMonth> Months { get; }
+  public IEnumerable<DayOfWeek> Days { get; }
   public SemesterPlanner(SemesterConfiguration configuration)
   {
     var start = configuration.StartDate;
@@ -20,5 +21,6 @@ public class SemesterPlanner
         var year = start.Year + ((start.Month + monthDiff - 1) / 12);
         return new CalendarMonth(year, month);
       });
+    Days = configuration.Days;
   }
 }

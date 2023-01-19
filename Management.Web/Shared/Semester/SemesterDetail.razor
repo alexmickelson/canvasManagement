@@ -4,20 +4,21 @@
 @code
 {
   [Parameter, EditorRequired]
-  public EnrollmentTermModel Term { get; set; } = default!;
+  public SemesterConfiguration Configuration { get; set; } = default!;
 
-  @* private SemesterPlanner semester { get; set; } = default!;
+  private SemesterPlanner? semester { get; set; }
   protected override void OnParametersSet()
   {
-    semester = new SemesterPlanner(Term);
-  } *@
+    semester = new SemesterPlanner(Configuration);
+  }
 
 }
-
-@Term.Name
-
-@* @foreach (var month in semester.Months)
+<br>
+@if (semester != null)
 {
-  <MonthDetail Month="month" />
-  <hr />
-} *@
+  @foreach (var month in semester.Months)
+  {
+    <MonthDetail Month="month" Semester="semester" />
+    <hr />
+  }
+}
