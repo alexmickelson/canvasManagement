@@ -1,5 +1,6 @@
 global using System.Text.Json.Serialization;
 global using System.Text.Json;
+global using System.ComponentModel.DataAnnotations;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -15,6 +16,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<IWebRequestor, WebRequestor>();
 builder.Services.AddSingleton<ICanvasService, CanvasService>();
 builder.Services.AddSingleton<IConfigurationManagement, ConfigurationManagement>();
+builder.Services.AddSingleton<IModuleManager, ModuleManager>();
 
 var app = builder.Build();
 

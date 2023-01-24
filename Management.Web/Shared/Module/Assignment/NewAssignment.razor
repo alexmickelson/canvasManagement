@@ -1,0 +1,38 @@
+@inject IModuleManager moduleManager
+
+@code {
+
+  [Parameter, EditorRequired]
+  public int ModuleIndex { get; set; }
+
+  [Parameter]
+  public EventCallback OnSubmit { get; set; }
+
+  [Required]
+  [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
+  private string Name { get; set; } = "";
+
+  private async Task submitHandler()
+  {
+    var newAssignment = new LocalAssignment
+    {
+      name = Name,
+      description = "testDescription",
+      published = false,
+      lock_at_due_date = true,
+      rubric = new RubricItem[] { },
+      lock_at = null,
+      due_at = DateTime.Now,
+      points_possible = 10,
+      submission_types = new SubmissionType[] { SubmissionType.online_text_entry }
+    };
+    moduleManager.AddAssignment(ModuleIndex, newAssignment);
+    await OnSubmit.InvokeAsync();
+  }
+}
+
+<form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
+  <label for="Assignment Name">Name</label>
+  <input id="moduleName" class="form-control" @bind="Name" />
+  <button class="btn btn-primary">Save</button>
+</form>

@@ -1,0 +1,27 @@
+@inject IModuleManager moduleManager
+
+@code {
+
+  [Required]
+  [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
+  private string Name { get; set; } = "";
+
+  [Parameter]
+  public EventCallback OnSubmit { get; set; }
+
+  private async Task submitHandler()
+  {
+    var module = new CourseModule(Name: Name, Assignments: new LocalAssignment[] { });
+    moduleManager.AddModule(module);
+    Name = "";
+    await OnSubmit.InvokeAsync();
+  }
+}
+
+<h1>New Module</h1>
+
+<form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
+  <label for="moduleName">Name:</label>
+  <input id="moduleName" class="form-control" @bind="Name" />
+  <button class="btn btn-primary">Save</button>
+</form>

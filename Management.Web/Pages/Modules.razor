@@ -1,3 +1,31 @@
 ﻿@page "/modules"
+@using Management.Web.Shared.Module
+@using System.Linq
+@inject IModuleManager moduleManager
+
+@code {
+  private bool showNewModule { get; set; } = false;
+
+}
 
 <PageTitle>Weather forecast</PageTitle>
+
+@if (!showNewModule)
+{
+  <button class="btn btn-secondary" @onclick="() => showNewModule = true">New Module</button>
+}
+else
+{
+  <button class="btn btn-secondary" @onclick="() => showNewModule = false">Hide New Module</button>
+}
+
+@if (showNewModule)
+{
+  <NewModule OnSubmit="() => showNewModule = false" />
+}
+
+@foreach (var i in moduleManager.Modules.Select((_value, i) => i))
+{
+  <hr>
+  <ModuleDetail ModuleIndex="i" />
+}
