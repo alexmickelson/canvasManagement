@@ -17,6 +17,7 @@ builder.Services.AddSingleton<IWebRequestor, WebRequestor>();
 builder.Services.AddSingleton<ICanvasService, CanvasService>();
 builder.Services.AddSingleton<IConfigurationManagement, ConfigurationManagement>();
 builder.Services.AddSingleton<IModuleManager, ModuleManager>();
+builder.Services.AddSingleton<AssignmentDragContainer>();
 
 var app = builder.Build();
 

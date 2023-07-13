@@ -1,0 +1,23 @@
+@inject AssignmentDragContainer dragContainer
+
+@code {
+  [Parameter]
+  [Required]
+  public LocalAssignment assignment { get; set; } = new();
+  private  async Task HandleDragStart()
+  {
+    dragContainer.AssignmentBeingDragged = assignment;
+  }
+}
+
+<div 
+  draggable="true"
+  ondragstart="HandleDragStart"
+  class="col-2"
+>
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title">@assignment.name</div>
+    </div>
+  </div>
+</div>
