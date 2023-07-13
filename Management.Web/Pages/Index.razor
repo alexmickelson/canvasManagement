@@ -5,10 +5,13 @@
 
 @inject ICanvasService canvasService
 @inject IConfigurationManagement configurationManagement
-@inject ProtectedSessionStorage ProtectedSessionStore
+@inject ProtectedLocalStorage BrowserStorage
+
+
 
 @code
 {
+  private string semesterConfigurationKey = "semesterCalendarConfiguration";
   private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
   private ulong? selectedTermId { get; set; }
   private EnrollmentTermModel? selectedTerm
@@ -25,12 +28,27 @@
     readDaysFromConfig();
   }
 
+  protected override async Task OnAfterRenderAsync(bool firstRender) 
+  {
+    if(firstRender)
+    {
+      var storedConfiguration = await BrowserStorage.GetAsync<SemesterCalendarConfig>(semesterConfigurationKey);
+      if (storedConfiguration.Success) {
+        Console.WriteLine(JsonSerializer.Serialize(storedConfiguration.Value));
+        configurationManagement.SemesterCalendar = storedConfiguration.Value;
+      } else {
+        Console.WriteLine("no stored configuration");
+      }
+      StateHasChanged();
+    }
+  }
+
   private void readTermFromConfig()
   {
-    if (terms == null || configurationManagement.Configuration == null) return;
+    if (terms == null || configurationManagement.SemesterCalendar == null) return;
     foreach (var term in terms)
     {
-      var termInConfiguration = configurationManagement.Configuration.StartDate == term.StartAt;
+      var termInConfiguration = configurationManagement.SemesterCalendar.StartDate == term.StartAt;
       if (termInConfiguration)
       {
         selectedTermId = term.Id;
@@ -40,17 +58,24 @@
 
   private void readDaysFromConfig()
   {
-    if (terms == null || configurationManagement.Configuration == null) return;
+    if (terms == null || configurationManagement.SemesterCalendar == null) return;
 
-    days = configurationManagement.Configuration.Days.ToList();
+    days = configurationManagement.SemesterCalendar.Days.ToList();
   }
-
 
   public async void HandleSave()
   {
     saved = true;
-    configurationManagement.SetConfiguration(selectedTerm, days.ToArray());
-    await ProtectedSessionStore.SetAsync("configuration", configurationManagement.Configuration);
+    configurationManagement.SetConfiguration(
+        selectedTerm ?? throw new Exception("cannot save configuration without selecting term"), 
+        days.ToArray()
+    );
+    await BrowserStorage.SetAsync(
+      semesterConfigurationKey, 
+      configurationManagement.SemesterCalendar ?? throw new Exception("Semester Calendar configuration not properly configured")
+    );
+
+    Console.WriteLine(JsonSerializer.Serialize(await BrowserStorage.GetAsync<SemesterCalendarConfig>(semesterConfigurationKey)));
   }
 }
 <PageTitle>Index</PageTitle>
@@ -61,7 +86,7 @@
   <div class="col-auto">
 
     <form>
-      <lablel for="termselect">Select Term:</lablel>
+      <label for="termselect">Select Term:</label>
       <select id="termselect" class="form-select" @bind="selectedTermId">
         @foreach (var term in terms)
           {
@@ -103,7 +128,7 @@
   </div>
 }
 
-@if (configurationManagement.Configuration is not null)
+@if (configurationManagement.SemesterCalendar is not null)
 {
   <div>Config complete</div>
 }

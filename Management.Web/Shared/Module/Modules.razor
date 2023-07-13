@@ -1,0 +1,60 @@
+﻿@using Management.Web.Shared.Module
+@using System.Linq
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+
+@inject IModuleManager moduleManager
+@inject ProtectedLocalStorage BrowserStorage
+
+@code {
+  private bool showNewModule { get; set; } = false;
+  private string moduleStorageKey = "module storage key";
+
+  private async Task Save()
+  {
+    await BrowserStorage.SetAsync(moduleStorageKey, moduleManager.Modules);
+    
+  }
+  protected override async Task OnAfterRenderAsync(bool firstRender) 
+  {
+    if(firstRender)
+    {
+      var storedModules = await BrowserStorage.GetAsync<IEnumerable<CourseModule>>(moduleStorageKey);
+      if (storedModules.Success) {
+        moduleManager.Modules = storedModules.Value ?? throw new Exception("stored modules was null, it shouldn't have been");
+      } else {
+        Console.WriteLine("no stored modules");
+      }
+      StateHasChanged();
+    }
+  }
+}
+
+@if (!showNewModule)
+{
+  <button class="btn btn-secondary" @onclick="() => showNewModule = true">New Module</button>
+}
+else
+{
+  <button class="btn btn-secondary" @onclick="() => showNewModule = false">Hide New Module</button>
+}
+
+@if (showNewModule)
+{
+  <NewModule OnSubmit="() => showNewModule = false" />
+}
+
+@foreach (var i in moduleManager.Modules.Select((_value, i) => i))
+{
+  <hr>
+  <ModuleDetail ModuleIndex="i" />
+}
+
+<hr>
+<div class="text-center">
+  <button 
+    class="btn btn-primary" 
+    @onclick="Save"
+  >
+    Save Modules
+  </button>
+</div>

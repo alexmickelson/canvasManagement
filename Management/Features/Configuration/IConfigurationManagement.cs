@@ -2,7 +2,7 @@ using CanvasModel.EnrollmentTerms;
 
 public interface IConfigurationManagement
 {
-  SemesterConfiguration? Configuration { get; }
+  SemesterCalendarConfig? SemesterCalendar { get; set; }
 
   void SetConfiguration(EnrollmentTermModel canvasTerm, DayOfWeek[] daysOfWeek);
 }

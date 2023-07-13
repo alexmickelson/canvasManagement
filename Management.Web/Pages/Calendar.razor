@@ -1,5 +1,6 @@
 @page "/calendar"
 @using CanvasModel.EnrollmentTerms
+@using Management.Web.Shared.Module
 @using Management.Web.Shared.Semester
 
 @inject IConfigurationManagement configurationManagement
@@ -10,17 +11,26 @@
   private SemesterPlanner? semester { get; set; }
   protected override void OnParametersSet()
   {
-    if (configurationManagement.Configuration != null)
-      semester = new SemesterPlanner(configurationManagement.Configuration);
+    if (configurationManagement.SemesterCalendar != null)
+      semester = new SemesterPlanner(configurationManagement.SemesterCalendar);
   }
 
 }
 <br>
-@if (semester != null)
-{
-  @foreach (var month in semester.Months)
-  {
-    <MonthDetail Month="month" Semester="semester" />
-    <hr />
-  }
-}
+
+<div class="row">
+  <div class="col">
+    
+    @if (semester != null)
+    {
+      @foreach (var month in semester.Months)
+      {
+        <MonthDetail Month="month" Semester="semester" />
+        <hr />
+      }
+    }
+  </div>
+  <div class="col">
+    <Modules />
+  </div>
+</div>

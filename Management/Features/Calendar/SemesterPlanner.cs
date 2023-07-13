@@ -7,7 +7,7 @@ public class SemesterPlanner
 
   public IEnumerable<CalendarMonth> Months { get; }
   public IEnumerable<DayOfWeek> Days { get; }
-  public SemesterPlanner(SemesterConfiguration configuration)
+  public SemesterPlanner(SemesterCalendarConfig configuration)
   {
     FirstDay = configuration.StartDate;
     LastDay = configuration.EndDate;

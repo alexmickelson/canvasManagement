@@ -1,6 +1,6 @@
 public class ModuleManager : IModuleManager
 {
-  public IEnumerable<CourseModule> Modules { get; internal set; } = new CourseModule[] { };
+  public IEnumerable<CourseModule> Modules { get; set; } = new CourseModule[] { };
 
   public void AddAssignment(int moduleIndex, LocalAssignment assignment)
   {

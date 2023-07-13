@@ -10,14 +10,15 @@ public class ConfigurationManagement : IConfigurationManagement
     var start = canvasTerm.StartAt ?? throw new Exception($"Canvas Term must have a start date. Term: {canvasTerm.Name}");
     var end = canvasTerm.EndAt ?? throw new Exception($"Canvas Term must have a end date. Term: {canvasTerm.Name}");
 
-    Configuration = new SemesterConfiguration(
+    SemesterCalendar = new SemesterCalendarConfig(
       StartDate: start,
       EndDate: end,
       Days: daysOfWeek
     );
   }
 
-  public SemesterConfiguration? Configuration { get; private set; } = null;
+  public SemesterCalendarConfig? SemesterCalendar { get; set; } = null;
+  public IModuleManager ModuleManager {get; private set;} = new ModuleManager();
 
 
 

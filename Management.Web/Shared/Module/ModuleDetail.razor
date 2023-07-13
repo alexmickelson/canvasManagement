@@ -25,16 +25,27 @@
   @if (showAddAssignment)
   {
     <div class="ms-5 ">
-  <div class="bg-light border rounded m-3 p-3">
-    <NewAssignment ModuleIndex="ModuleIndex" OnSubmit="() => showAddAssignment = false" />
-  </div>
-</div>
+      <div class="bg-light border rounded m-3 p-3">
+        <NewAssignment ModuleIndex="ModuleIndex" OnSubmit="() => showAddAssignment = false" />
+      </div>
+    </div>
   }
 
   <h5>Assignments</h5>
+  <div class="row">
+
   @foreach (var assignment in module.Assignments)
   {
-    <div>@assignment.name</div>
+    <div class="col-2">
+      <div class="card">
+        <div class="card-body">
+          <div class="card-title">
+            @assignment.name
+          </div>
+        </div>
+      </div>
+    </div>
   }
+  </div>
 
 }

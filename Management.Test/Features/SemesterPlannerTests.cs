@@ -8,7 +8,7 @@ public class SemesterPlannerTests
   public void TestCanCreatePlanner()
   {
 
-    var config = new SemesterConfiguration(
+    var config = new SemesterCalendarConfig(
       StartDate: new DateTime(2022, 1, 1),
       EndDate: new DateTime(2022, 1, 2),
       new DayOfWeek[] { }
@@ -22,7 +22,7 @@ public class SemesterPlannerTests
   [Test]
   public void TestNewPlannerHasCorrectNumberOfMonths()
   {
-    var config = new SemesterConfiguration(
+    var config = new SemesterCalendarConfig(
       StartDate: new DateTime(2022, 1, 1),
       EndDate: new DateTime(2022, 2, 1),
       new DayOfWeek[] { }
@@ -36,7 +36,7 @@ public class SemesterPlannerTests
   [Test]
   public void TestNewPlannerHandlesTermsThatWrapYears()
   {
-    var config = new SemesterConfiguration(
+    var config = new SemesterCalendarConfig(
       StartDate: new DateTime(2022, 12, 1),
       EndDate: new DateTime(2023, 1, 1),
       new DayOfWeek[] { }
@@ -50,7 +50,7 @@ public class SemesterPlannerTests
   [Test]
   public void TestSemesterGetsCorrectMonths()
   {
-    var config = new SemesterConfiguration(
+    var config = new SemesterCalendarConfig(
       StartDate: new DateTime(2022, 1, 1),
       EndDate: new DateTime(2022, 2, 1),
       new DayOfWeek[] { }
@@ -66,7 +66,7 @@ public class SemesterPlannerTests
   [Test]
   public void TestMonthsCanWrapYears()
   {
-    var config = new SemesterConfiguration(
+    var config = new SemesterCalendarConfig(
       StartDate: new DateTime(2022, 12, 1),
       EndDate: new DateTime(2023, 1, 1),
       new DayOfWeek[] { }
@@ -85,7 +85,7 @@ public class SemesterPlannerTests
   public void TestSemesterTracksDaysOfWeek()
   {
     DayOfWeek[] days = new DayOfWeek[] { DayOfWeek.Monday };
-    var config = new SemesterConfiguration(
+    var config = new SemesterCalendarConfig(
       StartDate: new DateTime(2022, 12, 1),
       EndDate: new DateTime(2023, 1, 1),
       days
