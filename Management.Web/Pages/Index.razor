@@ -1,23 +1,42 @@
 ﻿@page "/"
 @using CanvasModel.EnrollmentTerms
 @using Management.Web.Shared.Semester
+@using CanvasModel.Courses
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 
-@inject ICanvasService canvasService
-@inject IConfigurationManagement configurationManagement
+@inject CanvasService canvasService
+@inject CoursePlanner configurationManagement
 @inject ProtectedLocalStorage BrowserStorage
-
-
 
 @code
 {
   private string semesterConfigurationKey = "semesterCalendarConfiguration";
   private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
-  private ulong? selectedTermId { get; set; }
+  private bool loadingCourses = false;
+  private IEnumerable<CourseModel>? courses {get; set;} = null;
+
+  private ulong? _selectedTermId { get; set; }
+  private ulong? selectedTermId { 
+    get => _selectedTermId;
+    set 
+    {
+      _selectedTermId = value;
+      updateCourses();
+    } 
+  }
   private EnrollmentTermModel? selectedTerm
   {
     get => terms?.FirstOrDefault(t => t.Id == selectedTermId);
   }
+
+  private ulong? selectedCourseId {
+    get => configurationManagement.Course?.Id;
+    set 
+    {
+      configurationManagement.Course = courses?.First(c => c.Id == value);
+    }
+  }
+
   private List<DayOfWeek> days { get; set; } = new();
   private bool saved { get; set; } = false;
 
@@ -33,16 +52,35 @@
     if(firstRender)
     {
       var storedConfiguration = await BrowserStorage.GetAsync<SemesterCalendarConfig>(semesterConfigurationKey);
-      if (storedConfiguration.Success) {
+      if (storedConfiguration.Success) 
+      {
         Console.WriteLine(JsonSerializer.Serialize(storedConfiguration.Value));
         configurationManagement.SemesterCalendar = storedConfiguration.Value;
-      } else {
+      } 
+      else 
+      {
         Console.WriteLine("no stored configuration");
       }
       StateHasChanged();
     }
   }
 
+  private async Task updateCourses()
+  {
+    if(selectedTermId != null)
+    {
+      loadingCourses = true;
+
+      courses = await canvasService.GetCourses((ulong)selectedTermId);
+      System.Console.WriteLine(courses);
+      System.Console.WriteLine(selectedTermId);
+      loadingCourses = false;
+    }
+    else
+      courses = null;
+
+    StateHasChanged();
+  }
   private void readTermFromConfig()
   {
     if (terms == null || configurationManagement.SemesterCalendar == null) return;
@@ -83,42 +121,59 @@
 @if (terms != null)
 {
   <div class="row justify-content-center">
-  <div class="col-auto">
-
-    <form>
+    <div class="col-auto">
       <label for="termselect">Select Term:</label>
       <select id="termselect" class="form-select" @bind="selectedTermId">
         @foreach (var term in terms)
           {
             <option value="@term.Id">@term.Name</option>
           }
-        </select>
-      </form>
+      </select>
     </div>
   </div>
 }
 @if (selectedTerm is not null)
 {
-  <h5>Select Days Of Week</h5>
+  <h5 class="text-center mt-3">Select Days Of Week</h5>
   <div class="row m-3">
   @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
-    {
-      <div class="col">
-        <button class="@(
-              days.Contains(day) 
-              ? "btn btn-secondary" 
-              : "btn btn-outline-secondary"
-            )" @onclick="() => {
-              if(days.Contains(day))
-                days.Remove(day);
-              else
-                days.Add(day);
-            }" disabled="@saved">
-          @day
-        </button>
-      </div>
-    }
+  {
+    <div class="col">
+      <button class="@(
+            days.Contains(day) 
+            ? "btn btn-secondary" 
+            : "btn btn-outline-secondary"
+          )" @onclick="() => {
+            if(days.Contains(day))
+              days.Remove(day);
+            else
+              days.Add(day);
+          }" disabled="@saved">
+        @day
+      </button>
+    </div>
+  }
+  @if(loadingCourses)
+  {
+    <Spinner />
+  }
   </div>
+
+  @if(courses != null)
+  {
+    <div class="row justify-content-center m-3">
+      <div class="col-auto">
+        <label for="courseselect">Select Course:</label>
+        <select id="courseselect" class="form-select" @bind="selectedCourseId">
+          @foreach (var course in courses)
+          {
+            <option value="@course.Id">@course.Name</option>
+          }
+        </select>
+      </div>
+    </div>
+  }
+
   <div class="row justify-content-center">
     <div class="col-auto">
       <button @onclick="@HandleSave" class="btn btn-primary">
@@ -130,5 +185,5 @@
 
 @if (configurationManagement.SemesterCalendar is not null)
 {
-  <div>Config complete</div>
+  <div class="text-center">Config complete</div>
 }

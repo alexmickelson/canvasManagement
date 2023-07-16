@@ -4,6 +4,16 @@ GET https://snow.instructure.com/api/v1/account_calendars
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 ###
-GET https://snow.instructure.com/api/v1/accounts/10/terms
+GET https://snow.instructure.com/api/v1/accounts/10/terms?per_page=100
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
+###
+
+GET https://snow.instructure.com/api/v1/courses?enrollment_term_id=751
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+
+###
+
+GET https://snow.instructure.com/api/v1/courses?enrollment_term_id=751&per_page=100
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}

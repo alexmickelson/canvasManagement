@@ -14,10 +14,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<IWebRequestor, WebRequestor>();
-builder.Services.AddSingleton<ICanvasService, CanvasService>();
-builder.Services.AddSingleton<IConfigurationManagement, ConfigurationManagement>();
-builder.Services.AddSingleton<IModuleManager, ModuleManager>();
+builder.Services.AddSingleton<CanvasService, CanvasService>();
+builder.Services.AddSingleton<CoursePlanner>();
 builder.Services.AddSingleton<AssignmentDragContainer>();
+builder.Services.AddScoped<StorageManagement>();
 
 var app = builder.Build();
 

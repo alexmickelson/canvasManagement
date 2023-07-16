@@ -1,6 +1,7 @@
 using CanvasModel.EnrollmentTerms;
+using CanvasModel.Courses;
 
-public class ConfigurationManagement : IConfigurationManagement
+public class CoursePlanner
 {
   public void SetConfiguration(
     EnrollmentTermModel canvasTerm,
@@ -18,8 +19,8 @@ public class ConfigurationManagement : IConfigurationManagement
   }
 
   public SemesterCalendarConfig? SemesterCalendar { get; set; } = null;
-  public IModuleManager ModuleManager {get; private set;} = new ModuleManager();
 
-
-
+  public IEnumerable<CourseModule> Modules { get; set; } = new CourseModule[] { };
+  public IEnumerable<LocalAssignment> Assignments { get; set; } = new LocalAssignment[] { };
+  public CourseModel? Course { get; set; } = null;
 }

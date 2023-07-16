@@ -1,4 +1,5 @@
-@inject IModuleManager moduleManager
+@inject CoursePlanner configurationManagement
+
 
 @code {
 
@@ -16,6 +17,7 @@
   {
     var newAssignment = new LocalAssignment
     {
+      id = Guid.NewGuid().ToString(),
       name = Name,
       description = "testDescription",
       published = false,
@@ -26,7 +28,7 @@
       points_possible = 10,
       submission_types = new SubmissionType[] { SubmissionType.online_text_entry }
     };
-    moduleManager.AddAssignment(ModuleIndex, newAssignment);
+    configurationManagement.Assignments = configurationManagement.Assignments.Append(newAssignment);
     await OnSubmit.InvokeAsync();
   }
 }

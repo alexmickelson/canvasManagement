@@ -14,7 +14,7 @@ public class ConfigurationTests
       EndAt: endAt
     );
     var daysOfWeek = new DayOfWeek[] { DayOfWeek.Monday };
-    var management = new ConfigurationManagement();
+    var management = new CoursePlanner();
     management.SetConfiguration(canvasTerm, daysOfWeek);
     var config = management.SemesterCalendar;
 

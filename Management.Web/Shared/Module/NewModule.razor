@@ -1,4 +1,4 @@
-@inject IModuleManager moduleManager
+@inject CoursePlanner configurationManagement
 
 @code {
 
@@ -12,7 +12,7 @@
   private async Task submitHandler()
   {
     var module = new CourseModule(Name: Name, Assignments: new LocalAssignment[] { });
-    moduleManager.AddModule(module);
+    configurationManagement.Modules = configurationManagement.Modules.Append(module);
     Name = "";
     await OnSubmit.InvokeAsync();
   }

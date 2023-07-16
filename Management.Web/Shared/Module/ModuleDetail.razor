@@ -1,5 +1,5 @@
 @using Management.Web.Shared.Module.Assignment
-@inject IModuleManager moduleManager
+@inject CoursePlanner configurationManagement
 
 @code {
     [Parameter, EditorRequired]
@@ -11,7 +11,7 @@
   {
     get
     {
-      return moduleManager.Modules.ElementAtOrDefault(ModuleIndex);
+      return configurationManagement.Modules.ElementAtOrDefault(ModuleIndex);
     }
   }
 }
