@@ -1,0 +1,78 @@
+@inject AssignmentDragContainer dragContainer
+
+@code 
+{
+  [Parameter, EditorRequired]
+  public DateTime? date { get; set; } =
+  default!; 
+  
+  [Parameter, EditorRequired]
+  public SemesterPlanner Semester { get; set; } = default!;
+
+  private bool isWeekDay {
+    get => date?.DayOfWeek != null;
+  }
+  private bool dragging {get; set;} = false;
+  private string calculatedClass
+  {
+    get
+    {
+      var baseClasses = "col border rounded rounded-3 p-2 pb-4 m-1 "; 
+      if(dragging)
+        return baseClasses + " bg-secondary text-light ";
+
+      if (isWeekDay)
+      {
+        DayOfWeek? weekDay = date?.DayOfWeek;
+        DayOfWeek notNullDay = weekDay ?? default;
+        var dayInSemester = 
+          Semester.Days.Contains(notNullDay) 
+          && date < Semester.LastDay 
+          && date > Semester.FirstDay;
+
+        var totalClasses = dayInSemester ? $"bg-light {baseClasses}" : baseClasses;
+
+        return totalClasses;
+      }
+      else
+      {
+        return baseClasses;
+      }
+    }
+  }
+  void OnDragStart()
+  {
+      Console.WriteLine("on drag start");
+  }
+
+  async Task OnDrop()
+  {
+    Console.WriteLine("on drop");
+    dragging = false;
+    if(dragContainer.AssignmentBeingDragged == null){
+      System.Console.WriteLine("no assignment in drop event");
+      return;
+    }
+
+    Console.WriteLine(JsonSerializer.Serialize(dragContainer.AssignmentBeingDragged));
+    dragContainer.AssignmentBeingDragged = null;
+  }
+
+  async Task OnDragEnter() {
+    dragging = true;
+  }
+  async Task OnDragLeave() {
+    dragging = false;
+  }
+} 
+
+<div 
+  class="@calculatedClass"
+  @ondrop="@(() => OnDrop())"
+  @ondragenter="OnDragEnter"
+  @ondragleave="OnDragLeave"
+  ondragover="event.preventDefault();"
+  ondragstart="event.dataTransfer.setData('', event.target.id);"
+>
+  @(isWeekDay ? date?.Day : "")
+</div>
