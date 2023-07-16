@@ -1,4 +1,5 @@
-@inject CoursePlanner configurationManagement
+@inject CoursePlanner planner
+@inject CanvasService canvas
 
 @code {
 
@@ -11,8 +12,11 @@
 
   private async Task submitHandler()
   {
-    var module = new CourseModule(Name: Name, Assignments: new LocalAssignment[] { });
-    configurationManagement.Modules = configurationManagement.Modules.Append(module);
+    if(planner.Course != null && Name != "")
+    {
+      await canvas.CreateModule(planner.Course.Id, Name);
+      planner.Modules = await canvas.GetModules(planner.Course.Id);
+    }
     Name = "";
     await OnSubmit.InvokeAsync();
   }

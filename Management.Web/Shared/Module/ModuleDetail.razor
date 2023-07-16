@@ -2,39 +2,30 @@
 @inject CoursePlanner configurationManagement
 
 @code {
-    [Parameter, EditorRequired]
-    public int ModuleIndex { get; set; }
+  [Parameter, EditorRequired]
+  public CourseModule Module { get; set; } = default!;
 
   private bool showAddAssignment { get; set; } = false;
 
-  private CourseModule? module
-  {
-    get
-    {
-      return configurationManagement.Modules.ElementAtOrDefault(ModuleIndex);
-    }
-  }
 }
 
-@if (module != null)
+
+<h3 class="text-center">@Module.Name</h3>
+<button class="btn btn-primary" @onclick="() => showAddAssignment = true">Add Assignment</button>
+@if (showAddAssignment)
 {
-    <h3 class="text-center">@module.Name</h3>
-    <button class="btn btn-primary" @onclick="() => showAddAssignment = true">Add Assignment</button>
-    @if (showAddAssignment)
-    {
-      <div class="ms-5 ">
-        <div class="bg-light border rounded m-3 p-3">
-          <NewAssignment ModuleIndex="ModuleIndex" OnSubmit="() => showAddAssignment = false" />
-        </div>
-      </div>
-    }
-
-    <h5>Assignments</h5>
-    <div class="row">
-
-    @foreach (var a in module.Assignments)
-    {
-      <AssignmentCard assignment="a" />
-    }
-  </div>
+  @* <div class="ms-5 ">
+    <div class="bg-light border rounded m-3 p-3">
+      <NewAssignment ModuleIndex="ModuleIndex" OnSubmit="() => showAddAssignment = false" />
+    </div>
+  </div> *@
 }
+
+<h5>Assignments</h5>
+<div class="row">
+
+@* @foreach (var a in module.Assignments)
+{
+  <AssignmentCard assignment="a" />
+} *@
+</div>

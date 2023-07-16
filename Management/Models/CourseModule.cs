@@ -1,12 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace CanvasModel;
+
 public record CourseModule(
-  [property: Required]
-  [property: StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
-  string Name,
-  IEnumerable<LocalAssignment>? Assignments = null
-)
-{
-  [JsonInclude]
-  public IEnumerable<LocalAssignment> Assignments = Assignments ?? new LocalAssignment[] { };
-}
+  [property: JsonPropertyName("id")] ulong Id,
+  [property: JsonPropertyName("name")] string Name
+  // [property: JsonPropertyName("start_at")] DateTime StartAt,
+  // [property: JsonPropertyName("end_at")] DateTime EndAt,
+  // [property: JsonPropertyName("description")] string Description
+);

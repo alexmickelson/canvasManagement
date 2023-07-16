@@ -1,6 +1,9 @@
 global using System.Text.Json.Serialization;
 global using System.Text.Json;
 global using System.ComponentModel.DataAnnotations;
+global using CanvasModel.EnrollmentTerms;
+global using CanvasModel.Courses;
+global using CanvasModel;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

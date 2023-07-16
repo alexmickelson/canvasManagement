@@ -52,6 +52,7 @@ public class StorageManagement
     {
       // var courses =
       planner.Course = await canvas.GetCourse(storedCourseId.Value);
+      planner.Modules = await canvas.GetModules(planner.Course.Id);
     }
     else
     {

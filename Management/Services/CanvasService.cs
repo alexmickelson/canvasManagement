@@ -1,3 +1,4 @@
+using CanvasModel;
 using CanvasModel.Courses;
 using CanvasModel.EnrollmentTerms;
 using RestSharp;
@@ -40,35 +41,59 @@ public class CanvasService : ICanvasService
 
   public async Task<CourseModel> GetCourse(ulong courseId)
   {
-    var url = $"course/${courseId}";
+    var url = $"course/{courseId}";
     var request = new RestRequest(url);
-    var response = await webRequestor.GetAsync<CourseModel>(request);
+    var (data, response) = await webRequestor.GetAsync<CourseModel>(request);
 
-    if (response.Data == null)
+    if (data == null)
     {
       System.Console.WriteLine(response.Content);
       System.Console.WriteLine(response.ResponseUri);
       throw new Exception("error getting course from canvas");
     }
-    return response.Data;
+    return data;
+  }
+
+  public async Task<IEnumerable<CourseModule>> GetModules(ulong courseId)
+  {
+    var url = $"courses/{courseId}/modules";
+    var request = new RestRequest(url);
+    var modules = await PaginatedRequest<IEnumerable<CourseModule>>(request);
+    return modules.SelectMany(c => c).ToArray();
+  }
+
+  public async Task CreateModule(ulong courseId, string name)
+  {
+    var url = $"courses/{courseId}/modules";
+    var request = new RestRequest(url);
+    request.AddParameter("module[name]", name);
+
+    await webRequestor.PostAsync(request);
   }
 
   private async Task<IEnumerable<T>> PaginatedRequest<T>(RestRequest request)
   {
     var requestCount = 1;
     request.AddQueryParameter("per_page", "100");
-    RestResponse<T> response = await webRequestor.GetAsync<T>(request);
+    var (data, response) = await webRequestor.GetAsync<T>(request);
 
-    var returnData = response.Data != null ? new T[] { response.Data } : new T[] { };
+    if (response.ErrorMessage?.Length > 0)
+    {
+      System.Console.WriteLine("error in response");
+      System.Console.WriteLine(response.ErrorMessage);
+      throw new Exception("error in response");
+    }
+
+    var returnData = data != null ? new T[] { data } : new T[] { };
     var nextUrl = getNextUrl(response.Headers);
 
     while (nextUrl is not null)
     {
       requestCount += 1;
       RestRequest nextRequest = new RestRequest(nextUrl);
-      var nextResponse = await webRequestor.GetAsync<T>(nextRequest);
-      if (nextResponse.Data is not null)
-        returnData = returnData.Append(nextResponse.Data).ToArray();
+      var (nextData, nextResponse) = await webRequestor.GetAsync<T>(nextRequest);
+      if (nextData is not null)
+        returnData = returnData.Append(nextData).ToArray();
       nextUrl = getNextUrl(nextResponse.Headers);
     }
 

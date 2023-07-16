@@ -34,10 +34,10 @@ else
   <NewModule OnSubmit="() => showNewModule = false" />
 }
 
-@foreach (var i in configurationManagement.Modules.Select((_value, i) => i))
+@foreach (var module in configurationManagement.Modules)
 {
   <hr>
-  <ModuleDetail ModuleIndex="i" />
+  <ModuleDetail Module="module" />
 }
 
 <hr>
