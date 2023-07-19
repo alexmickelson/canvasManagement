@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
-public class StorageManagement
+public class BrowserStorageManagement
 {
   private string moduleStorageKey = "module storage key";
   private string assignmentStorageKey = "assignment storage key";
@@ -10,7 +10,7 @@ public class StorageManagement
   private ProtectedLocalStorage storage { get; }
   private CanvasService canvas { get; }
 
-  public StorageManagement(
+  public BrowserStorageManagement(
     CoursePlanner configurationManagement,
     ProtectedLocalStorage BrowserStorage,
     CanvasService canvasService

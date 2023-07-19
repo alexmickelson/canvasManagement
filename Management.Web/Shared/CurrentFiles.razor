@@ -1,0 +1,21 @@
+@using LocalModels
+
+@inject YamlManager yamlManager
+
+@code 
+{
+  public IEnumerable<LocalCourse> localCourses { get; set; }
+  protected override async Task OnInitializedAsync()
+  {
+    localCourses = await yamlManager.LoadSavedCourses();
+  }
+}
+
+@if(localCourses != null)
+{
+  <h3>Stored Courses</h3>
+  @foreach (var course in localCourses)
+  {
+    <div>@course.Name</div>
+  }
+}

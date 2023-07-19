@@ -1,0 +1,153 @@
+@using CanvasModel.EnrollmentTerms
+@using Management.Web.Shared.Semester
+@using CanvasModel.Courses
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using LocalModels
+
+@inject CanvasService canvas
+@inject YamlManager yamlManager
+
+
+@code {
+  private bool loadingCourses = false;
+  public IEnumerable<LocalCourse> localCourses { get; set; }
+  private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;  
+  private IEnumerable<CourseModel>? courses { get; set;} = null;
+  private ulong? _selectedTermId { get; set; }
+  private ulong? selectedTermId 
+  { 
+    get => _selectedTermId;
+    set 
+    {
+      _selectedTermId = value;
+      updateCourses();
+    } 
+  }
+  private EnrollmentTermModel? selectedTerm
+  {
+    get => terms?.FirstOrDefault(t => t.Id == selectedTermId);
+  }
+
+  private ulong? _selectedCourseId { get; set; }
+  private ulong? selectedCourseId 
+  {
+    get => _selectedCourseId;
+    set 
+    {
+      _selectedCourseId = value;
+    }
+  }
+
+  private CourseModel? selectedCourse 
+  {
+    get => courses?.First(c => c.Id == selectedCourseId);
+  }
+  private List<DayOfWeek> days { get; set; } = new();
+  protected override async Task OnInitializedAsync()
+  {
+    terms = await canvas.GetCurrentTermsFor();
+  }
+  private async Task YamlTrigger()
+  {
+    if(selectedCourse != null)
+    {
+      var course = new LocalCourse
+      {
+        Modules= new LocalModule[] {},
+        Name = selectedCourse.Name,
+        CanvasId = selectedCourse.Id,
+        DaysOfWeek = days,
+      };
+      await yamlManager.SaveCourse(course);
+    }
+    await updateCourses();
+  }
+  
+  private async Task updateCourses()
+  {
+    if(selectedTermId != null)
+    {
+      loadingCourses = true;
+      
+      localCourses = await yamlManager.LoadSavedCourses();
+      var storedCourseIds = localCourses.Select(c => c.CanvasId);
+      var allCourses = await canvas.GetCourses((ulong)selectedTermId);
+      courses = allCourses.Where(c => !storedCourseIds.Contains(c.Id));
+      loadingCourses = false;
+    }
+    else
+      courses = null;
+
+    StateHasChanged();
+  }
+}
+
+@if (terms != null)
+{
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <label for="termselect">Select Term:</label>
+      <select id="termselect" class="form-select" @bind="selectedTermId">
+        @foreach (var term in terms)
+          {
+            <option value="@term.Id">@term.Name</option>
+          }
+      </select>
+    </div>
+  </div>
+}
+
+
+@if (selectedTerm is not null)
+{
+  @if(loadingCourses)
+  {
+    <Spinner />
+  }
+
+  @if(courses != null)
+  {
+    <div class="row justify-content-center m-3">
+      <div class="col-auto">
+        <label for="courseselect">Select Course:</label>
+        <select id="courseselect" class="form-select" @bind="selectedCourseId">
+          @foreach (var course in courses)
+          {
+            <option value="@course.Id">@course.Name</option>
+          }
+        </select>
+      </div>
+    </div>
+  }
+
+  <h5 class="text-center mt-3">Select Days Of Week</h5>
+  <div class="row m-3">
+  @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+  {
+    <div class="col">
+      <button class="@(
+            days.Contains(day) 
+            ? "btn btn-secondary" 
+            : "btn btn-outline-secondary"
+          )" @onclick="() => {
+            if(days.Contains(day))
+              days.Remove(day);
+            else
+              days.Add(day);
+          }">
+        @day
+      </button>
+    </div>
+  }
+  </div>
+
+
+<div class="text-center">
+  <button 
+    @onclick="YamlTrigger" 
+    class="btn btn-primary"
+  >
+    Save Yaml File
+  </button>
+</div>
+}

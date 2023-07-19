@@ -20,7 +20,8 @@ builder.Services.AddSingleton<IWebRequestor, WebRequestor>();
 builder.Services.AddSingleton<CanvasService, CanvasService>();
 builder.Services.AddSingleton<CoursePlanner>();
 builder.Services.AddSingleton<AssignmentDragContainer>();
-builder.Services.AddScoped<StorageManagement>();
+builder.Services.AddScoped<BrowserStorageManagement>();
+builder.Services.AddScoped<YamlManager>();
 
 var app = builder.Build();
 
