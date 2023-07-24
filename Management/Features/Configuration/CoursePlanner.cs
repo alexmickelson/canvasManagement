@@ -1,24 +1,19 @@
 using CanvasModel.EnrollmentTerms;
 using CanvasModel.Courses;
 using CanvasModel;
+using LocalModels;
 
 public class CoursePlanner
 {
-  public void SetConfiguration(EnrollmentTermModel canvasTerm, DayOfWeek[] daysOfWeek)
+  public LocalCourse _localCourse { get; set; } = default!;
+  public LocalCourse LocalCourse
   {
-    var start =
-      canvasTerm.StartAt
-      ?? throw new Exception($"Canvas Term must have a start date. Term: {canvasTerm.Name}");
-    var end =
-      canvasTerm.EndAt
-      ?? throw new Exception($"Canvas Term must have a end date. Term: {canvasTerm.Name}");
-
-    SemesterCalendar = new SemesterCalendarConfig(StartDate: start, EndDate: end, Days: daysOfWeek);
+    get => _localCourse;
+    set
+    {
+      _localCourse = value;
+      StateHasChanged?.Invoke();
+    }
   }
-
-  public SemesterCalendarConfig? SemesterCalendar { get; set; } = null;
-
-  public IEnumerable<CourseModule> Modules { get; set; } = new CourseModule[] { };
-  public IEnumerable<LocalAssignment> Assignments { get; set; } = new LocalAssignment[] { };
-  public CourseModel? Course { get; set; } = null;
+  public event Action? StateHasChanged;
 }

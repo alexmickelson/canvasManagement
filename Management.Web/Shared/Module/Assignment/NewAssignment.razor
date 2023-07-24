@@ -1,10 +1,10 @@
-@inject CoursePlanner configurationManagement
+@inject CoursePlanner planner
 
 
 @code {
 
   [Parameter, EditorRequired]
-  public ulong ModuleId { get; set; }
+  public string ModuleName { get; set; }
 
   [Parameter]
   public EventCallback OnSubmit { get; set; }
@@ -28,7 +28,7 @@
       points_possible = 10,
       submission_types = new SubmissionType[] { SubmissionType.online_text_entry }
     };
-    configurationManagement.Assignments = configurationManagement.Assignments.Append(newAssignment);
+    @* planner.LocalCourse.Assignments = planner.Assignments.Append(newAssignment); *@
     await OnSubmit.InvokeAsync();
   }
 }

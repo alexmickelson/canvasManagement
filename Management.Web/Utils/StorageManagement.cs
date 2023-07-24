@@ -47,17 +47,17 @@ public class BrowserStorageManagement
     //   Console.WriteLine("no stored assignments");
     // }
 
-    var storedCourseId = await storage.GetAsync<ulong>(courseIdKey);
-    if (storedCourseId.Success)
-    {
-      // var courses =
-      planner.Course = await canvas.GetCourse(storedCourseId.Value);
-      planner.Modules = await canvas.GetModules(planner.Course.Id);
-    }
-    else
-    {
-      Console.WriteLine("no stored assignments");
-    }
+    // var storedCourseId = await storage.GetAsync<ulong>(courseIdKey);
+    // if (storedCourseId.Success)
+    // {
+    //   // var courses =
+    //   planner.Course = await canvas.GetCourse(storedCourseId.Value);
+    //   planner.Modules = await canvas.GetModules(planner.Course.Id);
+    // }
+    // else
+    // {
+    //   Console.WriteLine("no stored assignments");
+    // }
   }
 
   public async Task Save()
@@ -65,9 +65,9 @@ public class BrowserStorageManagement
     // await storage.SetAsync(moduleStorageKey, planner.Modules);
     // await storage.SetAsync(assignmentStorageKey, planner.Assignments);
 
-    if (planner.Course != null)
-      await storage.SetAsync(courseIdKey, planner.Course.Id);
-    else
-      await storage.DeleteAsync(courseIdKey);
+    // if (planner.Course != null)
+    //   await storage.SetAsync(courseIdKey, planner.Course.Id);
+    // else
+    //   await storage.DeleteAsync(courseIdKey);
   }
 }

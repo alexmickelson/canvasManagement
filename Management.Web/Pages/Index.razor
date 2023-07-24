@@ -12,9 +12,59 @@
 
 @code
 {
+  private bool showNewFile { get; set; } = false;
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += () => this.InvokeAsync(this.StateHasChanged);
+  }
+
 }
 <PageTitle>Index</PageTitle>
 
-<CurrentFiles />
+@if(planner.LocalCourse == null)
+{
+  <CurrentFiles />
+  @if(!showNewFile)
+  {
+    <div class="text-center">
+      <button
+        @onclick="@(()=>showNewFile = true)"
+        class="btn btn-primary"
+      >
+        Create New File
+      </button>
+    </div>
+  }
 
-<InitializeYamlFromCanvas />
+  @if(showNewFile)
+  {
+    <div class="text-center">
+      <button
+        @onclick="@(()=>showNewFile = false)"
+        class="btn btn-primary"
+      >
+        Hide File Initialization
+      </button>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-auto border rounded bg-light p-3">
+        <InitializeYamlFromCanvas />
+      </div>
+    </div>
+  }
+}
+
+@if(planner.LocalCourse != null)
+{
+  
+    <div class="">
+      <button
+        @onclick="@(() => planner.LocalCourse = default)"
+        class="btn btn-primary"
+      >
+        Select New Course
+      </button>
+    </div>
+  <Calendar />
+}

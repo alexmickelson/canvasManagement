@@ -4,6 +4,7 @@ global using System.ComponentModel.DataAnnotations;
 global using CanvasModel.EnrollmentTerms;
 global using CanvasModel.Courses;
 global using CanvasModel;
+global using LocalModels;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

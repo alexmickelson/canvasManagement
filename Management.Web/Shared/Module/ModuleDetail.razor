@@ -1,9 +1,11 @@
 @using Management.Web.Shared.Module.Assignment
+@using LocalModels
+
 @inject CoursePlanner configurationManagement
 
 @code {
   [Parameter, EditorRequired]
-  public CourseModule Module { get; set; } = default!;
+  public LocalModule Module { get; set; } = default!;
 
   private bool showAddAssignment { get; set; } = false;
 
@@ -20,7 +22,7 @@
 
 @if (showAddAssignment)
 {
-  <NewAssignment ModuleId="Module.Id" OnSubmit="() => showAddAssignment = false" />
+  <NewAssignment ModuleName="Module.Name" OnSubmit="() => showAddAssignment = false" />
 }
 
 <h5>Assignments</h5>

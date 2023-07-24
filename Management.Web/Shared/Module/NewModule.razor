@@ -12,10 +12,18 @@
 
   private async Task submitHandler()
   {
-    if(planner.Course != null && Name != "")
+    if(planner.LocalCourse != null && Name != "")
     {
-      await canvas.CreateModule(planner.Course.Id, Name);
-      planner.Modules = await canvas.GetModules(planner.Course.Id);
+      var newModule = new LocalModule
+      {
+        Name=Name
+      };
+
+
+      planner.LocalCourse = planner.LocalCourse with 
+      {
+        Modules = planner.LocalCourse.Modules.Append(newModule)
+      };
     }
     Name = "";
     await OnSubmit.InvokeAsync();

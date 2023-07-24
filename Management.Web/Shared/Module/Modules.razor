@@ -2,7 +2,7 @@
 @using System.Linq
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 
-@inject CoursePlanner configurationManagement
+@inject CoursePlanner planner
 @inject ProtectedLocalStorage BrowserStorage
 @inject BrowserStorageManagement storage
 
@@ -34,10 +34,13 @@ else
   <NewModule OnSubmit="() => showNewModule = false" />
 }
 
-@foreach (var module in configurationManagement.Modules)
+@if (planner.LocalCourse != null)
 {
-  <hr>
-  <ModuleDetail Module="module" />
+  @foreach (var module in planner.LocalCourse.Modules)
+  {
+    <hr>
+    <ModuleDetail Module="module" />
+  }
 }
 
 <hr>

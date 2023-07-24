@@ -1,6 +1,7 @@
 @using LocalModels
 
 @inject YamlManager yamlManager
+@inject CoursePlanner planner
 
 @code 
 {
@@ -9,6 +10,9 @@
   {
     localCourses = await yamlManager.LoadSavedCourses();
   }
+
+  
+
 }
 
 @if(localCourses != null)
@@ -16,6 +20,19 @@
   <h3>Stored Courses</h3>
   @foreach (var course in localCourses)
   {
-    <div>@course.Name</div>
+    void SetCourse()
+    {
+      planner.LocalCourse = course;
+      this.StateHasChanged();
+    }
+    <div>
+      <button 
+        class="btn btn-outline-primary"
+        @onclick="@SetCourse"
+      >
+        Use
+      </button>
+      @course.Name
+    </div>
   }
 }
