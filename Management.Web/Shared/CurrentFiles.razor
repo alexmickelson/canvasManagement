@@ -5,14 +5,11 @@
 
 @code 
 {
-  public IEnumerable<LocalCourse> localCourses { get; set; }
+  public IEnumerable<LocalCourse>? localCourses { get; set; }
   protected override async Task OnInitializedAsync()
   {
     localCourses = await yamlManager.LoadSavedCourses();
   }
-
-  
-
 }
 
 @if(localCourses != null)

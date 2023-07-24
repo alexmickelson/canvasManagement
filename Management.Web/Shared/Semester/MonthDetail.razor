@@ -19,7 +19,14 @@
 <div class="row text-center fw-bold">
   @foreach (DayOfWeek day in WeekDaysList)
   {
-    <div class="@(planner.LocalCourse.DaysOfWeek.Contains(day) ? "col" : "col text-secondary")">@day</div>
+    <div class="@(
+        planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false 
+          ? "col" 
+          : "col text-secondary"
+      )"
+    >
+      @day
+    </div>
   }
 </div>
 

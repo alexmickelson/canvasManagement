@@ -4,7 +4,7 @@
   [Parameter]
   [Required]
   public LocalAssignment assignment { get; set; } = new();
-  private async Task HandleDragStart()
+  private void HandleDragStart()
   {
     dragContainer.AssignmentBeingDragged = assignment;
     System.Console.WriteLine("assignment set");
@@ -13,7 +13,7 @@
 
 <div 
   draggable="true"
-  ondragstart="@HandleDragStart"
+  @ondragstart="HandleDragStart"
   class="col-2"
 >
   <div class="card">

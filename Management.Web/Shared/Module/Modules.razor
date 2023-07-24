@@ -7,17 +7,7 @@
 @inject BrowserStorageManagement storage
 
 @code {
-  private bool showNewModule { get; set; } = false;
-
-  protected override async Task OnAfterRenderAsync(bool firstRender) 
-  {
-    if(firstRender)
-    {
-      await storage.LoadStoredConfig();
-      StateHasChanged();
-    }
-  }
-  
+  private bool showNewModule { get; set; } = false;  
 }
 
 @if (!showNewModule)
@@ -42,13 +32,3 @@ else
     <ModuleDetail Module="module" />
   }
 }
-
-<hr>
-<div class="text-center">
-  <button 
-    class="btn btn-primary" 
-    @onclick="@(async () => await storage.Save())"
-  >
-    Save Modules
-  </button>
-</div>

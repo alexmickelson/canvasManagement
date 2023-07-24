@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using CanvasModel.EnrollmentTerms
+@using Management.Web.Shared.Course
 @using Management.Web.Shared.Semester
 @using CanvasModel.Courses
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
@@ -8,7 +9,6 @@
 @inject CanvasService canvas
 @inject CoursePlanner planner
 @inject ProtectedLocalStorage BrowserStorage
-@inject YamlManager yamlManager
 
 @code
 {
@@ -57,14 +57,13 @@
 
 @if(planner.LocalCourse != null)
 {
-  
-    <div class="">
-      <button
-        @onclick="@(() => planner.LocalCourse = default)"
-        class="btn btn-primary"
-      >
-        Select New Course
-      </button>
-    </div>
-  <Calendar />
+  <div class="">
+    <button
+      @onclick="@(() => planner.LocalCourse = null)"
+      class="btn btn-primary"
+    >
+      Select New Course
+    </button>
+  </div>
+  <CourseDetails />
 }

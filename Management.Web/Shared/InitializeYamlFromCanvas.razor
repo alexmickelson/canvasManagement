@@ -10,7 +10,7 @@
 
 @code {
   private bool loadingCourses = false;
-  public IEnumerable<LocalCourse> localCourses { get; set; }
+  public IEnumerable<LocalCourse>? localCourses { get; set; }
   private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;  
   private IEnumerable<CourseModel>? courses { get; set;} = null;
   private ulong? _selectedTermId { get; set; }
@@ -20,7 +20,10 @@
     set 
     {
       _selectedTermId = value;
-      updateCourses();
+      @* updateCourses(); *@
+      var task = Task.Run(async () => await updateCourses());
+      task.Wait();
+      StateHasChanged();
     } 
   }
   private EnrollmentTermModel? selectedTerm
@@ -58,7 +61,7 @@
         CanvasId = selectedCourse.Id,
         DaysOfWeek = days,
       };
-      await yamlManager.SaveCourse(course);
+      await yamlManager.SaveCourseAsync(course);
     }
     await updateCourses();
   }

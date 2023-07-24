@@ -58,7 +58,7 @@ public class WebRequestor : IWebRequestor
     }
     try
     {
-      var data = JsonSerializer.Deserialize<T>(response.Content);
+      var data = JsonSerializer.Deserialize<T>(response.Content!);
 
       if (data == null)
       {

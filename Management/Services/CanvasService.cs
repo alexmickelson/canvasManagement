@@ -41,7 +41,7 @@ public class CanvasService : ICanvasService
 
   public async Task<CourseModel> GetCourse(ulong courseId)
   {
-    var url = $"course/{courseId}";
+    var url = $"courses/{courseId}";
     var request = new RestRequest(url);
     var (data, response) = await webRequestor.GetAsync<CourseModel>(request);
 
@@ -127,7 +127,8 @@ public class CanvasService : ICanvasService
 
     var currentTerms = terms
       .Where(t => t.EndAt != null && t.EndAt > queryDate && t.EndAt < queryDate.AddYears(1))
-      .Take(3);
+      .Take(3)
+      .OrderBy(t => t.StartAt);
 
     return currentTerms;
   }

@@ -1,0 +1,99 @@
+@inject CanvasService canvas
+@inject CoursePlanner planner
+
+@code
+{
+  private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
+  private ulong? _selectedTermId {get; set;}
+  private ulong? selectedTermId { 
+    get => _selectedTermId; 
+    set
+    {
+      _selectedTermId = value;
+      if(selectedTerm != null && planner.LocalCourse != null)
+      {
+        planner.LocalCourse = planner.LocalCourse with 
+        {
+          StartDate=selectedTerm.StartAt ?? new DateTime(),
+          EndDate=selectedTerm.EndAt ?? new DateTime(),
+        };
+      }
+    } 
+  }
+  private EnrollmentTermModel? selectedTerm
+  {
+    get => terms?.FirstOrDefault(t => t.Id == selectedTermId);
+  }
+  private bool loading = false;
+  protected override async Task OnInitializedAsync()
+  {
+    if(planner.LocalCourse != null && planner.LocalCourse.CanvasId != null)
+    {
+      loading = true;
+      ulong id = planner.LocalCourse?.CanvasId ?? throw new Exception("wtf how did i get here");
+      var canvasCourse = await canvas.GetCourse(id);
+      terms = await canvas.GetCurrentTermsFor(canvasCourse.StartAt);
+      loading = false;
+    }
+  }
+}
+
+<h5>Select Days Of Week</h5>
+<div class="row m-3">
+@foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+  {
+    <div class="col">
+      <button
+        class="@(
+          planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false
+            ? "btn btn-secondary" 
+            : "btn btn-outline-secondary"
+        )" 
+        @onclick="() => 
+        {
+          if(planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false)
+          {
+            planner.LocalCourse = planner.LocalCourse with 
+            {
+              DaysOfWeek = planner.LocalCourse.DaysOfWeek.Where((d) => d != day)
+            };
+          }
+          else
+          {
+            if (planner.LocalCourse != null)
+            {
+              planner.LocalCourse = planner.LocalCourse with 
+              {
+                DaysOfWeek = planner.LocalCourse.DaysOfWeek.Append(day)
+              };
+            }
+          }
+        }" 
+      >
+        @day
+      </button>
+    </div>
+  }
+</div>
+
+@if(loading)
+{
+  <Spinner />
+}
+
+@if (terms != null)
+{
+  <div class="row justify-content-center">
+  <div class="col-auto">
+    <form>
+      <lablel for="termselect">Select Term for Start and End Date:</lablel>
+      <select id="termselect" class="form-select" @bind="selectedTermId">
+        @foreach (var term in terms)
+          {
+            <option value="@term.Id">@term.Name</option>
+          }
+        </select>
+      </form>
+    </div>
+  </div>
+}

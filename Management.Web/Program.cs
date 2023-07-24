@@ -5,6 +5,7 @@ global using CanvasModel.EnrollmentTerms;
 global using CanvasModel.Courses;
 global using CanvasModel;
 global using LocalModels;
+global using Management.Web.Shared.Course;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -19,10 +20,10 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<IWebRequestor, WebRequestor>();
 builder.Services.AddSingleton<CanvasService, CanvasService>();
+builder.Services.AddSingleton<YamlManager>();
 builder.Services.AddSingleton<CoursePlanner>();
 builder.Services.AddSingleton<AssignmentDragContainer>();
 builder.Services.AddScoped<BrowserStorageManagement>();
-builder.Services.AddScoped<YamlManager>();
 
 var app = builder.Build();
 

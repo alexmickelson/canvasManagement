@@ -6,28 +6,33 @@ public class YamlManager
 {
   public string CourseToYaml(LocalCourse course)
   {
-    var serializer = new SerializerBuilder()
-      .Build();
+    var serializer = new SerializerBuilder().Build();
     var yaml = serializer.Serialize(course);
 
-    System.Console.WriteLine(yaml);
+    // System.Console.WriteLine(yaml);
     return yaml;
   }
 
   public LocalCourse ParseCourse(string rawCourse)
   {
-    var deserializer = new DeserializerBuilder()
-      .Build();
+    var deserializer = new DeserializerBuilder().Build();
 
     var person = deserializer.Deserialize<LocalCourse>(rawCourse);
     return person;
   }
 
-  public async Task SaveCourse(LocalCourse course)
+  public async Task SaveCourseAsync(LocalCourse course)
   {
     var courseString = CourseToYaml(course);
 
     await File.WriteAllTextAsync($"../storage/{course.Name}.yml", courseString);
+  }
+
+  public void SaveCourse(LocalCourse course)
+  {
+    var courseString = CourseToYaml(course);
+
+    File.WriteAllText($"../storage/{course.Name}.yml", courseString);
   }
 
   public async Task<IEnumerable<LocalCourse>> LoadSavedCourses()

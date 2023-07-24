@@ -26,9 +26,9 @@
         DayOfWeek? weekDay = date?.DayOfWeek;
         DayOfWeek notNullDay = weekDay ?? default;
         var dayInSemester = 
-          planner.LocalCourse.DaysOfWeek.Contains(notNullDay) 
-          && date < planner.LocalCourse.EndDate 
-          && date > planner.LocalCourse.StartDate;
+          planner.LocalCourse?.DaysOfWeek.Contains(notNullDay) ?? false
+            && date < planner.LocalCourse.EndDate 
+            && date > planner.LocalCourse.StartDate;
 
         var totalClasses = dayInSemester ? $"bg-light {baseClasses}" : baseClasses;
 
@@ -45,7 +45,7 @@
       Console.WriteLine("on drag start");
   }
 
-  async Task OnDrop()
+  void OnDrop()
   {
     Console.WriteLine("on drop");
     dragging = false;
@@ -58,10 +58,10 @@
     dragContainer.AssignmentBeingDragged = null;
   }
 
-  async Task OnDragEnter() {
+  void OnDragEnter() {
     dragging = true;
   }
-  async Task OnDragLeave() {
+  void OnDragLeave() {
     dragging = false;
   }
 } 

@@ -1,0 +1,48 @@
+
+@using CanvasModel.EnrollmentTerms
+@using Management.Web.Shared.Module
+@using Management.Web.Shared.Semester
+
+@inject CoursePlanner planner
+
+@code
+{
+  private bool showEditCourseSettings = false;
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += () => this.InvokeAsync(this.StateHasChanged);
+  }
+}
+<br>
+
+@if(!showEditCourseSettings)
+{
+  <button class="btn btn-outline-secondary" @onclick="@(() => showEditCourseSettings = true)">Edit Course Settings</button>
+}
+else
+{
+  <CourseSettings />
+  <button 
+    class="btn btn-outline-secondary" 
+    @onclick="@(() => showEditCourseSettings = false)"
+  >
+    Done Editing Course Settings
+  </button>
+}
+
+
+<div class="row">
+  <div class="col">
+    @if (planner.LocalCourse != null)
+    {
+      @foreach (var month in SemesterPlanner.GetMonthsBetweenDates(planner.LocalCourse.StartDate, planner.LocalCourse.EndDate))
+      {
+        <MonthDetail Month="month" />
+        <hr />
+      }
+    }
+  </div>
+  <div class="col">
+    <Modules />
+  </div>
+</div>
