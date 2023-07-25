@@ -12,6 +12,7 @@
       _selectedTermId = value;
       if(selectedTerm != null && planner.LocalCourse != null)
       {
+        System.Console.WriteLine(JsonSerializer.Serialize(selectedTerm));
         planner.LocalCourse = planner.LocalCourse with 
         {
           StartDate=selectedTerm.StartAt ?? new DateTime(),

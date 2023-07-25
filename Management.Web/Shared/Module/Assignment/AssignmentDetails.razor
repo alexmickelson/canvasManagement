@@ -6,10 +6,10 @@
 @code {
   [Parameter]
   [EditorRequired]
-  public LocalAssignment assignment { get; set; } = new();
+  public LocalAssignment Assignment { get; set; } = new();
   [Parameter]
   [EditorRequired]
-  public LocalModule module { get; set; } = new();
+  public LocalModule Module { get; set; } = new();
   private bool showUpdateForm = false;
   
   protected override void OnInitialized()
@@ -33,12 +33,12 @@
         var newCourse = planner.LocalCourse with 
         {
           Modules = planner.LocalCourse.Modules.Select(m => 
-            m.Name != module.Name
+            m.Name != Module.Name
               ? m
               : m with 
               {
-                Assignments = module.Assignments.Select(a => 
-                  a.id != assignment.id
+                Assignments = Module.Assignments.Select(a => 
+                  a.id != Assignment.id
                   ? a
                   : a with 
                   {
@@ -70,13 +70,13 @@
 >
   <div class="card">
     <div class="card-body">
-      <div class="card-title">@assignment.name</div>
+      <div class="card-title">@Assignment.name</div>
       <div class="card-text">
-        @assignment.description
-        <div>Due At: @assignment.due_at</div>
-        <div>Lock At: @assignment.lock_at</div>
-        <div>Points: @assignment.points_possible</div>
-        @if(assignment.canvasId != null)
+        @Assignment.description
+        <div>Due At: @Assignment.due_at</div>
+        <div>Lock At: @Assignment.lock_at</div>
+        <div>Points: @Assignment.points_possible</div>
+        @if(Assignment.canvasId != null)
         {
           <div>Synced with canvas</div>
         }
@@ -84,7 +84,7 @@
         {
           <div>Not synced with canvas</div>
         }
-        <code>@JsonSerializer.Serialize(@assignment.rubric)</code>
+        <code>@JsonSerializer.Serialize(Assignment.rubric)</code>
       </div>
 
     </div>
@@ -92,7 +92,8 @@
 </div>
 
 <AssignmentForm
-  assignment="assignment"
+  Assignment="Assignment"
   Show="showUpdateForm"
   OnHide="@(() => showUpdateForm = false)"
+  Module="Module"
 />

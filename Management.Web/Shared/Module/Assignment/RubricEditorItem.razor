@@ -1,0 +1,52 @@
+
+@inject CoursePlanner planner
+
+@code
+{
+  [Parameter, EditorRequired]
+  public RubricItem RubricItem { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public Action<RubricItem> OnUpdate { get; set; } = default!;
+  private void editItem(string label, int points)
+  {
+    var newRubricItem = RubricItem with
+    {
+      Label = label,
+      Points = points
+    };
+    OnUpdate(newRubricItem);
+
+  }
+}
+
+<li
+  class="list-group-item"
+>
+  <div class="row">
+    <div class="col">
+      <label for="rubricLabel">Label</label>
+      <input 
+        class="form-control"
+        id="rubricLabel"
+        name="rubricLabel"
+        @oninput="@(e => editItem(e.Value?.ToString() ?? "", RubricItem.Points))" 
+        value="@RubricItem.Label" 
+      />
+    </div>
+    <div class="col">
+      <label for="rubricPoints">Points</label>
+      <input 
+        class="form-control"
+        id="rubricPoints"
+        name="rubricPoints"
+        @oninput="@(e => editItem(
+          RubricItem.Label,
+          int.Parse(e.Value?.ToString() != "" ? e.Value?.ToString() ?? "0" : "0"))
+        )" 
+        value="@RubricItem.Points"
+        type="number" 
+      />
+    </div>
+  </div>
+</li>

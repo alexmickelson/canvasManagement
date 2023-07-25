@@ -49,12 +49,14 @@
       {
         DayOfWeek? weekDay = date?.DayOfWeek;
         DayOfWeek notNullDay = weekDay ?? default;
+        
+        var isClassDay = planner.LocalCourse?.DaysOfWeek.Contains(notNullDay) ?? false;
         var dayInSemester = 
-          planner.LocalCourse?.DaysOfWeek.Contains(notNullDay) ?? false
+          isClassDay
             && date < planner.LocalCourse.EndDate 
             && date > planner.LocalCourse.StartDate;
-
-        var totalClasses = dayInSemester ? $"bg-light-subtle text-light {baseClasses}" : baseClasses;
+        
+        var totalClasses = dayInSemester ? $"bg-light-subtle text-light " + baseClasses : baseClasses;
 
         return totalClasses;
       }

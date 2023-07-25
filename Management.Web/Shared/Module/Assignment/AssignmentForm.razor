@@ -1,9 +1,15 @@
 @using Management.Web.Shared.Components
 
+@inject CoursePlanner planner
+
 @code {
   [Parameter]
   [EditorRequired]
-  public LocalAssignment assignment
+  public LocalModule Module { get; set; } = default!;
+
+  [Parameter]
+  [EditorRequired]
+  public LocalAssignment Assignment
   {
     get;
     set;
@@ -15,9 +21,11 @@
 
   [Parameter] 
   public Action OnHide { get; set; } = () => { }; 
-  public Modal AssignmentModal { get; set; }
+  public Modal AssignmentModal { get; set; } = default!;
 
-  private string description { get; set; }
+  private string description { get; set; } = String.Empty;
+  private bool lockAtDueDate { get; set; }
+  private IEnumerable<RubricItem> rubric { get; set; } = Enumerable.Empty<RubricItem>();
 
   protected override void OnParametersSet()
   {
@@ -25,30 +33,81 @@
     {
       AssignmentModal.Show();
     }
-    description = assignment.description;
+    description = Assignment.description;
+    lockAtDueDate = Assignment.lock_at_due_date;
+    rubric = Assignment.rubric;
   }
 
   private void submitHandler()
   {
-    
+    var newAssignment = Assignment with 
+    {
+      description=description,
+      lock_at_due_date=lockAtDueDate,
+      rubric=rubric,
+    };
+    System.Console.WriteLine(JsonSerializer.Serialize(newAssignment));
+
+    if(planner.LocalCourse != null)
+    {
+      planner.LocalCourse = planner.LocalCourse with 
+      {
+        Modules=planner.LocalCourse.Modules.Select(m => 
+          m.Name != Module.Name 
+            ? m 
+            : Module with 
+            {
+              Assignments=Module.Assignments.Select(a => 
+                a.id == newAssignment.id
+                  ? newAssignment
+                  : a
+              )
+            }
+          )
+      };
+    }
+    AssignmentModal.Hide();
+  }
+  private void updateRubric(IEnumerable<RubricItem> newRubric)
+  {
+    rubric = newRubric;
+    StateHasChanged();
   }
 } 
 
 <Modal @ref="AssignmentModal" OnHide="@(() => OnHide())">
-  <Title>@assignment.name</Title>
+  <Title>@Assignment.name</Title>
   <Body>
     <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
-      <label 
-        for="description"
-        class="form-label"
-      >
-        Description
-      </label>
-      <textarea 
-        id="description" 
-        class="form-control"
-        @bind="description"
-      />
+      <div class="m-1">
+        <label 
+          for="description"
+          class="form-label"
+        >
+          Description
+        </label>
+        <textarea 
+          id="description" 
+          class="form-control"
+          @bind="description"
+        />
+      </div>
+
+      <div class="form-check m-1">
+        <input 
+          class="form-check-input"
+          id="lockAtDueDate"
+          type="checkbox"
+        />
+        <label 
+          class="form-check-label"
+          for="lockAtDueDate"
+          @bind="lockAtDueDate"
+        >
+          Lock At Due Date
+        </label>
+      </div>
+      <RubricEditor Rubric="rubric" SetRubric="updateRubric" />
     </form>
   </Body>
   <Footer>

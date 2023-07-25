@@ -1,0 +1,49 @@
+@using Management.Web.Shared.Components
+
+@inject CoursePlanner planner
+
+@code
+{
+  [Parameter, EditorRequired]
+  public IEnumerable<RubricItem> Rubric { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public Action<IEnumerable<RubricItem>> SetRubric { get; set; } = default!;  
+
+  private void addItem()
+  {
+    SetRubric(
+      Rubric.Append(new RubricItem
+      {
+        Id=Guid.NewGuid().ToString(),
+        Label="",
+        Points=0
+      })
+    );
+    StateHasChanged();
+  }
+  private void editItem(RubricItem newItem)
+  {
+    var newRubric = Rubric.Select(i => i.Id == newItem.Id ? newItem : i);
+    SetRubric(newRubric);
+    StateHasChanged();
+  }
+}
+
+<br>
+<h5>Rubric</h5>
+<ul class="list-group">
+  @foreach (var rubricItem in Rubric)
+  {
+    <RubricEditorItem RubricItem="rubricItem" OnUpdate="editItem" />
+  }
+</ul>
+
+<button
+  @onclick:preventDefault="true"
+  @onclick="addItem"
+  type="button"
+  class="btn btn-outline-primary"
+>
+  + rubric item
+</button>

@@ -1,4 +1,9 @@
-public record RubricItem(int Points, string Label);
+public record RubricItem
+{
+  public string Id { get; set; } = "";
+  public string Label { get; set; } = "";
+  public int Points { get; set; } = 0;
+}
 
 public enum SubmissionType
 {
