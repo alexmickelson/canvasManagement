@@ -1,4 +1,4 @@
 public class AssignmentDragContainer
 {
-  public LocalAssignment? AssignmentBeingDragged { get; set; }
+  public Action<DateTime>? DropCallback { get; set; }
 }

@@ -1,26 +1,28 @@
+@using Management.Web.Shared.Components
+
 @inject CoursePlanner planner
 
 
 @code {
 
-  [Parameter, EditorRequired]
-  public string ModuleName { get; set; } = "";
-
   [Parameter]
-  public EventCallback OnSubmit { get; set; }
+  [EditorRequired]
+  public LocalModule Module { get; set; } = default!;
 
   [Required]
   [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
   private string Name { get; set; } = "";
 
-  private async Task submitHandler()
+  private Modal? modal { get; set; }
+
+  private void submitHandler()
   {
+    System.Console.WriteLine("new assignment");
     var newAssignment = new LocalAssignment
     {
       id = Guid.NewGuid().ToString(),
       name = Name,
-      description = "testDescription",
-      published = false,
+      description = "",
       lock_at_due_date = true,
       rubric = new RubricItem[] { },
       lock_at = null,
@@ -28,21 +30,46 @@
       points_possible = 10,
       submission_types = new SubmissionType[] { SubmissionType.online_text_entry }
     };
-    @* planner.LocalCourse.Assignments = planner.Assignments.Append(newAssignment); *@
-    await OnSubmit.InvokeAsync();
+
+    if(planner.LocalCourse != null)
+    {
+      planner.LocalCourse = planner.LocalCourse with 
+      {
+        Modules=planner.LocalCourse.Modules.Select(m => 
+          m.Name != Module.Name 
+            ? m 
+            : Module with 
+            {
+              Assignments=Module.Assignments.Append(newAssignment)
+            }
+          )
+      };
+    }
+    modal?.Hide();
   }
 }
+<button 
+  class="btn btn-outline-secondary" 
+  @onclick="() => modal?.Show()"
+>
+  New Assignment
+</button>
 
-<div class="modal">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body">
-        <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
-          <label for="Assignment Name">Name</label>
-          <input id="moduleName" class="form-control" @bind="Name" />
-          <button class="btn btn-primary">Save</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
+<Modal @ref="modal">
+  <Title>New Assignment</Title>
+  <Body>
+    <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
+      <label for="Assignment Name">Name</label>
+      <input id="moduleName" class="form-control" @bind="Name" />
+    </form>
+  </Body>
+  <Footer>
+    <button 
+      type="button" 
+      class="btn btn-primary"
+      @onclick="submitHandler"
+    >
+      Save changes
+    </button>
+  </Footer>
+</Modal>

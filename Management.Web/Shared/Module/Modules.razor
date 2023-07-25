@@ -8,16 +8,32 @@
 
 @code {
   private bool showNewModule { get; set; } = false;  
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
 }
 
-@if (!showNewModule)
-{
-  <button class="btn btn-secondary" @onclick="() => showNewModule = true">New Module</button>
-}
-else
-{
-  <button class="btn btn-secondary" @onclick="() => showNewModule = false">Hide New Module</button>
-}
+<div class="row justify-content-end mb-1">
+  <div class="col-auto">
+    @if (!showNewModule)
+    {
+      <button class="btn btn-outline-secondary" @onclick="() => showNewModule = true">New Module</button>
+    }
+    else
+    {
+      <button class="btn btn-outline-secondary" @onclick="() => showNewModule = false">Hide New Module</button>
+    }
+  </div>
+</div>
 
 @if (showNewModule)
 {
@@ -26,9 +42,11 @@ else
 
 @if (planner.LocalCourse != null)
 {
+  <div class="accordion" id="modulesAccordion">
+
   @foreach (var module in planner.LocalCourse.Modules)
   {
-    <hr>
     <ModuleDetail Module="module" />
   }
+  </div>
 }

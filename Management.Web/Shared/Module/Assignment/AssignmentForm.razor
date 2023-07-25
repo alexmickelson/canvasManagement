@@ -1,0 +1,59 @@
+@using Management.Web.Shared.Components
+
+@code {
+  [Parameter]
+  [EditorRequired]
+  public LocalAssignment assignment
+  {
+    get;
+    set;
+  } = default!;
+
+  [Parameter]
+  [EditorRequired]
+  public bool Show { get; set; }
+
+  [Parameter] 
+  public Action OnHide { get; set; } = () => { }; 
+  public Modal AssignmentModal { get; set; }
+
+  private string description { get; set; }
+
+  protected override void OnParametersSet()
+  {
+    if(Show)
+    {
+      AssignmentModal.Show();
+    }
+    description = assignment.description;
+  }
+
+  private void submitHandler()
+  {
+    
+  }
+} 
+
+<Modal @ref="AssignmentModal" OnHide="@(() => OnHide())">
+  <Title>@assignment.name</Title>
+  <Body>
+    <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
+      <label 
+        for="description"
+        class="form-label"
+      >
+        Description
+      </label>
+      <textarea 
+        id="description" 
+        class="form-control"
+        @bind="description"
+      />
+    </form>
+  </Body>
+  <Footer>
+    <button class="btn btn-primary" @onclick="submitHandler">
+      Save
+    </button>
+  </Footer>
+</Modal>

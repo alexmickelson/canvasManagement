@@ -1,35 +1,71 @@
+
 @using Management.Web.Shared.Module.Assignment
 @using LocalModels
 
 @inject CoursePlanner configurationManagement
+@inject CoursePlanner planner
 
 @code {
   [Parameter, EditorRequired]
   public LocalModule Module { get; set; } = default!;
 
-  private bool showAddAssignment { get; set; } = false;
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
+
+  private string accordionId {
+    get => Module.Name.Replace(" ", "") + "-AccordionItem";
+  }
 
 }
 
+<div class="accordion-item">
 
-<h3 class="text-center">@Module.Name</h3>
-<button 
-  class="btn btn-primary" 
-  @onclick="() => showAddAssignment = true"
->
-  Add Assignment
-</button>
+  <h2 class="accordion-header">
+    <button 
+      class="accordion-button" 
+      type="button" 
+      data-bs-toggle="collapse" 
+      data-bs-target="@("#" + accordionId)" 
+      aria-expanded="true" 
+      aria-controls="@accordionId"
+    >
+      @Module.Name
+    </button>
+  </h2>
+  <div 
+    id="@accordionId" 
+    class="accordion-collapse collapse" 
+    data-bs-parent="#modulesAccordion"
+  >
+    <div class="accordion-body pt-1">
 
-@if (showAddAssignment)
-{
-  <NewAssignment ModuleName="Module.Name" OnSubmit="() => showAddAssignment = false" />
-}
-
-<h5>Assignments</h5>
-<div class="row">
-
-@* @foreach (var a in module.Assignments)
-{
-  <AssignmentCard assignment="a" />
-} *@
+      <div class="row m-1">
+        <div class="col my-auto">
+          <h5>Assignments</h5>
+        </div>
+        <div class="col-auto">
+          <NewAssignment 
+            Module="Module" 
+          />
+        </div>
+      </div>
+      
+      <div class="row">
+      @foreach (var a in Module.Assignments)
+      {
+        <AssignmentDetails assignment="a" module="Module" />
+      }
+      </div>
+    </div>
+  </div>
 </div>

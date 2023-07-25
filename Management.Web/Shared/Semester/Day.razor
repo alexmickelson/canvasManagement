@@ -13,6 +13,30 @@
     get => date?.DayOfWeek != null;
   }
   private bool dragging {get; set;} = false;
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
+
+  private IEnumerable<LocalAssignment> TodaysAssignments {
+    get
+    {
+      if(planner.LocalCourse == null || date == null)
+        return Enumerable.Empty<LocalAssignment>();
+      else
+        return planner.LocalCourse.Modules
+          .SelectMany(m => m.Assignments)
+          .Where(a => a.due_at.Date == date?.Date);
+    }
+  }
   private string calculatedClass
   {
     get
@@ -30,7 +54,7 @@
             && date < planner.LocalCourse.EndDate 
             && date > planner.LocalCourse.StartDate;
 
-        var totalClasses = dayInSemester ? $"bg-light {baseClasses}" : baseClasses;
+        var totalClasses = dayInSemester ? $"bg-light-subtle text-light {baseClasses}" : baseClasses;
 
         return totalClasses;
       }
@@ -40,29 +64,26 @@
       }
     }
   }
-  void OnDragStart()
-  {
-      Console.WriteLine("on drag start");
-  }
-
-  void OnDrop()
-  {
-    Console.WriteLine("on drop");
-    dragging = false;
-    if(dragContainer.AssignmentBeingDragged == null){
-      System.Console.WriteLine("no assignment in drop event");
-      return;
-    }
-
-    Console.WriteLine(JsonSerializer.Serialize(dragContainer.AssignmentBeingDragged));
-    dragContainer.AssignmentBeingDragged = null;
-  }
-
   void OnDragEnter() {
     dragging = true;
   }
   void OnDragLeave() {
     dragging = false;
+  }
+
+  void OnDrop()
+  {
+    @* System.Console.WriteLine("on drop"); *@
+    dragging = false;
+    if(dragContainer.DropCallback == null){
+      System.Console.WriteLine("no drop callback set");
+      return;
+    }
+    if(date != null)
+    {
+      DateTime d = date ?? throw new Exception("should not get here, error converting date from nullable");
+      dragContainer.DropCallback?.Invoke(d);
+    }
   }
 } 
 
@@ -72,7 +93,12 @@
   @ondragenter="OnDragEnter"
   @ondragleave="OnDragLeave"
   ondragover="event.preventDefault();"
-  ondragstart="event.dataTransfer.setData('', event.target.id);"
 >
   @(isWeekDay ? date?.Day : "")
+  <ul class="m-0 ps-3">
+  @foreach (var assignment in TodaysAssignments)
+  {
+    <li>@assignment.name</li>
+  }
+  </ul>
 </div>

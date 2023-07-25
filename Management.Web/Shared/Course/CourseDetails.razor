@@ -10,7 +10,15 @@
   private bool showEditCourseSettings = false;
   protected override void OnInitialized()
   {
-    planner.StateHasChanged += () => this.InvokeAsync(this.StateHasChanged);
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
   }
 }
 <br>
@@ -42,7 +50,7 @@ else
       }
     }
   </div>
-  <div class="col">
+  <div class="col-4">
     <Modules />
   </div>
 </div>
