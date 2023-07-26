@@ -1,5 +1,6 @@
 public record RubricItem
 {
+  public static readonly string extraCredit = "(Extra Credit) ";
   public string Id { get; set; } = "";
   public string Label { get; set; } = "";
   public int Points { get; set; } = 0;

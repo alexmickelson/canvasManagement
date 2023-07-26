@@ -28,6 +28,32 @@
     SetRubric(newRubric);
     StateHasChanged();
   }
+  private void MoveUp(RubricItem item)
+  {
+    var rubricList = Rubric.ToList();
+    var index = rubricList.IndexOf(item);
+
+    if(index > 0)
+    {
+      var previous = rubricList[index - 1];
+      rubricList[index - 1] = item;
+      rubricList[index] = previous;
+      SetRubric(rubricList);
+    }
+  }
+  private void MoveDown(RubricItem item)
+  {
+    var rubricList = Rubric.ToList();
+    var index = rubricList.IndexOf(item);
+
+    if(index < rubricList.Count())
+    {
+      var next = rubricList[index + 1];
+      rubricList[index + 1] = item;
+      rubricList[index] = next;
+      SetRubric(rubricList);
+    }
+  }
 }
 
 <br>
@@ -35,15 +61,22 @@
 <ul class="list-group">
   @foreach (var rubricItem in Rubric)
   {
-    <RubricEditorItem RubricItem="rubricItem" OnUpdate="editItem" />
+    <RubricEditorItem 
+      RubricItem="rubricItem" 
+      OnUpdate="editItem"
+      MoveUp="() => MoveUp(rubricItem)"
+      MoveDown="() => MoveDown(rubricItem)"
+    />
   }
 </ul>
 
-<button
-  @onclick:preventDefault="true"
-  @onclick="addItem"
-  type="button"
-  class="btn btn-outline-primary"
->
-  + rubric item
-</button>
+<div class="text-end my-1">
+  <button
+    @onclick:preventDefault="true"
+    @onclick="addItem"
+    type="button"
+    class="btn btn-outline-primary"
+  >
+    + rubric item
+  </button>
+</div>

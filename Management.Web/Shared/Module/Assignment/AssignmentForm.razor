@@ -40,13 +40,17 @@
 
   private void submitHandler()
   {
+    var totalRubricPoints = rubric
+      .Where(r => !r.Label.Contains(RubricItem.extraCredit))
+      .Select(s => s.Points)
+      .Sum();
     var newAssignment = Assignment with 
     {
       description=description,
       lock_at_due_date=lockAtDueDate,
       rubric=rubric,
+      points_possible=totalRubricPoints,
     };
-    System.Console.WriteLine(JsonSerializer.Serialize(newAssignment));
 
     if(planner.LocalCourse != null)
     {

@@ -84,7 +84,28 @@
         {
           <div>Not synced with canvas</div>
         }
-        <code>@JsonSerializer.Serialize(Assignment.rubric)</code>
+        <div class="ms-3">
+
+          <div class="row  p-1">
+            <div class="col border-end my-auto text-end">
+              Label
+            </div>
+            <div class="col my-auto">
+              Points
+            </div>
+          </div>
+          @foreach(var rubricItem in Assignment.rubric)
+          {
+            <div class="row  p-1">
+              <div class="col border-end my-auto text-end">
+                @rubricItem.Label
+              </div>
+              <div class="col my-auto">
+                @rubricItem.Points
+              </div>
+            </div>
+          }
+        </div>
       </div>
 
     </div>

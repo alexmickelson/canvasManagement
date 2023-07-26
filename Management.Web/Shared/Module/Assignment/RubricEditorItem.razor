@@ -8,6 +8,10 @@
 
   [Parameter, EditorRequired]
   public Action<RubricItem> OnUpdate { get; set; } = default!;
+  [Parameter, EditorRequired]
+  public Action MoveUp { get; set; } = default!;
+  [Parameter, EditorRequired]
+  public Action MoveDown { get; set; } = default!;
   private void editItem(string label, int points)
   {
     var newRubricItem = RubricItem with
@@ -16,7 +20,6 @@
       Points = points
     };
     OnUpdate(newRubricItem);
-
   }
 }
 
@@ -25,7 +28,12 @@
 >
   <div class="row">
     <div class="col">
-      <label for="rubricLabel">Label</label>
+      <label 
+        for="rubricLabel"
+        class="form-label"
+      >
+        Label
+      </label>
       <input 
         class="form-control"
         id="rubricLabel"
@@ -35,7 +43,12 @@
       />
     </div>
     <div class="col">
-      <label for="rubricPoints">Points</label>
+      <label
+        for="rubricPoints"
+        class="form-label"
+      >
+        Points
+      </label>
       <input 
         class="form-control"
         id="rubricPoints"
@@ -47,6 +60,63 @@
         value="@RubricItem.Points"
         type="number" 
       />
+    </div>
+    <div class="col-auto">
+      <label 
+        class="form-check-label" 
+        for="flexCheckDefault"
+      >
+        Extra Credit
+      </label>
+      <div class="form-check form-switch">
+        <input 
+          class="form-check-input" 
+          type="checkbox" 
+          checked="@RubricItem.Label.Contains(RubricItem.extraCredit)" 
+          @oninput="@(e => {
+            bool value = (bool) (e.Value ?? false);
+            var newLabel = value
+              ? RubricItem.extraCredit + RubricItem.Label
+              : RubricItem.Label.Replace(RubricItem.extraCredit, "");
+            editItem(newLabel, RubricItem.Points);
+          })" 
+          id="extraCredit"
+          name="extraCredit"
+          role="switch"
+        >
+      </div>
+    </div>
+    <div class="col-auto">
+      <div >
+        <svg 
+          width="2em" 
+          height="2em" 
+          viewBox="-0.5 0 25 25" 
+          fill="none"
+          stroke="rgb(173, 181, 189)"
+          xmlns="http://www.w3.org/2000/svg"
+          role="button"
+          @onclick="MoveUp"
+        >
+          <path d="M8 13.8599L10.87 10.8C11.0125 10.6416 11.1868 10.5149 11.3815 10.4282C11.5761 10.3415 11.7869 10.2966 12 10.2966C12.2131 10.2966 12.4239 10.3415 12.6185 10.4282C12.8132 10.5149 12.9875 10.6416 13.13 10.8L16 13.8599" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 7.41992L3 17.4199C3 19.6291 4.79086 21.4199 7 21.4199H17C19.2091 21.4199 21 19.6291 21 17.4199V7.41992C21 5.21078 19.2091 3.41992 17 3.41992H7C4.79086 3.41992 3 5.21078 3 7.41992Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <svg 
+          width="2em" 
+          height="2em" 
+          viewBox="-0.5 0 25 25" 
+          fill="none"
+          stroke="rgb(173, 181, 189)"
+          xmlns="http://www.w3.org/2000/svg"
+          role="button"
+          @onclick="MoveDown"
+        >
+          <path d="M16 10.99L13.1299 14.05C12.9858 14.2058 12.811 14.3298 12.6166 14.4148C12.4221 14.4998 12.2122 14.5437 12 14.5437C11.7878 14.5437 11.5779 14.4998 11.3834 14.4148C11.189 14.3298 11.0142 14.2058 10.87 14.05L8 10.99"  stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M21 17.4199V7.41992C21 5.21078 19.2091 3.41992 17 3.41992L7 3.41992C4.79086 3.41992 3 5.21078 3 7.41992V17.4199C3 19.6291 4.79086 21.4199 7 21.4199H17C19.2091 21.4199 21 19.6291 21 17.4199Z" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
     </div>
   </div>
 </li>
