@@ -8,4 +8,11 @@ public record LocalCourse
   public ulong? CanvasId { get; init; }
   public DateTime StartDate { get; init; }
   public DateTime EndDate { get; init; }
+  public SimpleTimeOnly DefaultDueTime { get; init; } = new SimpleTimeOnly();
+}
+
+public record SimpleTimeOnly
+{
+  public int Hour { get; init; } = 1;
+  public int Minute { get; init; } = 0;
 }

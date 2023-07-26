@@ -20,10 +20,8 @@
     set 
     {
       _selectedTermId = value;
+      this.InvokeAsync(updateCourses);
       @* updateCourses(); *@
-      var task = Task.Run(async () => await updateCourses());
-      task.Wait();
-      StateHasChanged();
     } 
   }
   private EnrollmentTermModel? selectedTerm

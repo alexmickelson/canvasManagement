@@ -40,17 +40,20 @@ else
 
 
 <div class="row">
-  <div class="col">
+  <div class="col overflow-y-auto border rounded " style="max-height: 95vh;">
     @if (planner.LocalCourse != null)
     {
-      @foreach (var month in SemesterPlanner.GetMonthsBetweenDates(planner.LocalCourse.StartDate, planner.LocalCourse.EndDate))
-      {
-        <MonthDetail Month="month" />
-        <hr />
-      }
+      <div class="py-2">
+
+        @foreach (var month in SemesterPlanner.GetMonthsBetweenDates(planner.LocalCourse.StartDate, planner.LocalCourse.EndDate))
+        {
+          <MonthDetail Month="month" />
+          <hr />
+        }
+      </div>
     }
   </div>
-  <div class="col-4">
+  <div class="col-4  overflow-y-auto" style="max-height: 95vh;">
     <Modules />
   </div>
 </div>

@@ -1,0 +1,64 @@
+
+@inject AssignmentDragContainer dragContainer
+@inject CoursePlanner planner
+
+@code {
+  [Parameter]
+  [EditorRequired]
+  public LocalAssignment Assignment { get; set; } = new();
+
+  private void HandleDragStart()
+  {
+    dragContainer.DropCallback = (DateTime dropDate) => {
+      var module = planner
+        .LocalCourse?
+        .Modules
+        .First(m => 
+          m.Assignments
+            .Select(a => a.id)
+            .Contains(Assignment.id)
+        );
+      if (module == null)
+      {
+        Console.WriteLine("module is null");
+        return;
+      }
+      if (planner.LocalCourse != null)
+      {
+        var newCourse = planner.LocalCourse with 
+        {
+          Modules = planner.LocalCourse.Modules.Select(m => 
+            m.Name != module.Name
+              ? m
+              : m with 
+              {
+                Assignments = module.Assignments.Select(a => 
+                  a.id != Assignment.id
+                  ? a
+                  : a with 
+                  {
+                    due_at=dropDate
+                  }
+                )
+              }
+          )
+        };
+        planner.LocalCourse = newCourse;
+      }
+    };
+  }
+
+  private void HandleDragEnd()
+  {
+    dragContainer.DropCallback = null;
+  }
+}
+
+<div
+  draggable="true"
+  @ondragstart="HandleDragStart"
+  @ondragend="HandleDragEnd"
+  role="button"
+>
+  @Assignment.name
+</div>

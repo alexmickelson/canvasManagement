@@ -5,6 +5,7 @@ global using CanvasModel.EnrollmentTerms;
 global using CanvasModel.Courses;
 global using CanvasModel;
 global using LocalModels;
+global using Management.Web.Shared.Components;
 global using Management.Web.Shared.Course;
 
 using Microsoft.AspNetCore.Components;

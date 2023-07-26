@@ -1,0 +1,120 @@
+
+@code {
+  [Parameter]
+  [EditorRequired]
+  public SimpleTimeOnly Time { get; set; } = default!;
+
+  [Parameter]
+  [EditorRequired]
+  public Action<SimpleTimeOnly> UpdateTime { get; set; }= default!;
+
+  private string AmPm
+  {
+    get => Time.Hour < 12 ? "AM" : "PM";
+  }
+  private int AdjustedHour
+  {
+    get => convert24to12Hour(Time.Hour);
+  }
+  private int convert24to12Hour(int hour)
+  {
+    if (hour == 0)
+    {
+      // 12 AM
+      return 12;
+    }
+    else if (hour <= 12)
+    {
+      // AM hours
+      return hour;
+    }
+    else
+    {
+      // PM hours
+      return hour - 12;
+    }
+  }
+  private int convert12To24Hour(int hour, string? amPm)
+  {
+    if (amPm == null) return -1;
+    if (amPm.ToUpper() == "PM" && hour < 12)
+    {
+      return hour + 12;
+    }
+    else if (amPm.ToUpper() == "AM" && hour == 12)
+    {
+      return 0;
+    }
+    else
+    {
+      return hour;
+    }
+  }
+}
+<div>
+<select 
+  @onchange="async (e) => 
+    UpdateTime(
+      new SimpleTimeOnly
+      {
+        Hour=convert24to12Hour(Convert.ToInt32(e.Value)),
+        Minute=Time.Minute
+      }
+    )" 
+  class="form-control w-auto d-inline"
+>
+  @foreach (var hour in Enumerable.Range(1, 12))
+  {
+    <option 
+      value="@hour" 
+      selected="@(hour == Time.Hour)"
+    >
+      @hour.ToString("00")
+    </option>
+  }
+</select>
+<span class="pl-0">:</span>
+<select 
+  @onchange="async (e) => 
+    UpdateTime(
+      new SimpleTimeOnly
+      {
+        Hour=AdjustedHour,
+        Minute=Convert.ToInt32(e.Value)
+      }
+    )"
+  class="form-control w-auto d-inline"
+>
+  @foreach (var minute in new int[] {0, 15, 30, 45, 59})
+  {
+    <option 
+      value="@minute" 
+      selected="@(minute == Time.Minute)"
+    >
+      @(minute.ToString("00"))
+    </option>
+  }
+</select>
+
+<select 
+  @onchange="(e) => 
+    UpdateTime(
+      new SimpleTimeOnly
+      {
+        Hour=convert12To24Hour(Time.Hour, e.Value?.ToString()),
+        Minute=Time.Minute
+      }
+    )"
+  class="form-control w-auto d-inline"
+>
+  @foreach (var amPm in new string[] {"AM", "PM"})
+  {
+    <option 
+      value="@amPm" 
+      selected="@(amPm == AmPm)"
+    >
+      @amPm
+    </option>
+  }
+</select>
+</div>

@@ -35,20 +35,6 @@
   <div class="row m-3">
   @foreach (var day in week)
     {
-
-      @* var baseClasses = "col border rounded rounded-3 pb-5 m-1";
-      DayOfWeek? weekDay = day?.DayOfWeek;
-      if (weekDay != null)
-      {
-        DayOfWeek notNullDay = weekDay ?? default;
-        var dayInSemester = Semester.Days.Contains(notNullDay) && day < Semester.LastDay && day > Semester.FirstDay;
-        var totalClasses = dayInSemester ? $"bg-light {baseClasses}" : baseClasses;
-        <div class="@totalClasses">@day?.Day</div>
-      }
-      else
-      {
-        <div class="@baseClasses"></div>
-      } *@
       <Day date="day"></Day>
     }
   </div>

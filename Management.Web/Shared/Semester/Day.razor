@@ -56,7 +56,9 @@
             && date < planner.LocalCourse.EndDate 
             && date > planner.LocalCourse.StartDate;
         
-        var totalClasses = dayInSemester ? $"bg-light-subtle text-light " + baseClasses : baseClasses;
+        var totalClasses = dayInSemester 
+          ? "bg-light-subtle text-light " + baseClasses 
+          : " " + baseClasses;
 
         return totalClasses;
       }
@@ -97,10 +99,10 @@
   ondragover="event.preventDefault();"
 >
   @(isWeekDay ? date?.Day : "")
-  <ul class="m-0 ps-3">
+  <div class="m-0 ps-3">
   @foreach (var assignment in TodaysAssignments)
   {
-    <li>@assignment.name</li>
+    <AssignmentInDay Assignment="assignment" />
   }
-  </ul>
+  </div>
 </div>
