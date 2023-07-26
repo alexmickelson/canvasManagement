@@ -1,4 +1,6 @@
 
+@inject CoursePlanner planner
+
 @code {
   [Parameter]
   [EditorRequired]
@@ -7,47 +9,51 @@
   [Parameter]
   [EditorRequired]
   public Action<SimpleTimeOnly> UpdateTime { get; set; }= default!;
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
 
   private string AmPm
   {
     get => Time.Hour < 12 ? "AM" : "PM";
   }
+
   private int AdjustedHour
   {
-    get => convert24to12Hour(Time.Hour);
-  }
-  private int convert24to12Hour(int hour)
-  {
-    if (hour == 0)
+    get 
     {
       // 12 AM
-      return 12;
-    }
-    else if (hour <= 12)
-    {
+      @* if (Time.Hour == 0)
+        return 12; *@
       // AM hours
-      return hour;
-    }
-    else
-    {
+      if (Time.Hour <= 11)
+        return Time.Hour;
       // PM hours
-      return hour - 12;
+      return Time.Hour + 1 - 12;
     }
   }
-  private int convert12To24Hour(int hour, string? amPm)
+
+  private int convertTo24Hour(int hour, string? amPm)
   {
-    if (amPm == null) return -1;
-    if (amPm.ToUpper() == "PM" && hour < 12)
+    if(amPm == "AM")
     {
-      return hour + 12;
+      return hour % 12;
     }
-    else if (amPm.ToUpper() == "AM" && hour == 12)
+    else 
     {
-      return 0;
-    }
-    else
-    {
-      return hour;
+      if (hour == 12)
+        return 12;
+      else 
+        return hour + 12;
     }
   }
 }
@@ -57,16 +63,22 @@
     UpdateTime(
       new SimpleTimeOnly
       {
-        Hour=convert24to12Hour(Convert.ToInt32(e.Value)),
+        Hour=convertTo24Hour(Convert.ToInt32(e.Value), AmPm),
         Minute=Time.Minute
       }
     )" 
   class="form-control w-auto d-inline"
 >
-  @foreach (var hour in Enumerable.Range(1, 12))
+  <option 
+    value="12" 
+    selected="@(12 == Time.Hour)"
+  >
+    12
+  </option>
+  @foreach (var hour in Enumerable.Range(1, 11))
   {
     <option 
-      value="@hour" 
+      value="@hour"
       selected="@(hour == Time.Hour)"
     >
       @hour.ToString("00")
@@ -79,7 +91,7 @@
     UpdateTime(
       new SimpleTimeOnly
       {
-        Hour=AdjustedHour,
+        Hour=Time.Hour,
         Minute=Convert.ToInt32(e.Value)
       }
     )"
@@ -101,7 +113,7 @@
     UpdateTime(
       new SimpleTimeOnly
       {
-        Hour=convert12To24Hour(Time.Hour, e.Value?.ToString()),
+        Hour=convertTo24Hour(Time.Hour, e.Value?.ToString()),
         Minute=Time.Minute
       }
     )"

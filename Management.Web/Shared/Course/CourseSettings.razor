@@ -4,6 +4,18 @@
 
 @code
 {
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
   private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
   private ulong? _selectedTermId {get; set;}
   private ulong? selectedTermId { 

@@ -18,14 +18,31 @@ public class CoursePlanner
     get => _localCourse;
     set
     {
-      // ignore initial load of course
-      if (_localCourse != null && value != null)
+      if (value == null)
       {
-        yamlManager.SaveCourse(value);
+        _localCourse = null;
+        StateHasChanged?.Invoke();
+        return;
       }
-      _localCourse = value;
+
+      var verifiedCourse = verifyCourse(value);
+      // ignore initial load of course
+      if (_localCourse != null)
+      {
+        yamlManager.SaveCourse(verifiedCourse);
+      }
+      _localCourse = verifiedCourse;
       StateHasChanged?.Invoke();
     }
   }
   public event Action? StateHasChanged;
+
+  private LocalCourse verifyCourse(LocalCourse incomingCourse)
+  {
+    var modulesWithUniqueAssignments = incomingCourse.Modules.Select(
+      module => module with { Assignments = module.Assignments.DistinctBy(a => a.id) }
+    );
+    
+    return incomingCourse with { Modules = modulesWithUniqueAssignments };
+  }
 }

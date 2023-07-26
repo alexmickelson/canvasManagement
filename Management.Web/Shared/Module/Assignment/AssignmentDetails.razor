@@ -26,62 +26,71 @@
   }
   private Modal? assignmentEditorModal {get; set;}
 
+    private void dropOnDate(DateTime dropDate)
+  {
+    if (planner.LocalCourse == null) return;
+    var currentModule = planner
+      .LocalCourse
+      .Modules
+      .First(m => 
+        m.Assignments
+          .Select(a => a.id)
+          .Contains(Assignment.id)
+      ) ?? throw new Exception("in day callback, could not find module");
+    var moduleWithUpdatedAssignment = currentModule with 
+    {
+      Assignments = currentModule.Assignments.Select(a => 
+        a.id != Assignment.id
+        ? a
+        : a with 
+        {
+          due_at=dropDate
+        }
+      )
+    };
+    var updatedModules = planner.LocalCourse.Modules
+      .Select(m => 
+        m.Name == moduleWithUpdatedAssignment.Name 
+          ? moduleWithUpdatedAssignment 
+          : m
+      );
+    var newCourse = planner.LocalCourse with 
+    {
+      Modules = updatedModules
+    };
+    planner.LocalCourse = newCourse;
+  }
+  private void dropOnModule(LocalModule module)
+  {
+    if (planner.LocalCourse == null) return;
+    var newModules = planner.LocalCourse.Modules.Select(m => 
+      m.Name != module.Name
+        ? m with 
+        {
+          Assignments = m.Assignments.Where(a => a.id != Assignment.id).DistinctBy(a => a.id)
+        }
+        : m with 
+        {
+          Assignments = m.Assignments.Append(Assignment).DistinctBy(a => a.id)
+        }
+    );
+
+    var newCourse = planner.LocalCourse with 
+    {
+      Modules = newModules
+    };
+    planner.LocalCourse = newCourse;
+  }
+
   private void DropCallback (DateTime? dropDate, LocalModule? module) 
   {
-    @* only supports changing date or module, not both *@
-    if (planner.LocalCourse == null) return;
     if (module == null)
     {
-      var currentModule = planner
-        .LocalCourse
-        .Modules
-        .First(m => 
-          m.Assignments
-            .Select(a => a.id)
-            .Contains(Assignment.id)
-        ) ?? throw new Exception("in day callback, could not find module");
-      var moduleWithUpdatedAssignment = currentModule with 
-      {
-        Assignments = currentModule.Assignments.Select(a => 
-          a.id != Assignment.id
-          ? a
-          : a with 
-          {
-            due_at=dropDate ?? Assignment.due_at
-          }
-        )
-      };
-      var updatedModules = planner.LocalCourse.Modules
-        .Select(m => 
-          m.Name == moduleWithUpdatedAssignment.Name 
-            ? moduleWithUpdatedAssignment 
-            : m
-        );
-      var newCourse = planner.LocalCourse with 
-      {
-        Modules = updatedModules
-      };
-      planner.LocalCourse = newCourse;
+      dropOnDate(dropDate ?? Assignment.due_at);
     } 
     else
     {
-      var newModules = planner.LocalCourse.Modules.Select(m => 
-        m.Name != module.Name
-          ? m with 
-          {
-            Assignments = m.Assignments.Where(a => a.id != Assignment.id).DistinctBy(a => a.id)
-          }
-          : m with 
-          {
-            Assignments = m.Assignments.Append(Assignment).DistinctBy(a => a.id)
-          }
-      );
-
-      var newCourse = planner.LocalCourse with 
-      {
-        Modules = newModules
-      };
-      planner.LocalCourse = newCourse;
+      dropOnModule(module);
     }
   }
   private void HandleDragStart()
@@ -106,41 +115,44 @@
 >
   <div class="card">
     <div class="card-body">
-      <div class="card-title">@Assignment.name</div>
+      <div class="card-title">
+        <h4 class="text-center">
+          @Assignment.name
+        </h4>
+      </div>
       <div class="card-text">
-        @Assignment.description
-        <div>Due At: @Assignment.due_at</div>
-        <div>Lock At: @Assignment.lock_at</div>
-        <div>Points: @Assignment.points_possible</div>
-        @if(Assignment.canvasId != null)
-        {
-          <div>Synced with canvas</div>
-        }
-        else
-        {
-          <div>Not synced with canvas</div>
-        }
-        <div class="ms-3">
-
-          <div class="row  p-1">
-            <div class="col border-end my-auto text-end">
-              Label
-            </div>
-            <div class="col my-auto">
-              Points
-            </div>
+        <div class="row">
+          <div class="col">
+            @Assignment.description
+            
           </div>
-          @foreach(var rubricItem in Assignment.rubric)
-          {
-            <div class="row  p-1">
-              <div class="col border-end my-auto text-end">
-                @rubricItem.Label
-              </div>
-              <div class="col my-auto">
-                @rubricItem.Points
-              </div>
+          <div class="col-auto">
+            <div>Points: @Assignment.points_possible</div>
+            <div>Due At: @Assignment.due_at</div>
+            <div>Lock At: @Assignment.lock_at</div>
+            @if(Assignment.canvasId != null)
+            {
+              <div>Synced with canvas</div>
+            }
+            else
+            {
+              <div>Not synced with canvas</div>
+            }
+            <div>
+              Rubric:
             </div>
-          }
+            @foreach(var rubricItem in Assignment.rubric)
+            {
+              <div class="row  p-1">
+                <div class="col border-end my-auto text-end">
+                  @rubricItem.Label
+                </div>
+                <div class="col-2 my-auto">
+                  @rubricItem.Points
+                </div>
+              </div>
+            }
+          </div>
         </div>
       </div>
 
