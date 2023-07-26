@@ -26,7 +26,7 @@
   }
   private Modal? assignmentEditorModal {get; set;}
 
-    private void dropOnDate(DateTime dropDate)
+  private void dropOnDate(DateTime dropDate)
   {
     if (planner.LocalCourse == null) return;
     var currentModule = planner
@@ -37,6 +37,16 @@
           .Select(a => a.id)
           .Contains(Assignment.id)
       ) ?? throw new Exception("in day callback, could not find module");
+
+
+    var defaultDueTimeDate = new DateTime(
+      year: dropDate.Year,
+      month: dropDate.Month,
+      day: dropDate.Day,
+      hour: planner.LocalCourse.DefaultDueTime.Hour,
+      minute: planner.LocalCourse.DefaultDueTime.Minute,
+      second: 0
+    );
     var moduleWithUpdatedAssignment = currentModule with 
     {
       Assignments = currentModule.Assignments.Select(a => 
@@ -44,7 +54,7 @@
         ? a
         : a with 
         {
-          due_at=dropDate
+          due_at=defaultDueTimeDate
         }
       )
     };

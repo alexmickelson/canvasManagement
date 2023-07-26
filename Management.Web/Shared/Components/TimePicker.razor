@@ -31,14 +31,9 @@
   {
     get 
     {
-      // 12 AM
-      @* if (Time.Hour == 0)
-        return 12; *@
-      // AM hours
-      if (Time.Hour <= 11)
-        return Time.Hour;
-      // PM hours
-      return Time.Hour + 1 - 12;
+      var time = Time.Hour % 12;
+      if (time == 0) return 12;
+      return time;
     }
   }
 
@@ -71,7 +66,7 @@
 >
   <option 
     value="12" 
-    selected="@(12 == Time.Hour)"
+    selected="@(12 == AdjustedHour)"
   >
     12
   </option>
@@ -79,7 +74,7 @@
   {
     <option 
       value="@hour"
-      selected="@(hour == Time.Hour)"
+      selected="@(hour == AdjustedHour)"
     >
       @hour.ToString("00")
     </option>
