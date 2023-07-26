@@ -86,7 +86,7 @@
     if(date != null)
     {
       DateTime d = date ?? throw new Exception("should not get here, error converting date from nullable");
-      dragContainer.DropCallback?.Invoke(d);
+      dragContainer.DropCallback?.Invoke(d, null);
     }
   }
 } 

@@ -7,45 +7,67 @@
   [EditorRequired]
   public LocalAssignment Assignment { get; set; } = new();
 
-  private void HandleDragStart()
+  private void DropCallback (DateTime? dropDate, LocalModule? module) 
   {
-    dragContainer.DropCallback = (DateTime dropDate) => {
-      var module = planner
-        .LocalCourse?
+    @* only supports changing date or module, not both *@
+    if (planner.LocalCourse == null) return;
+    if (module == null)
+    {
+      var currentModule = planner
+        .LocalCourse
         .Modules
         .First(m => 
           m.Assignments
             .Select(a => a.id)
             .Contains(Assignment.id)
+        ) ?? throw new Exception("in day callback, could not find module");
+      var moduleWithUpdatedAssignment = currentModule with 
+      {
+        Assignments = currentModule.Assignments.Select(a => 
+          a.id != Assignment.id
+          ? a
+          : a with 
+          {
+            due_at=dropDate ?? Assignment.due_at
+          }
+        )
+      };
+      var updatedModules = planner.LocalCourse.Modules
+        .Select(m => 
+          m.Name == moduleWithUpdatedAssignment.Name 
+            ? moduleWithUpdatedAssignment 
+            : m
         );
-      if (module == null)
+      var newCourse = planner.LocalCourse with 
       {
-        Console.WriteLine("module is null");
-        return;
-      }
-      if (planner.LocalCourse != null)
+        Modules = updatedModules
+      };
+      planner.LocalCourse = newCourse;
+    } 
+    else
+    {
+      var newModules = planner.LocalCourse.Modules.Select(m => 
+        m.Name != module.Name
+          ? m with 
+          {
+            Assignments = m.Assignments.Where(a => a.id != Assignment.id).DistinctBy(a => a.id)
+          }
+          : m with 
+          {
+            Assignments = m.Assignments.Append(Assignment).DistinctBy(a => a.id)
+          }
+      );
+
+      var newCourse = planner.LocalCourse with 
       {
-        var newCourse = planner.LocalCourse with 
-        {
-          Modules = planner.LocalCourse.Modules.Select(m => 
-            m.Name != module.Name
-              ? m
-              : m with 
-              {
-                Assignments = module.Assignments.Select(a => 
-                  a.id != Assignment.id
-                  ? a
-                  : a with 
-                  {
-                    due_at=dropDate
-                  }
-                )
-              }
-          )
-        };
-        planner.LocalCourse = newCourse;
-      }
-    };
+        Modules = newModules
+      };
+      planner.LocalCourse = newCourse;
+    }
+  }
+  private void HandleDragStart()
+  {
+    dragContainer.DropCallback = DropCallback;
   }
 
   private void HandleDragEnd()

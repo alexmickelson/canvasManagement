@@ -1,4 +1,4 @@
 public class AssignmentDragContainer
 {
-  public Action<DateTime>? DropCallback { get; set; }
+  public Action<DateTime?, LocalModule?>? DropCallback { get; set; }
 }

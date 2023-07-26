@@ -4,10 +4,12 @@
 
 @inject CoursePlanner configurationManagement
 @inject CoursePlanner planner
+@inject AssignmentDragContainer dragContainer
 
 @code {
   [Parameter, EditorRequired]
   public LocalModule Module { get; set; } = default!;
+  private bool dragging {get; set;} = false;
 
   protected override void OnInitialized()
   {
@@ -26,11 +28,33 @@
     get => Module.Name.Replace(" ", "") + "-AccordionItem";
   }
 
+  void OnDragEnter() {
+    dragging = true;
+  }
+  void OnDragLeave() {
+    dragging = false;
+  }
+
+  void OnDrop()
+  {
+    dragging = false;
+    if(dragContainer.DropCallback == null){
+      System.Console.WriteLine("no drop callback set");
+      return;
+    }
+    dragContainer.DropCallback?.Invoke(null, Module);
+  }
 }
 
-<div class="accordion-item">
+<div 
+  class="@("accordion-item " + (dragging ? "" : ""))"
+  @ondrop="@(() => OnDrop())"
+  @ondragenter="OnDragEnter"
+  @ondragleave="OnDragLeave"
+  ondragover="event.preventDefault();"
+>
 
-  <h2 class="accordion-header">
+  <h2 class="@("accordion-header ")">
     <button 
       class="accordion-button" 
       type="button" 
