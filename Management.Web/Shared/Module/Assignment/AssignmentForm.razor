@@ -24,6 +24,7 @@
   public Modal AssignmentModal { get; set; } = default!;
 
   private string description { get; set; } = String.Empty;
+  private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
   private IEnumerable<RubricItem> rubric { get; set; } = Enumerable.Empty<RubricItem>();
 
@@ -33,6 +34,7 @@
     {
       AssignmentModal.Show();
     }
+    name = Assignment.name;
     description = Assignment.description;
     lockAtDueDate = Assignment.lock_at_due_date;
     rubric = Assignment.rubric;
@@ -46,6 +48,7 @@
       .Sum();
     var newAssignment = Assignment with 
     {
+      name=name,
       description=description,
       lock_at_due_date=lockAtDueDate,
       rubric=rubric,
@@ -80,9 +83,22 @@
 } 
 
 <Modal @ref="AssignmentModal" OnHide="@(() => OnHide())">
-  <Title>@Assignment.name</Title>
+  <Title>
+    @Assignment.name
+  </Title>
   <Body>
     <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
+      <div class="m-1">
+        <label 
+          class="form-label"
+        >
+          Name
+        </label>
+        <input 
+          class="form-control"
+          @bind="name"
+        />
+      </div>
       <div class="m-1">
         <label 
           for="description"
