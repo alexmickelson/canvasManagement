@@ -7,7 +7,6 @@
 
 @code
 {
-  private bool showEditCourseSettings = false;
   protected override void OnInitialized()
   {
     planner.StateHasChanged += reload;
@@ -21,22 +20,7 @@
     planner.StateHasChanged -= reload;
   }
 }
-<br>
 
-@if(!showEditCourseSettings)
-{
-  <button class="btn btn-outline-secondary" @onclick="@(() => showEditCourseSettings = true)">Edit Course Settings</button>
-}
-else
-{
-  <CourseSettings />
-  <button 
-    class="btn btn-outline-secondary" 
-    @onclick="@(() => showEditCourseSettings = false)"
-  >
-    Done Editing Course Settings
-  </button>
-}
 
 
 <div class="row">

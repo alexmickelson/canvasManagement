@@ -1,10 +1,12 @@
 ﻿@page "/"
 @using CanvasModel.EnrollmentTerms
 @using Management.Web.Shared.Course
+@using Management.Web.Shared.Module.Assignment.Templates
 @using Management.Web.Shared.Semester
 @using CanvasModel.Courses
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using LocalModels
+@using Management.Web.Shared.Module.Assignment
 
 @inject CanvasService canvas
 @inject CoursePlanner planner
@@ -63,13 +65,15 @@ protected override void OnInitialized()
 
 @if(planner.LocalCourse != null)
 {
-  <div class="">
+  <div class="mb-3">
     <button
       @onclick="@(() => planner.LocalCourse = null)"
       class="btn btn-primary"
     >
       Select New Course
     </button>
+    <CourseSettings />
+    <AssignmentTemplateManagement />
   </div>
   <CourseDetails />
 }

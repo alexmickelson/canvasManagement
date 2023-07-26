@@ -1,0 +1,44 @@
+@code 
+{
+  [Parameter, EditorRequired]
+  public IEnumerable<SubmissionType> Types { get; set; } = Enumerable.Empty<SubmissionType>();
+
+  [Parameter, EditorRequired]
+  public Action<IEnumerable<SubmissionType>> SetTypes { get; set; } = (_) => {};
+  private string getLabel(SubmissionType type)
+  {
+    return type.ToString().Replace("_", "") + "switch";
+  }
+}
+
+<h5>Submission Types</h5>
+<div class="row">
+
+@foreach (var submissionType in (SubmissionType[])Enum.GetValues(typeof(SubmissionType)))
+{
+  <div class="col-4">
+    <div class="form-check form-switch">
+      <input 
+        class="form-check-input" 
+        type="checkbox"
+        role="switch" 
+        id="@getLabel(submissionType)"
+        checked="@Types.Contains(submissionType)"
+        @onchange="(e) => {
+          var isChecked = (bool)(e.Value ?? false);
+          if(isChecked)
+            SetTypes(Types.Append(submissionType));
+          else
+            SetTypes(Types.Where(t => t != submissionType));
+        }"
+      >
+      <label 
+        class="form-check-label" 
+        for="@getLabel(submissionType)"
+      >
+        @submissionType
+      </label>
+    </div>
+  </div>
+}
+</div>

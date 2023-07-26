@@ -27,6 +27,7 @@
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
   private IEnumerable<RubricItem> rubric { get; set; } = Enumerable.Empty<RubricItem>();
+  private IEnumerable<SubmissionType> submissionTypes { get; set; } = Enumerable.Empty<SubmissionType>();
 
   protected override void OnParametersSet()
   {
@@ -38,6 +39,7 @@
     description = Assignment.description;
     lockAtDueDate = Assignment.lock_at_due_date;
     rubric = Assignment.rubric;
+    submissionTypes = Assignment.submission_types;
   }
 
   private void submitHandler()
@@ -53,6 +55,7 @@
       lock_at_due_date=lockAtDueDate,
       rubric=rubric,
       points_possible=totalRubricPoints,
+      submission_types=submissionTypes,
     };
 
     if(planner.LocalCourse != null)
@@ -128,6 +131,10 @@
         </label>
       </div>
       <RubricEditor Rubric="rubric" SetRubric="updateRubric" />
+      <SubmissionTypeSelector
+        Types="submissionTypes"
+        SetTypes="(newTypes) => submissionTypes = newTypes"
+      />
     </form>
   </Body>
   <Footer>

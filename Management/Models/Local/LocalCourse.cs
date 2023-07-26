@@ -9,6 +9,8 @@ public record LocalCourse
   public DateTime StartDate { get; init; }
   public DateTime EndDate { get; init; }
   public SimpleTimeOnly DefaultDueTime { get; init; } = new SimpleTimeOnly();
+  public IEnumerable<AssignmentTemplate> AssignmentTemplates { get; init; } =
+    Enumerable.Empty<AssignmentTemplate>();
 }
 
 public record SimpleTimeOnly

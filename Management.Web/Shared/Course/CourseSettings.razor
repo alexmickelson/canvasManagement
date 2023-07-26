@@ -4,6 +4,7 @@
 
 @code
 {
+  private Modal modal { get; set; } = default!;
   protected override void OnInitialized()
   {
     planner.StateHasChanged += reload;
@@ -25,7 +26,6 @@
       _selectedTermId = value;
       if(selectedTerm != null && planner.LocalCourse != null)
       {
-        System.Console.WriteLine(JsonSerializer.Serialize(selectedTerm));
         planner.LocalCourse = planner.LocalCourse with 
         {
           StartDate=selectedTerm.StartAt ?? new DateTime(),
@@ -52,82 +52,102 @@
   }
 }
 
-<h5>Select Days Of Week</h5>
-<div class="row m-3">
-@foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
-  {
-    <div class="col">
-      <button
-        class="@(
-          planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false
-            ? "btn btn-secondary" 
-            : "btn btn-outline-secondary"
-        )" 
-        @onclick="() => 
-        {
-          if(planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false)
-          {
-            planner.LocalCourse = planner.LocalCourse with 
+<button 
+  class="btn btn-outline-secondary" 
+  @onclick="@(() => modal.Show())"
+>
+  Edit Course Settings
+</button>
+
+<Modal @ref="modal">
+  <Title>
+    <h1>Course Settings</h1>
+  </Title>
+  <Body>
+    <h5 class="text-center">Select Days Of Week</h5>
+    <div class="row m-3">
+    @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
+      {
+        <div class="col">
+          <button
+            class="@(
+              planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false
+                ? "btn btn-secondary" 
+                : "btn btn-outline-secondary"
+            )" 
+            @onclick="() => 
             {
-              DaysOfWeek = planner.LocalCourse.DaysOfWeek.Where((d) => d != day)
-            };
-          }
-          else
-          {
-            if (planner.LocalCourse != null)
-            {
-              planner.LocalCourse = planner.LocalCourse with 
+              if(planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false)
               {
-                DaysOfWeek = planner.LocalCourse.DaysOfWeek.Append(day)
-              };
-            }
-          }
-        }" 
-      >
-        @day
-      </button>
+                planner.LocalCourse = planner.LocalCourse with 
+                {
+                  DaysOfWeek = planner.LocalCourse.DaysOfWeek.Where((d) => d != day)
+                };
+              }
+              else
+              {
+                if (planner.LocalCourse != null)
+                {
+                  planner.LocalCourse = planner.LocalCourse with 
+                  {
+                    DaysOfWeek = planner.LocalCourse.DaysOfWeek.Append(day)
+                  };
+                }
+              }
+            }" 
+          >
+            @day
+          </button>
+        </div>
+      }
     </div>
-  }
-</div>
 
-@if(loading)
-{
-  <Spinner />
-}
+    @if(loading)
+    {
+      <Spinner />
+    }
 
-@if (terms != null)
-{
-  <div class="row justify-content-center">
-    <div class="col-auto">
-      <form>
-        <lablel for="termselect">Select Term for Start and End Date:</lablel>
-        <select id="termselect" class="form-select" @bind="selectedTermId">
-          @foreach (var term in terms)
-          {
-            <option value="@term.Id">@term.Name</option>
-          }
-        </select>
-      </form>
-    </div>
-  </div>
-}
+    @if (terms != null)
+    {
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <form @onsubmit:preventDefault="true">
+            <label for="termselect">Select Term for Start and End Date:</label>
+            <select id="termselect" class="form-select" @bind="selectedTermId">
+              @foreach (var term in terms)
+              {
+                <option value="@term.Id">@term.Name</option>
+              }
+            </select>
+          </form>
+        </div>
+      </div>
+    }
 
-  
-@if(planner.LocalCourse != null)
-{
-  <div class="row justify-content-center m-3 text-center">
-    <div class="col-auto">
-      <div>Default Assignment Due Time</div>
-      <TimePicker 
-        Time="planner.LocalCourse.DefaultDueTime"
-        UpdateTime="@((newTime) => 
-          planner.LocalCourse = 
-            planner.LocalCourse with 
-            { DefaultDueTime=newTime }
-        )"
-      />
-    </div>
-  </div>
-}
-
-<br>
+      
+    @if(planner.LocalCourse != null)
+    {
+      <div class="row justify-content-center m-3 text-center">
+        <div class="col-auto">
+          <div>Default Assignment Due Time</div>
+          <TimePicker 
+            Time="planner.LocalCourse.DefaultDueTime"
+            UpdateTime="@((newTime) => 
+              planner.LocalCourse = 
+                planner.LocalCourse with 
+                { DefaultDueTime=newTime }
+            )"
+          />
+        </div>
+      </div>
+    }
+  </Body>
+  <Footer>
+    <button 
+      class="btn btn-outline-secondary" 
+      @onclick="@(() => modal.Hide())"
+    >
+      Done Editing Course Settings
+    </button>
+  </Footer>
+</Modal>

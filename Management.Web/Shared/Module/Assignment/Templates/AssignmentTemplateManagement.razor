@@ -1,0 +1,122 @@
+@using Management.Web.Shared.Components
+
+
+@inject CoursePlanner planner
+
+@code
+{
+  private Modal modal { get; set; } = default!;
+  private string newTemplateName { get; set; } = "";
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
+
+  private string? _selectedTemplateId;
+  private string? selectedTemplateId
+  {
+    get { return _selectedTemplateId; }
+    set { _selectedTemplateId = value; }
+  }
+  
+
+  private AssignmentTemplate? selectedTemplate => 
+    planner
+    .LocalCourse?
+    .AssignmentTemplates
+    .FirstOrDefault(t => t.Id == selectedTemplateId);
+
+  private void newTemplate()
+  {
+    if (planner.LocalCourse != null)
+    {
+      var newOne = new AssignmentTemplate()
+      {
+        Id=Guid.NewGuid().ToString(),
+        Name=newTemplateName
+      };
+      planner.LocalCourse = planner.LocalCourse with
+      {
+        AssignmentTemplates = planner.LocalCourse.AssignmentTemplates.Append(newOne)
+      };
+      newTemplateName = "";
+    }
+  }
+
+}
+<button 
+  class="btn btn-outline-secondary" 
+  @onclick="@(() => modal.Show())"
+>
+  Manage Assignment Templates
+</button>
+
+@if(planner.LocalCourse != null)
+{
+  <Modal @ref="modal">
+    <Title>
+      <h1>Assignment Templates</h1>
+    </Title>
+    <Body>
+      <div class="row justify-content-center">
+        <div class="col-auto">
+          <form @onsubmit:preventDefault="true">
+            <label for="termselect">Templates</label>
+            <select id="termselect" class="form-select" @bind="selectedTemplateId">
+              <option></option>
+              @foreach (var template in planner.LocalCourse.AssignmentTemplates)
+              {
+                <option value="@template.Id">@template.Name</option>
+              }
+            </select>
+          </form>
+        </div>
+        <div class="col-auto my-auto">
+          <form 
+            @onsubmit:preventDefault="true"
+            @onsubmit="newTemplate"
+          >
+            <label 
+              class="form-label"
+              for="newTemplateName"
+            >
+              New Template Name
+            </label>
+            <input 
+              class="form-control"
+              type="text" 
+              @bind="newTemplateName" 
+              @bind:event="oninput" 
+            />
+            <button 
+              class="btn btn-outline-primary"
+            >
+              New Template
+            </button>
+          </form>
+        </div>
+      </div>
+      @if(selectedTemplate != null)
+      {
+        <TemplateEditor Template="selectedTemplate" />
+      }
+    </Body>
+    <Footer>
+      <button
+        class="btn btn-outline-secondary"
+        @onclick="@(() => modal.Hide())"
+      >
+        Close
+      </button>
+    </Footer>
+  </Modal>
+
+}

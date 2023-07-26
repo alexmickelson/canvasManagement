@@ -148,8 +148,8 @@
             {
               <div>Not synced with canvas</div>
             }
-            <div>
-              Rubric:
+            <div class="text-center">
+              Rubric
             </div>
             @foreach(var rubricItem in Assignment.rubric)
             {
@@ -162,6 +162,15 @@
                 </div>
               </div>
             }
+            <div>Submission Types:</div>
+            <ul>
+              @foreach(var type in Assignment.submission_types)
+              {
+                <li>
+                  @type
+                </li>
+              }
+            </ul>
           </div>
         </div>
       </div>

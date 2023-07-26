@@ -1,0 +1,92 @@
+@using Markdig
+
+@inject CoursePlanner planner
+
+@code
+{
+  [Parameter, EditorRequired]
+  public AssignmentTemplate Template { get; set; } = default!;
+
+  string markdownHtml = "";
+
+  protected override void OnInitialized()
+  {
+    base.OnInitialized();
+  }
+  public string Preview => Markdown.ToHtml(Template.Markdown);
+
+  private void SetName(string newName)
+  {
+    if(planner.LocalCourse != null)
+    {
+      var newTemplates = planner.LocalCourse.AssignmentTemplates.Select(t => 
+        t.Id == Template.Id
+          ? t with { Name=newName }
+          : t
+      );
+      planner.LocalCourse = planner.LocalCourse with 
+      {
+        AssignmentTemplates=newTemplates
+      };
+    }
+  }
+  private void SetMarkdown(string newMarkdown)
+  {
+    if(planner.LocalCourse != null)
+    {
+      var newTemplates = planner.LocalCourse.AssignmentTemplates.Select(t => 
+        t.Id == Template.Id
+          ? t with { Markdown=newMarkdown }
+          : t
+      );
+      planner.LocalCourse = planner.LocalCourse with 
+      {
+        AssignmentTemplates=newTemplates
+      };
+    }
+  }
+}
+
+<div class="row justify-content-center m-3">
+  <div class="col-6">
+    <input 
+      class="form-control"
+      type="text" 
+      value="@Template.Name"
+      @oninput="@((e) => {
+        var newValue = (string) (e.Value ?? "");
+        SetName(newValue);
+      })"
+    >
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-6">
+    <textarea
+      rows="30"
+      class="form-control" 
+      value="@Template.Markdown" 
+      @oninput="@((e) => {
+        var newValue = (string) (e.Value ?? "");
+        SetMarkdown(newValue);
+      })"
+    />
+  </div>
+  <div class="col-6">
+    @((MarkupString) Preview)
+  </div>
+</div>
+
+<br>
+<h5 class="text-center">Detected Template Variables</h5>
+<div class="row justify-content-center">
+  <div class="col-auto">
+    <ul>
+      @foreach (var variable in AssignmentTemplate.GetVariables(Template.Markdown))
+      {
+        <li>@variable</li>
+      }
+    </ul>
+  </div>
+</div>
