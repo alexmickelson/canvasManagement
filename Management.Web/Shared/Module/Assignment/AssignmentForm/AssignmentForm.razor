@@ -23,6 +23,10 @@
   public Action OnHide { get; set; } = () => { }; 
   public Modal AssignmentModal { get; set; } = default!;
 
+  private bool useTemplate { get; set; } = false;
+  private string? templateId { get; set; }
+  public Dictionary<string, string> templateVariables { get; set; } =
+    new Dictionary<string, string>();
   private string description { get; set; } = String.Empty;
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
@@ -40,6 +44,9 @@
     lockAtDueDate = Assignment.lock_at_due_date;
     rubric = Assignment.rubric;
     submissionTypes = Assignment.submission_types;
+    templateId = Assignment.template_id;
+    useTemplate = Assignment.use_template;
+    templateVariables = Assignment.template_variables;
   }
 
   private void submitHandler()
@@ -56,6 +63,9 @@
       rubric=rubric,
       points_possible=totalRubricPoints,
       submission_types=submissionTypes,
+      use_template=useTemplate,
+      template_id=templateId,
+      template_variables=templateVariables,
     };
 
     if(planner.LocalCourse != null)
@@ -103,16 +113,10 @@
         />
       </div>
       <div class="m-1">
-        <label 
-          for="description"
-          class="form-label"
-        >
-          Description
-        </label>
-        <textarea 
-          id="description" 
-          class="form-control"
-          @bind="description"
+        <AssignmentDescriptionEditor
+          @bind-Description="description"
+          @bind-UseTemplate="useTemplate"
+          @bind-TemplateId="templateId"
         />
       </div>
 

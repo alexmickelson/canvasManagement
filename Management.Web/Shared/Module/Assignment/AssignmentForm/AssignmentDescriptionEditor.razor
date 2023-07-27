@@ -1,0 +1,105 @@
+
+@inject CoursePlanner planner
+
+@code 
+{
+  [Parameter]
+  public string Description { get; set; } = default!;
+  [Parameter]
+  public bool UseTemplate { get; set; }
+  [Parameter]
+  public string? TemplateId { get; set; }
+
+  [Parameter]
+  public EventCallback<string> DescriptionChanged { get; set; }
+
+  [Parameter]
+  public EventCallback<bool> UseTemplateChanged { get; set; }
+
+  [Parameter]
+  public EventCallback<string?> TemplateIdChanged { get; set; }
+
+  private string selectedTemplateId { get; set; }
+  private AssignmentTemplate? selectedTemplate => 
+    planner
+    .LocalCourse?
+    .AssignmentTemplates
+    .FirstOrDefault(t => t.Id == selectedTemplateId);
+
+}
+
+
+<div class="form-check form-switch">
+  <input 
+    class="form-check-input" 
+    type="checkbox"
+    role="switch" 
+    id="useTemplateForDescription"
+    checked="@UseTemplate"
+    @onchange="async (e) => 
+      await UseTemplateChanged.InvokeAsync((bool)(e.Value ?? false))"
+  >
+  <label 
+    class="form-check-label" 
+    for="useTemplateForDescription"
+  >
+    use template for description
+  </label>
+</div>
+
+@if(UseTemplate)
+{
+  @if(planner.LocalCourse != null)
+  {
+    <div class="row justify-content-around">
+      <div class="col-auto text-center">
+        <form @onsubmit:preventDefault="true">
+          <label for="templateSelect">Templates</label>
+          <select id="templateSelect" class="form-select" @bind="selectedTemplateId">
+            <option></option>
+            @foreach (var template in planner.LocalCourse.AssignmentTemplates)
+            {
+              <option value="@template.Id">@template.Name</option>
+            }
+          </select>
+        </form>
+      </div>
+      <div class="col-auto">
+        VARIABLES:
+        @if(selectedTemplate != null)
+        {
+          var variables = AssignmentTemplate.GetVariables(selectedTemplate.Markdown);
+          @foreach(var variable in variables)
+          {
+            <div class="my-1">
+              <label
+                class="form-label"
+              >
+                @variable
+              </label>
+              <input
+                class="form-control"
+              />
+            </div>
+          }
+        }
+      </div>
+    </div>
+  }
+}
+else
+{
+  <label 
+    for="description"
+    class="form-label"
+  >
+    Description
+  </label>
+  <textarea 
+    id="description" 
+    class="form-control"
+    value="@Description"
+    @oninput="async (e) => 
+      await DescriptionChanged.InvokeAsync(e.Value?.ToString() ?? String.Empty)"
+  />
+}

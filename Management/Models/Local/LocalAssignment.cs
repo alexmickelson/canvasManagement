@@ -26,6 +26,10 @@ public record LocalAssignment
   public ulong? canvasId = null;
   public string name { get; init; } = "";
   public string description { get; init; } = "";
+  public bool use_template { get; init; } = false;
+  public string? template_id { get; init; } = string.Empty;
+  public Dictionary<string, string> template_variables { get; init; } =
+    new Dictionary<string, string>();
   public bool lock_at_due_date { get; init; }
   public IEnumerable<RubricItem> rubric { get; init; } = new RubricItem[] { };
   public DateTime? lock_at { get; init; }
