@@ -19,12 +19,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddSingleton<IWebRequestor, WebRequestor>();
-builder.Services.AddSingleton<CanvasService, CanvasService>();
+builder.Services.AddScoped<ICanvasTokenManagement, BrowserStorageManagement>();
+builder.Services.AddScoped<IWebRequestor, WebRequestor>();
+builder.Services.AddScoped<CanvasService, CanvasService>();
 builder.Services.AddSingleton<YamlManager>();
 builder.Services.AddSingleton<CoursePlanner>();
 builder.Services.AddSingleton<AssignmentDragContainer>();
-builder.Services.AddScoped<BrowserStorageManagement>();
 
 var app = builder.Build();
 

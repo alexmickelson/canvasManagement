@@ -1,0 +1,49 @@
+
+@code
+{
+  [Parameter, EditorRequired]
+  public Func<string,Task> SetToken { get; set; } = default!;
+  private Modal modal { get; set; } = default!;
+  private string tokenInput { get; set; } = "";
+
+  protected override void OnAfterRender(bool firstRender)
+  {
+    if(firstRender)
+      modal.Show();
+  }
+
+
+}
+
+<Modal @ref="modal">
+  <Title>
+    <h3>Canvas Token</h3>
+  </Title>
+  <Body>
+    <div>
+      <p>
+        Please input your canvas token to enable canvas integration
+      </p>
+      <p>
+        We only store the token encrypted in your browser. We do not store the token on our servers.
+      </p>
+      <p>
+        You can get your canvas token <a href="https://snow.instructure.com/profile/settings">here</a>
+      </p>
+      <form
+        onsubmit:preventDefault="true"
+        @onsubmit="async () => await SetToken(tokenInput)"
+      >
+        <input 
+          type="text"
+          class="form-control"
+          @bind="tokenInput"
+          @bind:event="oninput"
+        />
+      </form>
+    </div>
+  </Body>
+  <Footer>
+  </Footer>
+</Modal>
+

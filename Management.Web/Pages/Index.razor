@@ -7,29 +7,53 @@
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using LocalModels
 @using Management.Web.Shared.Module.Assignment
+@using Management.Web.Shared.Components
 
 @inject CanvasService canvas
 @inject CoursePlanner planner
-@inject ProtectedLocalStorage BrowserStorage
+@inject ICanvasTokenManagement tokenManagement
+
 
 @code
 {
   private bool showNewFile { get; set; } = false;
-protected override void OnInitialized()
+  private bool hasCanvasToken { get; set; } = false;
+  protected override void OnInitialized()
   {
     planner.StateHasChanged += reload;
   }
+
   private void reload()
   {
     this.InvokeAsync(this.StateHasChanged);
   }
+
   public void Dispose()
   {
     planner.StateHasChanged -= reload;
   }
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if(firstRender)
+    {
+      hasCanvasToken = await tokenManagement.GetCanvasToken() != null;
+      StateHasChanged();
+    }
+  }
 
+  private async Task SetToken(string newToken)
+  {
+    await tokenManagement.SaveCanvasToken(newToken);
+    hasCanvasToken = true;
+    StateHasChanged();
+  }
 }
 <PageTitle>Index</PageTitle>
+
+@if(!hasCanvasToken)
+{
+  <ValidateCanvasToken SetToken="SetToken" />
+}
 
 @if(planner.LocalCourse == null)
 {
