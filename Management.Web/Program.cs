@@ -19,7 +19,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddScoped<ICanvasTokenManagement, BrowserStorageManagement>();
 builder.Services.AddScoped<IWebRequestor, WebRequestor>();
 builder.Services.AddScoped<CanvasService, CanvasService>();
 builder.Services.AddSingleton<YamlManager>();

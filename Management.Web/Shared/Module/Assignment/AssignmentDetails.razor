@@ -134,7 +134,23 @@
       <div class="card-text">
         <div class="row">
           <div class="col">
-            @Assignment.description
+            @if(Assignment.use_template)
+            {
+              var template = planner.LocalCourse?.AssignmentTemplates.First((t) => t.Id == Assignment.template_id);
+              if(template == null)
+              {
+                System.Console.WriteLine($"Could not find template fof assignment, {Assignment.template_id}");
+              }
+              else
+              {
+                var html = AssignmentTemplate.GetHtml(template, Assignment);
+                @((MarkupString) html)
+              }
+            }
+            else
+            {
+              @Assignment.description
+            }
             
           </div>
           <div class="col-auto">

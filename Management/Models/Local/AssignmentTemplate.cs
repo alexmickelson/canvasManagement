@@ -15,4 +15,16 @@ public record AssignmentTemplate
 
     return matches.Select(match => match.Groups[1].Value);
   }
+  public static string GetHtml(AssignmentTemplate template, LocalAssignment assignment) 
+  {
+
+    var html = Markdig.Markdown.ToHtml(template.Markdown);
+
+    foreach (KeyValuePair<string, string> entry in assignment.template_variables)
+    {
+      html = html.Replace($"%7B%7B{entry.Key}%7D%7D", entry.Value);
+    }
+    return html;
+  } 
+  
 }

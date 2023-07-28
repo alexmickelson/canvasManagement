@@ -55,6 +55,7 @@
       .Where(r => !r.Label.Contains(RubricItem.extraCredit))
       .Select(s => s.Points)
       .Sum();
+
     var newAssignment = Assignment with 
     {
       name=name,
@@ -117,6 +118,7 @@
           @bind-Description="description"
           @bind-UseTemplate="useTemplate"
           @bind-TemplateId="templateId"
+          @bind-VariableValues="templateVariables"
         />
       </div>
 

@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Markdig" Version="0.31.0" />
     <PackageReference Include="RestSharp" Version="108.0.3" />
     <PackageReference Include="YamlDotNet" Version="13.1.1" />
   </ItemGroup>

@@ -9,6 +9,8 @@
   public bool UseTemplate { get; set; }
   [Parameter]
   public string? TemplateId { get; set; }
+  [Parameter]
+  public Dictionary<string, string> VariableValues { get; set; } = new Dictionary<string, string>();
 
   [Parameter]
   public EventCallback<string> DescriptionChanged { get; set; }
@@ -19,12 +21,14 @@
   [Parameter]
   public EventCallback<string?> TemplateIdChanged { get; set; }
 
-  private string selectedTemplateId { get; set; }
+  [Parameter]
+  public EventCallback<Dictionary<string, string>> VariableValuesChanged { get; set; }
+
   private AssignmentTemplate? selectedTemplate => 
     planner
     .LocalCourse?
     .AssignmentTemplates
-    .FirstOrDefault(t => t.Id == selectedTemplateId);
+    .FirstOrDefault(t => t.Id == TemplateId);
 
 }
 
@@ -55,8 +59,14 @@
       <div class="col-auto text-center">
         <form @onsubmit:preventDefault="true">
           <label for="templateSelect">Templates</label>
-          <select id="templateSelect" class="form-select" @bind="selectedTemplateId">
-            <option></option>
+          <select 
+            id="templateSelect" 
+            class="form-select" 
+            value="@TemplateId"
+            @onchange="async (e) =>
+              await TemplateIdChanged.InvokeAsync(e.Value?.ToString())"
+          >
+            <option value=""></option>
             @foreach (var template in planner.LocalCourse.AssignmentTemplates)
             {
               <option value="@template.Id">@template.Name</option>
@@ -79,6 +89,16 @@
               </label>
               <input
                 class="form-control"
+                value="@VariableValues.GetValueOrDefault(variable, String.Empty)"
+                @oninput="async (e) => 
+                  {
+                    var newValue = e.Value?.ToString() ?? String.Empty;
+                    var newDictionary = new Dictionary<string, string>(VariableValues);
+                    newDictionary[variable] = newValue;
+                    
+                    await VariableValuesChanged.InvokeAsync(newDictionary);
+                  }
+                "
               />
             </div>
           }
