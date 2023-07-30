@@ -1,0 +1,104 @@
+
+###
+get https://snow.instructure.com/api/v1/courses
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+
+###
+
+GET https://snow.instructure.com/api/v1/courses/705168
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+###
+POST https://snow.instructure.com/api/v1/courses/872095/assignments
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+{"assignment":{"name:":"New Assignment","description:":"This is a new assignment"}}
+
+###
+POST https://snow.instructure.com/api/v1/courses/705168/assignments
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+{
+  "assignment": {
+    "due_at":null,
+    "points_possible":0,
+    "assignment_group_id":"1805234",
+    "post_to_sis":false,
+    "graders_anonymous_to_graders":false,
+    "grader_comments_visible_to_graders":true,
+    "grader_names_visible_to_final_grader":true,
+    "annotatable_attachment_id":"",
+    "secure_params":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJsdGlfYXNzaWdubWVudF9pZCI6ImIxZWNhNjFjLWJlZWQtNGJjMC1hNTBiLWJkYmNiOTA3MjNiOSIsImx0aV9hc3NpZ25tZW50X2Rlc2NyaXB0aW9uIjpudWxsfQ.jzOL4gSSsNkq7m3S7kl9RbbqsdjK7FzhhepqyHWuTAk",
+    "lti_context_id":null,
+    "course_id":"872095",
+    "name":"test1",
+    "submission_types":["online_text_entry"],
+    "has_submitted_submissions":false,
+    "due_date_required":false,
+    "max_name_length":255,
+    "allowed_attempts":"-1",
+    "in_closed_grading_period":false,
+    "graded_submissions_exist":false,
+    "omit_from_final_grade":"0",
+    "hide_in_gradebook":false,
+    "turnitin_enabled":"0",
+    "turnitin_settings": {
+      "s_paper_check":true,
+      "originality_report_visibility":"immediate",
+      "internet_check":true,
+      "exclude_biblio":true,
+      "exclude_quoted":true,
+      "journal_check":true,
+      "exclude_small_matches_type":null,
+      "exclude_small_matches_value":0,
+      "submit_papers_to":true
+    },
+    "is_quiz_assignment":false,
+    "can_duplicate":true,
+    "original_course_id":null,
+    "original_assignment_id":null,
+    "original_lti_resource_link_id":null,
+    "original_assignment_name":null,
+    "original_quiz_id":null,
+    "workflow_state":"unpublished",
+    "important_dates":false,
+    "assignment_overrides":[],
+    "publishable":true,
+    "hidden":false,
+    "unpublishable":true,
+    "grading_type":"points",
+    "submission_type":"online",
+    "only_visible_to_overrides":false,
+    "description":"",
+    "grading_standard_id":"",
+    "allowed_extensions":null,
+    "vericite_enabled":"0",
+    "external_tool_tag_attributes": {
+      "external_data":"",
+      "custom_params":"",
+      "line_item":"",
+      "link_settings": {
+        "selection_width":"",
+        "selection_height":""
+      },
+      "url":"",
+      "content_type":"",
+      "content_id":"",
+      "new_tab":"0"
+    },
+    "similarityDetectionTool":"None",
+    "configuration_tool_type":"",
+    "grade_group_students_individually":false,
+    "group_category_id":null,
+    "peer_reviews":"0",
+    "automatic_peer_reviews":"0",
+    "peer_review_count":0,
+    "peer_reviews_assign_at":null,
+    "intra_group_peer_reviews":"0",
+    "anonymous_peer_reviews":"0",
+    "notify_of_update":"0",
+    "lock_at":null,
+    "unlock_at":null
+  }
+}

@@ -1,6 +1,6 @@
 namespace CanvasModel.Assignments;
 
-public record RubricCriteriaModel
+public record CanvasRubricCriteria
 (
   [property: JsonPropertyName("id")]
   string Id,
@@ -23,7 +23,7 @@ public record RubricCriteriaModel
   bool? CriterionUseRange = null,
 
   [property: JsonPropertyName("ratings")]
-  IEnumerable<RubricRatingModel>? Ratings = null,
+  IEnumerable<CanvasRubricRating>? Ratings = null,
 
   [property: JsonPropertyName("ignore_for_scoring")]
   bool? IgnoreForScoring = null

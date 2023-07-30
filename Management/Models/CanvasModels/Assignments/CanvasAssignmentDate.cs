@@ -1,6 +1,6 @@
 namespace CanvasModel.Assignments;
 
-public record AssignmentDateModel
+public record CanvasAssignmentDate
 (
   [property: JsonPropertyName("title")]
   string Title,

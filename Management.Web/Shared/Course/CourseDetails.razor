@@ -3,6 +3,7 @@
 @using Management.Web.Shared.Module
 @using Management.Web.Shared.Semester
 
+@inject CanvasService canvas
 @inject CoursePlanner planner
 
 @code
@@ -11,6 +12,22 @@
   {
     planner.StateHasChanged += reload;
   }
+  protected override async Task OnInitializedAsync()
+  {
+    if(
+      planner.CanvasAssignments == null 
+      && planner.LocalCourse != null 
+      && planner.LocalCourse.CanvasId != null
+    )
+    {
+      var canvasId = planner.LocalCourse.CanvasId ?? throw new Exception("no canvas id found for selected course");
+      planner.CanvasAssignments = await canvas.GetAssignments(canvasId);
+      planner.CanvasModules = await canvas.GetModules(canvasId);
+      System.Console.WriteLine(JsonSerializer.Serialize(planner.CanvasAssignments));
+    }
+    await base.OnInitializedAsync();
+  }
+
   private void reload()
   {
     this.InvokeAsync(this.StateHasChanged);
@@ -20,8 +37,6 @@
     planner.StateHasChanged -= reload;
   }
 }
-
-
 
 <div class="row">
   <div class="col overflow-y-auto border rounded " style="max-height: 95vh;">

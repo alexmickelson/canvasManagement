@@ -3,7 +3,7 @@ using CanvasModel.Submissions;
 
 namespace CanvasModel.Assignments;
 
-public record AssignmentModel
+public record CanvasAssignment
 (
 
   [property: JsonPropertyName("id")]
@@ -88,7 +88,7 @@ public record AssignmentModel
   DateTime? UnlockAt = null,
 
   [property: JsonPropertyName("all_dates")]
-  IEnumerable<AssignmentDateModel>? AllDates = null,
+  IEnumerable<CanvasAssignmentDate>? AllDates = null,
 
   [property: JsonPropertyName("allowed_extensions")]
   IEnumerable<string>? AllowedExtensions = null,
@@ -100,13 +100,13 @@ public record AssignmentModel
   bool? VeriCiteEnabled = null,
 
   [property: JsonPropertyName("turnitin_settings")]
-  TurnitinSettingsModel? TurnitinSettings = null,
+  CanvasTurnitinSettings? TurnitinSettings = null,
 
   [property: JsonPropertyName("grade_group_students_individually")]
   bool? GradeGroupStudentsIndividually = null,
 
   [property: JsonPropertyName("external_tool_tag_attributes")]
-  ExternalToolTagAttributesModel? ExternalToolTagAttributes = null,
+  CanvasExternalToolTagAttributes? ExternalToolTagAttributes = null,
 
   [property: JsonPropertyName("peer_review_count")]
   uint? PeerReviewCount = null,
@@ -124,7 +124,7 @@ public record AssignmentModel
   uint? NeedsGradingCount = null,
 
   [property: JsonPropertyName("needs_grading_count_be_section")]
-  IEnumerable<NeedsGradingCountModel>? NeedsGradingCountBySection = null,
+  IEnumerable<CanvasNeedsGradingCount>? NeedsGradingCountBySection = null,
 
   [property: JsonPropertyName("post_to_sis")]
   bool? PostToSis = null,
@@ -148,7 +148,7 @@ public record AssignmentModel
   ulong? GradingStandardId = null,
 
   [property: JsonPropertyName("lock_info")]
-  LockInfoModel? LockInfo = null,
+  CanvasLockInfo? LockInfo = null,
 
   [property: JsonPropertyName("lock_explanation")]
   string? LockExplanation = null,
@@ -181,13 +181,13 @@ public record AssignmentModel
   object? RubricSettings = null,
 
   [property: JsonPropertyName("rubric")]
-  IEnumerable<RubricCriteriaModel>? Rubric = null,
+  IEnumerable<CanvasRubricCriteria>? Rubric = null,
 
   [property: JsonPropertyName("assignment_visibility")]
   IEnumerable<ulong>? AssignmentVisibility = null,
 
   [property: JsonPropertyName("overrides")]
-  IEnumerable<AssignmentOverrideModel>? Overrides = null,
+  IEnumerable<CanvasAssignmentOverride>? Overrides = null,
 
   [property: JsonPropertyName("omit_from_final_grade")]
   bool? OmitFromFinalGrade = null,

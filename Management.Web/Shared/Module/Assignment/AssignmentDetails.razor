@@ -48,6 +48,7 @@
       minute: planner.LocalCourse.DefaultDueTime.Minute,
       second: 0
     );
+
     var moduleWithUpdatedAssignment = currentModule with 
     {
       Assignments = currentModule.Assignments.Select(a => 
@@ -114,6 +115,13 @@
     dragContainer.DropCallback = null;
   }
 
+  private bool isSyncedWithCanvas => 
+    planner
+    .CanvasAssignments?
+    .FirstOrDefault(
+      a => a.Id == Assignment.canvasId
+    ) != null;
+
 }
 
 <div 
@@ -130,7 +138,15 @@
         <h4 class="text-center">
           @Assignment.name
         </h4>
-      </div>
+        @if(isSyncedWithCanvas)
+        {
+          <div>Synced With Canvas</div>
+        }
+        else
+        {
+          <div>Not Synced with Canvas</div>
+        }
+       </div>
       <div class="card-text">
         <div class="row">
           <div class="col">

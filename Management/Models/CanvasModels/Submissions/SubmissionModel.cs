@@ -33,7 +33,7 @@ public record SubmissionModel
   string LatePolicyStatus,
 
   [property: JsonPropertyName("assignment")]
-  AssignmentModel? Assignment = null,
+  CanvasAssignment? Assignment = null,
 
   [property: JsonPropertyName("course")]
   CourseModel? Course = null,

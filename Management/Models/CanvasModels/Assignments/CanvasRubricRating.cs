@@ -1,6 +1,6 @@
 namespace CanvasModel.Assignments;
 
-public record RubricRatingModel
+public record CanvasRubricRating
 (
   [property: JsonPropertyName("points")]
   double Points,

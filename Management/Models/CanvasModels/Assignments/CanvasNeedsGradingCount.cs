@@ -1,6 +1,6 @@
 namespace CanvasModel.Assignments;
 
-public record NeedsGradingCountModel
+public record CanvasNeedsGradingCount
 (
   [property: JsonPropertyName("section_id")]
   string SectionId,

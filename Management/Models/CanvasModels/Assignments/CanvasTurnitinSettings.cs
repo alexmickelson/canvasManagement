@@ -1,6 +1,6 @@
 namespace CanvasModel.Assignments;
 
-public record TurnitinSettingsModel
+public record CanvasTurnitinSettings
 (
   [property: JsonPropertyName("originality_report_visibility")]
   string OriginalityReportVisibility,

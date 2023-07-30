@@ -1,6 +1,8 @@
 using CanvasModel;
+using CanvasModel.Assignments;
 using CanvasModel.Courses;
 using CanvasModel.EnrollmentTerms;
+using CanvasModel.Modules;
 using RestSharp;
 
 public interface ICanvasService
@@ -13,11 +15,9 @@ public class CanvasService : ICanvasService
 {
   private const string BaseUrl = "https://snow.instructure.com/api/v1/";
   private readonly IWebRequestor webRequestor;
-  private string courseid { get; }
 
   public CanvasService(IWebRequestor webRequestor)
   {
-    courseid = "774898";
     this.webRequestor = webRequestor;
   }
 
@@ -54,11 +54,26 @@ public class CanvasService : ICanvasService
     return data;
   }
 
-  public async Task<IEnumerable<CourseModule>> GetModules(ulong courseId)
+  public async Task<IEnumerable<CanvasAssignment>> GetAssignments(ulong courseId)
+  {
+    var url = $"courses/{courseId}/assignments ";
+    var request = new RestRequest(url);
+    var assignmentResponse = await PaginatedRequest<IEnumerable<CanvasAssignment>>(request);
+    return assignmentResponse.SelectMany(c => c);
+  }
+
+  // public async Task<CanvasAssignment> CreateAssignment(
+
+  // )
+  // {
+    
+  // }
+
+  public async Task<IEnumerable<CanvasModule>> GetModules(ulong courseId)
   {
     var url = $"courses/{courseId}/modules";
     var request = new RestRequest(url);
-    var modules = await PaginatedRequest<IEnumerable<CourseModule>>(request);
+    var modules = await PaginatedRequest<IEnumerable<CanvasModule>>(request);
     return modules.SelectMany(c => c).ToArray();
   }
 

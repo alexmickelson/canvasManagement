@@ -2,14 +2,18 @@ using CanvasModel.EnrollmentTerms;
 using CanvasModel.Courses;
 using CanvasModel;
 using LocalModels;
+using CanvasModel.Assignments;
+using CanvasModel.Modules;
 
 public class CoursePlanner
 {
   private readonly YamlManager yamlManager;
+  private readonly CanvasService canvas;
 
-  public CoursePlanner(YamlManager yamlManager)
+  public CoursePlanner(YamlManager yamlManager, CanvasService canvas)
   {
     this.yamlManager = yamlManager;
+    this.canvas = canvas;
   }
 
   private LocalCourse? _localCourse { get; set; }
@@ -42,7 +46,101 @@ public class CoursePlanner
     var modulesWithUniqueAssignments = incomingCourse.Modules.Select(
       module => module with { Assignments = module.Assignments.DistinctBy(a => a.id) }
     );
-    
-    return incomingCourse with { Modules = modulesWithUniqueAssignments };
+
+    return incomingCourse with
+    {
+      Modules = modulesWithUniqueAssignments
+    };
+  }
+
+  public IEnumerable<CanvasAssignment>? CanvasAssignments { get; set; } = null;
+  public IEnumerable<CanvasModule>? CanvasModules { get; set; } = null;
+
+  public async Task SyncWithCanvas()
+  {
+    if (
+      LocalCourse == null
+      || LocalCourse.CanvasId == null
+      || CanvasAssignments == null
+      || CanvasModules == null
+    )
+      return;
+
+    var canvasId =
+      LocalCourse.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");
+    await ensureAllModulesCreated(canvasId);
+    await reloadModules_UpdateLocalModulesWithNewId(canvasId);
+
+    await ensureAllAssignmentsCreated_updateIds(canvasId);
+  }
+
+  private async Task reloadModules_UpdateLocalModulesWithNewId(ulong canvasId)
+  {
+    if (LocalCourse == null)
+      return;
+
+    CanvasModules = await canvas.GetModules(canvasId);
+    LocalCourse = LocalCourse with
+    {
+      Modules = LocalCourse.Modules.Select(m =>
+      {
+        var canvasModule = CanvasModules.FirstOrDefault(cm => cm.Name == m.Name);
+        return canvasModule == null ? m : m with { CanvasId = canvasModule.Id };
+      })
+    };
+  }
+
+  private async Task ensureAllModulesCreated(ulong canvasId)
+  {
+    if (LocalCourse == null || CanvasModules == null)
+      return;
+
+    foreach (var module in LocalCourse.Modules)
+    {
+      var canvasModule = CanvasModules.FirstOrDefault(cm => cm.Id == module.CanvasId);
+      if (canvasModule == null)
+      {
+        await canvas.CreateModule(canvasId, module.Name);
+      }
+    }
+  }
+
+  private async Task ensureAllAssignmentsCreated_updateIds(ulong canvasId)
+  {
+    if (
+      LocalCourse == null
+      || LocalCourse.CanvasId == null
+      || CanvasAssignments == null
+      || CanvasModules == null
+    )
+      return;
+
+    var moduleTasks = LocalCourse.Modules.Select(async m =>
+    {
+      var assignmentTasks = m.Assignments.Select(ensureAssignmentInCanvas_returnUpdated);
+      var assignments = await Task.WhenAll(assignmentTasks);
+      return m with { Assignments = assignments };
+    });
+
+    var modules = await Task.WhenAll(moduleTasks);
+    LocalCourse = LocalCourse with 
+    {
+      Modules = modules
+    };
+  }
+
+  private async Task<LocalAssignment> ensureAssignmentInCanvas_returnUpdated(
+    LocalAssignment localAssignment
+  )
+  {
+    // var canvasAssignment = await canvas.
+    return localAssignment;
+  }
+
+  public void Clear()
+  {
+    LocalCourse = null;
+    CanvasAssignments = null;
+    CanvasModules = null;
   }
 }

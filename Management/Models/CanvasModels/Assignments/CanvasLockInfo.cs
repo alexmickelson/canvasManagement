@@ -1,6 +1,6 @@
 namespace CanvasModel.Assignments;
 
-public record LockInfoModel
+public record CanvasLockInfo
 (
   [property: JsonPropertyName("asset_string")]
   string AssetString,

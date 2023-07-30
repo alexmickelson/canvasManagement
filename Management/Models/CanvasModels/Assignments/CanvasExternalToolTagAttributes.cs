@@ -1,6 +1,6 @@
 namespace CanvasModel.Assignments;
 
-public record ExternalToolTagAttributesModel
+public record CanvasExternalToolTagAttributes
 (
   [property: JsonPropertyName("url")]
   string Url,

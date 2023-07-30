@@ -70,13 +70,20 @@
 {
   <div class="mb-3">
     <button
-      @onclick="@(() => planner.LocalCourse = null)"
+      @onclick="planner.Clear"
       class="btn btn-primary"
     >
       Select New Course
     </button>
     <CourseSettings />
     <AssignmentTemplateManagement />
+
+    <button 
+      class="btn btn-outline-primary"
+      @onclick="planner.SyncWithCanvas"
+    >
+      Sync With Canvas
+    </button>
   </div>
   <CourseDetails />
 }

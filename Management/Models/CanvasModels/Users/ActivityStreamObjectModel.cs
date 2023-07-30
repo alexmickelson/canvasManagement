@@ -90,7 +90,7 @@ public record ActivityStreamObjectModel
   ulong? AssignmentId = null,
 
   [property: JsonPropertyName("assignment")]
-  AssignmentModel? Assignment = null,
+  CanvasAssignment? Assignment = null,
 
   [property: JsonPropertyName("course")]
   CourseModel? Course = null,

@@ -44,6 +44,12 @@
     }
     dragContainer.DropCallback?.Invoke(null, Module);
   }
+
+  private bool isSyncedWithCanvas => planner
+    .CanvasModules?
+    .FirstOrDefault(
+      cm => cm.Id == Module.CanvasId
+    ) != null;
 }
 
 <div 
@@ -53,18 +59,29 @@
   @ondragleave="OnDragLeave"
   ondragover="event.preventDefault();"
 >
-
-  <h2 class="@("accordion-header ")">
+  <h2 class="accordion-header">
     <button 
       class="accordion-button" 
       type="button" 
       data-bs-toggle="collapse" 
       data-bs-target="@("#" + accordionId)" 
-      aria-expanded="true" 
       aria-controls="@accordionId"
     >
-      @Module.Name
+    <div class="w-100 d-flex justify-content-between pe-3">
+      <div>
+        @Module.Name
+      </div>
+      @if(isSyncedWithCanvas)
+      {
+        <div>in canvas</div>
+      }
+      else
+      {
+        <div>not in canvas</div>
+      }
+    </div>
     </button>
+    
   </h2>
   <div 
     id="@accordionId" 

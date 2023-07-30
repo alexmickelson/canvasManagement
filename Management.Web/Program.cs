@@ -21,9 +21,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<IWebRequestor, WebRequestor>();
 builder.Services.AddScoped<CanvasService, CanvasService>();
-builder.Services.AddSingleton<YamlManager>();
-builder.Services.AddSingleton<CoursePlanner>();
-builder.Services.AddSingleton<AssignmentDragContainer>();
+builder.Services.AddScoped<YamlManager>();
+builder.Services.AddScoped<CoursePlanner>();
+builder.Services.AddScoped<AssignmentDragContainer>();
 
 var app = builder.Build();
 

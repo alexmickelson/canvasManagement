@@ -1,6 +1,6 @@
 namespace CanvasModel.Assignments;
 
-public record AssignmentOverrideModel
+public record CanvasAssignmentOverride
 (
 
   [property: JsonPropertyName("id")]
