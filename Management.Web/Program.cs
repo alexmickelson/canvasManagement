@@ -1,6 +1,7 @@
 global using System.Text.Json.Serialization;
 global using System.Text.Json;
 global using System.ComponentModel.DataAnnotations;
+global using Management.Services.Canvas;
 global using CanvasModel.EnrollmentTerms;
 global using CanvasModel.Courses;
 global using CanvasModel;
@@ -19,8 +20,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
 builder.Services.AddScoped<IWebRequestor, WebRequestor>();
+builder.Services.AddScoped<CanvasServiceUtils>();
+builder.Services.AddScoped<CanvasAssignmentService>();
 builder.Services.AddScoped<CanvasService, CanvasService>();
+
 builder.Services.AddScoped<YamlManager>();
 builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentDragContainer>();

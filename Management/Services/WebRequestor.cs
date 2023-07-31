@@ -46,7 +46,26 @@ public class WebRequestor : IWebRequestor
     return (Deserialize<T>(response), response);
   }
 
-  public T? Deserialize<T>(RestResponse response)
+  public async Task<RestResponse> PutAsync(RestRequest request)
+  {
+    var response = await client.ExecutePutAsync(request);
+    if (!response.IsSuccessful)
+    {
+      System.Console.WriteLine(response.Content);
+      System.Console.WriteLine(response.ResponseUri);
+      System.Console.WriteLine("error with response");
+      throw new Exception("error with response");
+    }
+    return response;
+  }
+
+  public async Task<(T?, RestResponse)> PutAsync<T>(RestRequest request)
+  {
+    var response = await client.ExecutePutAsync(request);
+    return (Deserialize<T>(response), response);
+  }
+
+  private T? Deserialize<T>(RestResponse response)
   {
     if (!response.IsSuccessful)
     {

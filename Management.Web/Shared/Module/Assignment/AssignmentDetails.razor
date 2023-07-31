@@ -140,7 +140,19 @@
         </h4>
         @if(isSyncedWithCanvas)
         {
-          <div>Synced With Canvas</div>
+          @if(planner.LocalCourse != null
+            && planner.LocalCourse.CanvasId != null
+            && planner.CanvasAssignments != null
+            && planner.CanvasModules != null 
+            && planner.AssignmentNeedsUpdates(Assignment)
+          )
+          {
+            <div>need to update canvas</div>
+          }
+          else
+          {
+            <div>Canvas is up to date</div>
+          }
         }
         else
         {

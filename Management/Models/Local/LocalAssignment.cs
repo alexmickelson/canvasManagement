@@ -1,3 +1,5 @@
+using LocalModels;
+
 public record RubricItem
 {
   public static readonly string extraCredit = "(Extra Credit) ";

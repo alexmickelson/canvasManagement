@@ -1,3 +1,6 @@
+
+namespace Management.Services.Canvas;
+
 public record CanvasAssignmentCreationRequest
 {
   public string? name { get; set; }

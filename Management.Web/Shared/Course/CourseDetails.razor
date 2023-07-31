@@ -14,19 +14,24 @@
   }
   protected override async Task OnInitializedAsync()
   {
-    if(
-      planner.CanvasAssignments == null 
-      && planner.LocalCourse != null 
-      && planner.LocalCourse.CanvasId != null
-    )
-    {
-      var canvasId = planner.LocalCourse.CanvasId ?? throw new Exception("no canvas id found for selected course");
-      planner.CanvasAssignments = await canvas.GetAssignments(canvasId);
-      planner.CanvasModules = await canvas.GetModules(canvasId);
-      System.Console.WriteLine(JsonSerializer.Serialize(planner.CanvasAssignments));
-    }
-    await base.OnInitializedAsync();
   }
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if(firstRender)
+    {
+      if(
+        planner.CanvasAssignments == null 
+        && planner.LocalCourse != null 
+        && planner.LocalCourse.CanvasId != null
+      )
+      {
+        await planner.LoadCanvasData();
+      }
+
+    }
+  }
+
+  
 
   private void reload()
   {

@@ -84,6 +84,11 @@
     >
       Sync With Canvas
     </button>
+
+    @if(planner.LoadingCanvasData)
+    {
+      <Spinner />
+    }
   </div>
   <CourseDetails />
 }
