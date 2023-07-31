@@ -30,13 +30,19 @@
   {
     planner.StateHasChanged -= reload;
   }
-
+  private void NewFileCreated()
+  {
+    showNewFile = false;
+    refreshKey++;
+    StateHasChanged();
+  }
+  private int refreshKey;
 }
 <PageTitle>Index</PageTitle>
 
 @if(planner.LocalCourse == null)
 {
-  <CurrentFiles />
+  <CurrentFiles RefreshKey="refreshKey" />
   @if(!showNewFile)
   {
     <div class="text-center">
@@ -61,7 +67,7 @@
     </div>
 
     <div class="border rounded bg-dark-subtle p-3 my-3">
-      <InitializeYamlFromCanvas />
+      <InitializeYamlFromCanvas NewFileCreated="NewFileCreated" />
     </div>
   }
 }

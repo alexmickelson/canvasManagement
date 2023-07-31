@@ -10,6 +10,9 @@
 
 
 @code {
+  [Parameter, EditorRequired]
+  public Action NewFileCreated { get; set; } = default!;
+  private bool loadingTerms = false;
   private bool loadingCourses = false;
   public IEnumerable<LocalCourse>? localCourses { get; set; }
   private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;  
@@ -47,7 +50,9 @@
   private List<DayOfWeek> days { get; set; } = new();
   protected override async Task OnInitializedAsync()
   {
+    loadingTerms = true;
     terms = await canvas.GetCurrentTermsFor();
+    loadingTerms = false;
   }
   private async Task YamlTrigger()
   {
@@ -55,12 +60,15 @@
     {
       var course = new LocalCourse
       {
-        Modules= new LocalModule[] {},
+        Modules = new LocalModule[] {},
         Name = selectedCourse.Name,
         CanvasId = selectedCourse.Id,
         DaysOfWeek = days,
+        StartDate = selectedTerm?.StartAt ?? new DateTime(),
+        EndDate = selectedTerm?.EndAt ?? new DateTime(),
       };
       await yamlManager.SaveCourseAsync(course);
+      NewFileCreated();
     }
     await updateCourses();
   }
@@ -82,6 +90,11 @@
 
     StateHasChanged();
   }
+}
+
+@if(loadingTerms)
+{
+  <Spinner />
 }
 
 @if (terms != null)

@@ -5,11 +5,14 @@
 
 @code 
 {
+  [Parameter]
+  public int RefreshKey { get; set; }
   public IEnumerable<LocalCourse>? localCourses { get; set; }
-  protected override async Task OnInitializedAsync()
+  protected override async Task OnParametersSetAsync()
   {
     localCourses = await yamlManager.LoadSavedCourses();
   }
+
 }
 
 @if(localCourses != null)
