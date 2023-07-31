@@ -114,7 +114,6 @@ public class CoursePlanner
 
     await syncAssignmentsWithCanvas(canvasId);
 
-
     CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
     CanvasModules = await canvas.GetModules(canvasId);
 
@@ -175,9 +174,7 @@ public class CoursePlanner
     LocalCourse = LocalCourse with { Modules = modules };
   }
 
-  private async Task<LocalAssignment> syncAssignmentToCanvas(
-    LocalAssignment localAssignment
-  )
+  private async Task<LocalAssignment> syncAssignmentToCanvas(LocalAssignment localAssignment)
   {
     if (
       LocalCourse == null
@@ -208,20 +205,11 @@ public class CoursePlanner
     }
     else
     {
-      var createdAssignment = await canvas.Assignments.Create(
-        courseId: canvasId,
-        name: localAssignment.name,
-        submissionTypes: localAssignment.submission_types,
-        description: localHtmlDescription,
-        dueAt: localAssignment.due_at,
-        lockAt: localAssignment.lock_at,
-        pointsPossible: localAssignment.points_possible
+      return await canvas.Assignments.Create(
+        canvasId,
+        localAssignment,
+        localHtmlDescription
       );
-
-      return localAssignment with
-      {
-        canvasId = createdAssignment.Id
-      };
     }
   }
 
@@ -253,7 +241,7 @@ public class CoursePlanner
     var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
       localAssignment.submission_types.Select(t => t.ToString())
     );
-    
+
     if (!quiet)
     {
       if (!dueDatesSame)

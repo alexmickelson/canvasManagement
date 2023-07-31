@@ -27,27 +27,23 @@ public class CanvasAssignmentService
     );
   }
 
-  public async Task<CanvasAssignment> Create(
+  public async Task<LocalAssignment> Create(
     ulong courseId,
-    string name,
-    IEnumerable<SubmissionType> submissionTypes,
-    string? description,
-    DateTime? dueAt,
-    DateTime? lockAt,
-    int? pointsPossible
+    LocalAssignment localAssignment,
+    string htmlDescription
   )
   {
-    System.Console.WriteLine($"creating assignment: {name}");
+    System.Console.WriteLine($"creating assignment: {localAssignment.name}");
     var url = $"courses/{courseId}/assignments";
     var request = new RestRequest(url);
     var body = new CanvasAssignmentCreationRequest()
     {
-      name = name,
-      submission_types = submissionTypes.Select(t => t.ToString()),
-      description = description ?? "",
-      due_at = dueAt,
-      lock_at = lockAt,
-      points_possible = pointsPossible ?? 0
+      name = localAssignment.name,
+      submission_types = localAssignment.submission_types.Select(t => t.ToString()),
+      description = localAssignment.description ?? "",
+      due_at = localAssignment.due_at,
+      lock_at = localAssignment.lock_at,
+      points_possible = localAssignment.points_possible
     };
     request.AddHeader("Content-Type", "application/json");
     var bodyObj = new { assignment = body };
@@ -55,10 +51,12 @@ public class CanvasAssignmentService
     var (canvasAssignment, response) = await webRequestor.PostAsync<CanvasAssignment>(request);
     if (canvasAssignment == null)
       throw new Exception("created canvas assignment was null");
-    return canvasAssignment with
+
+    await CreateRubric(courseId, localAssignment);
+
+    return localAssignment with
     {
-      DueAt = canvasAssignment.DueAt?.ToLocalTime(),
-      LockAt = canvasAssignment.LockAt?.ToLocalTime()
+      canvasId = canvasAssignment.Id
     };
   }
 
