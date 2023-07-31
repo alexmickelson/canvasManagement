@@ -3,7 +3,7 @@
 @inject YamlManager yamlManager
 @inject CoursePlanner planner
 
-@code 
+@code
 {
   [Parameter]
   public int RefreshKey { get; set; }
@@ -15,24 +15,20 @@
 
 }
 
-@if(localCourses != null)
-{
-  <h3>Stored Courses</h3>
-  @foreach (var course in localCourses)
+<div class="text-center">
+
+  @if (localCourses != null)
   {
-    void SetCourse()
+    <h3 >Stored Courses</h3>
+    @foreach (var course in localCourses)
     {
-      planner.LocalCourse = course;
-      this.StateHasChanged();
-    }
-    <div>
-      <button 
-        class="btn btn-outline-primary"
-        @onclick="@SetCourse"
+      <h4 
+        class="m-3 hover-underline-animation"  
+        @onclick="() => planner.LocalCourse = course" 
+        role='button'
       >
-        Use
-      </button>
-      @course.Name
-    </div>
+        @course.Name
+      </h4>
+    }
   }
-}
+</div>

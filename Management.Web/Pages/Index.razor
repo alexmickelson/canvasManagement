@@ -42,7 +42,12 @@
 
 @if(planner.LocalCourse == null)
 {
-  <CurrentFiles RefreshKey="refreshKey" />
+  <div class="row justify-content-center">
+    <div class="col-auto">
+      <CurrentFiles RefreshKey="refreshKey" />
+    </div>
+  </div>
+  
   @if(!showNewFile)
   {
     <div class="text-center">
