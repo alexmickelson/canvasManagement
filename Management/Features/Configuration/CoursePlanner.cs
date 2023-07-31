@@ -150,8 +150,6 @@ public class CoursePlanner
       pointsPossible: localAssignment.points_possible
     );
 
-    Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
-    
     return localAssignment with
     {
       canvasId = canvasAssignment.Id

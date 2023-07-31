@@ -103,6 +103,7 @@ public class CanvasService : ICanvasService
 
   public async Task CreateModule(ulong courseId, string name)
   {
+    Console.WriteLine($"Creating Module: {name}");
     var url = $"courses/{courseId}/modules";
     var request = new RestRequest(url);
     request.AddParameter("module[name]", name);
