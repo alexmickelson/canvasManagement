@@ -5,7 +5,6 @@ namespace CanvasModel.Assignments;
 
 public record CanvasAssignment
 (
-
   [property: JsonPropertyName("id")]
   ulong Id,
 

@@ -11,9 +11,15 @@ Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 ###
 POST https://snow.instructure.com/api/v1/courses/872095/assignments
+Content-Type: application/json
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
-{"assignment":{"name:":"New Assignment","description:":"This is a new assignment"}}
+{
+  "assignment": {
+    "name:": "New Assignment",
+    "description:": "This is a new assignment"
+  }
+}
 
 ###
 POST https://snow.instructure.com/api/v1/courses/705168/assignments

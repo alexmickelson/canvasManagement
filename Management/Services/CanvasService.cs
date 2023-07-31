@@ -56,18 +56,42 @@ public class CanvasService : ICanvasService
 
   public async Task<IEnumerable<CanvasAssignment>> GetAssignments(ulong courseId)
   {
-    var url = $"courses/{courseId}/assignments ";
+    var url = $"courses/{courseId}/assignments";
     var request = new RestRequest(url);
     var assignmentResponse = await PaginatedRequest<IEnumerable<CanvasAssignment>>(request);
     return assignmentResponse.SelectMany(c => c);
   }
 
-  // public async Task<CanvasAssignment> CreateAssignment(
-
-  // )
-  // {
-    
-  // }
+  public async Task<CanvasAssignment> CreateAssignment(
+    ulong courseId,
+    string name,
+    IEnumerable<SubmissionType> submissionTypes,
+    string? description,
+    DateTime? dueAt,
+    DateTime? lockAt,
+    int? pointsPossible
+  )
+  {
+    System.Console.WriteLine($"creating assignment: {name}");
+    var url = $"courses/{courseId}/assignments";
+    var request = new RestRequest(url);
+    var body = new CanvasAssignmentCreationRequest()
+    {
+      name = name,
+      submission_types = submissionTypes.Select(t => t.ToString()),
+      description = description,
+      due_at = dueAt,
+      lock_at = lockAt,
+      points_possible = pointsPossible
+    };
+    request.AddHeader("Content-Type", "application/json");
+    var bodyObj = new { assignment = body };
+    request.AddBody(bodyObj);
+    var (canvasAssignment, response) = await webRequestor.PostAsync<CanvasAssignment>(request);
+    if (canvasAssignment == null)
+      throw new Exception("created canvas assignment was null");
+    return canvasAssignment;
+  }
 
   public async Task<IEnumerable<CanvasModule>> GetModules(ulong courseId)
   {

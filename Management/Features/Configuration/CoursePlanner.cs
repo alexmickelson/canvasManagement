@@ -123,18 +123,39 @@ public class CoursePlanner
     });
 
     var modules = await Task.WhenAll(moduleTasks);
-    LocalCourse = LocalCourse with 
-    {
-      Modules = modules
-    };
+    LocalCourse = LocalCourse with { Modules = modules };
   }
 
   private async Task<LocalAssignment> ensureAssignmentInCanvas_returnUpdated(
     LocalAssignment localAssignment
   )
   {
-    // var canvasAssignment = await canvas.
-    return localAssignment;
+    if (
+      LocalCourse == null
+      || LocalCourse.CanvasId == null
+      || CanvasAssignments == null
+      || CanvasModules == null
+    )
+      throw new Exception(
+        "cannot create canvas assignment if local course is null or other values not set"
+      );
+    ulong canvasId = LocalCourse.CanvasId ?? throw new Exception("no canvas id to create course");
+    var canvasAssignment = await canvas.CreateAssignment(
+      courseId: canvasId,
+      name: localAssignment.name,
+      submissionTypes: localAssignment.submission_types,
+      description: localAssignment.description,
+      dueAt: localAssignment.due_at,
+      lockAt: localAssignment.lock_at,
+      pointsPossible: localAssignment.points_possible
+    );
+
+    Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
+    
+    return localAssignment with
+    {
+      canvasId = canvasAssignment.Id
+    };
   }
 
   public void Clear()

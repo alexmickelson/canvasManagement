@@ -15,7 +15,6 @@ public class WebRequestor : IWebRequestor
     client.AddDefaultHeader("Authorization", $"Bearer {token}");
   }
 
-
   public async Task<(T[]?, RestResponse)> GetManyAsync<T>(RestRequest request)
   {
     var response = await client.ExecuteGetAsync(request);
@@ -55,19 +54,29 @@ public class WebRequestor : IWebRequestor
       System.Console.WriteLine(response.ResponseUri);
       System.Console.WriteLine(response.ErrorMessage);
       System.Console.WriteLine("error with response");
-      throw new Exception("error with response");
+      // Console.WriteLine(JsonSerializer.Serialize(response));
+      Console.WriteLine(JsonSerializer.Serialize(response.Request?.Parameters));
+      throw new Exception($"error with response to {response.ResponseUri} {response.StatusCode}");
     }
     try
     {
-      var data = JsonSerializer.Deserialize<T>(response.Content!);
-
-      if (data == null)
+      try
       {
-        System.Console.WriteLine(response.Content);
-        System.Console.WriteLine(response.ResponseUri);
-        System.Console.WriteLine("could not parse response, got empty object");
+        var data = JsonSerializer.Deserialize<T>(response.Content!);
+
+        if (data == null)
+        {
+          System.Console.WriteLine(response.Content);
+          System.Console.WriteLine(response.ResponseUri);
+          System.Console.WriteLine("could not parse response, got empty object");
+        }
+        return data;
       }
-      return data;
+      catch (System.NotSupportedException exception)
+      {
+        Console.WriteLine(response.Content);
+        throw exception;
+      }
     }
     catch (JsonException ex)
     {
