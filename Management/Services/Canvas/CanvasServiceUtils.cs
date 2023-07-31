@@ -1,10 +1,12 @@
 using RestSharp;
 
 namespace Management.Services.Canvas;
+
 public class CanvasServiceUtils
 {
   private const string BaseUrl = "https://snow.instructure.com/api/v1/";
   private readonly IWebRequestor webRequestor;
+
   public CanvasServiceUtils(IWebRequestor webRequestor)
   {
     this.webRequestor = webRequestor;
@@ -36,7 +38,8 @@ public class CanvasServiceUtils
       nextUrl = getNextUrl(nextResponse.Headers);
     }
 
-    System.Console.WriteLine($"Requesting {typeof(T)} took {requestCount} requests");
+    if (requestCount > 1)
+      System.Console.WriteLine($"Requesting {typeof(T)} took {requestCount} requests");
 
     return returnData;
   }

@@ -103,6 +103,7 @@ public class CoursePlanner
     )
       return;
 
+    Console.WriteLine("syncing with canvas");
     LoadingCanvasData = true;
     StateHasChanged?.Invoke();
 
@@ -111,10 +112,15 @@ public class CoursePlanner
     await ensureAllModulesCreated(canvasId);
     await reloadModules_UpdateLocalModulesWithNewId(canvasId);
 
-    await ensureAllAssignmentsCreated_updateIds(canvasId);
+    await syncAssignmentsWithCanvas(canvasId);
+
+
+    CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
+    CanvasModules = await canvas.GetModules(canvasId);
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
+    Console.WriteLine("done syncing with canvas\n");
   }
 
   private async Task reloadModules_UpdateLocalModulesWithNewId(ulong canvasId)
@@ -148,7 +154,7 @@ public class CoursePlanner
     }
   }
 
-  private async Task ensureAllAssignmentsCreated_updateIds(ulong canvasId)
+  private async Task syncAssignmentsWithCanvas(ulong canvasId)
   {
     if (
       LocalCourse == null
@@ -160,7 +166,7 @@ public class CoursePlanner
 
     var moduleTasks = LocalCourse.Modules.Select(async m =>
     {
-      var assignmentTasks = m.Assignments.Select(ensureAssignmentInCanvas_returnUpdated);
+      var assignmentTasks = m.Assignments.Select(syncAssignmentToCanvas);
       var assignments = await Task.WhenAll(assignmentTasks);
       return m with { Assignments = assignments };
     });
@@ -169,7 +175,7 @@ public class CoursePlanner
     LocalCourse = LocalCourse with { Modules = modules };
   }
 
-  private async Task<LocalAssignment> ensureAssignmentInCanvas_returnUpdated(
+  private async Task<LocalAssignment> syncAssignmentToCanvas(
     LocalAssignment localAssignment
   )
   {
@@ -187,11 +193,13 @@ public class CoursePlanner
     var canvasAssignment = CanvasAssignments.FirstOrDefault(
       ca => ca.Id == localAssignment.canvasId
     );
-    string localHtmlDescription = getAssignmentDescriptionHtml(localAssignment);
+    string localHtmlDescription = localAssignment.GetDescriptionHtml(
+      LocalCourse.AssignmentTemplates
+    );
 
     if (canvasAssignment != null)
     {
-      var assignmentNeedsUpdates = AssignmentNeedsUpdates(localAssignment);
+      var assignmentNeedsUpdates = AssignmentNeedsUpdates(localAssignment, quiet: false);
       if (assignmentNeedsUpdates)
       {
         await canvas.Assignments.Update(courseId: canvasId, localAssignment, localHtmlDescription);
@@ -217,21 +225,7 @@ public class CoursePlanner
     }
   }
 
-  private string getAssignmentDescriptionHtml(LocalAssignment localAssignment)
-  {
-    if (LocalCourse == null)
-      throw new Exception(
-        "cannot get assignment description if local course is null or other values not set"
-      );
-    return localAssignment.use_template
-      ? AssignmentTemplate.GetHtml(
-        LocalCourse.AssignmentTemplates.First(t => t.Id == localAssignment.template_id),
-        localAssignment
-      )
-      : Markdig.Markdown.ToHtml(localAssignment.description);
-  }
-
-  public bool AssignmentNeedsUpdates(LocalAssignment localAssignment)
+  public bool AssignmentNeedsUpdates(LocalAssignment localAssignment, bool quiet = true)
   {
     if (
       LocalCourse == null
@@ -245,7 +239,7 @@ public class CoursePlanner
 
     var canvasAssignment = CanvasAssignments.First(ca => ca.Id == localAssignment.canvasId);
 
-    var localHtmlDescription = getAssignmentDescriptionHtml(localAssignment);
+    var localHtmlDescription = localAssignment.GetDescriptionHtml(LocalCourse.AssignmentTemplates);
 
     var canvasHtmlDescription = canvasAssignment.Description;
     canvasHtmlDescription = Regex.Replace(canvasHtmlDescription, "<script.*script>", "");
@@ -259,37 +253,40 @@ public class CoursePlanner
     var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
       localAssignment.submission_types.Select(t => t.ToString())
     );
-
-    if (!dueDatesSame)
-      Console.WriteLine(
-        $"Due dates different for {localAssignment.name}, local: {localAssignment.due_at}, in canvas {canvasAssignment.DueAt}"
-      );
-
-    if (!descriptionSame)
+    
+    if (!quiet)
     {
-      Console.WriteLine($"descriptions different for {localAssignment.name}");
-      Console.WriteLine("Local Description:");
-      Console.WriteLine(localHtmlDescription);
-      Console.WriteLine("Canvas Description: ");
-      Console.WriteLine(canvasHtmlDescription);
-    }
+      if (!dueDatesSame)
+        Console.WriteLine(
+          $"Due dates different for {localAssignment.name}, local: {localAssignment.due_at}, in canvas {canvasAssignment.DueAt}"
+        );
 
-    if (!nameSame)
-      Console.WriteLine(
-        $"names different for {localAssignment.name}, local: {localAssignment.name}, in canvas {canvasAssignment.Name}"
-      );
-    if (!lockDateSame)
-      Console.WriteLine(
-        $"Lock Dates different for {localAssignment.name}, local: {localAssignment.lock_at}, in canvas {canvasAssignment.LockAt}"
-      );
-    if (!pointsSame)
-      Console.WriteLine(
-        $"Points different for {localAssignment.name}, local: {localAssignment.points_possible}, in canvas {canvasAssignment.PointsPossible}"
-      );
-    if (!submissionTypesSame)
-      Console.WriteLine(
-        $"Submission Types different for {localAssignment.name}, local: {JsonSerializer.Serialize(localAssignment.submission_types.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}"
-      );
+      if (!descriptionSame)
+      {
+        Console.WriteLine($"descriptions different for {localAssignment.name}");
+        Console.WriteLine("Local Description:");
+        Console.WriteLine(localHtmlDescription);
+        Console.WriteLine("Canvas Description: ");
+        Console.WriteLine(canvasHtmlDescription);
+      }
+
+      if (!nameSame)
+        Console.WriteLine(
+          $"names different for {localAssignment.name}, local: {localAssignment.name}, in canvas {canvasAssignment.Name}"
+        );
+      if (!lockDateSame)
+        Console.WriteLine(
+          $"Lock Dates different for {localAssignment.name}, local: {localAssignment.lock_at}, in canvas {canvasAssignment.LockAt}"
+        );
+      if (!pointsSame)
+        Console.WriteLine(
+          $"Points different for {localAssignment.name}, local: {localAssignment.points_possible}, in canvas {canvasAssignment.PointsPossible}"
+        );
+      if (!submissionTypesSame)
+        Console.WriteLine(
+          $"Submission Types different for {localAssignment.name}, local: {JsonSerializer.Serialize(localAssignment.submission_types.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}"
+        );
+    }
 
     return !nameSame
       || !dueDatesSame

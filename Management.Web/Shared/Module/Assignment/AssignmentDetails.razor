@@ -147,7 +147,7 @@
             && planner.AssignmentNeedsUpdates(Assignment)
           )
           {
-            <div>need to update canvas</div>
+            <div>Need to update canvas</div>
           }
           else
           {
@@ -164,16 +164,8 @@
           <div class="col">
             @if(Assignment.use_template)
             {
-              var template = planner.LocalCourse?.AssignmentTemplates.First((t) => t.Id == Assignment.template_id);
-              if(template == null)
-              {
-                System.Console.WriteLine($"Could not find template fof assignment, {Assignment.template_id}");
-              }
-              else
-              {
-                var html = AssignmentTemplate.GetHtml(template, Assignment);
-                @((MarkupString) html)
-              }
+              var html = Assignment.GetDescriptionHtml(planner.LocalCourse?.AssignmentTemplates);
+              @((MarkupString) html)
             }
             else
             {

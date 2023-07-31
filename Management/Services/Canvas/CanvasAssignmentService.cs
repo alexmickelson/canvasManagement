@@ -22,12 +22,7 @@ public class CanvasAssignmentService
     return assignmentResponse.SelectMany(
       assignments =>
         assignments.Select(
-          a =>
-            a with
-            {
-              DueAt = a.DueAt?.ToLocalTime(),
-              LockAt = a.LockAt?.ToLocalTime()
-            }
+          a => a with { DueAt = a.DueAt?.ToLocalTime(), LockAt = a.LockAt?.ToLocalTime() }
         )
     );
   }
@@ -85,5 +80,75 @@ public class CanvasAssignmentService
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
     await webRequestor.PutAsync(request);
+
+    await CreateRubric(courseId, localAssignment);
+  }
+
+  public async Task CreateRubric(ulong courseId, LocalAssignment localAssignment)
+  {
+    if (localAssignment.canvasId == null)
+      throw new Exception("cannot create rubric if no canvas id in assignment");
+
+    var criterion = new Dictionary<int, object>();
+
+    var i = 0;
+    foreach (var rubricItem in localAssignment.rubric)
+    {
+      var ratings = new Dictionary<int, object>
+      {
+        { 0, new { description = "Full Marks", points = rubricItem.Points } },
+        { 1, new { description = "No Marks", points = 0 } },
+      };
+      criterion[i] = new
+      {
+        description = rubricItem.Label,
+        points = rubricItem.Points,
+        ratings = ratings
+      };
+      i++;
+    }
+
+    // https://canvas.instructure.com/doc/api/rubrics.html#method.rubrics.create
+    var body = new
+    {
+      rubric_association_id = localAssignment.canvasId,
+      rubric = new
+      {
+        title = $"Rubric for Assignment: {localAssignment.name}",
+        association_id = localAssignment.canvasId,
+        association_type = "Assignment",
+        use_for_grading = true,
+        criteria = criterion,
+      },
+      rubric_association = new
+      {
+        association_id = localAssignment.canvasId,
+        association_type = "Assignment",
+        purpose = "grading",
+        use_for_grading = true,
+      }
+    };
+    var creationUrl = $"courses/{courseId}/rubrics";
+    var rubricCreationRequest = new RestRequest(creationUrl);
+    rubricCreationRequest.AddBody(body);
+    rubricCreationRequest.AddHeader("Content-Type", "application/json");
+
+    var (rubricCreationResponse, creationResponse) =
+      await webRequestor.PostAsync<CanvasRubricCreationResponse>(rubricCreationRequest);
+
+    if (rubricCreationResponse == null)
+      throw new Exception("failed to create rubric before association");
+
+    var assignmentPointCorrectionBody = new
+    {
+      assignment = new { points_possible = localAssignment.points_possible }
+    };
+    var adjustmentUrl = $"courses/{courseId}/assignments/{localAssignment.canvasId}";
+    var pointAdjustmentRequest = new RestRequest(adjustmentUrl);
+    pointAdjustmentRequest.AddBody(assignmentPointCorrectionBody);
+    pointAdjustmentRequest.AddHeader("Content-Type", "application/json");
+    var (updatedAssignment, adjustmentResponse) = await webRequestor.PutAsync<CanvasAssignment>(
+      pointAdjustmentRequest
+    );
   }
 }
