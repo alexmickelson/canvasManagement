@@ -6,6 +6,18 @@
   [Parameter]
   [EditorRequired]
   public LocalAssignment Assignment { get; set; } = new();
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
 
   private void dropOnDate(DateTime dropDate)
   {

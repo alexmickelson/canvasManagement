@@ -2,7 +2,7 @@ using RestSharp;
 
 public class WebRequestor : IWebRequestor
 {
-  private const string BaseUrl = "https://snow.instructure.com/api/v1/";
+  private string BaseUrl = Environment.GetEnvironmentVariable("CANVAS_URL") + "/api/v1/";
   private string token;
   private RestClient client;
 
@@ -49,13 +49,13 @@ public class WebRequestor : IWebRequestor
   public async Task<RestResponse> PutAsync(RestRequest request)
   {
     var response = await client.ExecutePutAsync(request);
-    if (!response.IsSuccessful)
-    {
-      System.Console.WriteLine(response.Content);
-      System.Console.WriteLine(response.ResponseUri);
-      System.Console.WriteLine("error with response");
-      throw new Exception("error with response");
-    }
+    // if (!response.IsSuccessful)
+    // {
+    //   System.Console.WriteLine(response.Content);
+    //   System.Console.WriteLine(response.ResponseUri);
+    //   System.Console.WriteLine("error with response");
+    //   throw new Exception("error with response");
+    // }
     return response;
   }
 
@@ -79,23 +79,20 @@ public class WebRequestor : IWebRequestor
     }
     try
     {
-      try
-      {
-        var data = JsonSerializer.Deserialize<T>(response.Content!);
+      var data = JsonSerializer.Deserialize<T>(response.Content!);
 
-        if (data == null)
-        {
-          System.Console.WriteLine(response.Content);
-          System.Console.WriteLine(response.ResponseUri);
-          System.Console.WriteLine("could not parse response, got empty object");
-        }
-        return data;
-      }
-      catch (System.NotSupportedException exception)
+      if (data == null)
       {
-        Console.WriteLine(response.Content);
-        throw exception;
+        System.Console.WriteLine(response.Content);
+        System.Console.WriteLine(response.ResponseUri);
+        System.Console.WriteLine("could not parse response, got empty object");
       }
+      return data;
+    }
+    catch (System.NotSupportedException exception)
+    {
+      Console.WriteLine(response.Content);
+      throw exception;
     }
     catch (JsonException ex)
     {

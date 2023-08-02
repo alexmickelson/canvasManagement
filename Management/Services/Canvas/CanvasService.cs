@@ -4,6 +4,7 @@ using CanvasModel.Courses;
 using CanvasModel.EnrollmentTerms;
 using CanvasModel.Modules;
 using RestSharp;
+
 namespace Management.Services.Canvas;
 
 public class CanvasService
@@ -75,6 +76,53 @@ public class CanvasService
     await webRequestor.PostAsync(request);
   }
 
+  public async Task UpdateModule(ulong courseId, ulong moduleId, string name, int position)
+  {
+    Console.WriteLine($"Updating Module: {name}");
+    var url = $"courses/{courseId}/modules/{moduleId}";
+    var body = new { module = new { name = name, position = position } };
+    var request = new RestRequest(url);
+    request.AddBody(body);
+
+    await webRequestor.PutAsync(request);
+  }
+
+  public async Task<IEnumerable<CanvasModuleItem>> GetModuleItems(ulong courseId, ulong moduleId)
+  {
+    var url = $"courses/{courseId}/modules/{moduleId}/items";
+    var request = new RestRequest(url);
+    var (items, response) = await webRequestor.GetAsync<IEnumerable<CanvasModuleItem>>(request);
+    if (items == null)
+      throw new Exception($"Error getting canvas module items for {url}");
+    return items;
+  }
+
+  public async Task<Dictionary<ulong, IEnumerable<CanvasModuleItem>>> GetAllModulesItems(
+    ulong courseId,
+    IEnumerable<CanvasModule> modules
+  )
+  {
+    var itemsTasks = modules.Select(
+      async (m) =>
+      {
+        var items = await GetModuleItems(courseId, m.Id);
+        return (m, items);
+      }
+    );
+
+    var output = new Dictionary<ulong, IEnumerable<CanvasModuleItem>>();
+    var itemTasksResult = await Task.WhenAll(itemsTasks);
+    foreach (var (module, items) in itemTasksResult)
+    {
+      if (module == null || items == null)
+        throw new Exception(
+          "i'm not sure how we got here, but module and items are null after looking up module items"
+        );
+      output[module.Id] = items;
+    }
+    return output;
+  }
+
   public async Task<IEnumerable<EnrollmentTermModel>> GetCurrentTermsFor(
     DateTime? _queryDate = null
   )
@@ -89,5 +137,51 @@ public class CanvasService
       .OrderBy(t => t.StartAt);
 
     return currentTerms;
+  }
+
+  public async Task UpdateModuleItem(
+    ulong canvasCourseId,
+    ulong canvasModuleId,
+    CanvasModuleItem item
+  )
+  {
+    Console.WriteLine($"updating module item {item.Title}");
+    var url = $"courses/{canvasCourseId}/modules/{canvasModuleId}/items/{item.Id}";
+    var body = new { module_item = new { title = item.Title, position = item.Position } };
+    var request = new RestRequest(url);
+    request.AddBody(body);
+    request.AddHeader("Content-Type", "application/json");
+
+    var (newItem, response) = await webRequestor.PutAsync<CanvasModuleItem>(request);
+    if (newItem == null)
+      throw new Exception("something went wrong updating module item");
+  }
+
+  public async Task CreateModuleItem(
+    ulong canvasCourseId,
+    ulong canvasModuleId,
+    string title,
+    string type,
+    ulong contentId
+  )
+  {
+    Console.WriteLine($"creating new module item {title}");
+    var url = $"courses/{canvasCourseId}/modules/{canvasModuleId}/items";
+    var body = new
+    {
+      module_item = new
+      {
+        title = title,
+        type = type.ToString(),
+        content_id = contentId,
+      }
+    };
+    var request = new RestRequest(url);
+    request.AddBody(body);
+    request.AddHeader("Content-Type", "application/json");
+
+    var (newItem, response) = await webRequestor.PostAsync<CanvasModuleItem>(request);
+    if (newItem == null)
+      throw new Exception("something went wrong updating module item");
   }
 }

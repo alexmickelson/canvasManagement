@@ -6,6 +6,7 @@ global using CanvasModel.EnrollmentTerms;
 global using CanvasModel.Courses;
 global using CanvasModel;
 global using LocalModels;
+global using Management.Planner;
 global using Management.Web.Shared.Components;
 global using Management.Web.Shared.Course;
 
@@ -16,6 +17,16 @@ using dotenv.net;
 DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
+
+var canvas_token = Environment.GetEnvironmentVariable("CANVAS_TOKEN");
+if (canvas_token == null)
+  throw new Exception("CANVAS_TOKEN is null");
+var canvas_url = Environment.GetEnvironmentVariable("CANVAS_URL");
+if (canvas_url == null)
+{
+  Console.WriteLine("CANVAS_URL is null, defaulting to https://snow.instructure.com");
+  Environment.SetEnvironmentVariable("CANVAS_URL", "https://snow.instructure.com");
+}
 
 // Add services to the container.
 builder.Services.AddRazorPages();

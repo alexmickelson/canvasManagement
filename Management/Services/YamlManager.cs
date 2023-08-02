@@ -9,7 +9,6 @@ public class YamlManager
     var serializer = new SerializerBuilder().Build();
     var yaml = serializer.Serialize(course);
 
-    // System.Console.WriteLine(yaml);
     return yaml;
   }
 
@@ -17,8 +16,8 @@ public class YamlManager
   {
     var deserializer = new DeserializerBuilder().Build();
 
-    var person = deserializer.Deserialize<LocalCourse>(rawCourse);
-    return person;
+    var course = deserializer.Deserialize<LocalCourse>(rawCourse);
+    return course;
   }
 
   public async Task SaveCourseAsync(LocalCourse course)
@@ -44,7 +43,9 @@ public class YamlManager
     var fileNames = Directory.GetFiles(path);
 
     var courses = await Task.WhenAll(
-      fileNames.Select(async n => ParseCourse(await File.ReadAllTextAsync($"../storage/{n}")))
+      fileNames
+        .Where(name => name.EndsWith(".yml"))
+        .Select(async n => ParseCourse(await File.ReadAllTextAsync($"../storage/{n}")))
     );
     return courses;
   }

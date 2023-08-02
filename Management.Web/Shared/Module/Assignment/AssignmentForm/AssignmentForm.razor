@@ -31,7 +31,7 @@
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
   private IEnumerable<RubricItem> rubric { get; set; } = Enumerable.Empty<RubricItem>();
-  private IEnumerable<SubmissionType> submissionTypes { get; set; } = Enumerable.Empty<SubmissionType>();
+  private IEnumerable<string> submissionTypes { get; set; } = Enumerable.Empty<string>();
 
   protected override void OnParametersSet()
   {

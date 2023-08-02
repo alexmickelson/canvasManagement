@@ -95,6 +95,13 @@
     >
       Sync With Canvas
     </button>
+    <a 
+      class="btn btn-outline-secondary"
+      target="_blank"
+      href="@($"{Environment.GetEnvironmentVariable("CANVAS_URL")}/courses/{planner.LocalCourse.CanvasId}")"
+    >
+      View In Canvas
+    </a>
 
     @if(planner.LoadingCanvasData)
     {

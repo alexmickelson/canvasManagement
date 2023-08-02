@@ -52,12 +52,14 @@ public class CanvasAssignmentService
     if (canvasAssignment == null)
       throw new Exception("created canvas assignment was null");
 
-    await CreateRubric(courseId, localAssignment);
-
-    return localAssignment with
+    var updatedLocalAssignment = localAssignment with
     {
       canvasId = canvasAssignment.Id
     };
+
+    await CreateRubric(courseId, updatedLocalAssignment);
+
+    return updatedLocalAssignment;
   }
 
   public async Task Update(ulong courseId, LocalAssignment localAssignment, string htmlDescription)

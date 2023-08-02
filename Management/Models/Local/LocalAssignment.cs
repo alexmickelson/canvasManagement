@@ -8,24 +8,37 @@ public record RubricItem
   public int Points { get; set; } = 0;
 }
 
-public enum SubmissionType
+public static class SubmissionType
 {
-  online_text_entry,
-  online_upload,
-  online_quiz,
-  on_paper,
-  discussion_topic,
-  external_tool,
-  online_url,
-  media_recording,
-  student_annotation,
-  none,
+  public static readonly string online_text_entry = "online_text_entry";
+  public static readonly string online_upload = "online_upload";
+  public static readonly string online_quiz = "online_quiz";
+  public static readonly string on_paper = "on_paper";
+  public static readonly string discussion_topic = "discussion_topic";
+  public static readonly string external_tool = "external_tool";
+  public static readonly string online_url = "online_url";
+  public static readonly string media_recording = "media_recording";
+  public static readonly string student_annotation = "student_annotation";
+  public static readonly string none = "none";
+  public static readonly IEnumerable<string> AllTypes = new string[]
+  {
+    SubmissionType.online_text_entry,
+    SubmissionType.online_upload,
+    SubmissionType.online_quiz,
+    SubmissionType.on_paper,
+    SubmissionType.discussion_topic,
+    SubmissionType.external_tool,
+    SubmissionType.online_url,
+    SubmissionType.media_recording,
+    SubmissionType.student_annotation,
+    SubmissionType.none,
+  };
 }
 
 public record LocalAssignment
 {
   public string id { get; init; } = "";
-  public ulong? canvasId = null;
+  public ulong? canvasId { get; init; } = null;
   public string name { get; init; } = "";
   public string description { get; init; } = "";
   public bool use_template { get; init; } = false;
@@ -37,7 +50,7 @@ public record LocalAssignment
   public DateTime? lock_at { get; init; }
   public DateTime due_at { get; init; }
   public int points_possible { get; init; }
-  public IEnumerable<SubmissionType> submission_types { get; init; } = new SubmissionType[] { };
+  public IEnumerable<string> submission_types { get; init; } = new string[] { };
 
   public string GetRubricHtml()
   {

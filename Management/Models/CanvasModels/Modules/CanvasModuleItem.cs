@@ -3,7 +3,7 @@ namespace CanvasModel.Modules;
 public record CanvasModuleItem(
   [property: JsonPropertyName("id")] ulong Id,
   [property: JsonPropertyName("module_id")] ulong ModuleId,
-  [property: JsonPropertyName("position")] uint Position,
+  [property: JsonPropertyName("position")] int Position,
   [property: JsonPropertyName("title")] string Title,
   [property: JsonPropertyName("indent")] uint? Indent,
   [property: JsonPropertyName("type")] string Type,

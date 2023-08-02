@@ -1,11 +1,13 @@
+@using System.Reflection
+
 @code 
 {
   [Parameter, EditorRequired]
-  public IEnumerable<SubmissionType> Types { get; set; } = Enumerable.Empty<SubmissionType>();
+  public IEnumerable<string> Types { get; set; } = Enumerable.Empty<string>();
 
   [Parameter, EditorRequired]
-  public Action<IEnumerable<SubmissionType>> SetTypes { get; set; } = (_) => {};
-  private string getLabel(SubmissionType type)
+  public Action<IEnumerable<string>> SetTypes { get; set; } = (_) => {};
+  private string getLabel(string type)
   {
     return type.ToString().Replace("_", "") + "switch";
   }
@@ -14,7 +16,7 @@
 <h5>Submission Types</h5>
 <div class="row">
 
-@foreach (var submissionType in (SubmissionType[])Enum.GetValues(typeof(SubmissionType)))
+@foreach (var submissionType in SubmissionType.AllTypes)
 {
   <div class="col-4">
     <div class="form-check form-switch">
