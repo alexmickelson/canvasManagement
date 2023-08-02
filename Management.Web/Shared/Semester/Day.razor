@@ -102,7 +102,7 @@
   <div class="m-0 ps-3">
   @foreach (var assignment in TodaysAssignments)
   {
-    <AssignmentInDay Assignment="assignment" />
+    <AssignmentInDay Assignment="assignment" @key="@assignment" />
   }
   </div>
 </div>
