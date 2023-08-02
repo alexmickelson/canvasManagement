@@ -89,17 +89,17 @@ public class WebRequestor : IWebRequestor
       }
       return data;
     }
-    catch (System.NotSupportedException exception)
+    catch (System.NotSupportedException )
     {
       Console.WriteLine(response.Content);
-      throw exception;
+      throw;
     }
-    catch (JsonException ex)
+    catch (JsonException)
     {
       System.Console.WriteLine(response.ResponseUri);
       System.Console.WriteLine(response.Content);
-      Console.WriteLine($"An error occurred during deserialization: {ex.Message}");
-      throw ex;
+      Console.WriteLine($"An error occurred during deserialization");
+      throw;
     }
   }
 }

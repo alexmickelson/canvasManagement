@@ -144,7 +144,10 @@
             && planner.LocalCourse.CanvasId != null
             && planner.CanvasAssignments != null
             && planner.CanvasModules != null 
-            && planner.AssignmentNeedsUpdates(Assignment)
+            && Assignment.NeedsUpdates(
+              planner.CanvasAssignments, 
+              planner.LocalCourse.AssignmentTemplates
+            )
           )
           {
             <div>Need to update canvas</div>

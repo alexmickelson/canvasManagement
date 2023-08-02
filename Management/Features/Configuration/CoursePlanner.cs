@@ -97,14 +97,15 @@ public class CoursePlanner
     var canvasId =
       LocalCourse.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");
 
-    await ensureAllModulesExistInCanvas(canvasId);
+    await LocalCourse.EnsureAllModulesExistInCanvas(canvasId, CanvasModules, canvas);
     CanvasModules = await canvas.GetModules(canvasId);
-    await sortCanvasModules(canvasId);
+
+    await LocalCourse.SortCanvasModules(canvasId, CanvasModules, canvas);
     CanvasModulesItems = await canvas.GetAllModulesItems(canvasId, CanvasModules);
 
-    await syncModulesWithCanvasData(canvasId);
+    LocalCourse = await LocalCourse.SyncModulesWithCanvasData(canvasId, CanvasModules, canvas);
 
-    await syncAssignmentsWithCanvas(canvasId);
+    await LocalCourse.SyncAssignmentsWithCanvas(canvasId, CanvasAssignments, canvas);
     CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
 
     await syncModuleItemsWithCanvas(canvasId);
@@ -113,185 +114,6 @@ public class CoursePlanner
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
     Console.WriteLine("done syncing with canvas\n");
-  }
-
-  private async Task syncModulesWithCanvasData(ulong canvasId)
-  {
-    if (LocalCourse == null)
-      return;
-
-    CanvasModules = await canvas.GetModules(canvasId);
-    LocalCourse = LocalCourse with
-    {
-      Modules = LocalCourse.Modules.Select(m =>
-      {
-        var canvasModule = CanvasModules.FirstOrDefault(cm => cm.Name == m.Name);
-        return canvasModule == null ? m : m with { CanvasId = canvasModule.Id };
-      })
-    };
-  }
-
-  private async Task ensureAllModulesExistInCanvas(ulong canvasId)
-  {
-    if (LocalCourse == null || CanvasModules == null)
-      return;
-
-    foreach (var module in LocalCourse.Modules)
-    {
-      var canvasModule = CanvasModules.FirstOrDefault(cm => cm.Id == module.CanvasId);
-      if (canvasModule == null)
-      {
-        await canvas.CreateModule(canvasId, module.Name);
-      }
-    }
-  }
-
-  private async Task sortCanvasModules(ulong canvasId)
-  {
-    if (LocalCourse == null)
-      throw new Exception("cannot sort modules, no course selected");
-    if (CanvasModules == null)
-      throw new Exception("cannot sort modules, no canvas modules loaded");
-
-    var currentCanvasPositions = CanvasModules.ToDictionary(m => m.Id, m => m.Position);
-    foreach (var (localModule, i) in LocalCourse.Modules.Select((m, i) => (m, i)))
-    {
-      var correctPosition = i + 1;
-      var moduleCanvasId =
-        localModule.CanvasId ?? throw new Exception("cannot sort module if no module canvas id");
-      var currentCanvasPosition = currentCanvasPositions[moduleCanvasId];
-      if (currentCanvasPosition != correctPosition)
-      {
-        await canvas.UpdateModule(canvasId, moduleCanvasId, localModule.Name, correctPosition);
-      }
-    }
-  }
-
-  private async Task syncAssignmentsWithCanvas(ulong canvasId)
-  {
-    if (
-      LocalCourse == null
-      || LocalCourse.CanvasId == null
-      || CanvasAssignments == null
-      || CanvasModules == null
-    )
-      return;
-
-    var moduleTasks = LocalCourse.Modules.Select(async m =>
-    {
-      var assignmentTasks = m.Assignments.Select(syncAssignmentToCanvas);
-      var assignments = await Task.WhenAll(assignmentTasks);
-      return m with { Assignments = assignments };
-    });
-
-    var modules = await Task.WhenAll(moduleTasks);
-    LocalCourse = LocalCourse with { Modules = modules };
-  }
-
-  private async Task<LocalAssignment> syncAssignmentToCanvas(LocalAssignment localAssignment)
-  {
-    if (
-      LocalCourse == null
-      || LocalCourse.CanvasId == null
-      || CanvasAssignments == null
-      || CanvasModules == null
-    )
-      throw new Exception(
-        "cannot create canvas assignment if local course is null or other values not set"
-      );
-
-    ulong canvasId = LocalCourse.CanvasId ?? throw new Exception("no canvas id to create course");
-    var canvasAssignment = CanvasAssignments.FirstOrDefault(
-      ca => ca.Id == localAssignment.canvasId
-    );
-    string localHtmlDescription = localAssignment.GetDescriptionHtml(
-      LocalCourse.AssignmentTemplates
-    );
-
-    if (canvasAssignment != null)
-    {
-      var assignmentNeedsUpdates = AssignmentNeedsUpdates(localAssignment, quiet: false);
-      if (assignmentNeedsUpdates)
-      {
-        await canvas.Assignments.Update(courseId: canvasId, localAssignment, localHtmlDescription);
-      }
-      return localAssignment;
-    }
-    else
-    {
-      return await canvas.Assignments.Create(canvasId, localAssignment, localHtmlDescription);
-    }
-  }
-
-  public bool AssignmentNeedsUpdates(LocalAssignment localAssignment, bool quiet = true)
-  {
-    if (
-      LocalCourse == null
-      || LocalCourse.CanvasId == null
-      || CanvasAssignments == null
-      || CanvasModules == null
-    )
-      throw new Exception(
-        "cannot check if assignment needs updates if local course is null or other values not set"
-      );
-
-    var canvasAssignment = CanvasAssignments.First(ca => ca.Id == localAssignment.canvasId);
-
-    var localHtmlDescription = localAssignment.GetDescriptionHtml(LocalCourse.AssignmentTemplates);
-
-    var canvasHtmlDescription = canvasAssignment.Description;
-    canvasHtmlDescription = Regex.Replace(canvasHtmlDescription, "<script.*script>", "");
-    canvasHtmlDescription = Regex.Replace(canvasHtmlDescription, "<link .*\">", "");
-
-    var dueDatesSame = canvasAssignment.DueAt == localAssignment.due_at;
-    var descriptionSame = canvasHtmlDescription == localHtmlDescription;
-    var nameSame = canvasAssignment.Name == localAssignment.name;
-    var lockDateSame = canvasAssignment.LockAt == localAssignment.lock_at;
-    var pointsSame = canvasAssignment.PointsPossible == localAssignment.points_possible;
-    var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
-      localAssignment.submission_types.Select(t => t.ToString())
-    );
-
-    if (!quiet)
-    {
-      if (!dueDatesSame)
-        Console.WriteLine(
-          $"Due dates different for {localAssignment.name}, local: {localAssignment.due_at}, in canvas {canvasAssignment.DueAt}"
-        );
-
-      if (!descriptionSame)
-      {
-        Console.WriteLine($"descriptions different for {localAssignment.name}");
-        Console.WriteLine("Local Description:");
-        Console.WriteLine(localHtmlDescription);
-        Console.WriteLine("Canvas Description: ");
-        Console.WriteLine(canvasHtmlDescription);
-      }
-
-      if (!nameSame)
-        Console.WriteLine(
-          $"names different for {localAssignment.name}, local: {localAssignment.name}, in canvas {canvasAssignment.Name}"
-        );
-      if (!lockDateSame)
-        Console.WriteLine(
-          $"Lock Dates different for {localAssignment.name}, local: {localAssignment.lock_at}, in canvas {canvasAssignment.LockAt}"
-        );
-      if (!pointsSame)
-        Console.WriteLine(
-          $"Points different for {localAssignment.name}, local: {localAssignment.points_possible}, in canvas {canvasAssignment.PointsPossible}"
-        );
-      if (!submissionTypesSame)
-        Console.WriteLine(
-          $"Submission Types different for {localAssignment.name}, local: {JsonSerializer.Serialize(localAssignment.submission_types.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}"
-        );
-    }
-
-    return !nameSame
-      || !dueDatesSame
-      || !lockDateSame
-      || !descriptionSame
-      || !pointsSame
-      || !submissionTypesSame;
   }
 
   private async Task syncModuleItemsWithCanvas(ulong canvasId)
