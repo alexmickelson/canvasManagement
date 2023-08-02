@@ -25,7 +25,8 @@
   {
     planner.StateHasChanged -= reload;
   }
-  private Modal? assignmentEditorModal {get; set;}
+  private Modal? assignmentEditorModal { get; set; }
+  private bool showAll { get; set; } = false;
 
   private void dropOnDate(DateTime dropDate)
   {
@@ -135,36 +136,61 @@
   <div class="card">
     <div class="card-body">
       <div class="card-title">
-        <h4 class="text-center">
-          @Assignment.name
-        </h4>
-        @if(isSyncedWithCanvas)
-        {
-          @if(planner.LocalCourse != null
-            && planner.LocalCourse.CanvasId != null
-            && planner.CanvasAssignments != null
-            && planner.CanvasModules != null 
-            && Assignment.NeedsUpdates(
-              planner.CanvasAssignments, 
-              planner.LocalCourse.AssignmentTemplates
-            )
-          )
+        <div class="row">
+          <div class="col">
+          </div>
+          <div class="col-8">
+            <h4 class="text-center">
+              @Assignment.name
+            </h4>
+            
+          </div>
+          <div class="col text-end">
+            @if(isSyncedWithCanvas)
+            {
+              @if(planner.LocalCourse != null
+                && planner.LocalCourse.CanvasId != null
+                && planner.CanvasAssignments != null
+                && planner.CanvasModules != null 
+                && Assignment.NeedsUpdates(
+                  planner.CanvasAssignments, 
+                  planner.LocalCourse.AssignmentTemplates
+                )
+              )
+              {
+                <SyncIcon />
+              }
+              else
+              {
+                <CheckIcon />
+              }
+            }
+            else
+            {
+              <div>Not Synced with Canvas</div>
+            }
+          </div>
+        </div>
+      </div>
+      @if(!showAll)
+      {
+        <div class="card-text overflow-hidden" style="max-height: 5rem;">
+          @* @if(Assignment.use_template)
           {
-            <div>Need to update canvas</div>
+            var html = Assignment.GetDescriptionHtml(planner.LocalCourse?.AssignmentTemplates);
+            @((MarkupString) html)
           }
           else
           {
-            <div>Canvas is up to date</div>
-          }
-        }
-        else
-        {
-          <div>Not Synced with Canvas</div>
-        }
-       </div>
-      <div class="card-text">
-        <div class="row">
-          <div class="col">
+            @Assignment.description
+          } *@
+          <div>Points: @Assignment.points_possible</div>
+          <div>Due At: @Assignment.due_at</div>
+        </div>
+       }
+       else
+       {
+          <div class="card-text">
             @if(Assignment.use_template)
             {
               var html = Assignment.GetDescriptionHtml(planner.LocalCourse?.AssignmentTemplates);
@@ -175,26 +201,18 @@
               @Assignment.description
             }
             
-          </div>
-          <div class="col-auto">
+            <hr>
             <div>Points: @Assignment.points_possible</div>
             <div>Due At: @Assignment.due_at</div>
             <div>Lock At: @Assignment.lock_at</div>
-            @if(Assignment.canvasId != null)
-            {
-              <div>Synced with canvas</div>
-            }
-            else
-            {
-              <div>Not synced with canvas</div>
-            }
-            <div class="text-center">
+            <br>
+            <h5>
               Rubric
-            </div>
+            </h5>
             @foreach(var rubricItem in Assignment.rubric)
             {
-              <div class="row  p-1">
-                <div class="col border-end my-auto text-end">
+              <div class="row m-0">
+                <div class="col border-end my-auto">
                   @rubricItem.Label
                 </div>
                 <div class="col-2 my-auto">
@@ -202,6 +220,7 @@
                 </div>
               </div>
             }
+            <br>
             <div>Submission Types:</div>
             <ul>
               @foreach(var type in Assignment.submission_types)
@@ -212,8 +231,33 @@
               }
             </ul>
           </div>
+       }
+      
+
+      @if(!showAll)
+      {
+        <div 
+          class="text-center" 
+          role="button" 
+          @onclick:preventDefault="true" 
+          @onclick:stopPropagation="true"
+          @onclick="() => showAll = true"
+        >
+          ...
         </div>
-      </div>
+      }
+      else
+      {
+        <div 
+          class="text-center" 
+          role="button" 
+          @onclick:preventDefault="true" 
+          @onclick:stopPropagation="true"
+          @onclick="() => showAll = false"
+        >
+          ...
+        </div>
+      }
 
     </div>
   </div>
