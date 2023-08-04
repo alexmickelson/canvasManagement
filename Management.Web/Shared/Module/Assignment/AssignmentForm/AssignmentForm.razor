@@ -3,8 +3,6 @@
 @inject CoursePlanner planner
 
 @code {
-  [Parameter]
-  [EditorRequired]
   public LocalModule Module { get; set; } = default!;
 
   [Parameter]
@@ -94,6 +92,11 @@
     rubric = newRubric;
     StateHasChanged();
   }
+  private void SetTypes(IEnumerable<string> newTypes)
+  { 
+    submissionTypes = newTypes;
+    StateHasChanged();
+  }
 } 
 
 <Modal @ref="AssignmentModal" OnHide="@(() => OnHide())">
@@ -139,7 +142,7 @@
       <RubricEditor Rubric="rubric" SetRubric="updateRubric" />
       <SubmissionTypeSelector
         Types="submissionTypes"
-        SetTypes="(newTypes) => submissionTypes = newTypes"
+        SetTypes="SetTypes"
       />
     </form>
   </Body>

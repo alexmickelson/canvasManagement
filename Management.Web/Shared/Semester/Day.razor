@@ -25,6 +25,7 @@
   {
     planner.StateHasChanged -= reload;
   }
+  
 
   private IEnumerable<LocalAssignment> TodaysAssignments {
     get
@@ -53,8 +54,8 @@
         var isClassDay = planner.LocalCourse?.DaysOfWeek.Contains(notNullDay) ?? false;
         var dayInSemester = 
           isClassDay
-            && date < planner.LocalCourse?.EndDate 
-            && date > planner.LocalCourse.StartDate;
+            && date <= planner.LocalCourse?.EndDate
+            && date >= planner.LocalCourse?.StartDate;
         
         var totalClasses = dayInSemester 
           ? "bg-light-subtle text-light " + baseClasses 

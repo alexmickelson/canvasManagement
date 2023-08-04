@@ -25,7 +25,6 @@
   {
     planner.StateHasChanged -= reload;
   }
-  private Modal? assignmentEditorModal { get; set; }
   private bool showAll { get; set; } = false;
 
   private void dropOnDate(DateTime dropDate)
@@ -134,18 +133,15 @@
   role="button"
 >
   <div class="card">
-    <div class="card-body">
-      <div class="card-title">
-        <div class="row">
-          <div class="col">
-          </div>
-          <div class="col-8">
-            <h4 class="text-center">
+    <div class="card-body p-0">
+      <div class="card-title pt-2 px-2 m-0">
+        <div class="row mx-1">
+          <div class="col offset-2 offset-lg-1 ">
+            <h4 class="text-center m-0">
               @Assignment.name
             </h4>
-            
           </div>
-          <div class="col text-end">
+          <div class="col-2 col-lg-1 text-end">
             @if(isSyncedWithCanvas)
             {
               @if(planner.LocalCourse != null
@@ -167,23 +163,15 @@
             }
             else
             {
-              <div>Not Synced with Canvas</div>
+              <SyncIcon />
             }
           </div>
         </div>
       </div>
+
       @if(!showAll)
       {
-        <div class="card-text overflow-hidden" style="max-height: 5rem;">
-          @* @if(Assignment.use_template)
-          {
-            var html = Assignment.GetDescriptionHtml(planner.LocalCourse?.AssignmentTemplates);
-            @((MarkupString) html)
-          }
-          else
-          {
-            @Assignment.description
-          } *@
+        <div class="card-text overflow-hidden p-2" style="max-height: 5rem;">
           <div>Points: @Assignment.points_possible</div>
           <div>Due At: @Assignment.due_at</div>
         </div>
@@ -191,45 +179,25 @@
        else
        {
           <div class="card-text">
-            @if(Assignment.use_template)
-            {
-              var html = Assignment.GetDescriptionHtml(planner.LocalCourse?.AssignmentTemplates);
-              @((MarkupString) html)
-            }
-            else
-            {
-              @Assignment.description
-            }
-            
-            <hr>
-            <div>Points: @Assignment.points_possible</div>
-            <div>Due At: @Assignment.due_at</div>
-            <div>Lock At: @Assignment.lock_at</div>
-            <br>
-            <h5>
-              Rubric
-            </h5>
-            @foreach(var rubricItem in Assignment.rubric)
-            {
-              <div class="row m-0">
-                <div class="col border-end my-auto">
-                  @rubricItem.Label
-                </div>
-                <div class="col-2 my-auto">
-                  @rubricItem.Points
-                </div>
-              </div>
-            }
-            <br>
-            <div>Submission Types:</div>
-            <ul>
-              @foreach(var type in Assignment.submission_types)
-              {
-                <li>
-                  @type
-                </li>
-              }
-            </ul>
+            <div class="px-3 py-1 bg-dark-subtle my-1">
+
+            @((MarkupString) @Assignment.GetDescriptionHtml(planner.LocalCourse?.AssignmentTemplates))
+            </div>
+
+            <section class="px-3">
+              <div>Points: @Assignment.points_possible</div>
+              <div>Due At: @Assignment.due_at</div>
+              <div>Lock At: @Assignment.lock_at</div>
+              <div>Submission Types:</div>
+              <ul>
+                @foreach(var type in Assignment.submission_types)
+                {
+                  <li>
+                    @type
+                  </li>
+                }
+              </ul>
+            </section>
           </div>
        }
       
@@ -237,25 +205,45 @@
       @if(!showAll)
       {
         <div 
-          class="text-center" 
+          class="text-center fs-3 fw-bold lh-1 text-primary" 
           role="button" 
           @onclick:preventDefault="true" 
           @onclick:stopPropagation="true"
           @onclick="() => showAll = true"
         >
-          ...
+          <svg 
+            width="30" 
+            height="30" 
+            viewBox="0 0 20 20" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path 
+              d="M6 10a2 2 0 11-4.001-.001A2 2 0 016 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0112 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0118 10z" 
+              fill="var(--bs-primary)"
+            />
+          </svg>
         </div>
       }
       else
       {
         <div 
-          class="text-center" 
+          class="text-center fs-3 fw-bold lh-1 text-primary" 
           role="button" 
           @onclick:preventDefault="true" 
           @onclick:stopPropagation="true"
           @onclick="() => showAll = false"
         >
-          ...
+          <svg 
+            width="30" 
+            height="30" 
+            viewBox="0 0 20 20" 
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path 
+              d="M6 10a2 2 0 11-4.001-.001A2 2 0 016 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0112 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0118 10z" 
+              fill="var(--bs-primary)"
+            />
+          </svg>
         </div>
       }
 
@@ -267,5 +255,4 @@
   Assignment="Assignment"
   Show="showUpdateForm"
   OnHide="@(() => showUpdateForm = false)"
-  Module="Module"
 />

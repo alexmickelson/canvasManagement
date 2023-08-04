@@ -2,8 +2,16 @@
 
 @code 
 {
+  private IEnumerable<string> _types { get; set; } = Enumerable.Empty<string>();
   [Parameter, EditorRequired]
-  public IEnumerable<string> Types { get; set; } = Enumerable.Empty<string>();
+  public IEnumerable<string> Types {
+    get => _types;
+    set 
+    {
+      _types = value;
+      renderKey++;
+    }
+  }
 
   [Parameter, EditorRequired]
   public Action<IEnumerable<string>> SetTypes { get; set; } = (_) => {};
@@ -11,36 +19,47 @@
   {
     return type.ToString().Replace("_", "") + "switch";
   }
+
+  private bool discussionIsSelected
+  {
+    get => Types.FirstOrDefault(
+              t => t == SubmissionType.discussion_topic
+            ) != null;
+  }
+  private int renderKey {get; set; } = 1;
 }
 
 <h5>Submission Types</h5>
-<div class="row">
+<div class="row" @key="Types">
 
-@foreach (var submissionType in SubmissionType.AllTypes)
-{
-  <div class="col-4">
-    <div class="form-check form-switch">
-      <input 
-        class="form-check-input" 
-        type="checkbox"
-        role="switch" 
-        id="@getLabel(submissionType)"
-        checked="@Types.Contains(submissionType)"
-        @onchange="(e) => {
-          var isChecked = (bool)(e.Value ?? false);
-          if(isChecked)
-            SetTypes(Types.Append(submissionType));
-          else
-            SetTypes(Types.Where(t => t != submissionType));
-        }"
-      >
-      <label 
-        class="form-check-label" 
-        for="@getLabel(submissionType)"
-      >
-        @submissionType
-      </label>
+  @foreach (var submissionType in SubmissionType.AllTypes)
+  {
+    var isDiscussion = submissionType == SubmissionType.discussion_topic;
+    var allowedToBeChecked = !discussionIsSelected || isDiscussion;
+    <div class="col-4">
+      <div class="form-check form-switch">
+        <input
+          class="form-check-input" 
+          type="checkbox"
+          role="switch" 
+          id="@getLabel(submissionType)"
+          checked="@(Types.Contains(submissionType) && allowedToBeChecked)"
+          @onchange="(e) => {
+            var isChecked = (bool)(e.Value ?? false);
+            if(isChecked)
+              SetTypes(Types.Append(submissionType));
+            else
+              SetTypes(Types.Where(t => t != submissionType));
+          }"
+          disabled="@(discussionIsSelected && !isDiscussion)"
+        >
+        <label 
+          class="form-check-label" 
+          for="@getLabel(submissionType)"
+        >
+          @submissionType
+        </label>
+      </div>
     </div>
-  </div>
-}
+  }
 </div>

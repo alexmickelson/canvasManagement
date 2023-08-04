@@ -8,17 +8,33 @@ public static class CoursePlannerExtensions
 {
   public static LocalCourse GeneralCourseCleanup(this LocalCourse incomingCourse)
   {
-    var modulesWithUniqueAssignments = incomingCourse.Modules.Select(
+    var cleanModules = incomingCourse.Modules.Select(
       module =>
         module with
         {
-          Assignments = module.Assignments.OrderBy(a => a.due_at).DistinctBy(a => a.id)
+          Assignments = module.Assignments
+            .OrderBy(a => a.due_at)
+            .DistinctBy(a => a.id)
+            .Select(a => a.validateSubmissionTypes())
         }
+    );
+
+    var cleanStartDay = new DateTime(
+      incomingCourse.StartDate.Year,
+      incomingCourse.StartDate.Month,
+      incomingCourse.StartDate.Day
+    );
+    var cleanEndDay = new DateTime(
+      incomingCourse.EndDate.Year,
+      incomingCourse.EndDate.Month,
+      incomingCourse.EndDate.Day
     );
 
     return incomingCourse with
     {
-      Modules = modulesWithUniqueAssignments
+      Modules = cleanModules,
+      StartDate = cleanStartDay,
+      EndDate = cleanEndDay,
     };
   }
 
@@ -78,6 +94,19 @@ public static class CoursePlannerExtensions
       );
       return assignment with { canvasId = null };
     }
+    return assignment;
+  }
+
+  public static LocalAssignment validateSubmissionTypes(this LocalAssignment assignment)
+  {
+    var containsDiscussion =
+      assignment.submission_types.FirstOrDefault(t => t == SubmissionType.discussion_topic) != null;
+
+    if (containsDiscussion)
+      return assignment with
+      {
+        submission_types = new string[] { SubmissionType.discussion_topic }
+      };
     return assignment;
   }
 }

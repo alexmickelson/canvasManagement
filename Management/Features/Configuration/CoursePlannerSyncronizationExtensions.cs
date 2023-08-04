@@ -111,7 +111,7 @@ public static class CoursePlannerSyncronizationExtensions
 
     var canvasHtmlDescription = canvasAssignment.Description;
     canvasHtmlDescription = Regex.Replace(canvasHtmlDescription, "<script.*script>", "");
-    canvasHtmlDescription = Regex.Replace(canvasHtmlDescription, "<link .*\">", "");
+    canvasHtmlDescription = Regex.Replace(canvasHtmlDescription, "<link\\s+rel=\"[^\"]*\"\\s+href=\"[^\"]*\"[^>]*>", "");
 
     var dueDatesSame = canvasAssignment.DueAt == localAssignment.due_at;
     var descriptionSame = canvasHtmlDescription == localHtmlDescription;
@@ -131,11 +131,21 @@ public static class CoursePlannerSyncronizationExtensions
 
       if (!descriptionSame)
       {
+        Console.WriteLine();
         Console.WriteLine($"descriptions different for {localAssignment.name}");
+        Console.WriteLine();
+
         Console.WriteLine("Local Description:");
         Console.WriteLine(localHtmlDescription);
+        Console.WriteLine();
         Console.WriteLine("Canvas Description: ");
         Console.WriteLine(canvasHtmlDescription);
+        Console.WriteLine();
+        Console.WriteLine("Canvas Raw Description: ");
+        Console.WriteLine(canvasAssignment.Description);
+        Console.WriteLine();
+        
+
       }
 
       if (!nameSame)

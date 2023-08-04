@@ -1,3 +1,4 @@
+@using Markdig
 
 @inject CoursePlanner planner
 
@@ -29,6 +30,7 @@
     .LocalCourse?
     .AssignmentTemplates
     .FirstOrDefault(t => t.Id == TemplateId);
+  public string Preview => Markdown.ToHtml(Description);
 
 }
 
@@ -109,17 +111,35 @@
 }
 else
 {
-  <label 
-    for="description"
-    class="form-label"
-  >
-    Description
-  </label>
-  <textarea 
-    id="description" 
-    class="form-control"
-    value="@Description"
-    @oninput="async (e) => 
-      await DescriptionChanged.InvokeAsync(e.Value?.ToString() ?? String.Empty)"
-  />
+  
+  <div class="row">
+    <div class="col">
+      <label 
+        for="description"
+        class="form-label"
+      >
+        Description
+      </label>
+    </div>
+    <div class="col">
+      HTML Preview
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <textarea 
+        id="description" 
+        class="form-control"
+        value="@Description"
+        rows=12
+        @oninput="async (e) => 
+          await DescriptionChanged.InvokeAsync(e.Value?.ToString() ?? String.Empty)"
+      />
+    </div>
+    <div class="col">
+      @((MarkupString) Preview)
+
+    </div>
+  </div>
 }

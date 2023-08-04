@@ -40,7 +40,7 @@ public class CanvasAssignmentService
     {
       name = localAssignment.name,
       submission_types = localAssignment.submission_types.Select(t => t.ToString()),
-      description = localAssignment.description ?? "",
+      description = htmlDescription,
       due_at = localAssignment.due_at,
       lock_at = localAssignment.lock_at,
       points_possible = localAssignment.points_possible

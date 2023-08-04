@@ -22,6 +22,13 @@
     );
     StateHasChanged();
   }
+  private void removeItem()
+  {
+    SetRubric(
+      Rubric.Take(Rubric.Count() - 1)
+    );
+    StateHasChanged();
+  }
   private void editItem(RubricItem newItem)
   {
     var newRubric = Rubric.Select(i => i.Id == newItem.Id ? newItem : i);
@@ -71,6 +78,14 @@
 </ul>
 
 <div class="text-end my-1">
+  <button
+    @onclick:preventDefault="true"
+    @onclick="removeItem"
+    type="button"
+    class="btn btn-outline-danger"
+  >
+    - rubric item
+  </button>
   <button
     @onclick:preventDefault="true"
     @onclick="addItem"

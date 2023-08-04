@@ -92,6 +92,8 @@ public class CoursePlanner
     StateHasChanged?.Invoke();
 
     var (canvasAssignments, canvasModules, canvasModuleItems) = await LoadCanvasData();
+    LoadingCanvasData = true;
+    StateHasChanged?.Invoke();
     LocalCourse = LocalCourse.deleteCanvasIdsThatNoLongerExist(canvasModules, canvasAssignments);
 
     var canvasId =
@@ -105,7 +107,7 @@ public class CoursePlanner
 
     LocalCourse = await LocalCourse.SyncModulesWithCanvasData(canvasId, CanvasModules, canvas);
 
-    await LocalCourse.SyncAssignmentsWithCanvas(canvasId, CanvasAssignments, canvas);
+    LocalCourse = await LocalCourse.SyncAssignmentsWithCanvas(canvasId, CanvasAssignments, canvas);
     CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
 
     await syncModuleItemsWithCanvas(canvasId);
