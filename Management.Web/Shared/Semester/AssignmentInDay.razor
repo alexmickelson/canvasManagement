@@ -1,3 +1,4 @@
+@using Management.Web.Shared.Components.AssignmentForm
 
 @inject AssignmentDragContainer dragContainer
 @inject CoursePlanner planner
@@ -18,6 +19,7 @@
   {
     planner.StateHasChanged -= reload;
   }
+  private bool showUpdateForm = false;
 
   private void dropOnDate(DateTime dropDate)
   {
@@ -112,7 +114,14 @@
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
+  @onclick="@(() => showUpdateForm = true)"
   role="button"
 >
   @Assignment.name
 </div>
+
+<AssignmentForm
+  Assignment="Assignment"
+  Show="showUpdateForm"
+  OnHide="@(() => showUpdateForm = false)"
+/>

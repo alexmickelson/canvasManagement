@@ -1,5 +1,3 @@
 {
-  "cucumberautocomplete.steps": [
-    "./Management.Gherkin/**/*.cs"
-  ]
+  "dotnet.defaultSolution": "canvasManagement.sln"
 }
