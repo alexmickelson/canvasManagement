@@ -35,8 +35,8 @@
       .Modules
       .First(m => 
         m.Assignments
-          .Select(a => a.id)
-          .Contains(Assignment.id)
+          .Select(a => a.Id)
+          .Contains(Assignment.Id)
       ) ?? throw new Exception("in day callback, could not find module");
 
 
@@ -52,11 +52,11 @@
     var moduleWithUpdatedAssignment = currentModule with 
     {
       Assignments = currentModule.Assignments.Select(a => 
-        a.id != Assignment.id
+        a.Id != Assignment.Id
         ? a
         : a with 
         {
-          due_at=defaultDueTimeDate
+          DueAt=defaultDueTimeDate
         }
       )
     };
@@ -79,11 +79,11 @@
       m.Name != module.Name
         ? m with 
         {
-          Assignments = m.Assignments.Where(a => a.id != Assignment.id).DistinctBy(a => a.id)
+          Assignments = m.Assignments.Where(a => a.Id != Assignment.Id).DistinctBy(a => a.Id)
         }
         : m with 
         {
-          Assignments = m.Assignments.Append(Assignment).DistinctBy(a => a.id)
+          Assignments = m.Assignments.Append(Assignment).DistinctBy(a => a.Id)
         }
     );
 
@@ -98,7 +98,7 @@
   {
     if (module == null)
     {
-      dropOnDate(dropDate ?? Assignment.due_at);
+      dropOnDate(dropDate ?? Assignment.DueAt);
     } 
     else
     {
@@ -119,7 +119,7 @@
     planner
     .CanvasAssignments?
     .FirstOrDefault(
-      a => a.Id == Assignment.canvasId
+      a => a.Id == Assignment.CanvasId
     ) != null;
 
 }
@@ -138,7 +138,7 @@
         <div class="row mx-1">
           <div class="col offset-2 offset-lg-1 ">
             <h4 class="text-center m-0">
-              @Assignment.name
+              @Assignment.Name
             </h4>
           </div>
           <div class="col-2 col-lg-1 text-end">
@@ -172,8 +172,8 @@
       @if(!showAll)
       {
         <div class="card-text overflow-hidden p-2" style="max-height: 5rem;">
-          <div>Points: @Assignment.points_possible</div>
-          <div>Due At: @Assignment.due_at</div>
+          <div>Points: @Assignment.PointsPossible</div>
+          <div>Due At: @Assignment.DueAt</div>
         </div>
        }
        else
@@ -185,12 +185,12 @@
             </div>
 
             <section class="px-3">
-              <div>Points: @Assignment.points_possible</div>
-              <div>Due At: @Assignment.due_at</div>
-              <div>Lock At: @Assignment.lock_at</div>
+              <div>Points: @Assignment.PointsPossible</div>
+              <div>Due At: @Assignment.DueAt</div>
+              <div>Lock At: @Assignment.LockAt</div>
               <div>Submission Types:</div>
               <ul>
-                @foreach(var type in Assignment.submission_types)
+                @foreach(var type in Assignment.SubmissionTypes)
                 {
                   <li>
                     @type

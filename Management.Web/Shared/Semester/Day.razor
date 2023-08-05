@@ -35,7 +35,7 @@
       else
         return planner.LocalCourse.Modules
           .SelectMany(m => m.Assignments)
-          .Where(a => a.due_at.Date == date?.Date);
+          .Where(a => a.DueAt.Date == date?.Date);
     }
   }
   private string calculatedClass

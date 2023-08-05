@@ -19,7 +19,7 @@
 
   [Parameter] 
   public Action OnHide { get; set; } = () => { }; 
-  public Modal AssignmentModal { get; set; } = default!;
+  public Modal? AssignmentModal { get; set; } = null;
 
   private bool useTemplate { get; set; } = false;
   private string? templateId { get; set; }
@@ -35,16 +35,16 @@
   {
     if(Show)
     {
-      AssignmentModal.Show();
+      AssignmentModal?.Show();
     }
-    name = Assignment.name;
-    description = Assignment.description;
-    lockAtDueDate = Assignment.lock_at_due_date;
-    rubric = Assignment.rubric;
-    submissionTypes = Assignment.submission_types;
-    templateId = Assignment.template_id;
-    useTemplate = Assignment.use_template;
-    templateVariables = Assignment.template_variables;
+    name = Assignment.Name;
+    description = Assignment.Description;
+    lockAtDueDate = Assignment.LockAtDueDate;
+    rubric = Assignment.Rubric;
+    submissionTypes = Assignment.SubmissionTypes;
+    templateId = Assignment.TemplateId;
+    useTemplate = Assignment.UseTemplate;
+    templateVariables = Assignment.TemplateVariables;
   }
 
   private void submitHandler()
@@ -56,15 +56,15 @@
 
     var newAssignment = Assignment with 
     {
-      name=name,
-      description=description,
-      lock_at_due_date=lockAtDueDate,
-      rubric=rubric,
-      points_possible=totalRubricPoints,
-      submission_types=submissionTypes,
-      use_template=useTemplate,
-      template_id=templateId,
-      template_variables=templateVariables,
+      Name=name,
+      Description=description,
+      LockAtDueDate=lockAtDueDate,
+      Rubric=rubric,
+      PointsPossible=totalRubricPoints,
+      SubmissionTypes=submissionTypes,
+      UseTemplate=useTemplate,
+      TemplateId=templateId,
+      TemplateVariables=templateVariables,
     };
 
     if(planner.LocalCourse != null)
@@ -77,7 +77,7 @@
             : Module with 
             {
               Assignments=Module.Assignments.Select(a => 
-                a.id == newAssignment.id
+                a.Id == newAssignment.Id
                   ? newAssignment
                   : a
               )
@@ -85,7 +85,7 @@
           )
       };
     }
-    AssignmentModal.Hide();
+    AssignmentModal?.Hide();
   }
   private void updateRubric(IEnumerable<RubricItem> newRubric)
   {
@@ -101,7 +101,7 @@
 
 <Modal @ref="AssignmentModal" OnHide="@(() => OnHide())">
   <Title>
-    @Assignment.name
+    @Assignment.Name
   </Title>
   <Body>
     <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">

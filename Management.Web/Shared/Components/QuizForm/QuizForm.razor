@@ -1,0 +1,42 @@
+@using Management.Web.Shared.Components
+
+@code {
+  public LocalModule Module { get; set; } = default!;
+
+  [Parameter]
+  [EditorRequired]
+  public LocalQuiz Quiz
+  {
+    get;
+    set;
+  } = default!;
+
+  [Parameter]
+  [EditorRequired]
+  public bool Show { get; set; }
+
+  [Parameter] 
+  public Action OnHide { get; set; } = () => { }; 
+  private Modal? Modal { get; set; }
+
+  private void submitHandler ()
+  {
+
+  }
+}
+
+<Modal @ref="Modal" OnHide="@(() => OnHide())">
+  <Title>
+    @Quiz.Name
+  </Title>
+  <Body>
+    <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
+
+    </form>
+  </Body>
+  <Footer>
+    <button class="btn btn-primary" @onclick="submitHandler">
+      Save
+    </button>
+  </Footer>
+</Modal>

@@ -23,7 +23,7 @@
   private bool discussionIsSelected
   {
     get => Types.FirstOrDefault(
-              t => t == SubmissionType.discussion_topic
+              t => t == SubmissionType.DISCUSSION_TOPIC
             ) != null;
   }
   private int renderKey {get; set; } = 1;
@@ -34,7 +34,7 @@
 
   @foreach (var submissionType in SubmissionType.AllTypes)
   {
-    var isDiscussion = submissionType == SubmissionType.discussion_topic;
+    var isDiscussion = submissionType == SubmissionType.DISCUSSION_TOPIC;
     var allowedToBeChecked = !discussionIsSelected || isDiscussion;
     <div class="col-4">
       <div class="form-check form-switch">

@@ -149,7 +149,7 @@ public class CoursePlanner
   )
   {
     var localItemsWithCorrectOrder = localModule.Assignments
-      .OrderBy(a => a.due_at)
+      .OrderBy(a => a.DueAt)
       .Select((a, i) => (Assignment: a, Position: i + 1));
 
     var canvasContentIdsByCurrentPosition =
@@ -160,9 +160,9 @@ public class CoursePlanner
     {
       var itemIsInCorrectOrder =
         canvasContentIdsByCurrentPosition.ContainsKey(position)
-        && canvasContentIdsByCurrentPosition[position] == localAssignment.canvasId;
+        && canvasContentIdsByCurrentPosition[position] == localAssignment.CanvasId;
 
-      var currentCanvasItem = canvasModuleItems.First(i => i.ContentId == localAssignment.canvasId);
+      var currentCanvasItem = canvasModuleItems.First(i => i.ContentId == localAssignment.CanvasId);
       if (!itemIsInCorrectOrder)
       {
         await canvas.UpdateModuleItem(
@@ -187,15 +187,15 @@ public class CoursePlanner
     foreach (var localAssignment in localModule.Assignments)
     {
       var canvasModuleItemContentIds = CanvasModulesItems[moduleCanvasId].Select(i => i.ContentId);
-      if (!canvasModuleItemContentIds.Contains(localAssignment.canvasId))
+      if (!canvasModuleItemContentIds.Contains(localAssignment.CanvasId))
       {
         var canvasAssignmentId =
-          localAssignment.canvasId
+          localAssignment.CanvasId
           ?? throw new Exception("cannot create module item if assignment does not have canvas id");
         await canvas.CreateModuleItem(
           canvasId,
           moduleCanvasId,
-          localAssignment.name,
+          localAssignment.Name,
           "Assignment",
           canvasAssignmentId
         );

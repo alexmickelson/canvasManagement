@@ -6,7 +6,7 @@ using Management.Services.Canvas;
 
 namespace Management.Planner;
 
-public static class CoursePlannerSyncronizationExtensions
+public static partial class CoursePlannerSyncronizationExtensions
 {
   internal static async Task EnsureAllModulesExistInCanvas(
     this LocalCourse localCourse,
@@ -73,7 +73,7 @@ public static class CoursePlannerSyncronizationExtensions
   )
   {
     var canvasAssignment = canvasAssignments.FirstOrDefault(
-      ca => ca.Id == localAssignment.canvasId
+      ca => ca.Id == localAssignment.CanvasId
     );
     string localHtmlDescription = localAssignment.GetDescriptionHtml(
       localCourse.AssignmentTemplates
@@ -105,34 +105,34 @@ public static class CoursePlannerSyncronizationExtensions
     bool quiet = true
   )
   {
-    var canvasAssignment = canvasAssignments.First(ca => ca.Id == localAssignment.canvasId);
+    var canvasAssignment = canvasAssignments.First(ca => ca.Id == localAssignment.CanvasId);
 
     var localHtmlDescription = localAssignment.GetDescriptionHtml(courseAssignmentTemplates);
 
     var canvasHtmlDescription = canvasAssignment.Description;
-    canvasHtmlDescription = Regex.Replace(canvasHtmlDescription, "<script.*script>", "");
-    canvasHtmlDescription = Regex.Replace(canvasHtmlDescription, "<link\\s+rel=\"[^\"]*\"\\s+href=\"[^\"]*\"[^>]*>", "");
+    canvasHtmlDescription = CanvasScriptTagRegex().Replace(canvasHtmlDescription, "");
+    canvasHtmlDescription = CanvasLinkTagRegex().Replace(canvasHtmlDescription, "");
 
-    var dueDatesSame = canvasAssignment.DueAt == localAssignment.due_at;
+    var dueDatesSame = canvasAssignment.DueAt == localAssignment.DueAt;
     var descriptionSame = canvasHtmlDescription == localHtmlDescription;
-    var nameSame = canvasAssignment.Name == localAssignment.name;
-    var lockDateSame = canvasAssignment.LockAt == localAssignment.lock_at;
-    var pointsSame = canvasAssignment.PointsPossible == localAssignment.points_possible;
+    var nameSame = canvasAssignment.Name == localAssignment.Name;
+    var lockDateSame = canvasAssignment.LockAt == localAssignment.LockAt;
+    var pointsSame = canvasAssignment.PointsPossible == localAssignment.PointsPossible;
     var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
-      localAssignment.submission_types.Select(t => t.ToString())
+      localAssignment.SubmissionTypes.Select(t => t.ToString())
     );
 
     if (!quiet)
     {
       if (!dueDatesSame)
         Console.WriteLine(
-          $"Due dates different for {localAssignment.name}, local: {localAssignment.due_at}, in canvas {canvasAssignment.DueAt}"
+          $"Due dates different for {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}"
         );
 
       if (!descriptionSame)
       {
         Console.WriteLine();
-        Console.WriteLine($"descriptions different for {localAssignment.name}");
+        Console.WriteLine($"descriptions different for {localAssignment.Name}");
         Console.WriteLine();
 
         Console.WriteLine("Local Description:");
@@ -144,25 +144,23 @@ public static class CoursePlannerSyncronizationExtensions
         Console.WriteLine("Canvas Raw Description: ");
         Console.WriteLine(canvasAssignment.Description);
         Console.WriteLine();
-        
-
       }
 
       if (!nameSame)
         Console.WriteLine(
-          $"names different for {localAssignment.name}, local: {localAssignment.name}, in canvas {canvasAssignment.Name}"
+          $"names different for {localAssignment.Name}, local: {localAssignment.Name}, in canvas {canvasAssignment.Name}"
         );
       if (!lockDateSame)
         Console.WriteLine(
-          $"Lock Dates different for {localAssignment.name}, local: {localAssignment.lock_at}, in canvas {canvasAssignment.LockAt}"
+          $"Lock Dates different for {localAssignment.Name}, local: {localAssignment.LockAt}, in canvas {canvasAssignment.LockAt}"
         );
       if (!pointsSame)
         Console.WriteLine(
-          $"Points different for {localAssignment.name}, local: {localAssignment.points_possible}, in canvas {canvasAssignment.PointsPossible}"
+          $"Points different for {localAssignment.Name}, local: {localAssignment.PointsPossible}, in canvas {canvasAssignment.PointsPossible}"
         );
       if (!submissionTypesSame)
         Console.WriteLine(
-          $"Submission Types different for {localAssignment.name}, local: {JsonSerializer.Serialize(localAssignment.submission_types.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}"
+          $"Submission Types different for {localAssignment.Name}, local: {JsonSerializer.Serialize(localAssignment.SubmissionTypes.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}"
         );
     }
 
@@ -193,4 +191,10 @@ public static class CoursePlannerSyncronizationExtensions
     var modules = await Task.WhenAll(moduleTasks);
     return localCourse with { Modules = modules };
   }
+
+  [GeneratedRegex("<script.*script>")]
+  private static partial Regex CanvasScriptTagRegex();
+
+  [GeneratedRegex("<link\\s+rel=\"[^\"]*\"\\s+href=\"[^\"]*\"[^>]*>")]
+  private static partial Regex CanvasLinkTagRegex();
 }

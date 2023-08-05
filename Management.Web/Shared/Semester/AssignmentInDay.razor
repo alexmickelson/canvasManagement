@@ -30,8 +30,8 @@
       .Modules
       .First(m => 
         m.Assignments
-          .Select(a => a.id)
-          .Contains(Assignment.id)
+          .Select(a => a.Id)
+          .Contains(Assignment.Id)
       ) ?? throw new Exception("in day callback, could not find module");
 
     var defaultDueTimeDate = new DateTime(
@@ -46,11 +46,11 @@
     var moduleWithUpdatedAssignment = currentModule with 
     {
       Assignments = currentModule.Assignments.Select(a => 
-        a.id != Assignment.id
+        a.Id != Assignment.Id
         ? a
         : a with 
         {
-          due_at=defaultDueTimeDate
+          DueAt=defaultDueTimeDate
         }
       )
     };
@@ -73,7 +73,7 @@
       m.Name != module.Name
         ? m with 
         {
-          Assignments = m.Assignments.Where(a => a.id != Assignment.id)
+          Assignments = m.Assignments.Where(a => a.Id != Assignment.Id)
         }
         : m with 
         {
@@ -92,7 +92,7 @@
   {
     if (module == null)
     {
-      dropOnDate(dropDate ?? Assignment.due_at);
+      dropOnDate(dropDate ?? Assignment.DueAt);
     } 
     else
     {
@@ -117,7 +117,7 @@
   @onclick="@(() => showUpdateForm = true)"
   role="button"
 >
-  @Assignment.name
+  @Assignment.Name
 </div>
 
 <AssignmentForm

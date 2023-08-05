@@ -13,22 +13,22 @@
   [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
   private string Name { get; set; } = "";
 
-  private Modal? modal { get; set; }
+  private Modal? modal { get; set; } = null;
 
   private void submitHandler()
   {
     System.Console.WriteLine("new assignment");
     var newAssignment = new LocalAssignment
     {
-      id = Guid.NewGuid().ToString(),
-      name = Name,
-      description = "",
-      lock_at_due_date = true,
-      rubric = new RubricItem[] { },
-      lock_at = null,
-      due_at = DateTime.Now,
-      points_possible = 10,
-      submission_types = new string[] { SubmissionType.online_text_entry }
+      Id = Guid.NewGuid().ToString(),
+      Name = Name,
+      Description = "",
+      LockAtDueDate = true,
+      Rubric = new RubricItem[] { },
+      LockAt = null,
+      DueAt = DateTime.Now,
+      PointsPossible = 10,
+      SubmissionTypes = new string[] { SubmissionType.ONLINE_TEXT_ENTRY }
     };
 
     if(planner.LocalCourse != null)

@@ -7,23 +7,23 @@
   [Parameter]
   public string Description { get; set; } = default!;
   [Parameter]
-  public bool UseTemplate { get; set; }
-  [Parameter]
-  public string? TemplateId { get; set; }
-  [Parameter]
-  public Dictionary<string, string> VariableValues { get; set; } = new Dictionary<string, string>();
-
-  [Parameter]
   public EventCallback<string> DescriptionChanged { get; set; }
 
+  [Parameter]
+  public bool UseTemplate { get; set; }
   [Parameter]
   public EventCallback<bool> UseTemplateChanged { get; set; }
 
   [Parameter]
+  public string? TemplateId { get; set; }
+  [Parameter]
   public EventCallback<string?> TemplateIdChanged { get; set; }
 
   [Parameter]
+  public Dictionary<string, string> VariableValues { get; set; } = new Dictionary<string, string>();
+  [Parameter]
   public EventCallback<Dictionary<string, string>> VariableValuesChanged { get; set; }
+
 
   private AssignmentTemplate? selectedTemplate => 
     planner

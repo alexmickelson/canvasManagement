@@ -6,5 +6,7 @@ public record LocalModule
   public IEnumerable<LocalAssignment> Assignments { get; init; } =
     Enumerable.Empty<LocalAssignment>();
 
+  public IEnumerable<LocalQuiz> Quizzes { get; init; } = Enumerable.Empty<LocalQuiz>();
+
   public ulong? CanvasId { get; set; } = null;
 }

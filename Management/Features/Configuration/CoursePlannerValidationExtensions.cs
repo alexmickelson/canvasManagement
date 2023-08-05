@@ -13,8 +13,8 @@ public static class CoursePlannerExtensions
         module with
         {
           Assignments = module.Assignments
-            .OrderBy(a => a.due_at)
-            .DistinctBy(a => a.id)
+            .OrderBy(a => a.DueAt)
+            .DistinctBy(a => a.Id)
             .Select(a => a.validateSubmissionTypes())
         }
     );
@@ -86,13 +86,13 @@ public static class CoursePlannerExtensions
   )
   {
     var assignmentIdInCanvas =
-      canvasAssignments.FirstOrDefault(ca => ca.Id == assignment.canvasId) != null;
+      canvasAssignments.FirstOrDefault(ca => ca.Id == assignment.CanvasId) != null;
     if (!assignmentIdInCanvas)
     {
       Console.WriteLine(
-        $"no id in canvas for assignment, removing old canvas id: {assignment.name}"
+        $"no id in canvas for assignment, removing old canvas id: {assignment.Name}"
       );
-      return assignment with { canvasId = null };
+      return assignment with { CanvasId = null };
     }
     return assignment;
   }
@@ -100,12 +100,12 @@ public static class CoursePlannerExtensions
   public static LocalAssignment validateSubmissionTypes(this LocalAssignment assignment)
   {
     var containsDiscussion =
-      assignment.submission_types.FirstOrDefault(t => t == SubmissionType.discussion_topic) != null;
+      assignment.SubmissionTypes.FirstOrDefault(t => t == SubmissionType.DISCUSSION_TOPIC) != null;
 
     if (containsDiscussion)
       return assignment with
       {
-        submission_types = new string[] { SubmissionType.discussion_topic }
+        SubmissionTypes = new string[] { SubmissionType.DISCUSSION_TOPIC }
       };
     return assignment;
   }
