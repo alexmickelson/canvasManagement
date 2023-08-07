@@ -1,4 +1,5 @@
 using CanvasModel.Assignments;
+using LocalModels;
 using RestSharp;
 
 namespace Management.Services.Canvas;

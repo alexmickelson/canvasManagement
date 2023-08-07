@@ -1,4 +1,4 @@
-using LocalModels;
+namespace LocalModels;
 
 public record RubricItem
 {
@@ -46,11 +46,11 @@ public record LocalAssignment
   public Dictionary<string, string> TemplateVariables { get; init; } =
     new Dictionary<string, string>();
   public bool LockAtDueDate { get; init; }
-  public IEnumerable<RubricItem> Rubric { get; init; } = new RubricItem[] { };
+  public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
   public int PointsPossible { get; init; }
-  public IEnumerable<string> SubmissionTypes { get; init; } = new string[] { };
+  public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
 
   public string GetRubricHtml()
   {
@@ -73,9 +73,9 @@ public record LocalAssignment
 
     if (UseTemplate)
     {
-      var template = templates?.FirstOrDefault(t => t.Id == TemplateId);
-      if (template == null)
-        throw new Exception($"Could not find template with id {TemplateId}");
+      var template =
+        (templates?.FirstOrDefault(t => t.Id == TemplateId))
+        ?? throw new Exception($"Could not find template with id {TemplateId}");
 
       var html = Markdig.Markdown.ToHtml(template.Markdown);
 

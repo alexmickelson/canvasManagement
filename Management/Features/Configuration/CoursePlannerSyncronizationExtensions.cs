@@ -112,6 +112,8 @@ public static partial class CoursePlannerSyncronizationExtensions
     var canvasHtmlDescription = canvasAssignment.Description;
     canvasHtmlDescription = CanvasScriptTagRegex().Replace(canvasHtmlDescription, "");
     canvasHtmlDescription = CanvasLinkTagRegex().Replace(canvasHtmlDescription, "");
+    canvasHtmlDescription = canvasHtmlDescription.Replace("&gt;", ">");
+    canvasHtmlDescription = canvasHtmlDescription.Replace("&lt;", "<");
 
     var dueDatesSame = canvasAssignment.DueAt == localAssignment.DueAt;
     var descriptionSame = canvasHtmlDescription == localHtmlDescription;

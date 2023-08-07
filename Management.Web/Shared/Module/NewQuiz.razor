@@ -1,8 +1,6 @@
 @using Management.Web.Shared.Components
 
 @inject CoursePlanner planner
-
-
 @code {
 
   [Parameter]
@@ -17,28 +15,20 @@
 
   private void submitHandler()
   {
-    System.Console.WriteLine("new assignment");
-    var newAssignment = new LocalAssignment
+    Console.WriteLine("new quiz");
+    var newQuiz = new LocalQuiz
     {
       Id = Guid.NewGuid().ToString(),
-      Name = Name,
-      Description = "",
-      LockAtDueDate = true,
-      Rubric = new RubricItem[] { },
-      LockAt = null,
-      DueAt = DateTime.Now,
-      PointsPossible = 10,
-      SubmissionTypes = new string[] { SubmissionType.ONLINE_TEXT_ENTRY }
+      Name=Name,
     };
-
     if(planner.LocalCourse != null)
     {
-      var newModules =planner.LocalCourse.Modules.Select(m => 
+      var newModules = planner.LocalCourse.Modules.Select(m => 
         m.Name != Module.Name 
           ? m 
           : Module with 
           {
-            Assignments=Module.Assignments.Append(newAssignment)
+            Quizzes=Module.Quizzes.Append(newQuiz)
           }
         );
       planner.LocalCourse = planner.LocalCourse with 
@@ -49,15 +39,16 @@
     modal?.Hide();
   }
 }
-<button 
-  class="btn btn-outline-secondary" 
+
+<button
+  class="btn btn-outline-secondary"
   @onclick="() => modal?.Show()"
 >
-  + Assignment
+  + Quiz
 </button>
 
 <Modal @ref="modal">
-  <Title>New Assignment</Title>
+  <Title>New Quiz</Title>
   <Body>
     <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
       <label for="Assignment Name">Name</label>
@@ -65,12 +56,11 @@
     </form>
   </Body>
   <Footer>
-    <button 
-      type="button" 
+    <button
       class="btn btn-primary"
       @onclick="submitHandler"
     >
-      Create Assignment
+      CreateQuiz
     </button>
   </Footer>
 </Modal>

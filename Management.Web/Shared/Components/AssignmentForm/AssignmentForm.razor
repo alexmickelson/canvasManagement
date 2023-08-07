@@ -3,7 +3,6 @@
 @inject CoursePlanner planner
 
 @code {
-  public LocalModule Module { get; set; } = default!;
 
   [Parameter]
   [EditorRequired]
@@ -54,6 +53,7 @@
       .Select(s => s.Points)
       .Sum();
 
+      
     var newAssignment = Assignment with 
     {
       Name=name,
@@ -69,20 +69,29 @@
 
     if(planner.LocalCourse != null)
     {
+       var currentModule = planner
+          .LocalCourse
+          .Modules
+          .First(m => 
+            m.Assignments
+              .Select(a => a.Id)
+              .Contains(Assignment.Id)
+          ) ?? throw new Exception("could not find current module in assignment form");
+      var updatedModules = planner.LocalCourse.Modules.Select(m => 
+        m.Name == currentModule.Name 
+          ? currentModule with 
+          {
+            Assignments=currentModule.Assignments.Select(a => 
+              a.Id == newAssignment.Id
+                ? newAssignment
+                : a
+            ).ToArray()
+          }
+          : m
+        ).ToArray();
       planner.LocalCourse = planner.LocalCourse with 
       {
-        Modules=planner.LocalCourse.Modules.Select(m => 
-          m.Name != Module.Name 
-            ? m 
-            : Module with 
-            {
-              Assignments=Module.Assignments.Select(a => 
-                a.Id == newAssignment.Id
-                  ? newAssignment
-                  : a
-              )
-            }
-          )
+        Modules=updatedModules
       };
     }
     AssignmentModal?.Hide();
