@@ -107,15 +107,40 @@ public static partial class CoursePlannerSyncronizationExtensions
   {
     var canvasAssignment = canvasAssignments.First(ca => ca.Id == localAssignment.CanvasId);
 
-    var localHtmlDescription = localAssignment.GetDescriptionHtml(courseAssignmentTemplates);
+    var localHtmlDescription = localAssignment.GetDescriptionHtml(courseAssignmentTemplates)
+      .Replace("&gt;", "")
+      .Replace("&lt;", "")
+      .Replace(">", "")
+      .Replace("<", "");
 
     var canvasHtmlDescription = canvasAssignment.Description;
     canvasHtmlDescription = CanvasScriptTagRegex().Replace(canvasHtmlDescription, "");
     canvasHtmlDescription = CanvasLinkTagRegex().Replace(canvasHtmlDescription, "");
-    canvasHtmlDescription = canvasHtmlDescription.Replace("&gt;", ">");
-    canvasHtmlDescription = canvasHtmlDescription.Replace("&lt;", "<");
+    canvasHtmlDescription = canvasHtmlDescription
+      .Replace("&gt;", "")
+      .Replace("&lt;", "")
+      .Replace(">", "")
+      .Replace("<", "");
 
-    var dueDatesSame = canvasAssignment.DueAt == localAssignment.DueAt;
+    var dueDatesSame =
+      canvasAssignment.DueAt != null
+      && new DateTime(
+        year: canvasAssignment.DueAt.Value.Year,
+        month: canvasAssignment.DueAt.Value.Month,
+        day: canvasAssignment.DueAt.Value.Day,
+        hour: canvasAssignment.DueAt.Value.Hour,
+        minute: canvasAssignment.DueAt.Value.Minute,
+        second: canvasAssignment.DueAt.Value.Second
+      )
+        == new DateTime(
+          year: localAssignment.DueAt.Year,
+          month: localAssignment.DueAt.Month,
+          day: localAssignment.DueAt.Day,
+          hour: localAssignment.DueAt.Hour,
+          minute: localAssignment.DueAt.Minute,
+          second: localAssignment.DueAt.Second
+        );
+
     var descriptionSame = canvasHtmlDescription == localHtmlDescription;
     var nameSame = canvasAssignment.Name == localAssignment.Name;
     var lockDateSame = canvasAssignment.LockAt == localAssignment.LockAt;
@@ -128,7 +153,6 @@ public static partial class CoursePlannerSyncronizationExtensions
     {
       if (!dueDatesSame)
       {
-
         Console.WriteLine(
           $"Due dates different for {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}"
         );

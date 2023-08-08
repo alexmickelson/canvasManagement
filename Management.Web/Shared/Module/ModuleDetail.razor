@@ -1,11 +1,12 @@
 
 @using Management.Web.Shared.Components
+@using Management.Web.Shared.Components.Quiz
 @using Management.Web.Shared.Module.Assignment
 @using LocalModels
 
 @inject CoursePlanner configurationManagement
 @inject CoursePlanner planner
-@inject AssignmentDragContainer dragContainer
+@inject DragContainer dragContainer
 
 @code {
   [Parameter, EditorRequired]
@@ -109,6 +110,11 @@
       @foreach (var a in Module.Assignments)
       {
         <AssignmentDetails Assignment="a" Module="Module" />
+      }
+      <br>
+      @foreach(var quiz in Module.Quizzes)
+      {
+        <QuizDetail Quiz="quiz" />
       }
       </div>
     </div>

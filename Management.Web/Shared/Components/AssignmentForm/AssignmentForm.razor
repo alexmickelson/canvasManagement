@@ -4,6 +4,18 @@
 @inject CanvasService canvas
 
 @code {
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
 
   [Parameter]
   [EditorRequired]
@@ -20,12 +32,6 @@
   [Parameter] 
   public Action OnHide { get; set; } = () => { }; 
   public Modal? AssignmentModal { get; set; } = null;
-
-  private bool useTemplate { get; set; } = false;
-  private string? templateId { get; set; }
-  public Dictionary<string, string> templateVariables { get; set; } =
-    new Dictionary<string, string>();
-  private string description { get; set; } = String.Empty;
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
   private IEnumerable<RubricItem> rubric { get; set; } = Enumerable.Empty<RubricItem>();
@@ -38,13 +44,9 @@
       AssignmentModal?.Show();
     }
     name = Assignment.Name;
-    description = Assignment.Description;
     lockAtDueDate = Assignment.LockAtDueDate;
     rubric = Assignment.Rubric;
     submissionTypes = Assignment.SubmissionTypes;
-    templateId = Assignment.TemplateId;
-    useTemplate = Assignment.UseTemplate;
-    templateVariables = Assignment.TemplateVariables;
   }
 
   private void submitHandler()
@@ -54,18 +56,13 @@
       .Select(s => s.Points)
       .Sum();
 
-      
     var newAssignment = Assignment with 
     {
       Name=name,
-      Description=description,
       LockAtDueDate=lockAtDueDate,
       Rubric=rubric,
       PointsPossible=totalRubricPoints,
       SubmissionTypes=submissionTypes,
-      UseTemplate=useTemplate,
-      TemplateId=templateId,
-      TemplateVariables=templateVariables,
     };
 
     if(planner.LocalCourse != null)
@@ -97,6 +94,7 @@
     }
     AssignmentModal?.Hide();
   }
+
   private void updateRubric(IEnumerable<RubricItem> newRubric)
   {
     rubric = newRubric;
@@ -162,10 +160,7 @@
       </div>
       <div class="m-1">
         <AssignmentDescriptionEditor
-          @bind-Description="description"
-          @bind-UseTemplate="useTemplate"
-          @bind-TemplateId="templateId"
-          @bind-VariableValues="templateVariables"
+          Assignment="Assignment"
         />
       </div>
 
@@ -196,7 +191,7 @@
       Class="btn btn-danger"
       OnConfirmAsync="HandleDelete"
     />
-    <button class="btn btn-primary" @onclick="submitHandler">
+    <button class="btn btn-primary" @onclick="@(() => AssignmentModal?.Hide())">
       Save
     </button>
   </Footer>

@@ -41,7 +41,7 @@ public record LocalAssignment
   public ulong? CanvasId { get; init; } = null;
   public string Name { get; init; } = "";
   public string Description { get; init; } = "";
-  public bool UseTemplate { get; init; } = false;
+  // public bool UseTemplate { get; init; } = false;
   public string? TemplateId { get; init; } = string.Empty;
   public Dictionary<string, string> TemplateVariables { get; init; } =
     new Dictionary<string, string>();
@@ -66,12 +66,12 @@ public record LocalAssignment
 
   public string GetDescriptionHtml(IEnumerable<AssignmentTemplate>? templates)
   {
-    if (UseTemplate && templates == null)
+    if (TemplateId != null && TemplateId != "" && templates == null)
       throw new Exception("cannot get description for assignment if templates not provided");
 
     var rubricHtml = GetRubricHtml();
 
-    if (UseTemplate)
+    if (TemplateId != null && TemplateId != "")
     {
       var template =
         (templates?.FirstOrDefault(t => t.Id == TemplateId))

@@ -39,7 +39,7 @@ builder.Services.AddScoped<CanvasService, CanvasService>();
 
 builder.Services.AddScoped<YamlManager>();
 builder.Services.AddScoped<CoursePlanner>();
-builder.Services.AddScoped<AssignmentDragContainer>();
+builder.Services.AddScoped<DragContainer>();
 
 var app = builder.Build();
 

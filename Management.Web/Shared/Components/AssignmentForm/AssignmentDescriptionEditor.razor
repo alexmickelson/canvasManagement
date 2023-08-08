@@ -2,74 +2,118 @@
 
 @inject CoursePlanner planner
 
-@code 
+@code
 {
-  [Parameter]
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
+
+
+  [Parameter, EditorRequired]
+  public LocalAssignment Assignment { get; set; } = default!;
+
+
   public string Description { get; set; } = default!;
-  [Parameter]
-  public EventCallback<string> DescriptionChanged { get; set; }
-
-  [Parameter]
   public bool UseTemplate { get; set; }
-  [Parameter]
-  public EventCallback<bool> UseTemplateChanged { get; set; }
 
-  [Parameter]
   public string? TemplateId { get; set; }
-  [Parameter]
-  public EventCallback<string?> TemplateIdChanged { get; set; }
 
-  [Parameter]
   public Dictionary<string, string> VariableValues { get; set; } = new Dictionary<string, string>();
-  [Parameter]
-  public EventCallback<Dictionary<string, string>> VariableValuesChanged { get; set; }
+
+  protected override void OnParametersSet()
+  {
+    Description = Assignment.Description;
+    TemplateId = Assignment.TemplateId;
+    UseTemplate = Assignment.TemplateId != null && Assignment.TemplateId != "";
+  }
 
 
-  private AssignmentTemplate? selectedTemplate => 
+  private AssignmentTemplate? selectedTemplate =>
     planner
     .LocalCourse?
     .AssignmentTemplates
-    .FirstOrDefault(t => t.Id == TemplateId);
-  public string Preview => Markdown.ToHtml(Description);
+    .FirstOrDefault(t => t.Id == Assignment.TemplateId);
+  public string Preview => Markdown.ToHtml(Assignment.Description);
+
+  private void SaveAssignment(LocalAssignment newAssignment)
+  {
+    if(planner.LocalCourse != null)
+    {
+       var currentModule = planner
+          .LocalCourse
+          .Modules
+          .First(m => 
+            m.Assignments
+              .Select(a => a.Id)
+              .Contains(Assignment.Id)
+          ) ?? throw new Exception("could not find current module in assignment description form");
+
+      var updatedModules = planner.LocalCourse.Modules.Select(m => 
+        m.Name == currentModule.Name 
+          ? currentModule with 
+          {
+            Assignments=currentModule.Assignments.Select(a => 
+              a.Id == newAssignment.Id
+                ? newAssignment
+                : a
+            ).ToArray()
+          }
+          : m
+        ).ToArray();
+
+      planner.LocalCourse = planner.LocalCourse with 
+      {
+        Modules=updatedModules
+      };
+    }
+  }
 
 }
 
 
 <div class="form-check form-switch">
   <input 
-    class="form-check-input" 
-    type="checkbox"
-    role="switch" 
-    id="useTemplateForDescription"
-    checked="@UseTemplate"
-    @onchange="async (e) => 
-      await UseTemplateChanged.InvokeAsync((bool)(e.Value ?? false))"
-  >
-  <label 
-    class="form-check-label" 
-    for="useTemplateForDescription"
-  >
+  class="form-check-input" 
+  type="checkbox" 
+  role="switch" 
+  id="useTemplateForDescription"
+  @bind="UseTemplate"
+  <label class="form-check-label" for="useTemplateForDescription">
     use template for description
   </label>
 </div>
 
-@if(UseTemplate)
+@if (UseTemplate)
 {
-  @if(planner.LocalCourse != null)
+  @if (planner.LocalCourse != null)
   {
     <div class="row justify-content-around">
-      <div class="col-auto text-center">
-        <form @onsubmit:preventDefault="true">
-          <label for="templateSelect">Templates</label>
-          <select 
-            id="templateSelect" 
-            class="form-select" 
-            value="@TemplateId"
-            @onchange="async (e) =>
-              await TemplateIdChanged.InvokeAsync(e.Value?.ToString())"
-          >
-            <option value=""></option>
-            @foreach (var template in planner.LocalCourse.AssignmentTemplates)
+  <div class="col-auto text-center">
+    <form @onsubmit:preventDefault="true">
+      <label for="templateSelect">Templates</label>
+      <select 
+        id="templateSelect" 
+        class="form-select" 
+        @onchange="@((e) =>
+        {
+          var newTemplateId = e.Value?.ToString();
+          SaveAssignment(Assignment with 
+          {
+            TemplateId = newTemplateId
+          });
+        })"
+      >
+        <option value=""></option>
+        @foreach (var template in planner.LocalCourse.AssignmentTemplates)
             {
               <option value="@template.Id">@template.Name</option>
             }
@@ -78,30 +122,30 @@
       </div>
       <div class="col-auto">
         VARIABLES:
-        @if(selectedTemplate != null)
+        @if (selectedTemplate != null)
         {
           var variables = AssignmentTemplate.GetVariables(selectedTemplate.Markdown);
-          @foreach(var variable in variables)
+          @foreach (var variable in variables)
           {
             <div class="my-1">
-              <label
-                class="form-label"
-              >
+              <label class="form-label">
                 @variable
               </label>
-              <input
-                class="form-control"
-                value="@VariableValues.GetValueOrDefault(variable, String.Empty)"
-                @oninput="async (e) => 
+              <input 
+                class="form-control" 
+                value="@VariableValues.GetValueOrDefault(variable, String.Empty)" 
+                @oninput="@((e) => 
                   {
                     var newValue = e.Value?.ToString() ?? String.Empty;
                     var newDictionary = new Dictionary<string, string>(VariableValues);
                     newDictionary[variable] = newValue;
-                    
-                    await VariableValuesChanged.InvokeAsync(newDictionary);
-                  }
-                "
-              />
+
+                    SaveAssignment(Assignment with 
+                    {
+                      TemplateVariables = newDictionary
+                    });
+                  })"
+                />
             </div>
           }
         }
@@ -111,34 +155,36 @@
 }
 else
 {
-  
-  <div class="row">
-    <div class="col">
-      <label 
-        for="description"
-        class="form-label"
-      >
-        Description
-      </label>
-    </div>
-    <div class="col">
-      HTML Preview
 
-    </div>
+  <div class="row">
+  <div class="col">
+    <label for="description" class="form-label">
+      Description
+    </label>
   </div>
+  <div class="col">
+    HTML Preview
+
+  </div>
+</div>
   <div class="row">
     <div class="col">
       <textarea 
         id="description" 
-        class="form-control"
-        value="@Description"
-        rows=12
-        @oninput="async (e) => 
-          await DescriptionChanged.InvokeAsync(e.Value?.ToString() ?? String.Empty)"
-      />
+        class="form-control" 
+        rows=12 
+        @oninput="@((e) => 
+          {
+            var newDescription = e.Value?.ToString();
+            SaveAssignment(Assignment with 
+            {
+              Description = newDescription ?? ""
+            });
+          })"
+        />
     </div>
     <div class="col">
-      @((MarkupString) Preview)
+      @((MarkupString)Preview)
 
     </div>
   </div>
