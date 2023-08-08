@@ -8,4 +8,5 @@ public interface IWebRequestor
   Task<(T?, RestResponse)> PostAsync<T>(RestRequest request);
   Task<RestResponse> PutAsync(RestRequest request);
   Task<(T?, RestResponse)> PutAsync<T>(RestRequest request);
+  Task<RestResponse> DeleteAsync(RestRequest request);
 }

@@ -1,0 +1,12 @@
+# Top-most EditorConfig file
+root = true
+
+[*.cs]
+dotnet_naming_rule.methods_must_be_camel_case.severity = warning
+dotnet_naming_rule.methods_must_be_camel_case.symbols  = private_methods
+dotnet_naming_rule.methods_must_be_camel_case.style    = camel_case_style
+
+dotnet_naming_symbols.private_methods.applicable_kinds = method
+dotnet_naming_symbols.private_methods.applicable_accessibilities = private 
+
+dotnet_naming_style.camel_case_style.capitalization = camel_case

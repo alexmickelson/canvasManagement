@@ -4,17 +4,19 @@
 {
   private IEnumerable<string> _types { get; set; } = Enumerable.Empty<string>();
   [Parameter, EditorRequired]
-  public IEnumerable<string> Types {
-    get => _types;
-    set 
+  public IEnumerable<string> Types { get; set; } = Enumerable.Empty<string>();
+
+  [Parameter, EditorRequired]
+  public Action<IEnumerable<string>> SetTypes { get; set; } = (_) => {};
+  protected override void OnParametersSet()
+  {
+    if (!Types.SequenceEqual(_types))
     {
-      _types = value;
+      _types = Types;
       renderKey++;
     }
   }
 
-  [Parameter, EditorRequired]
-  public Action<IEnumerable<string>> SetTypes { get; set; } = (_) => {};
   private string getLabel(string type)
   {
     return type.ToString().Replace("_", "") + "switch";
@@ -23,8 +25,8 @@
   private bool discussionIsSelected
   {
     get => Types.FirstOrDefault(
-              t => t == SubmissionType.DISCUSSION_TOPIC
-            ) != null;
+      t => t == SubmissionType.DISCUSSION_TOPIC
+    ) != null;
   }
   private int renderKey {get; set; } = 1;
 }

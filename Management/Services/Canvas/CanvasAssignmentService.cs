@@ -6,7 +6,7 @@ namespace Management.Services.Canvas;
 
 public class CanvasAssignmentService
 {
-  private IWebRequestor webRequestor;
+  private readonly IWebRequestor webRequestor;
   private readonly CanvasServiceUtils utils;
 
   public CanvasAssignmentService(IWebRequestor webRequestor, CanvasServiceUtils utils)
@@ -34,7 +34,7 @@ public class CanvasAssignmentService
     string htmlDescription
   )
   {
-    System.Console.WriteLine($"creating assignment: {localAssignment.Name}");
+    Console.WriteLine($"creating assignment: {localAssignment.Name}");
     var url = $"courses/{courseId}/assignments";
     var request = new RestRequest(url);
     var body = new CanvasAssignmentCreationRequest()
@@ -62,7 +62,7 @@ public class CanvasAssignmentService
 
   public async Task Update(ulong courseId, LocalAssignment localAssignment, string htmlDescription)
   {
-    System.Console.WriteLine($"updating assignment: {localAssignment.Name}");
+    Console.WriteLine($"updating assignment: {localAssignment.Name}");
     var url = $"courses/{courseId}/assignments/{localAssignment.CanvasId}";
     var request = new RestRequest(url);
     var body = new CanvasAssignmentCreationRequest()
@@ -80,6 +80,19 @@ public class CanvasAssignmentService
     await webRequestor.PutAsync(request);
 
     await CreateRubric(courseId, localAssignment);
+  }
+
+  public async Task Delete(ulong courseId, LocalAssignment assignment)
+  {
+    Console.WriteLine($"deleting assignment from canvas {assignment.Name}");
+    var url = $"courses/{courseId}/assignments/{assignment.CanvasId}";
+    var request = new RestRequest(url);
+    var response = await webRequestor.DeleteAsync(request);
+    if (!response.IsSuccessful)
+    {
+      Console.WriteLine(url);
+      throw new Exception("Failed to delete assignment");
+    }
   }
 
   public async Task CreateRubric(ulong courseId, LocalAssignment localAssignment)
@@ -101,7 +114,7 @@ public class CanvasAssignmentService
       {
         description = rubricItem.Label,
         points = rubricItem.Points,
-        ratings = ratings
+        ratings
       };
       i++;
     }
@@ -130,9 +143,9 @@ public class CanvasAssignmentService
     var rubricCreationRequest = new RestRequest(creationUrl);
     rubricCreationRequest.AddBody(body);
     rubricCreationRequest.AddHeader("Content-Type", "application/json");
-
-    var (rubricCreationResponse, creationResponse) =
-      await webRequestor.PostAsync<CanvasRubricCreationResponse>(rubricCreationRequest);
+    var (rubricCreationResponse, _) = await webRequestor.PostAsync<CanvasRubricCreationResponse>(
+      rubricCreationRequest
+    );
 
     if (rubricCreationResponse == null)
       throw new Exception("failed to create rubric before association");
@@ -145,8 +158,6 @@ public class CanvasAssignmentService
     var pointAdjustmentRequest = new RestRequest(adjustmentUrl);
     pointAdjustmentRequest.AddBody(assignmentPointCorrectionBody);
     pointAdjustmentRequest.AddHeader("Content-Type", "application/json");
-    var (updatedAssignment, adjustmentResponse) = await webRequestor.PutAsync<CanvasAssignment>(
-      pointAdjustmentRequest
-    );
+    var (_, _) = await webRequestor.PutAsync<CanvasAssignment>(pointAdjustmentRequest);
   }
 }

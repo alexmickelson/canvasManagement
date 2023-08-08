@@ -18,13 +18,13 @@ public class WebRequestor : IWebRequestor
   public async Task<(T[]?, RestResponse)> GetManyAsync<T>(RestRequest request)
   {
     var response = await client.ExecuteGetAsync(request);
-    return (Deserialize<T[]>(response), response);
+    return (deserialize<T[]>(response), response);
   }
 
   public async Task<(T?, RestResponse)> GetAsync<T>(RestRequest request)
   {
     var response = await client.ExecuteGetAsync(request);
-    return (Deserialize<T>(response), response);
+    return (deserialize<T>(response), response);
   }
 
   public async Task<RestResponse> PostAsync(RestRequest request)
@@ -32,9 +32,9 @@ public class WebRequestor : IWebRequestor
     var response = await client.ExecutePostAsync(request);
     if (!response.IsSuccessful)
     {
-      System.Console.WriteLine(response.Content);
-      System.Console.WriteLine(response.ResponseUri);
-      System.Console.WriteLine("error with response");
+      Console.WriteLine(response.Content);
+      Console.WriteLine(response.ResponseUri);
+      Console.WriteLine("error with response");
       throw new Exception("error with response");
     }
     return response;
@@ -43,7 +43,7 @@ public class WebRequestor : IWebRequestor
   public async Task<(T?, RestResponse)> PostAsync<T>(RestRequest request)
   {
     var response = await client.ExecutePostAsync(request);
-    return (Deserialize<T>(response), response);
+    return (deserialize<T>(response), response);
   }
 
   public async Task<RestResponse> PutAsync(RestRequest request)
@@ -51,9 +51,9 @@ public class WebRequestor : IWebRequestor
     var response = await client.ExecutePutAsync(request);
     // if (!response.IsSuccessful)
     // {
-    //   System.Console.WriteLine(response.Content);
-    //   System.Console.WriteLine(response.ResponseUri);
-    //   System.Console.WriteLine("error with response");
+    //   Console.WriteLine(response.Content);
+    //   Console.WriteLine(response.ResponseUri);
+    //   Console.WriteLine("error with response");
     //   throw new Exception("error with response");
     // }
     return response;
@@ -62,17 +62,22 @@ public class WebRequestor : IWebRequestor
   public async Task<(T?, RestResponse)> PutAsync<T>(RestRequest request)
   {
     var response = await client.ExecutePutAsync(request);
-    return (Deserialize<T>(response), response);
+    return (deserialize<T>(response), response);
   }
 
-  private T? Deserialize<T>(RestResponse response)
+  public async Task<RestResponse> DeleteAsync(RestRequest request)
+  {
+    return await client.DeleteAsync(request);
+  }
+
+  private static T? deserialize<T>(RestResponse response)
   {
     if (!response.IsSuccessful)
     {
-      System.Console.WriteLine(response.Content);
-      System.Console.WriteLine(response.ResponseUri);
-      System.Console.WriteLine(response.ErrorMessage);
-      System.Console.WriteLine("error with response");
+      Console.WriteLine(response.Content);
+      Console.WriteLine(response.ResponseUri);
+      Console.WriteLine(response.ErrorMessage);
+      Console.WriteLine("error with response");
       // Console.WriteLine(JsonSerializer.Serialize(response));
       Console.WriteLine(JsonSerializer.Serialize(response.Request?.Parameters));
       throw new Exception($"error with response to {response.ResponseUri} {response.StatusCode}");
@@ -83,21 +88,21 @@ public class WebRequestor : IWebRequestor
 
       if (data == null)
       {
-        System.Console.WriteLine(response.Content);
-        System.Console.WriteLine(response.ResponseUri);
-        System.Console.WriteLine("could not parse response, got empty object");
+        Console.WriteLine(response.Content);
+        Console.WriteLine(response.ResponseUri);
+        Console.WriteLine("could not parse response, got empty object");
       }
       return data;
     }
-    catch (System.NotSupportedException )
+    catch (NotSupportedException)
     {
       Console.WriteLine(response.Content);
       throw;
     }
     catch (JsonException)
     {
-      System.Console.WriteLine(response.ResponseUri);
-      System.Console.WriteLine(response.Content);
+      Console.WriteLine(response.ResponseUri);
+      Console.WriteLine(response.Content);
       Console.WriteLine($"An error occurred during deserialization");
       throw;
     }

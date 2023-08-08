@@ -127,9 +127,14 @@ public static partial class CoursePlannerSyncronizationExtensions
     if (!quiet)
     {
       if (!dueDatesSame)
+      {
+
         Console.WriteLine(
           $"Due dates different for {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}"
         );
+        Console.WriteLine(JsonSerializer.Serialize(localAssignment.DueAt));
+        Console.WriteLine(JsonSerializer.Serialize(canvasAssignment.DueAt));
+      }
 
       if (!descriptionSame)
       {

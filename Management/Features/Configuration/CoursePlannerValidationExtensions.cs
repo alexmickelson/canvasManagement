@@ -16,8 +16,10 @@ public static class CoursePlannerExtensions
             .OrderBy(a => a.DueAt)
             .DistinctBy(a => a.Id)
             .Select(a => a.validateSubmissionTypes())
+            .Select(a => a.validateDates())
+            .ToArray()
         }
-    );
+    ).ToArray();
 
     var cleanStartDay = new DateTime(
       incomingCourse.StartDate.Year,
@@ -109,4 +111,13 @@ public static class CoursePlannerExtensions
       };
     return assignment;
   }
+
+    public static LocalAssignment validateDates(this LocalAssignment assignment)
+    {
+      return assignment with 
+      {
+        DueAt=assignment.DueAt.AddMilliseconds(0).AddMilliseconds(0),
+        LockAt=assignment.LockAt?.AddMilliseconds(0).AddMilliseconds(0)
+      };
+    }
 }
