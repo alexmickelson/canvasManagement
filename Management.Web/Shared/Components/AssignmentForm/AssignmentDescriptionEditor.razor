@@ -31,7 +31,10 @@
 
   protected override void OnParametersSet()
   {
-    Description = Assignment.Description;
+    if (Description == "")
+    {
+      Description = Assignment.Description;
+    }
     TemplateId = Assignment.TemplateId;
     UseTemplate = Assignment.TemplateId != null && Assignment.TemplateId != "";
   }
@@ -87,6 +90,7 @@
   role="switch" 
   id="useTemplateForDescription"
   @bind="UseTemplate"
+  />
   <label class="form-check-label" for="useTemplateForDescription">
     use template for description
   </label>
@@ -172,7 +176,8 @@ else
       <textarea 
         id="description" 
         class="form-control" 
-        rows=12 
+        rows=12
+        value="@Description"
         @oninput="@((e) => 
           {
             var newDescription = e.Value?.ToString();

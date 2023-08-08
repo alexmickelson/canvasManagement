@@ -1,38 +1,38 @@
 @code {
-  [Parameter, EditorRequired] 
+  [Parameter, EditorRequired]
   public RenderFragment? Title { get; set; }
 
-  [Parameter, EditorRequired] 
+  [Parameter, EditorRequired]
   public RenderFragment? Body { get; set; }
 
-  [Parameter, EditorRequired] 
+  [Parameter, EditorRequired]
   public RenderFragment? Footer { get; set; }
 
-  [Parameter] 
-  public Action OnShow { get; set; } = () => { }; 
+  [Parameter]
+  public Action OnShow { get; set; } = () => { };
 
-  [Parameter] 
-  public Action OnHide { get; set; } = () => { }; 
-  
-  private string modalClass = "hide-modal"; 
-  private bool showBackdrop = false; 
+  [Parameter]
+  public Action OnHide { get; set; } = () => { };
+
+  private string modalClass = "hide-modal";
+  private bool showBackdrop = false;
   public void Show()
-  { 
-    modalClass = "show-modal"; 
-    showBackdrop = true; 
+  {
+    modalClass = "show-modal";
+    showBackdrop = true;
     OnShow();
   }
 
   public void Hide()
   {
-    modalClass = "hide-modal"; 
+    modalClass = "hide-modal";
     showBackdrop = false;
     OnHide();
   }
 }
 
-<div class="modal @modalClass">
-  <div class="modal-dialog modal-xl" role="document">
+<div class="modal @modalClass" @onclick="Hide">
+  <div class="modal-dialog modal-xl" role="document" @onclick:stopPropagation="true">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title text-center w-100">@Title</h4>
@@ -46,5 +46,7 @@
 
 @if (showBackdrop)
 {
-  <div class="modal-backdrop fade show"></div>
-} 
+  <div 
+    class="modal-backdrop fade show"
+  ></div>
+}

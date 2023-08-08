@@ -29,8 +29,8 @@
   [EditorRequired]
   public bool Show { get; set; }
 
-  [Parameter] 
-  public Action OnHide { get; set; } = () => { }; 
+  [Parameter]
+  public Action OnHide { get; set; } = () => { };
   public Modal? AssignmentModal { get; set; } = null;
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
@@ -39,7 +39,7 @@
 
   protected override void OnParametersSet()
   {
-    if(Show)
+    if (Show)
     {
       AssignmentModal?.Show();
     }
@@ -52,45 +52,45 @@
   private void submitHandler()
   {
     var totalRubricPoints = rubric
-      .Where(r => !r.Label.Contains(RubricItem.extraCredit))
-      .Select(s => s.Points)
-      .Sum();
+    .Where(r => !r.Label.Contains(RubricItem.extraCredit))
+    .Select(s => s.Points)
+    .Sum();
 
-    var newAssignment = Assignment with 
-    {
-      Name=name,
-      LockAtDueDate=lockAtDueDate,
-      Rubric=rubric,
-      PointsPossible=totalRubricPoints,
-      SubmissionTypes=submissionTypes,
-    };
-
-    if(planner.LocalCourse != null)
-    {
-       var currentModule = planner
-          .LocalCourse
-          .Modules
-          .First(m => 
-            m.Assignments
-              .Select(a => a.Id)
-              .Contains(Assignment.Id)
-          ) ?? throw new Exception("could not find current module in assignment form");
-      var updatedModules = planner.LocalCourse.Modules.Select(m => 
-        m.Name == currentModule.Name 
-          ? currentModule with 
-          {
-            Assignments=currentModule.Assignments.Select(a => 
-              a.Id == newAssignment.Id
-                ? newAssignment
-                : a
-            ).ToArray()
-          }
-          : m
-        ).ToArray();
-      planner.LocalCourse = planner.LocalCourse with 
+    var newAssignment = Assignment with
       {
-        Modules=updatedModules
+        Name = name,
+        LockAtDueDate = lockAtDueDate,
+        Rubric = rubric,
+        PointsPossible = totalRubricPoints,
+        SubmissionTypes = submissionTypes,
       };
+
+    if (planner.LocalCourse != null)
+    {
+      var currentModule = planner
+      .LocalCourse
+      .Modules
+      .First(m =>
+      m.Assignments
+      .Select(a => a.Id)
+      .Contains(Assignment.Id)
+      ) ?? throw new Exception("could not find current module in assignment form");
+      var updatedModules = planner.LocalCourse.Modules.Select(m =>
+      m.Name == currentModule.Name
+      ? currentModule with
+        {
+          Assignments = currentModule.Assignments.Select(a =>
+  a.Id == newAssignment.Id
+  ? newAssignment
+  : a
+        ).ToArray()
+        }
+      : m
+      ).ToArray();
+      planner.LocalCourse = planner.LocalCourse with
+        {
+          Modules = updatedModules
+        };
     }
     AssignmentModal?.Hide();
   }
@@ -101,38 +101,38 @@
     StateHasChanged();
   }
   private void SetTypes(IEnumerable<string> newTypes)
-  { 
+  {
     submissionTypes = newTypes;
     StateHasChanged();
   }
 
   private async Task HandleDelete()
   {
-    if(planner.LocalCourse != null)
+    if (planner.LocalCourse != null)
     {
       var assignment = Assignment;
       var currentModule = planner
-        .LocalCourse
-        .Modules
-        .First(m => 
-          m.Assignments
-            .Select(a => a.Id)
-            .Contains(Assignment.Id)
-        ) ?? throw new Exception("handling assignment delete, could not find module");
-      var newModules = planner.LocalCourse.Modules.Select(m => 
-        m.Name == currentModule.Name
-          ? m with 
-          {
-            Assignments = m.Assignments.Where(a => a.Id != assignment.Id).ToArray()
-          }
-          : m
+      .LocalCourse
+      .Modules
+      .First(m =>
+      m.Assignments
+      .Select(a => a.Id)
+      .Contains(Assignment.Id)
+      ) ?? throw new Exception("handling assignment delete, could not find module");
+      var newModules = planner.LocalCourse.Modules.Select(m =>
+      m.Name == currentModule.Name
+      ? m with
+        {
+          Assignments = m.Assignments.Where(a => a.Id != assignment.Id).ToArray()
+        }
+      : m
       ).ToArray();
 
-      planner.LocalCourse = planner.LocalCourse with 
-      {
-        Modules = newModules
-      };
-      if(assignment.CanvasId != null && planner.LocalCourse.CanvasId != null)
+      planner.LocalCourse = planner.LocalCourse with
+        {
+          Modules = newModules
+        };
+      if (assignment.CanvasId != null && planner.LocalCourse.CanvasId != null)
       {
         ulong courseId = planner.LocalCourse.CanvasId ?? throw new Exception("cannot delete if no course id");
         await canvas.Assignments.Delete(courseId, assignment);
@@ -145,52 +145,31 @@
   <Title>
     @Assignment.Name
   </Title>
+
   <Body>
     <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
       <div class="m-1">
-        <label 
-          class="form-label"
-        >
+        <label class="form-label">
           Name
         </label>
-        <input 
-          class="form-control"
-          @bind="name"
-        />
+        <input class="form-control" @bind="name" />
       </div>
       <div class="m-1">
-        <AssignmentDescriptionEditor
-          Assignment="Assignment"
-        />
+        <AssignmentDescriptionEditor Assignment="Assignment" />
       </div>
 
       <div class="form-check m-1">
-        <input 
-          class="form-check-input"
-          id="lockAtDueDate"
-          type="checkbox"
-        />
-        <label 
-          class="form-check-label"
-          for="lockAtDueDate"
-          @bind="lockAtDueDate"
-        >
+        <input class="form-check-input" id="lockAtDueDate" type="checkbox" />
+        <label class="form-check-label" for="lockAtDueDate" @bind="lockAtDueDate">
           Lock At Due Date
         </label>
       </div>
       <RubricEditor Rubric="rubric" SetRubric="updateRubric" />
-      <SubmissionTypeSelector
-        Types="submissionTypes"
-        SetTypes="SetTypes"
-      />
+      <SubmissionTypeSelector Types="submissionTypes" SetTypes="SetTypes" />
     </form>
   </Body>
   <Footer>
-    <ConfirmationModal 
-      Label="Delete" 
-      Class="btn btn-danger"
-      OnConfirmAsync="HandleDelete"
-    />
+    <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
     <button class="btn btn-primary" @onclick="@(() => AssignmentModal?.Hide())">
       Save
     </button>
