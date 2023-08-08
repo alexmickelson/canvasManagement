@@ -23,7 +23,7 @@
 
 
   public string Description { get; set; } = default!;
-  public bool UseTemplate { get; set; }
+  public bool? UseTemplate { get; set; } = null;
 
   public string? TemplateId { get; set; }
 
@@ -31,12 +31,17 @@
 
   protected override void OnParametersSet()
   {
-    if (Description == "")
-    {
-      Description = Assignment.Description;
-    }
+    Description = Assignment.Description;
+    Preview = Markdown.ToHtml(Assignment.Description);
+    if (currentDescription == null)
+      currentDescription = Description;
+
     TemplateId = Assignment.TemplateId;
-    UseTemplate = Assignment.TemplateId != null && Assignment.TemplateId != "";
+    if (UseTemplate == null)
+    { 
+      UseTemplate = Assignment.TemplateId != null && Assignment.TemplateId != "";
+    }
+    Console.WriteLine(Description)
   }
 
 
@@ -45,20 +50,20 @@
     .LocalCourse?
     .AssignmentTemplates
     .FirstOrDefault(t => t.Id == Assignment.TemplateId);
-  public string Preview => Markdown.ToHtml(Assignment.Description);
+  public string Preview { get; set; }
 
   private void SaveAssignment(LocalAssignment newAssignment)
   {
     if(planner.LocalCourse != null)
     {
-       var currentModule = planner
-          .LocalCourse
-          .Modules
-          .First(m => 
-            m.Assignments
-              .Select(a => a.Id)
-              .Contains(Assignment.Id)
-          ) ?? throw new Exception("could not find current module in assignment description form");
+      var currentModule = planner
+         .LocalCourse
+         .Modules
+         .First(m => 
+           m.Assignments
+             .Select(a => a.Id)
+             .Contains(Assignment.Id)
+         ) ?? throw new Exception("could not find current module in assignment description form");
 
       var updatedModules = planner.LocalCourse.Modules.Select(m => 
         m.Name == currentModule.Name 
@@ -80,6 +85,31 @@
     }
   }
 
+  private Timer _debounceTimer;
+
+  private void SaveDescription()
+  {
+
+    Console.WriteLine("saving description");
+    _debounceTimer?.Dispose();
+    SaveAssignment(Assignment with { Description = currentDescription });
+  }
+
+  private string? currentDescription { get; set; } = null;
+  private void OnInputChanged(ChangeEventArgs e)
+  {
+    // Dispose of any existing timer
+    _debounceTimer?.Dispose();
+
+    // Create a new timer that waits for 500ms before executing SaveData
+    _debounceTimer = new Timer(
+      (_) => SaveDescription(),
+      null, 
+      500, 
+      Timeout.Infinite
+    );
+  }
+
 }
 
 
@@ -96,7 +126,7 @@
   </label>
 </div>
 
-@if (UseTemplate)
+@if (UseTemplate ?? false)
 {
   @if (planner.LocalCourse != null)
   {
@@ -177,15 +207,8 @@ else
         id="description" 
         class="form-control" 
         rows=12
-        value="@Description"
-        @oninput="@((e) => 
-          {
-            var newDescription = e.Value?.ToString();
-            SaveAssignment(Assignment with 
-            {
-              Description = newDescription ?? ""
-            });
-          })"
+        @bind="currentDescription"
+        @oninput="OnInputChanged"
         />
     </div>
     <div class="col">
