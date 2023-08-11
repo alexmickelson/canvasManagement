@@ -4,7 +4,7 @@
 
 @code
 {
-  protected override void OnInitialized()
+  @* protected override void OnInitialized()
   {
     planner.StateHasChanged += reload;
   }
@@ -15,7 +15,7 @@
   public void Dispose()
   {
     planner.StateHasChanged -= reload;
-  }
+  } *@
 
 
   [Parameter, EditorRequired]
@@ -41,7 +41,6 @@
     { 
       UseTemplate = Assignment.TemplateId != null && Assignment.TemplateId != "";
     }
-    Console.WriteLine(Description)
   }
 
 
@@ -77,7 +76,7 @@
           }
           : m
         ).ToArray();
-
+      
       planner.LocalCourse = planner.LocalCourse with 
       {
         Modules=updatedModules
@@ -85,41 +84,21 @@
     }
   }
 
-  private Timer _debounceTimer;
-
-  private void SaveDescription()
-  {
-
-    Console.WriteLine("saving description");
-    _debounceTimer?.Dispose();
-    SaveAssignment(Assignment with { Description = currentDescription });
-  }
-
   private string? currentDescription { get; set; } = null;
   private void OnInputChanged(ChangeEventArgs e)
   {
-    // Dispose of any existing timer
-    _debounceTimer?.Dispose();
-
-    // Create a new timer that waits for 500ms before executing SaveData
-    _debounceTimer = new Timer(
-      (_) => SaveDescription(),
-      null, 
-      500, 
-      Timeout.Infinite
-    );
+    SaveAssignment(Assignment with { Description = e.Value?.ToString() ?? "" });
   }
-
 }
 
 
 <div class="form-check form-switch">
   <input 
-  class="form-check-input" 
-  type="checkbox" 
-  role="switch" 
-  id="useTemplateForDescription"
-  @bind="UseTemplate"
+    class="form-check-input" 
+    type="checkbox" 
+    role="switch" 
+    id="useTemplateForDescription"
+    @bind="UseTemplate"
   />
   <label class="form-check-label" for="useTemplateForDescription">
     use template for description

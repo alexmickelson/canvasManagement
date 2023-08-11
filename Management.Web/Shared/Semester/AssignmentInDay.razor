@@ -2,6 +2,7 @@
 
 @inject DragContainer dragContainer
 @inject CoursePlanner planner
+@inject AssignmentEditorContext assignmentContext
 
 @code {
   [Parameter]
@@ -14,12 +15,12 @@
   private void reload()
   {
     this.InvokeAsync(this.StateHasChanged);
+    @* Console.WriteLine("on initialized " + showUpdateForm + " " + Assignment.Name); *@
   }
   public void Dispose()
   {
     planner.StateHasChanged -= reload;
   }
-  private bool showUpdateForm = false;
 
   private void dropOnDate(DateTime dropDate)
   {
@@ -114,14 +115,8 @@
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
-  @onclick="@(() => showUpdateForm = true)"
+  @onclick="@(() => assignmentContext.Assignment = Assignment)"
   role="button"
 >
   @Assignment.Name
 </div>
-
-<AssignmentForm
-  Assignment="Assignment"
-  Show="showUpdateForm"
-  OnHide="@(() => showUpdateForm = false)"
-/>

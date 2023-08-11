@@ -21,6 +21,8 @@ public class CoursePlanner
     this.canvas = canvas;
   }
 
+  private Timer _debounceTimer;
+  private int _debounceInterval = 1000;
   private LocalCourse? _localCourse { get; set; }
   public LocalCourse? LocalCourse
   {
@@ -36,15 +38,30 @@ public class CoursePlanner
 
       var verifiedCourse = value.GeneralCourseCleanup();
 
-      // ignore initial load of course
-      if (_localCourse != null)
-      {
-        yamlManager.SaveCourse(verifiedCourse);
-      }
+      _debounceTimer?.Dispose();
+      _debounceTimer = new Timer(
+        (_) => saveCourseToFile(),
+        null,
+        _debounceInterval,
+        Timeout.Infinite
+      );
+
       _localCourse = verifiedCourse;
       StateHasChanged?.Invoke();
     }
   }
+
+  private void saveCourseToFile()
+  {
+    _debounceTimer?.Dispose();
+    // ignore initial load of course
+    if (LocalCourse != null)
+    {
+      Console.WriteLine("Saving file");
+      yamlManager.SaveCourse(LocalCourse);
+    }
+  }
+
   public event Action? StateHasChanged;
 
   public IEnumerable<CanvasAssignment>? CanvasAssignments { get; internal set; }

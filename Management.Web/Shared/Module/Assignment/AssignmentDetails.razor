@@ -3,6 +3,7 @@
 
 @inject DragContainer dragContainer
 @inject CoursePlanner planner
+@inject AssignmentEditorContext assignmentContext
 
 @code {
   [Parameter]
@@ -128,7 +129,7 @@
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
-  @onclick="@(() => showUpdateForm = true)"
+  @onclick="@(() => assignmentContext.Assignment = Assignment)"
   role="button"
 >
   <div class="card">
@@ -249,9 +250,3 @@
     </div>
   </div>
 </div>
-
-<AssignmentForm
-  Assignment="Assignment"
-  Show="showUpdateForm"
-  OnHide="@(() => showUpdateForm = false)"
-/>

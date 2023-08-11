@@ -8,7 +8,7 @@ global using CanvasModel;
 global using LocalModels;
 global using Management.Planner;
 global using Management.Web.Shared.Components;
-global using Management.Web.Shared.Course;
+global using Management.Web.Shared;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -39,6 +39,7 @@ builder.Services.AddScoped<CanvasService, CanvasService>();
 
 builder.Services.AddScoped<YamlManager>();
 builder.Services.AddScoped<CoursePlanner>();
+builder.Services.AddScoped<AssignmentEditorContext>();
 builder.Services.AddScoped<DragContainer>();
 
 var app = builder.Build();

@@ -2,32 +2,30 @@
 
 @inject CoursePlanner planner
 @inject CanvasService canvas
+@inject AssignmentEditorContext assignmentContext
 
 @code {
   protected override void OnInitialized()
   {
-    planner.StateHasChanged += reload;
+    assignmentContext.StateHasChanged += reload;
   }
   private void reload()
   {
+    if (assignmentContext.Assignment != null)
+    {
+      AssignmentModal?.Show();
+      name = assignmentContext.Assignment.Name;
+      lockAtDueDate = assignmentContext.Assignment.LockAtDueDate;
+      rubric = assignmentContext.Assignment.Rubric;
+      submissionTypes = assignmentContext.Assignment.SubmissionTypes;
+    }
     this.InvokeAsync(this.StateHasChanged);
   }
   public void Dispose()
   {
-    planner.StateHasChanged -= reload;
+    assignmentContext.StateHasChanged -= reload;
   }
 
-  [Parameter]
-  [EditorRequired]
-  public LocalAssignment Assignment
-  {
-    get;
-    set;
-  } = default!;
-
-  [Parameter]
-  [EditorRequired]
-  public bool Show { get; set; }
 
   [Parameter]
   public Action OnHide { get; set; } = () => { };
@@ -37,26 +35,16 @@
   private IEnumerable<RubricItem> rubric { get; set; } = Enumerable.Empty<RubricItem>();
   private IEnumerable<string> submissionTypes { get; set; } = Enumerable.Empty<string>();
 
-  protected override void OnParametersSet()
-  {
-    if (Show)
-    {
-      AssignmentModal?.Show();
-    }
-    name = Assignment.Name;
-    lockAtDueDate = Assignment.LockAtDueDate;
-    rubric = Assignment.Rubric;
-    submissionTypes = Assignment.SubmissionTypes;
-  }
-
   private void submitHandler()
   {
-    var totalRubricPoints = rubric
-    .Where(r => !r.Label.Contains(RubricItem.extraCredit))
-    .Select(s => s.Points)
-    .Sum();
+    if(assignmentContext.Assignment != null)
+    {
+      var totalRubricPoints = rubric
+        .Where(r => !r.Label.Contains(RubricItem.extraCredit))
+        .Select(s => s.Points)
+        .Sum();
 
-    var newAssignment = Assignment with
+      var newAssignment = assignmentContext.Assignment with
       {
         Name = name,
         LockAtDueDate = lockAtDueDate,
@@ -65,34 +53,36 @@
         SubmissionTypes = submissionTypes,
       };
 
-    if (planner.LocalCourse != null)
-    {
-      var currentModule = planner
-      .LocalCourse
-      .Modules
-      .First(m =>
-      m.Assignments
-      .Select(a => a.Id)
-      .Contains(Assignment.Id)
-      ) ?? throw new Exception("could not find current module in assignment form");
-      var updatedModules = planner.LocalCourse.Modules.Select(m =>
-      m.Name == currentModule.Name
-      ? currentModule with
-        {
-          Assignments = currentModule.Assignments.Select(a =>
-  a.Id == newAssignment.Id
-  ? newAssignment
-  : a
-        ).ToArray()
-        }
-      : m
-      ).ToArray();
-      planner.LocalCourse = planner.LocalCourse with
+      if (planner.LocalCourse != null)
+      {
+        var currentModule = planner
+          .LocalCourse
+          .Modules
+          .First(m =>
+          m.Assignments
+          .Select(a => a.Id)
+          .Contains(newAssignment.Id)
+          ) ?? throw new Exception("could not find current module in assignment form");
+        var updatedModules = planner.LocalCourse.Modules.Select(m =>
+          m.Name == currentModule.Name
+          ? currentModule with
+            {
+              Assignments = currentModule.Assignments.Select(a =>
+                a.Id == newAssignment.Id
+                ? newAssignment
+                : a
+            ).ToArray()
+            }
+          : m
+          ).ToArray();
+        planner.LocalCourse = planner.LocalCourse with
         {
           Modules = updatedModules
         };
+      }
+      AssignmentModal?.Hide();
+      assignmentContext.Assignment = null;
     }
-    AssignmentModal?.Hide();
   }
 
   private void updateRubric(IEnumerable<RubricItem> newRubric)
@@ -108,16 +98,17 @@
 
   private async Task HandleDelete()
   {
-    if (planner.LocalCourse != null)
+    if (planner.LocalCourse != null && assignmentContext.Assignment != null)
     {
-      var assignment = Assignment;
+      var assignment = assignmentContext.Assignment;
+
       var currentModule = planner
       .LocalCourse
       .Modules
       .First(m =>
       m.Assignments
       .Select(a => a.Id)
-      .Contains(Assignment.Id)
+      .Contains(assignment.Id)
       ) ?? throw new Exception("handling assignment delete, could not find module");
       var newModules = planner.LocalCourse.Modules.Select(m =>
       m.Name == currentModule.Name
@@ -143,34 +134,40 @@
 
 <Modal @ref="AssignmentModal" OnHide="@(() => OnHide())">
   <Title>
-    @Assignment.Name
+    @assignmentContext.Assignment?.Name
   </Title>
 
   <Body>
-    <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
-      <div class="m-1">
-        <label class="form-label">
-          Name
-        </label>
-        <input class="form-control" @bind="name" />
-      </div>
-      <div class="m-1">
-        <AssignmentDescriptionEditor @key="Assignment" Assignment="Assignment" />
-      </div>
+    @if(assignmentContext.Assignment != null)
+    {
+      <form @onsubmit:preventDefault="true">
+        <div class="m-1">
+          <label class="form-label">
+            Name
+          </label>
+          <input class="form-control" @bind="name" />
+        </div>
+        <div class="m-1">
+          <AssignmentDescriptionEditor Assignment="assignmentContext.Assignment" />
+        </div>
 
-      <div class="form-check m-1">
-        <input class="form-check-input" id="lockAtDueDate" type="checkbox" />
-        <label class="form-check-label" for="lockAtDueDate" @bind="lockAtDueDate">
-          Lock At Due Date
-        </label>
-      </div>
-      <RubricEditor Rubric="rubric" SetRubric="updateRubric" />
-      <SubmissionTypeSelector Types="submissionTypes" SetTypes="SetTypes" />
-    </form>
+        <div class="form-check m-1">
+          <input class="form-check-input" id="lockAtDueDate" type="checkbox" />
+          <label class="form-check-label" for="lockAtDueDate" @bind="lockAtDueDate">
+            Lock At Due Date
+          </label>
+        </div>
+        <RubricEditor Rubric="rubric" SetRubric="updateRubric" />
+        <SubmissionTypeSelector Types="submissionTypes" SetTypes="SetTypes" />
+      </form>
+    }
   </Body>
   <Footer>
     <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
-    <button class="btn btn-primary" @onclick="@(() => AssignmentModal?.Hide())">
+    <button class="btn btn-primary" @onclick="@(() => {
+        AssignmentModal?.Hide();
+        assignmentContext.Assignment = null;
+      })">
       Save
     </button>
   </Footer>
