@@ -10,6 +10,7 @@
   protected override void OnInitialized()
   {
     assignmentContext.StateHasChanged += reload;
+    reload();
   }
   private void reload()
   {

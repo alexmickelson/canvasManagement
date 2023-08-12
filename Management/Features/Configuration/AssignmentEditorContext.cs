@@ -14,11 +14,12 @@ public class AssignmentEditorContext
   private LocalAssignment? _assignment;
   public LocalAssignment? Assignment
   {
-    get { return _assignment; }
+    get  =>_assignment;
     set
     {
       _assignment = value;
       StateHasChanged?.Invoke();
+      Console.WriteLine("new assignment");
     }
   }
 

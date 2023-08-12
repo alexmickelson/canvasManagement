@@ -6,6 +6,7 @@
   protected override void OnInitialized()
   {
     assignmentContext.StateHasChanged += reload;
+    reload();
   }
   private void reload()
   {
@@ -37,11 +38,11 @@
   {
     if(assignmentContext.Assignment != null)
     {
+      types = newTypes;
       assignmentContext.SaveAssignment(assignmentContext.Assignment with
       {
-        SubmissionTypes = newTypes
-      }
-      );
+        SubmissionTypes = types
+      });
     }
   }
 
@@ -54,6 +55,7 @@
   {
     var isDiscussion = submissionType == SubmissionType.DISCUSSION_TOPIC;
     var allowedToBeChecked = !discussionIsSelected || isDiscussion;
+
     <div class="col-4">
       <div class="form-check form-switch">
         <input
