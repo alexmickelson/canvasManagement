@@ -22,16 +22,16 @@ public static class SubmissionType
   public static readonly string NONE = "none";
   public static readonly IEnumerable<string> AllTypes = new string[]
   {
-    SubmissionType.ONLINE_TEXT_ENTRY,
-    SubmissionType.ONLINE_UPLOAD,
-    SubmissionType.ONLINE_QUIZ,
-    SubmissionType.ON_PAPER,
-    SubmissionType.DISCUSSION_TOPIC,
-    SubmissionType.EXTERNAL_TOOL,
-    SubmissionType.ONLINE_URL,
-    SubmissionType.MEDIA_RECORDING,
-    SubmissionType.STUDENT_ANNOTATION,
-    SubmissionType.NONE,
+    ONLINE_TEXT_ENTRY,
+    ONLINE_UPLOAD,
+    ONLINE_QUIZ,
+    ON_PAPER,
+    DISCUSSION_TOPIC,
+    EXTERNAL_TOOL,
+    ONLINE_URL,
+    MEDIA_RECORDING,
+    STUDENT_ANNOTATION,
+    NONE,
   };
 }
 

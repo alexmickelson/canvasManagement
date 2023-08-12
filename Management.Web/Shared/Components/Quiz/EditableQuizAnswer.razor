@@ -1,0 +1,88 @@
+
+
+@code {
+  [Parameter, EditorRequired]
+  public LocalQuizQuestionAnswer Answer { get; set; } = default!;
+  [Parameter, EditorRequired]
+  public LocalQuizQuestion Question { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public Action<LocalQuizQuestionAnswer> SaveAnswer { get; set; } = (_) => {};
+
+  private string _text { get; set; } = string.Empty;
+  private string text 
+  { 
+    get => _text;
+    set
+    {
+      _text = value;
+      SaveAnswer(Answer with { Text = _text });
+    }
+  }
+
+  protected override void OnParametersSet()
+  {
+    if(_text == string.Empty)
+      _text = Answer.Text;
+    base.OnParametersSet();
+  }
+
+  private void handleOneAnswerChange()
+  {
+    SaveAnswer(Answer with {Correct = !Answer.Correct});
+  }
+}
+
+
+<div class="row">
+  <div class="col-auto my-auto">
+    @if(Question.QuestionType == QuestionType.MULTIPLE_ANSWERS)
+    {
+      <div class="form-check form-switch">
+        <input 
+          class="form-check-input" 
+          type="checkbox"
+          role="switch" 
+          id="@("answer_" + Answer.Id)"
+          checked="@Answer.Correct"
+          @onchange="@(() => handleOneAnswerChange())"
+        >
+        <label 
+          class="form-check-label" 
+          for="@("answer_" + Answer.Id)"
+        >
+          Is Correct
+        </label>
+      </div>
+    }
+    @if(Question.QuestionType == QuestionType.MULTIPLE_CHOICE)
+    {
+      <div class="form-check">
+        <input 
+          class="form-check-input" 
+          type="radio" 
+          name="@("correct_answer_" + Question.Id)"
+          id="@("answer_" + Answer.Id)"
+          checked="@Answer.Correct"
+
+          @onchange="@(() => handleOneAnswerChange())"
+        >
+        <label
+          class="form-check-label" 
+          for="@("answer_" + Answer.Id)"
+        >
+          Is Correct
+        </label>
+      </div>
+    }
+  </div>
+  <div class="col">
+    <div class="m-1">
+      <textarea 
+        class="form-control"
+        @bind="text"
+        @bind:event="oninput"
+      />
+    </div>
+  </div>
+</div>

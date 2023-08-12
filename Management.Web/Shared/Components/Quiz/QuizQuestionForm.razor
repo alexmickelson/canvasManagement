@@ -1,0 +1,157 @@
+@inject QuizEditorContext quizContext
+
+@code {
+  [Parameter, EditorRequired]
+  public LocalQuizQuestion Question { get; set; } = default!;
+  [Parameter, EditorRequired]
+  public Action<LocalQuizQuestion> UpdateQuestion { get; set; } = (_) => {};
+
+  protected override void OnParametersSet()
+  {
+    if(questionType == string.Empty)
+      questionType = Question.QuestionType;
+    if(text == string.Empty)
+      text = Question.Text;
+
+    if(answers.Count() == 0)
+      answers = Question.Answers;
+
+    base.OnParametersSet();
+  }
+  private string text { get; set; } = string.Empty;
+  private string questionType { get; set; } = string.Empty;
+  private IEnumerable<LocalQuizQuestionAnswer> answers { get; set; } = Enumerable.Empty<LocalQuizQuestionAnswer>();
+
+  private void handleTypeUpdate(string type)
+  {
+    if(quizContext.Quiz != null)
+    {
+      questionType = type;
+      var newQuestion = Question with 
+      {
+        QuestionType = questionType
+      };
+
+      UpdateQuestion(newQuestion);
+    }
+  }
+
+  private void addAnswer()
+  {
+    if(quizContext.Quiz != null)
+    {
+      var newAnswer = new LocalQuizQuestionAnswer
+        { Id = Guid.NewGuid().ToString() };
+      
+      answers = answers.Append(newAnswer);
+      UpdateQuestion(Question with { Answers = answers });
+    }
+  }
+
+  private void removeAnswer()
+  {
+
+    if(quizContext.Quiz != null)
+    {
+      var newAnswer = new LocalQuizQuestionAnswer
+        { Id = Guid.NewGuid().ToString() };
+      
+      answers = answers.Take(Question.Answers.Count() - 1);
+      UpdateQuestion(Question with { Answers = answers });
+    }
+  }
+
+  private void saveAnswer(LocalQuizQuestionAnswer newAnswer)
+  {
+    if(questionType == QuestionType.MULTIPLE_CHOICE && newAnswer.Correct)
+    {
+      answers = answers.Select(a => 
+       a.Id == newAnswer.Id
+          ? newAnswer
+          : a with { Correct = false }
+      ).ToArray();
+    }
+    else
+    {
+      answers = answers.Select(a => 
+        a.Id == newAnswer.Id
+          ? newAnswer
+          : a
+      ).ToArray();
+    }
+
+    UpdateQuestion(Question with { Answers = answers });
+  }
+}
+
+<div class="my-1 p-2 border border-3 rounded">
+
+  <div class="row">
+    <div class="col">
+      <label 
+        for="question_text"
+        class="form-label"
+      >
+        Question Text
+      </label>
+      <textarea 
+        class="form-control"
+        id="question_text"
+        name="question_text"
+        @bind="text"
+      />
+    </div>
+    <div class="col-auto">
+      @foreach(var typeOption in QuestionType.AllTypes)
+      {
+        <div class="form-check">
+          <input 
+            class="form-check-input" 
+            type="radio" 
+            name="@(Question.Id + "question_type")"
+            id="@(Question.Id + typeOption)"
+            value="@typeOption"
+            checked="@(typeOption == questionType)"
+            @onchange="() => handleTypeUpdate(typeOption)"
+          >
+          <label
+            class="form-check-label" 
+            for="@(Question.Id + typeOption)"
+          >
+            @typeOption
+          </label>
+        </div>
+      }
+    </div>
+  </div>
+  <div>Answers:</div>
+
+    @if(questionType == QuestionType.MULTIPLE_ANSWERS || questionType == QuestionType.MULTIPLE_CHOICE)
+    {
+
+      @foreach(var answer in answers)
+      {
+        <EditableQuizAnswer
+          Answer="answer" 
+          SaveAnswer="saveAnswer" 
+          Question="Question"
+        />
+      }
+      <button 
+        class="btn btn-outline-danger"
+        @onclick="removeAnswer"
+      >
+        - Remove Answer
+      </button>
+      <button 
+        class="btn btn-outline-primary"
+        @onclick="addAnswer"
+      >
+        + Add Answer
+      </button>
+      
+    }
+    <div>
+
+  </div>
+</div>

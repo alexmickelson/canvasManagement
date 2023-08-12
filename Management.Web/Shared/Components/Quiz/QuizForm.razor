@@ -3,6 +3,8 @@
 
 @code {
   private Modal? modal { get; set; }
+  private string name { get; set; } = "";
+  private string description { get; set; } = "";
 
   protected override void OnInitialized()
   {
@@ -12,7 +14,9 @@
   {
     if (quizContext.Quiz != null)
     {
-      //initialize
+      name = quizContext.Quiz.Name;
+      description = quizContext.Quiz.Description;
+
       modal?.Show();
       this.InvokeAsync(this.StateHasChanged);
     }
@@ -21,6 +25,76 @@
   {
     quizContext.StateHasChanged -= reload;
   }
+
+  private void addQuestion()
+  {
+    if(quizContext.Quiz != null)
+    {
+      var newQuestion = new LocalQuizQuestion
+      {
+        Id = Guid.NewGuid().ToString()
+      };
+      var newQuiz = quizContext.Quiz with
+      {
+        Questions = quizContext.Quiz.Questions.Append(newQuestion).ToArray()
+      };
+      quizContext.SaveQuiz(newQuiz);
+    }
+  }
+
+  private void removeQuestion()
+  {
+    if(quizContext.Quiz != null)
+    {
+      var newQuestion = new LocalQuizQuestion();
+      var newQuiz = quizContext.Quiz with
+      {
+        Questions = quizContext.Quiz.Questions.Take(quizContext.Quiz.Questions.Count() - 1)
+      };
+      quizContext.SaveQuiz(newQuiz);
+    }
+  }
+
+  private void updateQuestion(LocalQuizQuestion updatedQuestion)
+  {
+    if(quizContext.Quiz != null)
+    {
+      var newQuestions = quizContext.Quiz.Questions.Select(q => 
+        q.Id == updatedQuestion.Id
+          ? updatedQuestion
+          : q
+      );
+      var newQuiz = quizContext.Quiz with
+      {
+        Questions = newQuestions,
+      };
+      quizContext.SaveQuiz(newQuiz);
+    }
+  }
+
+  private void handleNewName(ChangeEventArgs e)
+  {
+    if(quizContext.Quiz != null)
+    {
+      var newQuiz = quizContext.Quiz with
+      {
+        Name = e.Value?.ToString() ?? ""
+      };
+      quizContext.SaveQuiz(newQuiz);
+    }
+  }
+  private void handleNewDescription(ChangeEventArgs e)
+  {
+    if(quizContext.Quiz != null)
+    {
+      var newQuiz = quizContext.Quiz with
+      {
+        Description = e.Value?.ToString() ?? ""
+      };
+      quizContext.SaveQuiz(newQuiz);
+    }
+  }
+
 }
 
 <Modal @ref="modal" OnHide="() => quizContext.Quiz = null" >
@@ -28,7 +102,51 @@
     @quizContext.Quiz?.Name
   </Title>
   <Body>
+    @if(quizContext.Quiz != null)
+    {
+      <div class="m-1">
+        <label class="form-label">
+          Name
+        </label>
+        <input 
+          class="form-control" 
+          @bind="name"
+          @oninput="handleNewName" 
+        />
+      </div>
+      <div class="m-1">
+        <label class="form-label">
+          Description
+        </label>
+        <textarea 
+          class="form-control" 
+          @bind="description"
+          @oninput="handleNewDescription" 
+        />
+      </div>
 
+      @foreach(var question in quizContext.Quiz.Questions)
+      {
+        <QuizQuestionForm 
+          @key="@question.Id" 
+          Question="question"
+          UpdateQuestion="updateQuestion"  
+        />
+      }
+
+      <button 
+        class="btn btn-outline-danger"
+        @onclick="removeQuestion"
+      >
+        - question
+      </button>
+      <button 
+        class="btn btn-outline-primary"
+        @onclick="addQuestion"
+      >
+        + question
+      </button>
+    }
   </Body>
   <Footer>
     <button 

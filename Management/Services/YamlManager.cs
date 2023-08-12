@@ -6,7 +6,7 @@ public class YamlManager
 {
   public string CourseToYaml(LocalCourse course)
   {
-    var serializer = new SerializerBuilder().Build();
+    var serializer = new SerializerBuilder().DisableAliases().Build();
     var yaml = serializer.Serialize(course);
 
     return yaml;

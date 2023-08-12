@@ -45,6 +45,7 @@ public class QuizEditorContext
         .ToArray();
 
       planner.LocalCourse = planner.LocalCourse with { Modules = updatedModules };
+      Quiz = newQuiz;
     }
   }
 }
