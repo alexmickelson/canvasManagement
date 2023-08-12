@@ -1,21 +1,26 @@
 @using System.Reflection
+@inject AssignmentEditorContext assignmentContext
 
 @code 
 {
-  private IEnumerable<string> _types { get; set; } = Enumerable.Empty<string>();
-  [Parameter, EditorRequired]
-  public IEnumerable<string> Types { get; set; } = Enumerable.Empty<string>();
-
-  [Parameter, EditorRequired]
-  public Action<IEnumerable<string>> SetTypes { get; set; } = (_) => {};
-  protected override void OnParametersSet()
+  protected override void OnInitialized()
   {
-    if (!Types.SequenceEqual(_types))
-    {
-      _types = Types;
-      renderKey++;
-    }
+    assignmentContext.StateHasChanged += reload;
   }
+  private void reload()
+  {
+    if (assignmentContext.Assignment != null)
+    {
+      types = assignmentContext.Assignment.SubmissionTypes;
+
+    }
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    assignmentContext.StateHasChanged -= reload;
+  }
+  private IEnumerable<string> types { get; set; } = Enumerable.Empty<string>();
 
   private string getLabel(string type)
   {
@@ -24,15 +29,26 @@
 
   private bool discussionIsSelected
   {
-    get => Types.FirstOrDefault(
+    get => types.FirstOrDefault(
       t => t == SubmissionType.DISCUSSION_TOPIC
     ) != null;
   }
-  private int renderKey {get; set; } = 1;
+  private void saveTypes(IEnumerable<string> newTypes)
+  {
+    if(assignmentContext.Assignment != null)
+    {
+      assignmentContext.SaveAssignment(assignmentContext.Assignment with
+      {
+        SubmissionTypes = newTypes
+      }
+      );
+    }
+  }
+
 }
 
 <h5>Submission Types</h5>
-<div class="row" @key="Types">
+<div class="row" @key="types">
 
   @foreach (var submissionType in SubmissionType.AllTypes)
   {
@@ -45,13 +61,13 @@
           type="checkbox"
           role="switch" 
           id="@getLabel(submissionType)"
-          checked="@(Types.Contains(submissionType) && allowedToBeChecked)"
+          checked="@(types.Contains(submissionType) && allowedToBeChecked)"
           @onchange="(e) => {
             var isChecked = (bool)(e.Value ?? false);
             if(isChecked)
-              SetTypes(Types.Append(submissionType));
+              saveTypes(types.Append(submissionType));
             else
-              SetTypes(Types.Where(t => t != submissionType));
+              saveTypes(types.Where(t => t != submissionType));
           }"
           disabled="@(discussionIsSelected && !isDiscussion)"
         >

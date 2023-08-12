@@ -17,8 +17,6 @@
       AssignmentModal?.Show();
       name = assignmentContext.Assignment.Name;
       lockAtDueDate = assignmentContext.Assignment.LockAtDueDate;
-      rubric = assignmentContext.Assignment.Rubric;
-      submissionTypes = assignmentContext.Assignment.SubmissionTypes;
     }
     this.InvokeAsync(this.StateHasChanged);
   }
@@ -33,43 +31,21 @@
   public Modal? AssignmentModal { get; set; } = null;
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
-  private IEnumerable<RubricItem> rubric { get; set; } = Enumerable.Empty<RubricItem>();
-  private IEnumerable<string> submissionTypes { get; set; } = Enumerable.Empty<string>();
 
   private void submitHandler()
   {
     if (assignmentContext.Assignment != null)
     {
-      var totalRubricPoints = rubric
-      .Where(r => !r.Label.Contains(RubricItem.extraCredit))
-      .Select(s => s.Points)
-      .Sum();
-
       var newAssignment = assignmentContext.Assignment with
         {
           Name = name,
           LockAtDueDate = lockAtDueDate,
-          Rubric = rubric,
-          PointsPossible = totalRubricPoints,
-          SubmissionTypes = submissionTypes,
         };
 
       assignmentContext.SaveAssignment(newAssignment);
     }
     AssignmentModal?.Hide();
     assignmentContext.Assignment = null;
-  }
-
-
-  private void updateRubric(IEnumerable<RubricItem> newRubric)
-  {
-    rubric = newRubric;
-    StateHasChanged();
-  }
-  private void SetTypes(IEnumerable<string> newTypes)
-  {
-    submissionTypes = newTypes;
-    StateHasChanged();
   }
 
   private async Task HandleDelete()
@@ -173,7 +149,7 @@
           </label>
         </div>
         <RubricEditor />
-        <SubmissionTypeSelector Types="submissionTypes" SetTypes="SetTypes" />
+        <SubmissionTypeSelector />
       </form>
     }
   </Body>
