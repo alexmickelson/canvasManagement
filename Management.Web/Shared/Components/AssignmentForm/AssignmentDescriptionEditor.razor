@@ -85,10 +85,7 @@
   }
 
   private string? currentDescription { get; set; } = null;
-  private void OnInputChanged(ChangeEventArgs e)
-  {
-    SaveAssignment(Assignment with { Description = e.Value?.ToString() ?? "" });
-  }
+
 }
 
 
@@ -187,7 +184,7 @@ else
         class="form-control" 
         rows=12
         @bind="currentDescription"
-        @oninput="OnInputChanged"
+        @oninput="@((e) => SaveAssignment(Assignment with { Description = e.Value?.ToString() ?? "" }))"
         />
     </div>
     <div class="col">

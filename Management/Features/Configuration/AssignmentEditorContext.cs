@@ -26,7 +26,6 @@ public class AssignmentEditorContext
   {
     if (planner.LocalCourse != null)
     {
-      Console.WriteLine(newAssignment.Description);
       var currentModule =
         planner.LocalCourse.Modules.First(
           m => m.Assignments.Select(a => a.Id).Contains(newAssignment.Id)

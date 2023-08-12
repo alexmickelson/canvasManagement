@@ -10,3 +10,8 @@ dotnet_naming_symbols.private_methods.applicable_kinds = method
 dotnet_naming_symbols.private_methods.applicable_accessibilities = private 
 
 dotnet_naming_style.camel_case_style.capitalization = camel_case
+
+
+[*.razor]
+indent_style = ignore
+indent_size = ignore

@@ -1,64 +1,101 @@
 @using Management.Web.Shared.Components
 
 @inject CoursePlanner planner
+@inject AssignmentEditorContext assignmentContext
 
 @code
 {
-  [Parameter, EditorRequired]
-  public IEnumerable<RubricItem> Rubric { get; set; } = default!;
+  private IEnumerable<RubricItem> rubric { get; set; } = Array.Empty<RubricItem>();
 
-  [Parameter, EditorRequired]
-  public Action<IEnumerable<RubricItem>> SetRubric { get; set; } = default!;  
+  protected override void OnInitialized()
+  {
+    assignmentContext.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    if (assignmentContext.Assignment != null)
+    {
+      rubric = assignmentContext.Assignment.Rubric;
+    }
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    assignmentContext.StateHasChanged -= reload;
+  }
 
+  private void save()
+  {
+    if (assignmentContext.Assignment != null)
+    {
+      var newAssignment = assignmentContext.Assignment with
+        {
+          Rubric = rubric
+        };
+      assignmentContext.SaveAssignment(newAssignment);
+      StateHasChanged();
+    }
+  }
   private void addItem()
   {
-    SetRubric(
-      Rubric.Append(new RubricItem
+    if (assignmentContext.Assignment != null)
+    {
+      rubric = rubric.Append(new RubricItem
       {
-        Id=Guid.NewGuid().ToString(),
-        Label="",
-        Points=0
-      })
-    );
-    StateHasChanged();
+        Id = Guid.NewGuid().ToString(),
+        Label = "",
+        Points = 0
+      });
+    }
   }
   private void removeItem()
   {
-    SetRubric(
-      Rubric.Take(Rubric.Count() - 1)
-    );
-    StateHasChanged();
+    if (assignmentContext.Assignment != null)
+    {
+      rubric = rubric.Take(rubric.Count() - 1);
+      save();
+    }
   }
   private void editItem(RubricItem newItem)
   {
-    var newRubric = Rubric.Select(i => i.Id == newItem.Id ? newItem : i);
-    SetRubric(newRubric);
-    StateHasChanged();
+    if (assignmentContext.Assignment != null)
+    {
+      rubric = rubric.Select(i => i.Id == newItem.Id ? newItem : i);
+      save();
+    }
   }
   private void MoveUp(RubricItem item)
   {
-    var rubricList = Rubric.ToList();
-    var index = rubricList.IndexOf(item);
-
-    if(index > 0)
+    if (assignmentContext.Assignment != null)
     {
-      var previous = rubricList[index - 1];
-      rubricList[index - 1] = item;
-      rubricList[index] = previous;
-      SetRubric(rubricList);
+      var rubricList = rubric.ToList();
+      var index = rubricList.IndexOf(item);
+
+      if (index > 0)
+      {
+        var previous = rubricList[index - 1];
+        rubricList[index - 1] = item;
+        rubricList[index] = previous;
+        rubric = rubricList;
+        save();
+      }
     }
   }
   private void MoveDown(RubricItem item)
   {
-    var rubricList = Rubric.ToList();
-    var index = rubricList.IndexOf(item);
-
-    if(index < rubricList.Count())
+    if (assignmentContext.Assignment != null)
     {
-      var next = rubricList[index + 1];
-      rubricList[index + 1] = item;
-      rubricList[index] = next;
-      SetRubric(rubricList);
+      var rubricList = rubric.ToList();
+      var index = rubricList.IndexOf(item);
+
+      if (index < rubricList.Count())
+      {
+        var next = rubricList[index + 1];
+        rubricList[index + 1] = item;
+        rubricList[index] = next;
+        rubric = rubricList;
+        save();
+      }
     }
   }
 }
@@ -66,7 +103,7 @@
 <br>
 <h5>Rubric</h5>
 <ul class="list-group">
-  @foreach (var rubricItem in Rubric)
+@foreach (var rubricItem in rubric)
   {
     <RubricEditorItem 
       RubricItem="rubricItem" 
