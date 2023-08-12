@@ -1,6 +1,6 @@
 @using Management.Web.Shared.Components.Quiz
-
 @inject DragContainer dragContainer
+@inject CoursePlanner planner
 @inject QuizEditorContext quizContext
 
 @inherits DroppableQuiz
@@ -18,26 +18,12 @@
   }
 }
 
-
-
-<div 
+<div
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
   @onclick="@(() => quizContext.Quiz = Quiz)"
   role="button"
 >
-  <div class="card">
-    <div class="card-body p-0">
-      <div class="card-title pt-2 px-2 m-0">
-        <h4>@Quiz.Name</h4>
-
-      </div>
-
-      <div class="card-text overflow-hidden p-2">
-        <div>Due At: @Quiz.DueAt</div>
-      </div>
-    </div>
-
-  </div>
+  @Quiz.Name
 </div>

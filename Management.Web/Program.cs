@@ -40,6 +40,7 @@ builder.Services.AddScoped<CanvasService, CanvasService>();
 builder.Services.AddScoped<YamlManager>();
 builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentEditorContext>();
+builder.Services.AddScoped<QuizEditorContext>();
 builder.Services.AddScoped<DragContainer>();
 
 var app = builder.Build();

@@ -15,8 +15,6 @@
     if (assignmentContext.Assignment != null)
     {
       Description = assignmentContext.Assignment.Description;
-      Console.WriteLine("loaded description");
-      Console.WriteLine(Description);
       Preview = Markdown.ToHtml(Description);
       TemplateId = assignmentContext.Assignment.TemplateId;
       UseTemplate = TemplateId != null && TemplateId != "";

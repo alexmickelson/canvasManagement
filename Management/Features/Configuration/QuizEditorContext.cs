@@ -1,35 +1,34 @@
 using LocalModels;
 using Management.Planner;
 
-public class AssignmentEditorContext
+public class QuizEditorContext
 {
   public event Action? StateHasChanged;
   private CoursePlanner planner { get; }
 
-  public AssignmentEditorContext(CoursePlanner planner)
+  public QuizEditorContext(CoursePlanner planner)
   {
     this.planner = planner;
   }
 
-  private LocalAssignment? _assignment;
-  public LocalAssignment? Assignment
+  private LocalQuiz? _quiz;
+  public LocalQuiz? Quiz
   {
-    get => _assignment;
+    get => _quiz;
     set
     {
-      _assignment = value;
+      _quiz = value;
       StateHasChanged?.Invoke();
     }
   }
 
-  public void SaveAssignment(LocalAssignment newAssignment)
+  public void SaveQuiz(LocalQuiz newQuiz)
   {
     if (planner.LocalCourse != null)
     {
       var currentModule =
-        planner.LocalCourse.Modules.First(
-          m => m.Assignments.Select(a => a.Id).Contains(newAssignment.Id)
-        ) ?? throw new Exception("could not find current module in assignment editor context");
+        planner.LocalCourse.Modules.First(m => m.Quizzes.Select(q => q.Id).Contains(newQuiz.Id))
+        ?? throw new Exception("could not find current module in quiz editor context");
 
       var updatedModules = planner.LocalCourse.Modules
         .Select(
@@ -37,8 +36,8 @@ public class AssignmentEditorContext
             m.Name == currentModule.Name
               ? currentModule with
               {
-                Assignments = currentModule.Assignments
-                  .Select(a => a.Id == newAssignment.Id ? newAssignment : a)
+                Quizzes = currentModule.Quizzes
+                  .Select(q => q.Id == newQuiz.Id ? newQuiz : q)
                   .ToArray()
               }
               : m

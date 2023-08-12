@@ -3,6 +3,7 @@
 @using Management.Web.Shared.Module
 @using Management.Web.Shared.Semester
 @using Management.Web.Shared.Components.AssignmentForm
+@using Management.Web.Shared.Components.Quiz
 
 @inject CanvasService canvas
 @inject CoursePlanner planner
@@ -40,6 +41,7 @@
 }
 
 <AssignmentForm />
+<QuizForm />
 
 <div class="row">
   <div class="col overflow-y-auto border rounded " style="max-height: 95vh;">

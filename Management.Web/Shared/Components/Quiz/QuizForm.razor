@@ -1,42 +1,41 @@
 @using Management.Web.Shared.Components
+@inject QuizEditorContext quizContext
 
 @code {
-  public LocalModule Module { get; set; } = default!;
+  private Modal? modal { get; set; }
 
-  [Parameter]
-  [EditorRequired]
-  public LocalQuiz Quiz
+  protected override void OnInitialized()
   {
-    get;
-    set;
-  } = default!;
-
-  [Parameter]
-  [EditorRequired]
-  public bool Show { get; set; }
-
-  [Parameter] 
-  public Action OnHide { get; set; } = () => { }; 
-  private Modal? Modal { get; set; }
-
-  private void submitHandler ()
+    quizContext.StateHasChanged += reload;
+  }
+  private void reload()
   {
-
+    if (quizContext.Quiz != null)
+    {
+      //initialize
+      modal?.Show();
+      this.InvokeAsync(this.StateHasChanged);
+    }
+  }
+  public void Dispose()
+  {
+    quizContext.StateHasChanged -= reload;
   }
 }
 
-<Modal @ref="Modal" OnHide="@(() => OnHide())">
+<Modal @ref="modal" OnHide="() => quizContext.Quiz = null" >
   <Title>
-    @Quiz.Name
+    @quizContext.Quiz?.Name
   </Title>
   <Body>
-    <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
 
-    </form>
   </Body>
   <Footer>
-    <button class="btn btn-primary" @onclick="submitHandler">
-      Save
+    <button 
+      class="btn btn-primary" 
+      @onclick="() => modal?.Hide()"
+    >
+      Done
     </button>
   </Footer>
 </Modal>

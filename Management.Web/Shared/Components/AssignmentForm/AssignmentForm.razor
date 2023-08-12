@@ -118,39 +118,37 @@
   <Body>
     @if (assignmentContext.Assignment != null)
     {
-      <form @onsubmit:preventDefault="true">
-        <div class="m-1">
-          <label class="form-label">
-            Name
-          </label>
-          <input 
-            class="form-control" 
-            @bind="name"
-            @oninput="handleNameChange" 
-          />
-        </div>
-        <div class="m-1">
-          <AssignmentDescriptionEditor />
-        </div>
+      <div class="m-1">
+        <label class="form-label">
+          Name
+        </label>
+        <input 
+          class="form-control" 
+          @bind="name"
+          @oninput="handleNameChange" 
+        />
+      </div>
+      <div class="m-1">
+        <AssignmentDescriptionEditor />
+      </div>
 
-        <div class="form-check m-1">
-          <input 
-            class="form-check-input" 
-            id="lockAtDueDate" 
-            type="checkbox" 
-            @bind="lockAtDueDate"
-            @oninput="handleLockAtDueDateChange" 
-          />
-          <label 
-            class="form-check-label" 
-            for="lockAtDueDate"
-          >
-            Lock At Due Date
-          </label>
-        </div>
-        <RubricEditor />
-        <SubmissionTypeSelector />
-      </form>
+      <div class="form-check m-1">
+        <input 
+          class="form-check-input" 
+          id="lockAtDueDate" 
+          type="checkbox" 
+          @bind="lockAtDueDate"
+          @oninput="handleLockAtDueDateChange" 
+        />
+        <label 
+          class="form-check-label" 
+          for="lockAtDueDate"
+        >
+          Lock At Due Date
+        </label>
+      </div>
+      <RubricEditor />
+      <SubmissionTypeSelector />
     }
   </Body>
   <Footer>

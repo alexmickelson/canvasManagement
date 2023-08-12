@@ -27,7 +27,8 @@
   }
   
 
-  private IEnumerable<LocalAssignment> TodaysAssignments {
+  private IEnumerable<LocalAssignment> TodaysAssignments 
+    {
     get
     {
       if(planner.LocalCourse == null || date == null)
@@ -38,6 +39,19 @@
           .Where(a => a.DueAt.Date == date?.Date);
     }
   }
+
+  private IEnumerable<LocalQuiz> todaysQuizzes 
+    {
+      get
+      {
+        if(planner.LocalCourse == null || date == null)
+          return Enumerable.Empty<LocalQuiz>();
+        else
+          return planner.LocalCourse.Modules
+            .SelectMany(m => m.Quizzes)
+            .Where(q => q.DueAt.Date == date?.Date);
+      }
+    }
   private string calculatedClass
   {
     get
@@ -78,7 +92,6 @@
 
   void OnDrop()
   {
-    @* System.Console.WriteLine("on drop"); *@
     dragging = false;
     if(dragContainer.DropCallback == null){
       System.Console.WriteLine("no drop callback set");
@@ -104,6 +117,11 @@
   @foreach (var assignment in TodaysAssignments)
   {
     <AssignmentInDay Assignment="assignment" @key="@assignment" />
+  }
+
+  @foreach(var quiz in todaysQuizzes)
+  {
+    <QuizInDay Quiz="quiz" @key="@quiz" />
   }
   </div>
 </div>
