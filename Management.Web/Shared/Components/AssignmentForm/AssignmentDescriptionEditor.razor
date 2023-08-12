@@ -1,26 +1,33 @@
 @using Markdig
 
 @inject CoursePlanner planner
+@inject AssignmentEditorContext assignmentContext
 
 @code
 {
-  @* protected override void OnInitialized()
+  protected override void OnInitialized()
   {
-    planner.StateHasChanged += reload;
+    assignmentContext.StateHasChanged += reload;
+    reload();
   }
   private void reload()
   {
-    this.InvokeAsync(this.StateHasChanged);
+    if (assignmentContext.Assignment != null)
+    {
+      Description = assignmentContext.Assignment.Description;
+      Console.WriteLine("loaded description");
+      Console.WriteLine(Description);
+      Preview = Markdown.ToHtml(Description);
+      TemplateId = assignmentContext.Assignment.TemplateId;
+      UseTemplate = TemplateId != null && TemplateId != "";
+      VariableValues = assignmentContext.Assignment.TemplateVariables;
+      this.InvokeAsync(this.StateHasChanged);
+    }
   }
   public void Dispose()
   {
-    planner.StateHasChanged -= reload;
-  } *@
-
-
-  [Parameter, EditorRequired]
-  public LocalAssignment Assignment { get; set; } = default!;
-
+    assignmentContext.StateHasChanged -= reload;
+  }
 
   public string Description { get; set; } = default!;
   public bool? UseTemplate { get; set; } = null;
@@ -29,100 +36,71 @@
 
   public Dictionary<string, string> VariableValues { get; set; } = new Dictionary<string, string>();
 
-  protected override void OnParametersSet()
-  {
-    Description = Assignment.Description;
-    Preview = Markdown.ToHtml(Assignment.Description);
-    if (currentDescription == null)
-      currentDescription = Description;
-
-    TemplateId = Assignment.TemplateId;
-    if (UseTemplate == null)
-    { 
-      UseTemplate = Assignment.TemplateId != null && Assignment.TemplateId != "";
-    }
-  }
-
   private AssignmentTemplate? selectedTemplate =>
     planner
     .LocalCourse?
     .AssignmentTemplates
-    .FirstOrDefault(t => t.Id == Assignment.TemplateId);
-  public string Preview { get; set; }
+    .FirstOrDefault(t => t.Id == TemplateId);
 
-  private void SaveAssignment(LocalAssignment newAssignment)
+  public string Preview { get; set; } = String.Empty;
+
+  private void saveDescription(ChangeEventArgs e)
   {
-    if(planner.LocalCourse != null)
+    if(assignmentContext.Assignment != null)
     {
-      var currentModule = planner
-         .LocalCourse
-         .Modules
-         .First(m => 
-           m.Assignments
-             .Select(a => a.Id)
-             .Contains(Assignment.Id)
-         ) ?? throw new Exception("could not find current module in assignment description form");
-
-      var updatedModules = planner.LocalCourse.Modules.Select(m => 
-        m.Name == currentModule.Name 
-          ? currentModule with 
-          {
-            Assignments=currentModule.Assignments.Select(a => 
-              a.Id == newAssignment.Id
-                ? newAssignment
-                : a
-            ).ToArray()
-          }
-          : m
-        ).ToArray();
-      
-      planner.LocalCourse = planner.LocalCourse with 
+      var newAssignment = assignmentContext.Assignment with 
       {
-        Modules=updatedModules
+        Description = e.Value?.ToString() ?? ""
       };
+      assignmentContext.SaveAssignment(newAssignment);
     }
   }
 
-  private string? currentDescription { get; set; } = null;
+  private void saveTemplateId(ChangeEventArgs e)
+  {
+    if(assignmentContext.Assignment != null)
+    {
+      var newTemplateId = e.Value?.ToString();
+      var newAssignment = assignmentContext.Assignment with 
+      {
+        Description = e.Value?.ToString() ?? ""
+      };
+      assignmentContext.SaveAssignment(newAssignment);
+    }
+  }
+
 
 }
 
-
-<div class="form-check form-switch">
-  <input 
-    class="form-check-input" 
-    type="checkbox" 
-    role="switch" 
-    id="useTemplateForDescription"
-    @bind="UseTemplate"
-  />
-  <label class="form-check-label" for="useTemplateForDescription">
-    use template for description
-  </label>
-</div>
-
-@if (UseTemplate ?? false)
+@if(assignmentContext.Assignment != null && planner.LocalCourse != null)
 {
-  @if (planner.LocalCourse != null)
+  <div class="form-check form-switch">
+    <input 
+      class="form-check-input" 
+      type="checkbox" 
+      role="switch" 
+      id="useTemplateForDescription"
+      @bind="UseTemplate"
+    />
+    <label class="form-check-label" for="useTemplateForDescription">
+      use template for description
+    </label>
+  </div>
+
+  @if (UseTemplate ?? false)
   {
     <div class="row justify-content-around">
-  <div class="col-auto text-center">
-    <form @onsubmit:preventDefault="true">
-      <label for="templateSelect">Templates</label>
-      <select 
-        id="templateSelect" 
-        class="form-select" 
-        @onchange="@((e) =>
-        {
-          var newTemplateId = e.Value?.ToString();
-          SaveAssignment(Assignment with 
-          {
-            TemplateId = newTemplateId
-          });
-        })"
-      >
-        <option value=""></option>
-        @foreach (var template in planner.LocalCourse.AssignmentTemplates)
+      <div class="col-auto text-center">
+        <form @onsubmit:preventDefault="true">
+          <label for="templateSelect">Templates</label>
+          <select 
+            id="templateSelect" 
+            class="form-select" 
+            @bind="TemplateId"
+            @oninput="saveTemplateId"
+          >
+            <option value=""></option>
+            @foreach (var template in planner.LocalCourse.AssignmentTemplates)
             {
               <option value="@template.Id">@template.Name</option>
             }
@@ -149,10 +127,11 @@
                     var newDictionary = new Dictionary<string, string>(VariableValues);
                     newDictionary[variable] = newValue;
 
-                    SaveAssignment(Assignment with 
+                    var newAssignment = assignmentContext.Assignment with 
                     {
                       TemplateVariables = newDictionary
-                    });
+                    };
+                    assignmentContext.SaveAssignment(newAssignment);
                   })"
                 />
             </div>
@@ -160,35 +139,34 @@
         }
       </div>
     </div>
+    
   }
-}
-else
-{
+  else
+  {
 
-  <div class="row">
-  <div class="col">
-    <label for="description" class="form-label">
-      Description
-    </label>
-  </div>
-  <div class="col">
-    HTML Preview
-
-  </div>
-</div>
-  <div class="row">
+    <div class="row">
     <div class="col">
-      <textarea 
-        id="description" 
-        class="form-control" 
-        rows=12
-        @bind="currentDescription"
-        @oninput="@((e) => SaveAssignment(Assignment with { Description = e.Value?.ToString() ?? "" }))"
+      <label for="description" class="form-label">
+        Description
+      </label>
+    </div>
+    <div class="col">
+      HTML Preview
+    </div>
+  </div>
+    <div class="row">
+      <div class="col">
+        <textarea 
+          id="description" 
+          class="form-control" 
+          rows=12
+          @bind="Description"
+          @oninput="saveDescription"
         />
+      </div>
+      <div class="col">
+        @((MarkupString)Preview)
+      </div>
     </div>
-    <div class="col">
-      @((MarkupString)Preview)
-
-    </div>
-  </div>
+  }
 }
