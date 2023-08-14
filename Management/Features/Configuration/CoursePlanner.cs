@@ -40,7 +40,7 @@ public class CoursePlanner
 
       _debounceTimer?.Dispose();
       _debounceTimer = new Timer(
-        (_) => saveCourseToFile(),
+        (_) => saveCourseToFile(value),
         null,
         _debounceInterval,
         Timeout.Infinite
@@ -51,13 +51,18 @@ public class CoursePlanner
     }
   }
 
-  private void saveCourseToFile()
+  private void saveCourseToFile(LocalCourse courseAsOfDebounce)
   {
     _debounceTimer?.Dispose();
     // ignore initial load of course
-    if (LocalCourse != null)
+    if (LocalCourse == null)
     {
-      Console.WriteLine("Saving file");
+      Console.WriteLine("saving course as of debounce call time");
+      yamlManager.SaveCourse(courseAsOfDebounce);
+    }
+    else
+    {
+      Console.WriteLine("Saving latest version of file");
       yamlManager.SaveCourse(LocalCourse);
     }
   }

@@ -26,7 +26,6 @@
     planner.StateHasChanged -= reload;
   }
   
-
   private IEnumerable<LocalAssignment> TodaysAssignments 
     {
     get
@@ -116,7 +115,8 @@
   <div class="m-0 ps-3">
   @foreach (var assignment in TodaysAssignments)
   {
-    <AssignmentInDay Assignment="assignment" @key="@assignment" />
+      @* Console.WriteLine($"assignment: {assignment.Name}"); *@
+      <AssignmentInDay Assignment="assignment" @key="@assignment" />
   }
 
   @foreach(var quiz in todaysQuizzes)
