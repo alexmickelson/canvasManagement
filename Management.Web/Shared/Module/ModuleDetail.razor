@@ -3,6 +3,8 @@
 @using Management.Web.Shared.Components.Quiz
 @using Management.Web.Shared.Module.Assignment
 @using LocalModels
+@using BlazorMonaco
+@using BlazorMonaco.Editor
 
 @inject CoursePlanner configurationManagement
 @inject CoursePlanner planner
@@ -12,13 +14,44 @@
   [Parameter, EditorRequired]
   public LocalModule Module { get; set; } = default!;
   private bool dragging {get; set;} = false;
+  private string _notes { get; set; } = "";
+  private string notes
+  {
+    get => _notes;
+    set
+    {
+      if(value != _notes)
+      {
+        _notes = value;
+        if(planner.LocalCourse  != null)
+        {
+          var newModule = Module with { Notes = _notes };
+          var newModules = planner.LocalCourse.Modules.Select(
+            m => m.Name == newModule.Name
+              ? newModule
+              : m
+          );
+          planner.LocalCourse = planner.LocalCourse with 
+          {
+            Modules = newModules
+          };
+        }
+      }
+    }
+  }
+
 
   protected override void OnInitialized()
   {
+    if(_notes == string.Empty)
+    {
+      _notes = Module.Notes;
+    }
     planner.StateHasChanged += reload;
   }
   private void reload()
   {
+
     this.InvokeAsync(this.StateHasChanged);
   }
   public void Dispose()
@@ -89,9 +122,14 @@
     id="@accordionId" 
     class="accordion-collapse collapse" 
   >
-    @* data-bs-parent="#modulesAccordion" include to limit expanded sections *@
     <div class="accordion-body pt-1">
-
+      @* <textarea
+        class="form-control"
+        @bind="notes"
+        @bind:event="oninput"
+        placeholder="notes for the module"
+        rows="6"
+      /> *@
       <div class="row m-1">
         <div class="col my-auto">
           <h5>Assignments</h5>

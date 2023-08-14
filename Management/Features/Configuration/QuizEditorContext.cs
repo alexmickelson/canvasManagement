@@ -26,9 +26,7 @@ public class QuizEditorContext
   {
     if (planner.LocalCourse != null)
     {
-      var currentModule =
-        planner.LocalCourse.Modules.First(m => m.Quizzes.Select(q => q.Id).Contains(newQuiz.Id))
-        ?? throw new Exception("could not find current module in quiz editor context");
+      var currentModule = getCurrentModule(newQuiz, planner.LocalCourse);
 
       var updatedModules = planner.LocalCourse.Modules
         .Select(
@@ -47,5 +45,26 @@ public class QuizEditorContext
       planner.LocalCourse = planner.LocalCourse with { Modules = updatedModules };
       Quiz = newQuiz;
     }
+  }
+
+  public void DeleteQuiz()
+  {
+    if (planner.LocalCourse != null && Quiz != null)
+    {
+      var currentModule = getCurrentModule(Quiz, planner.LocalCourse);
+
+      var updatedModules = planner.LocalCourse.Modules
+        .Where(m => m.Name != currentModule.Name)
+        .ToArray();
+
+      planner.LocalCourse = planner.LocalCourse with { Modules = updatedModules };
+      Quiz = null;
+    }
+  }
+
+  private static LocalModule getCurrentModule(LocalQuiz newQuiz, LocalCourse course)
+  {
+    return course.Modules.First(m => m.Quizzes.Select(q => q.Id).Contains(newQuiz.Id))
+      ?? throw new Exception("could not find current module in quiz editor context");
   }
 }

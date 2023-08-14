@@ -15,7 +15,6 @@
     if (assignmentContext.Assignment != null)
     {
       Description = assignmentContext.Assignment.Description;
-      Preview = Markdown.ToHtml(Description);
       TemplateId = assignmentContext.Assignment.TemplateId;
       UseTemplate = TemplateId != null && TemplateId != "";
       VariableValues = assignmentContext.Assignment.TemplateVariables;
@@ -27,7 +26,26 @@
     assignmentContext.StateHasChanged -= reload;
   }
 
-  public string Description { get; set; } = default!;
+  private string description { get; set; } = default!;
+  public string Description 
+  { 
+    get => description;
+    set 
+    {
+      description = value;
+      if (description != string.Empty)
+      {
+        if(assignmentContext.Assignment != null)
+        {
+          var newAssignment = assignmentContext.Assignment with 
+          {
+            Description = description
+          };
+          assignmentContext.SaveAssignment(newAssignment);
+        }
+      }
+    }
+  }
   public bool? UseTemplate { get; set; } = null;
 
   public string? TemplateId { get; set; }
@@ -40,18 +58,9 @@
     .AssignmentTemplates
     .FirstOrDefault(t => t.Id == TemplateId);
 
-  public string Preview { get; set; } = String.Empty;
-
   private void saveDescription(ChangeEventArgs e)
   {
-    if(assignmentContext.Assignment != null)
-    {
-      var newAssignment = assignmentContext.Assignment with 
-      {
-        Description = e.Value?.ToString() ?? ""
-      };
-      assignmentContext.SaveAssignment(newAssignment);
-    }
+    
   }
 
   private void saveTemplateId(ChangeEventArgs e)
@@ -67,6 +76,7 @@
     }
   }
 
+  private MarkupString preview { get => (MarkupString) Markdown.ToHtml(Description); }
 
 }
 
@@ -137,7 +147,6 @@
         }
       </div>
     </div>
-    
   }
   else
   {
@@ -159,11 +168,11 @@
           class="form-control" 
           rows=12
           @bind="Description"
-          @oninput="saveDescription"
+          @bind:event="oninput"
         />
       </div>
-      <div class="col">
-        @((MarkupString)Preview)
+      <div class="col" @key="Description">
+        @(preview)
       </div>
     </div>
   }

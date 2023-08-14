@@ -9,4 +9,5 @@ public record LocalModule
   public IEnumerable<LocalQuiz> Quizzes { get; init; } = Enumerable.Empty<LocalQuiz>();
 
   public ulong? CanvasId { get; set; } = null;
+  public string Notes { get; set; } = string.Empty;
 }

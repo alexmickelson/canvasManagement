@@ -32,6 +32,7 @@ if (canvas_url == null)
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
+
 builder.Services.AddScoped<IWebRequestor, WebRequestor>();
 builder.Services.AddScoped<CanvasServiceUtils>();
 builder.Services.AddScoped<CanvasAssignmentService>();

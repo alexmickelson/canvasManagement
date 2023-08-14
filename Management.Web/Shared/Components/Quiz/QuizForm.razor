@@ -26,6 +26,12 @@
     quizContext.StateHasChanged -= reload;
   }
 
+  private void deleteQuiz()
+  {
+    quizContext.DeleteQuiz();
+    modal?.Hide();
+  }
+
   private void addQuestion()
   {
     if(quizContext.Quiz != null)
@@ -149,6 +155,8 @@
     }
   </Body>
   <Footer>
+    <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirm="deleteQuiz" />
+
     <button 
       class="btn btn-primary" 
       @onclick="() => modal?.Hide()"
