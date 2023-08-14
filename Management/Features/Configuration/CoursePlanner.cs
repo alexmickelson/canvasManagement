@@ -121,7 +121,12 @@ public class CoursePlanner
     var canvasId =
       LocalCourse.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");
 
-    await LocalCourse.EnsureAllModulesExistInCanvas(canvasId, CanvasModules, canvas);
+    var newModules = await LocalCourse.EnsureAllModulesExistInCanvas(
+      canvasId,
+      CanvasModules,
+      canvas
+    );
+    LocalCourse = LocalCourse with { Modules = newModules };
     CanvasModules = await canvas.GetModules(canvasId);
 
     await LocalCourse.SortCanvasModules(canvasId, CanvasModules, canvas);

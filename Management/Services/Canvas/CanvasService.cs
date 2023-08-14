@@ -66,14 +66,15 @@ public class CanvasService
     return modules.SelectMany(c => c).ToArray();
   }
 
-  public async Task CreateModule(ulong courseId, string name)
+  public async Task<CanvasModule> CreateModule(ulong courseId, string name)
   {
     Console.WriteLine($"Creating Module: {name}");
     var url = $"courses/{courseId}/modules";
     var request = new RestRequest(url);
     request.AddParameter("module[name]", name);
 
-    await webRequestor.PostAsync(request);
+    var (newModule, _) = await webRequestor.PostAsync<CanvasModule>(request);
+    return newModule ?? throw new Exception($"failed to create new canvas module {name}");
   }
 
   public async Task UpdateModule(ulong courseId, ulong moduleId, string name, int position)

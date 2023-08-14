@@ -8,21 +8,26 @@ namespace Management.Planner;
 
 public static partial class CoursePlannerSyncronizationExtensions
 {
-  internal static async Task EnsureAllModulesExistInCanvas(
+  internal static async Task<IEnumerable<LocalModule>> EnsureAllModulesExistInCanvas(
     this LocalCourse localCourse,
     ulong canvasId,
     IEnumerable<CanvasModule> canvasModules,
     CanvasService canvas
   )
   {
-    foreach (var module in localCourse.Modules)
+    var moduleTasks = localCourse.Modules.Select(async module =>
     {
       var canvasModule = canvasModules.FirstOrDefault(cm => cm.Id == module.CanvasId);
       if (canvasModule == null)
       {
-        await canvas.CreateModule(canvasId, module.Name);
+        var newModule = await canvas.CreateModule(canvasId, module.Name);
+        return module with { CanvasId = newModule.Id };
       }
-    }
+      else
+        return module;
+    });
+    var newModules = await Task.WhenAll(moduleTasks);
+    return newModules ?? throw new Exception("Error ensuring all modules exist in canvas");
   }
 
   internal static async Task SortCanvasModules(
@@ -107,7 +112,8 @@ public static partial class CoursePlannerSyncronizationExtensions
   {
     var canvasAssignment = canvasAssignments.First(ca => ca.Id == localAssignment.CanvasId);
 
-    var localHtmlDescription = localAssignment.GetDescriptionHtml(courseAssignmentTemplates)
+    var localHtmlDescription = localAssignment
+      .GetDescriptionHtml(courseAssignmentTemplates)
       .Replace("&gt;", "")
       .Replace("&lt;", "")
       .Replace(">", "")
