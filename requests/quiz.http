@@ -1,0 +1,3 @@
+
+GET https://snow.instructure.com/api/v1/courses/705168
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}

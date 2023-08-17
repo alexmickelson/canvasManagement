@@ -21,7 +21,7 @@ public class CoursePlanner
     this.canvas = canvas;
   }
 
-  private Timer _debounceTimer;
+  private Timer? _debounceTimer;
   private int _debounceInterval = 1000;
   private LocalCourse? _localCourse { get; set; }
   public LocalCourse? LocalCourse
@@ -54,6 +54,7 @@ public class CoursePlanner
   private void saveCourseToFile(LocalCourse courseAsOfDebounce)
   {
     _debounceTimer?.Dispose();
+    
     // ignore initial load of course
     if (LocalCourse == null)
     {
@@ -136,6 +137,8 @@ public class CoursePlanner
 
     LocalCourse = await LocalCourse.SyncAssignmentsWithCanvas(canvasId, CanvasAssignments, canvas);
     CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
+
+    
 
     await syncModuleItemsWithCanvas(canvasId);
     CanvasModulesItems = await canvas.GetAllModulesItems(canvasId, CanvasModules);

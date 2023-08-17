@@ -82,6 +82,11 @@
 
     UpdateQuestion(Question with { Answers = answers });
   }
+  private void handleTextUpdate(ChangeEventArgs e)
+  {
+    var newText = e.Value?.ToString() ?? "";
+    UpdateQuestion(Question with { Text = newText });
+  }
 }
 
 <div class="my-1 p-2 border border-3 rounded">
@@ -99,6 +104,7 @@
         id="question_text"
         name="question_text"
         @bind="text"
+        @oninput="handleTextUpdate"
       />
     </div>
     <div class="col-auto">

@@ -1,0 +1,46 @@
+using CanvasModel.Assignments;
+
+namespace CanvasModel.Quizzes;
+
+public record CanvasQuiz(
+  [property: JsonPropertyName("id")] ulong Id,
+  [property: JsonPropertyName("title")] string Title,
+  [property: JsonPropertyName("html_url")] string HtmlUrl,
+  [property: JsonPropertyName("mobile_url")] string MobileUrl,
+  [property: JsonPropertyName("preview_url")] string PreviewUrl,
+  [property: JsonPropertyName("description")] string Description,
+  [property: JsonPropertyName("quiz_type")] string QuizType,
+  [property: JsonPropertyName("assignment_group_id")] ulong AssignmentGroupId,
+  [property: JsonPropertyName("time_limit")] decimal? TimeLimit,
+  [property: JsonPropertyName("shuffle_answers")] bool? ShuffleAnswers,
+  [property: JsonPropertyName("hide_results")] string? HideResults,
+  [property: JsonPropertyName("show_correct_answers")] bool? ShowCorrectAnswers,
+  [property: JsonPropertyName("show_correct_answers_last_attempt")]
+    bool? ShowCorrectAnswersLastAttempt,
+  [property: JsonPropertyName("show_correct_answers_at")] DateTime? ShowCorrectAnswersAt,
+  [property: JsonPropertyName("hide_correct_answers_at")] DateTime? HideCorrectAnswersAt,
+  [property: JsonPropertyName("one_time_results")] bool? OneTimeResults,
+  [property: JsonPropertyName("scoring_policy")] string? ScoringPolicy,
+  [property: JsonPropertyName("allowed_attempts")] int AllowedAttempts,
+  [property: JsonPropertyName("one_question_at_a_time")] bool? OneQuestionAtATime,
+  [property: JsonPropertyName("question_count")] uint? QuestionCount,
+  [property: JsonPropertyName("points_possible")] decimal? PointsPossible,
+  [property: JsonPropertyName("cant_go_back")] bool? CantGoBack,
+  [property: JsonPropertyName("access_code")] string? AccessCode,
+  [property: JsonPropertyName("ip_filter")] string? IpFilter,
+  [property: JsonPropertyName("due_at")] DateTime? DueAt,
+  [property: JsonPropertyName("lock_at")] DateTime? LockAt,
+  [property: JsonPropertyName("unlock_at")] DateTime? UnlockAt,
+  [property: JsonPropertyName("published")] bool? Published,
+  [property: JsonPropertyName("unpublishable")] bool? Unpublishable,
+  [property: JsonPropertyName("locked_for_user")] bool? LockedForUser,
+  [property: JsonPropertyName("lock_info")] CanvasLockInfo? LockInfo,
+  [property: JsonPropertyName("lock_explanation")] string? LockExplanation,
+  [property: JsonPropertyName("speedgrader_url")] string? SpeedGraderUrl,
+  [property: JsonPropertyName("quiz_extensions_url")] string QuizExtensionsUrl,
+  [property: JsonPropertyName("permissions")] CanvasQuizPermissions Permissions,
+  [property: JsonPropertyName("all_dates")] object AllDates,
+  [property: JsonPropertyName("version_number")] uint? VersionNumber,
+  [property: JsonPropertyName("question_types")] IEnumerable<string> QuestionTypes,
+  [property: JsonPropertyName("anonymous_submissions")] bool? AnonymousSubmissions
+);

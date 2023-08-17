@@ -19,6 +19,7 @@ public class CanvasAssignmentService
   {
     var url = $"courses/{courseId}/assignments";
     var request = new RestRequest(url);
+    request.AddParameter("include[]", "overrides");
     var assignmentResponse = await utils.PaginatedRequest<IEnumerable<CanvasAssignment>>(request);
     return assignmentResponse.SelectMany(
       assignments =>
@@ -77,6 +78,8 @@ public class CanvasAssignmentService
     request.AddHeader("Content-Type", "application/json");
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
+    Console.WriteLine(url);
+    Console.WriteLine(JsonSerializer.Serialize(bodyObj));
     await webRequestor.PutAsync(request);
 
     await CreateRubric(courseId, localAssignment);

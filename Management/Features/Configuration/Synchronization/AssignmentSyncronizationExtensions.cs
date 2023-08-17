@@ -1,75 +1,16 @@
 using System.Text.RegularExpressions;
 using CanvasModel.Assignments;
 using CanvasModel.Modules;
+using CanvasModel.Quizzes;
 using LocalModels;
 using Management.Services.Canvas;
 
 namespace Management.Planner;
 
-public static partial class CoursePlannerSyncronizationExtensions
+public static partial class AssignmentSyncronizationExtensions
 {
-  internal static async Task<IEnumerable<LocalModule>> EnsureAllModulesExistInCanvas(
-    this LocalCourse localCourse,
-    ulong canvasId,
-    IEnumerable<CanvasModule> canvasModules,
-    CanvasService canvas
-  )
-  {
-    var moduleTasks = localCourse.Modules.Select(async module =>
-    {
-      var canvasModule = canvasModules.FirstOrDefault(cm => cm.Id == module.CanvasId);
-      if (canvasModule == null)
-      {
-        var newModule = await canvas.CreateModule(canvasId, module.Name);
-        return module with { CanvasId = newModule.Id };
-      }
-      else
-        return module;
-    });
-    var newModules = await Task.WhenAll(moduleTasks);
-    return newModules ?? throw new Exception("Error ensuring all modules exist in canvas");
-  }
 
-  internal static async Task SortCanvasModules(
-    this LocalCourse localCourse,
-    ulong canvasId,
-    IEnumerable<CanvasModule> canvasModules,
-    CanvasService canvas
-  )
-  {
-    var currentCanvasPositions = canvasModules.ToDictionary(m => m.Id, m => m.Position);
-    foreach (var (localModule, i) in localCourse.Modules.Select((m, i) => (m, i)))
-    {
-      var correctPosition = i + 1;
-      var moduleCanvasId =
-        localModule.CanvasId ?? throw new Exception("cannot sort module if no module canvas id");
-      var currentCanvasPosition = currentCanvasPositions[moduleCanvasId];
-      if (currentCanvasPosition != correctPosition)
-      {
-        await canvas.UpdateModule(canvasId, moduleCanvasId, localModule.Name, correctPosition);
-      }
-    }
-  }
-
-  internal static async Task<LocalCourse> SyncModulesWithCanvasData(
-    this LocalCourse localCourse,
-    ulong canvasId,
-    IEnumerable<CanvasModule> canvasModules,
-    CanvasService canvas
-  )
-  {
-    canvasModules = await canvas.GetModules(canvasId);
-    return localCourse with
-    {
-      Modules = localCourse.Modules.Select(m =>
-      {
-        var canvasModule = canvasModules.FirstOrDefault(cm => cm.Name == m.Name);
-        return canvasModule == null ? m : m with { CanvasId = canvasModule.Id };
-      })
-    };
-  }
-
-  internal static async Task<LocalAssignment> SyncToCanvas(
+  internal static async Task<LocalAssignment> SyncAssignmentToCanvas(
     this LocalCourse localCourse,
     ulong canvasId,
     LocalAssignment localAssignment,
@@ -114,38 +55,51 @@ public static partial class CoursePlannerSyncronizationExtensions
 
     var localHtmlDescription = localAssignment
       .GetDescriptionHtml(courseAssignmentTemplates)
+      .Replace("<hr />", "<hr>")
       .Replace("&gt;", "")
       .Replace("&lt;", "")
       .Replace(">", "")
-      .Replace("<", "");
+      .Replace("<", "")
+      .Replace("&quot;", "")
+      .Replace("\"", "");
 
     var canvasHtmlDescription = canvasAssignment.Description;
     canvasHtmlDescription = CanvasScriptTagRegex().Replace(canvasHtmlDescription, "");
     canvasHtmlDescription = CanvasLinkTagRegex().Replace(canvasHtmlDescription, "");
     canvasHtmlDescription = canvasHtmlDescription
+      .Replace("<hr />", "<hr>")
       .Replace("&gt;", "")
       .Replace("&lt;", "")
       .Replace(">", "")
-      .Replace("<", "");
+      .Replace("<", "")
+      .Replace("&quot;", "")
+      .Replace("\"", "");
 
-    var dueDatesSame =
+    var canvasComparisonDueDate =
       canvasAssignment.DueAt != null
-      && new DateTime(
-        year: canvasAssignment.DueAt.Value.Year,
-        month: canvasAssignment.DueAt.Value.Month,
-        day: canvasAssignment.DueAt.Value.Day,
-        hour: canvasAssignment.DueAt.Value.Hour,
-        minute: canvasAssignment.DueAt.Value.Minute,
-        second: canvasAssignment.DueAt.Value.Second
-      )
-        == new DateTime(
+        ? new DateTime(
+          year: canvasAssignment.DueAt.Value.Year,
+          month: canvasAssignment.DueAt.Value.Month,
+          day: canvasAssignment.DueAt.Value.Day,
+          hour: canvasAssignment.DueAt.Value.Hour,
+          minute: canvasAssignment.DueAt.Value.Minute,
+          second: canvasAssignment.DueAt.Value.Second
+        )
+        : new DateTime();
+    var localComparisonDueDate =
+      canvasAssignment.DueAt != null
+        ? new DateTime(
           year: localAssignment.DueAt.Year,
           month: localAssignment.DueAt.Month,
           day: localAssignment.DueAt.Day,
           hour: localAssignment.DueAt.Hour,
           minute: localAssignment.DueAt.Minute,
           second: localAssignment.DueAt.Second
-        );
+        )
+        : new DateTime();
+
+    var dueDatesSame =
+      canvasAssignment.DueAt != null && canvasComparisonDueDate == localComparisonDueDate;
 
     var descriptionSame = canvasHtmlDescription == localHtmlDescription;
     var nameSame = canvasAssignment.Name == localAssignment.Name;
@@ -159,6 +113,9 @@ public static partial class CoursePlannerSyncronizationExtensions
     {
       if (!dueDatesSame)
       {
+        Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
+        Console.WriteLine(canvasComparisonDueDate);
+        Console.WriteLine(localComparisonDueDate);
         Console.WriteLine(
           $"Due dates different for {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}"
         );
@@ -219,7 +176,7 @@ public static partial class CoursePlannerSyncronizationExtensions
     var moduleTasks = localCourse.Modules.Select(async m =>
     {
       var assignmentTasks = m.Assignments.Select(
-        (a) => localCourse.SyncToCanvas(canvasId, a, canvasAssignments, canvas)
+        (a) => localCourse.SyncAssignmentToCanvas(canvasId, a, canvasAssignments, canvas)
       );
       var assignments = await Task.WhenAll(assignmentTasks);
       return m with { Assignments = assignments };

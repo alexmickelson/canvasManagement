@@ -13,6 +13,7 @@ public class WebRequestor : IWebRequestor
       ?? throw new Exception("CANVAS_TOKEN not in environment");
     client = new RestClient(BaseUrl);
     client.AddDefaultHeader("Authorization", $"Bearer {token}");
+
   }
 
   public async Task<(T[]?, RestResponse)> GetManyAsync<T>(RestRequest request)
@@ -48,6 +49,7 @@ public class WebRequestor : IWebRequestor
 
   public async Task<RestResponse> PutAsync(RestRequest request)
   {
+    request.AddHeader("Content-Type", "application/json");
     var response = await client.ExecutePutAsync(request);
     // if (!response.IsSuccessful)
     // {
@@ -61,6 +63,7 @@ public class WebRequestor : IWebRequestor
 
   public async Task<(T?, RestResponse)> PutAsync<T>(RestRequest request)
   {
+    request.AddHeader("Content-Type", "application/json");
     var response = await client.ExecutePutAsync(request);
     return (deserialize<T>(response), response);
   }
