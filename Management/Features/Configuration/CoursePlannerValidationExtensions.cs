@@ -1,5 +1,6 @@
 using CanvasModel.Assignments;
 using CanvasModel.Modules;
+using CanvasModel.Quizzes;
 using LocalModels;
 
 namespace Management.Planner;
@@ -43,13 +44,14 @@ public static class CoursePlannerExtensions
   public static LocalCourse deleteCanvasIdsThatNoLongerExist(
     this LocalCourse localCourse,
     IEnumerable<CanvasModule> canvasModules,
-    IEnumerable<CanvasAssignment> canvasAssignments
+    IEnumerable<CanvasAssignment> canvasAssignments,
+    IEnumerable<CanvasQuiz> canvasQuizzes
   )
   {
     Console.WriteLine("checking canvas ids still exist");
 
     var correctedModules = localCourse.Modules
-      .Select((m) => m.validateCanvasIds(canvasModules, canvasAssignments))
+      .Select((m) => m.validateCanvasIds(canvasModules, canvasAssignments, canvasQuizzes))
       .ToArray();
 
     return localCourse with
@@ -61,7 +63,8 @@ public static class CoursePlannerExtensions
   private static LocalModule validateCanvasIds(
     this LocalModule module,
     IEnumerable<CanvasModule> canvasModules,
-    IEnumerable<CanvasAssignment> canvasAssignments
+    IEnumerable<CanvasAssignment> canvasAssignments,
+    IEnumerable<CanvasQuiz> canvasQuizzes
   )
   {
     var moduleIdInCanvas = canvasModules.FirstOrDefault(m => m.Id == module.CanvasId) != null;
@@ -69,7 +72,8 @@ public static class CoursePlannerExtensions
     {
       Assignments = module.Assignments
         .Select((a) => a.validateAssignmentForCanvasId(canvasAssignments))
-        .ToArray()
+        .ToArray(),
+      Quizzes = module.Quizzes.Select((s) => s.validateQuizForCanvasId(canvasQuizzes)).ToArray()
     };
 
     if (!moduleIdInCanvas)
@@ -97,6 +101,22 @@ public static class CoursePlannerExtensions
       return assignment with { CanvasId = null };
     }
     return assignment;
+  }
+  private static LocalQuiz validateQuizForCanvasId(
+    this LocalQuiz quiz,
+    IEnumerable<CanvasQuiz> canvasQuizzes
+  )
+  {
+    var assignmentIdInCanvas =
+      canvasQuizzes.FirstOrDefault(cq => cq.Id == quiz.CanvasId) != null;
+    if (!assignmentIdInCanvas)
+    {
+      Console.WriteLine(
+        $"no id in canvas for quiz, removing old canvas id: {quiz.Name}"
+      );
+      return quiz with { CanvasId = null };
+    }
+    return quiz;
   }
 
   public static LocalAssignment validateSubmissionTypes(this LocalAssignment assignment)

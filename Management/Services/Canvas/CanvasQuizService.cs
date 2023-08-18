@@ -30,7 +30,7 @@ public class CanvasQuizService
 
   public async Task<LocalQuiz> Create(ulong canvasCourseId, LocalQuiz localQuiz)
   {
-    Console.WriteLine($"Creating Quiz ${localQuiz.Name}");
+    Console.WriteLine($"Creating Quiz {localQuiz.Name}");
 
     var url = $"courses/{canvasCourseId}/quizzes";
     var body = new

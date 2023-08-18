@@ -79,7 +79,8 @@ public class CoursePlanner
   public async Task<(
     IEnumerable<CanvasAssignment> CanvasAssignments,
     IEnumerable<CanvasModule> CanvasModules,
-    Dictionary<ulong, IEnumerable<CanvasModuleItem>> CanvasModulesItems
+    Dictionary<ulong, IEnumerable<CanvasModuleItem>> CanvasModulesItems,
+    IEnumerable<CanvasQuiz> canvasQuizzes
   )> LoadCanvasData()
   {
     LoadingCanvasData = true;
@@ -100,7 +101,7 @@ public class CoursePlanner
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
-    return (CanvasAssignments, CanvasModules, CanvasModulesItems);
+    return (CanvasAssignments, CanvasModules, CanvasModulesItems, CanvasQuizzes);
   }
 
   public async Task SyncWithCanvas()
@@ -118,10 +119,14 @@ public class CoursePlanner
     LoadingCanvasData = true;
     StateHasChanged?.Invoke();
 
-    var (canvasAssignments, canvasModules, canvasModuleItems) = await LoadCanvasData();
+    var (canvasAssignments, canvasModules, canvasModuleItems, canvasQuizzes) = await LoadCanvasData();
     LoadingCanvasData = true;
     StateHasChanged?.Invoke();
-    LocalCourse = LocalCourse.deleteCanvasIdsThatNoLongerExist(canvasModules, canvasAssignments);
+    LocalCourse = LocalCourse.deleteCanvasIdsThatNoLongerExist(
+      canvasModules,
+      canvasAssignments,
+      canvasQuizzes
+    );
 
     var canvasId =
       LocalCourse.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");

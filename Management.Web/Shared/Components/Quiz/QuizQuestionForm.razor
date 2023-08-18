@@ -15,11 +15,14 @@
 
     if(answers.Count() == 0)
       answers = Question.Answers;
+    if (points == 0)
+      points = Question.Points;
 
     base.OnParametersSet();
   }
   private string text { get; set; } = string.Empty;
   private string questionType { get; set; } = string.Empty;
+  private int points { get; set; }
   private IEnumerable<LocalQuizQuestionAnswer> answers { get; set; } = Enumerable.Empty<LocalQuizQuestionAnswer>();
 
   private void handleTypeUpdate(string type)
@@ -32,6 +35,18 @@
         QuestionType = questionType
       };
 
+      UpdateQuestion(newQuestion);
+    }
+  }
+  private void handlePointsInput(ChangeEventArgs e)
+  {
+    if (quizContext.Quiz != null)
+    {
+      var newPoints = int.Parse(e.Value?.ToString() ?? "0");
+      var newQuestion = Question with
+      {
+        Points = newPoints
+      };
       UpdateQuestion(newQuestion);
     }
   }
@@ -128,6 +143,23 @@
           </label>
         </div>
       }
+    </div>
+  </div>
+  <div class="mb-3 row">
+    <div class="col-auto">
+      <label 
+        for="exampleInputEmail1" 
+        class="form-label"
+      >
+        Points
+      </label>
+      <input 
+        type="number" 
+        class="form-control"
+        id="exampleInputEmail1" 
+        @bind="points"
+        @oninput="handlePointsInput"
+      >
     </div>
   </div>
   <div>Answers:</div>
