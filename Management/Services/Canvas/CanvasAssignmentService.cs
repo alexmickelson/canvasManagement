@@ -19,7 +19,7 @@ public class CanvasAssignmentService
   {
     var url = $"courses/{courseId}/assignments";
     var request = new RestRequest(url);
-    request.AddParameter("include[]", "overrides");
+    // request.AddParameter("include[]", "overrides");
     var assignmentResponse = await utils.PaginatedRequest<IEnumerable<CanvasAssignment>>(request);
     return assignmentResponse.SelectMany(
       assignments =>

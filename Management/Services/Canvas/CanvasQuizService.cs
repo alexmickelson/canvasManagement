@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+using System.Security.Cryptography.X509Certificates;
 using CanvasModel.Quizzes;
 using LocalModels;
 using RestSharp;
@@ -8,11 +10,17 @@ public class CanvasQuizService
 {
   private readonly IWebRequestor webRequestor;
   private readonly CanvasServiceUtils utils;
+  private readonly CanvasAssignmentService assignments;
 
-  public CanvasQuizService(IWebRequestor webRequestor, CanvasServiceUtils utils)
+  public CanvasQuizService(
+    IWebRequestor webRequestor,
+    CanvasServiceUtils utils,
+    CanvasAssignmentService assignments
+  )
   {
     this.webRequestor = webRequestor;
     this.utils = utils;
+    this.assignments = assignments;
   }
 
   public async Task<IEnumerable<CanvasQuiz>> GetAll(ulong courseId)
@@ -56,7 +64,6 @@ public class CanvasQuizService
     if (canvasQuiz == null)
       throw new Exception("Created canvas quiz was null");
 
-
     var updatedQuiz = localQuiz with { CanvasId = canvasQuiz.Id };
     var quizWithQuestions = await CreateQuizQuestions(canvasCourseId, updatedQuiz);
 
@@ -65,33 +72,67 @@ public class CanvasQuizService
 
   public async Task<LocalQuiz> CreateQuizQuestions(ulong canvasCourseId, LocalQuiz localQuiz)
   {
-    var tasks = localQuiz.Questions
-      .Select(
-        async (question) =>
-        {
-          var newQuestion = await createQuestionOnly(canvasCourseId, localQuiz, question);
+    var tasks = localQuiz.Questions.Select(createQuestion(canvasCourseId, localQuiz)).ToArray();
+    var updatedQuestions = await Task.WhenAll(tasks);
 
-          var answersWithIds = question.Answers
-            .Select(answer =>
-            {
-              var canvasAnswer = newQuestion.Answers?.FirstOrDefault(ca => ca.Html == answer.Text);
-              if (canvasAnswer == null)
-              {
-                Console.WriteLine(JsonSerializer.Serialize(newQuestion));
-                Console.WriteLine(JsonSerializer.Serialize(question));
-                throw new NullReferenceException(
-                  "Could not find canvas answer to update local answer id"
-                );
-              }
-              return answer with { CanvasId = canvasAnswer.Id };
-            })
-            .ToArray();
-          return question with { CanvasId = newQuestion.Id, Answers = answersWithIds };
-        }
+    await hackFixRedundantAssignments(canvasCourseId);
+    return localQuiz with { Questions = updatedQuestions };
+  }
+
+  private async Task hackFixRedundantAssignments(ulong canvasCourseId)
+  {
+    var canvasAssignments = await assignments.GetAll(canvasCourseId);
+
+    var assignmentsToDelete = canvasAssignments
+      .Where(
+        assignment =>
+          !assignment.IsQuizAssignment
+          && assignment.SubmissionTypes.Contains(SubmissionType.ONLINE_QUIZ)
       )
       .ToArray();
-    var updatedQuestions = await Task.WhenAll(tasks);
-    return localQuiz with { Questions = updatedQuestions };
+    var tasks = assignmentsToDelete.Select(
+      async (a) =>
+      {
+        await assignments.Delete(
+          canvasCourseId,
+          new LocalAssignment { Name = a.Name, CanvasId = a.Id }
+        );
+      }
+    );
+    await Task.WhenAll(tasks);
+  }
+
+  private Func<LocalQuizQuestion, Task<LocalQuizQuestion>> createQuestion(
+    ulong canvasCourseId,
+    LocalQuiz localQuiz
+  )
+  {
+    return async (question) =>
+    {
+      var newQuestion = await createQuestionOnly(canvasCourseId, localQuiz, question);
+
+      var answersWithIds = question.Answers
+        .Select(answer =>
+        {
+          var canvasAnswer = newQuestion.Answers?.FirstOrDefault(ca => ca.Html == answer.Text);
+          if (canvasAnswer == null)
+          {
+            Console.WriteLine(JsonSerializer.Serialize(newQuestion));
+            Console.WriteLine(JsonSerializer.Serialize(question));
+            throw new NullReferenceException(
+              "Could not find canvas answer to update local answer id"
+            );
+          }
+          return answer with { CanvasId = canvasAnswer.Id };
+        })
+        .ToArray();
+
+      return question with
+      {
+        CanvasId = newQuestion.Id,
+        Answers = answersWithIds
+      };
+    };
   }
 
   private async Task<CanvasQuizQuestion> createQuestionOnly(
@@ -109,8 +150,8 @@ public class CanvasQuizService
       question = new
       {
         question_text = q.Text,
-        question_type = q.QuestionType+"_question",
-        possible_points = q.Points,
+        question_type = q.QuestionType + "_question",
+        points_possible = q.Points,
         // position
         answers
       }
@@ -120,6 +161,7 @@ public class CanvasQuizService
     var (newQuestion, response) = await webRequestor.PostAsync<CanvasQuizQuestion>(request);
     if (newQuestion == null)
       throw new NullReferenceException("error creating new question, created question is null");
+
     return newQuestion;
   }
 }

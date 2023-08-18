@@ -7,13 +7,13 @@ GET https://snow.instructure.com/api/v1/courses/871954/assignments
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 ###
-POST https://snow.instructure.com/api/v1/courses/871954/quizzes/3236013/questions
+POST https://snow.instructure.com/api/v1/courses/871954/quizzes/3243305/questions
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 Content-Type: application/json
 
 {
   "question":{
-    "question_text": "Other clues to how things work come from their visible structure. Specifically from _____, _____, and _____",
+    "question_text": "dummy question via the api",
     "question_type": "multiple_answers_question",
     "points_possible": 3,
     "answers": [
