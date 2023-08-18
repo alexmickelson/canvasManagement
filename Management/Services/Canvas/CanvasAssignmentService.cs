@@ -30,13 +30,13 @@ public class CanvasAssignmentService
   }
 
   public async Task<LocalAssignment> Create(
-    ulong courseId,
+    ulong canvasCourseId,
     LocalAssignment localAssignment,
     string htmlDescription
   )
   {
     Console.WriteLine($"creating assignment: {localAssignment.Name}");
-    var url = $"courses/{courseId}/assignments";
+    var url = $"courses/{canvasCourseId}/assignments";
     var request = new RestRequest(url);
     var body = new CanvasAssignmentCreationRequest()
     {
@@ -47,7 +47,6 @@ public class CanvasAssignmentService
       lock_at = localAssignment.LockAt,
       points_possible = localAssignment.PointsPossible
     };
-    request.AddHeader("Content-Type", "application/json");
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
     var (canvasAssignment, response) = await webRequestor.PostAsync<CanvasAssignment>(request);
@@ -56,7 +55,7 @@ public class CanvasAssignmentService
 
     var updatedLocalAssignment = localAssignment with { CanvasId = canvasAssignment.Id };
 
-    await CreateRubric(courseId, updatedLocalAssignment);
+    await CreateRubric(canvasCourseId, updatedLocalAssignment);
 
     return updatedLocalAssignment;
   }
@@ -75,7 +74,6 @@ public class CanvasAssignmentService
       lock_at = localAssignment.LockAt,
       points_possible = localAssignment.PointsPossible
     };
-    request.AddHeader("Content-Type", "application/json");
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
     Console.WriteLine(url);
@@ -145,7 +143,6 @@ public class CanvasAssignmentService
     var creationUrl = $"courses/{courseId}/rubrics";
     var rubricCreationRequest = new RestRequest(creationUrl);
     rubricCreationRequest.AddBody(body);
-    rubricCreationRequest.AddHeader("Content-Type", "application/json");
     var (rubricCreationResponse, _) = await webRequestor.PostAsync<CanvasRubricCreationResponse>(
       rubricCreationRequest
     );
@@ -160,7 +157,6 @@ public class CanvasAssignmentService
     var adjustmentUrl = $"courses/{courseId}/assignments/{localAssignment.CanvasId}";
     var pointAdjustmentRequest = new RestRequest(adjustmentUrl);
     pointAdjustmentRequest.AddBody(assignmentPointCorrectionBody);
-    pointAdjustmentRequest.AddHeader("Content-Type", "application/json");
     var (_, _) = await webRequestor.PutAsync<CanvasAssignment>(pointAdjustmentRequest);
   }
 }

@@ -2,6 +2,7 @@ namespace LocalModels;
 
 public record LocalQuizQuestion
 {
+  public ulong? CanvasId { get; set; }
   public string Id { get; set; } = "";
   public string Text { get; init; } = string.Empty;
   public string QuestionType { get; init; } = string.Empty;

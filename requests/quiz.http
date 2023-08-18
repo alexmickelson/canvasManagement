@@ -1,3 +1,46 @@
 
-GET https://snow.instructure.com/api/v1/courses/705168
+GET https://snow.instructure.com/api/v1/courses/871954/quizzes
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+###
+GET https://snow.instructure.com/api/v1/courses/871954/assignments
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+###
+POST https://snow.instructure.com/api/v1/courses/871954/quizzes/3236013/questions
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+Content-Type: application/json
+
+{
+  "question":{
+    "question_text": "Other clues to how things work come from their visible structure. Specifically from _____, _____, and _____",
+    "question_type": "multiple_answers_question",
+    "points_possible": 3,
+    "answers": [
+      {
+        "answer_text": "color",
+        "answer_weight": 0
+      },
+      {
+        "answer_text": "affordances",
+        "answer_weight": 100
+      },
+      {
+        "answer_text": "structure",
+        "answer_weight": 0
+      },
+      {
+        "answer_text": "constraints",
+        "answer_weight": 100
+      },
+      {
+        "answer_text": "mappings",
+        "answer_weight": 100
+      },
+      {
+        "answer_text": "placement",
+        "answer_weight": 0
+      }
+    ]
+  }
+}

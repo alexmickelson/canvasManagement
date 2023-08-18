@@ -1,12 +1,13 @@
+@using Management.Web.Shared.Components
 @using Management.Web.Shared.Components.Quiz
 
 @inject DragContainer dragContainer
 @inject QuizEditorContext quizContext
+@inject CoursePlanner planner
 
 @inherits DroppableQuiz
 
 @code {
-
   private void HandleDragStart()
   {
     dragContainer.DropCallback = dropCallback;
@@ -16,6 +17,10 @@
   {
     dragContainer.DropCallback = null;
   }
+  private bool isSyncedWithCanvas => 
+    planner.CanvasQuizzes != null 
+      ? Quiz.QuizIsCreated(planner.CanvasQuizzes) 
+      : false;
 }
 
 
@@ -29,9 +34,16 @@
 >
   <div class="card">
     <div class="card-body p-0">
-      <div class="card-title pt-2 px-2 m-0">
+      <div class="card-title pt-2 px-2 m-0 d-flex justify-content-between">
         <h4>@Quiz.Name</h4>
-
+          @if(isSyncedWithCanvas)
+          {
+            <CheckIcon />
+          }
+          else
+          {
+            <SyncIcon />
+          }
       </div>
 
       <div class="card-text overflow-hidden p-2">

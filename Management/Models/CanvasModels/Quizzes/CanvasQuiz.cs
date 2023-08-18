@@ -2,45 +2,122 @@ using CanvasModel.Assignments;
 
 namespace CanvasModel.Quizzes;
 
-public record CanvasQuiz(
-  [property: JsonPropertyName("id")] ulong Id,
-  [property: JsonPropertyName("title")] string Title,
-  [property: JsonPropertyName("html_url")] string HtmlUrl,
-  [property: JsonPropertyName("mobile_url")] string MobileUrl,
-  [property: JsonPropertyName("preview_url")] string PreviewUrl,
-  [property: JsonPropertyName("description")] string Description,
-  [property: JsonPropertyName("quiz_type")] string QuizType,
-  [property: JsonPropertyName("assignment_group_id")] ulong AssignmentGroupId,
-  [property: JsonPropertyName("time_limit")] decimal? TimeLimit,
-  [property: JsonPropertyName("shuffle_answers")] bool? ShuffleAnswers,
-  [property: JsonPropertyName("hide_results")] string? HideResults,
-  [property: JsonPropertyName("show_correct_answers")] bool? ShowCorrectAnswers,
-  [property: JsonPropertyName("show_correct_answers_last_attempt")]
-    bool? ShowCorrectAnswersLastAttempt,
-  [property: JsonPropertyName("show_correct_answers_at")] DateTime? ShowCorrectAnswersAt,
-  [property: JsonPropertyName("hide_correct_answers_at")] DateTime? HideCorrectAnswersAt,
-  [property: JsonPropertyName("one_time_results")] bool? OneTimeResults,
-  [property: JsonPropertyName("scoring_policy")] string? ScoringPolicy,
-  [property: JsonPropertyName("allowed_attempts")] int AllowedAttempts,
-  [property: JsonPropertyName("one_question_at_a_time")] bool? OneQuestionAtATime,
-  [property: JsonPropertyName("question_count")] uint? QuestionCount,
-  [property: JsonPropertyName("points_possible")] decimal? PointsPossible,
-  [property: JsonPropertyName("cant_go_back")] bool? CantGoBack,
-  [property: JsonPropertyName("access_code")] string? AccessCode,
-  [property: JsonPropertyName("ip_filter")] string? IpFilter,
-  [property: JsonPropertyName("due_at")] DateTime? DueAt,
-  [property: JsonPropertyName("lock_at")] DateTime? LockAt,
-  [property: JsonPropertyName("unlock_at")] DateTime? UnlockAt,
-  [property: JsonPropertyName("published")] bool? Published,
-  [property: JsonPropertyName("unpublishable")] bool? Unpublishable,
-  [property: JsonPropertyName("locked_for_user")] bool? LockedForUser,
-  [property: JsonPropertyName("lock_info")] CanvasLockInfo? LockInfo,
-  [property: JsonPropertyName("lock_explanation")] string? LockExplanation,
-  [property: JsonPropertyName("speedgrader_url")] string? SpeedGraderUrl,
-  [property: JsonPropertyName("quiz_extensions_url")] string QuizExtensionsUrl,
-  [property: JsonPropertyName("permissions")] CanvasQuizPermissions Permissions,
-  [property: JsonPropertyName("all_dates")] object AllDates,
-  [property: JsonPropertyName("version_number")] uint? VersionNumber,
-  [property: JsonPropertyName("question_types")] IEnumerable<string> QuestionTypes,
-  [property: JsonPropertyName("anonymous_submissions")] bool? AnonymousSubmissions
-);
+public record CanvasQuiz
+{
+  [JsonPropertyName("id")]
+  public ulong Id { get; init; }
+
+  [JsonPropertyName("title")]
+  public required string Title { get; init; }
+
+  [JsonPropertyName("html_url")]
+  public required string HtmlUrl { get; init; }
+
+  [JsonPropertyName("mobile_url")]
+  public required string MobileUrl { get; init; }
+
+  [JsonPropertyName("preview_url")]
+  public string? PreviewUrl { get; init; }
+
+  [JsonPropertyName("description")]
+  public required string Description { get; init; }
+
+  [JsonPropertyName("quiz_type")]
+  public required string QuizType { get; init; }
+
+  [JsonPropertyName("assignment_group_id")]
+  public ulong? AssignmentGroupId { get; init; }
+
+  [JsonPropertyName("time_limit")]
+  public decimal? TimeLimit { get; init; }
+
+  [JsonPropertyName("shuffle_answers")]
+  public bool? ShuffleAnswers { get; init; }
+
+  [JsonPropertyName("hide_results")]
+  public string? HideResults { get; init; }
+
+  [JsonPropertyName("show_correct_answers")]
+  public bool? ShowCorrectAnswers { get; init; }
+
+  [JsonPropertyName("show_correct_answers_last_attempt")]
+  public bool? ShowCorrectAnswersLastAttempt { get; init; }
+
+  [JsonPropertyName("show_correct_answers_at")]
+  public DateTime? ShowCorrectAnswersAt { get; init; }
+
+  [JsonPropertyName("hide_correct_answers_at")]
+  public DateTime? HideCorrectAnswersAt { get; init; }
+
+  [JsonPropertyName("one_time_results")]
+  public bool? OneTimeResults { get; init; }
+
+  [JsonPropertyName("scoring_policy")]
+  public string? ScoringPolicy { get; init; }
+
+  [JsonPropertyName("allowed_attempts")]
+  public int AllowedAttempts { get; init; }
+
+  [JsonPropertyName("one_question_at_a_time")]
+  public bool? OneQuestionAtATime { get; init; }
+
+  [JsonPropertyName("question_count")]
+  public uint? QuestionCount { get; init; }
+
+  [JsonPropertyName("points_possible")]
+  public decimal? PointsPossible { get; init; }
+
+  [JsonPropertyName("cant_go_back")]
+  public bool? CantGoBack { get; init; }
+
+  [JsonPropertyName("access_code")]
+  public string? AccessCode { get; init; }
+
+  [JsonPropertyName("ip_filter")]
+  public string? IpFilter { get; init; }
+
+  [JsonPropertyName("due_at")]
+  public DateTime? DueAt { get; init; }
+
+  [JsonPropertyName("lock_at")]
+  public DateTime? LockAt { get; init; }
+
+  [JsonPropertyName("unlock_at")]
+  public DateTime? UnlockAt { get; init; }
+
+  [JsonPropertyName("published")]
+  public bool? Published { get; init; }
+
+  [JsonPropertyName("unpublishable")]
+  public bool? Unpublishable { get; init; }
+
+  [JsonPropertyName("locked_for_user")]
+  public bool? LockedForUser { get; init; }
+
+  [JsonPropertyName("lock_info")]
+  public CanvasLockInfo? LockInfo { get; init; }
+
+  [JsonPropertyName("lock_explanation")]
+  public string? LockExplanation { get; init; }
+
+  [JsonPropertyName("speedgrader_url")]
+  public string? SpeedGraderUrl { get; init; }
+
+  [JsonPropertyName("quiz_extensions_url")]
+  public string? QuizExtensionsUrl { get; init; }
+
+  [JsonPropertyName("permissions")]
+  public required CanvasQuizPermissions Permissions { get; init; }
+
+  [JsonPropertyName("all_dates")]
+  public object? AllDates { get; init; }
+
+  [JsonPropertyName("version_number")]
+  public uint? VersionNumber { get; init; }
+
+  [JsonPropertyName("question_types")]
+  public IEnumerable<string>? QuestionTypes { get; init; }
+
+  [JsonPropertyName("anonymous_submissions")]
+  public bool? AnonymousSubmissions { get; init; }
+}

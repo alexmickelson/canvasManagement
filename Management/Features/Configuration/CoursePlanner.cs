@@ -6,6 +6,7 @@ using CanvasModel.Assignments;
 using CanvasModel.Modules;
 using Management.Services.Canvas;
 using System.Text.RegularExpressions;
+using CanvasModel.Quizzes;
 
 namespace Management.Planner;
 
@@ -54,7 +55,7 @@ public class CoursePlanner
   private void saveCourseToFile(LocalCourse courseAsOfDebounce)
   {
     _debounceTimer?.Dispose();
-    
+
     // ignore initial load of course
     if (LocalCourse == null)
     {
@@ -71,6 +72,7 @@ public class CoursePlanner
   public event Action? StateHasChanged;
 
   public IEnumerable<CanvasAssignment>? CanvasAssignments { get; internal set; }
+  public IEnumerable<CanvasQuiz>? CanvasQuizzes { get; internal set; }
   public IEnumerable<CanvasModule>? CanvasModules { get; internal set; }
   public Dictionary<ulong, IEnumerable<CanvasModuleItem>>? CanvasModulesItems { get; internal set; }
 
@@ -87,13 +89,14 @@ public class CoursePlanner
       LocalCourse?.CanvasId ?? throw new Exception("no canvas id found for selected course");
 
     var assignmentsTask = canvas.Assignments.GetAll(canvasId);
+    var quizzesTask = canvas.Quizzes.GetAll(canvasId);
     var modulesTask = canvas.GetModules(canvasId);
 
     CanvasAssignments = await assignmentsTask;
+    CanvasQuizzes = await quizzesTask;
     CanvasModules = await modulesTask;
 
     CanvasModulesItems = await canvas.GetAllModulesItems(canvasId, CanvasModules);
-    // Console.WriteLine(JsonSerializer.Serialize(CanvasModulesItems));
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
@@ -107,6 +110,7 @@ public class CoursePlanner
       || LocalCourse.CanvasId == null
       || CanvasAssignments == null
       || CanvasModules == null
+      || CanvasQuizzes == null
     )
       return;
 
@@ -138,102 +142,14 @@ public class CoursePlanner
     LocalCourse = await LocalCourse.SyncAssignmentsWithCanvas(canvasId, CanvasAssignments, canvas);
     CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
 
-    
+    LocalCourse = await LocalCourse.SyncQuizzesWithCanvas(canvasId, CanvasQuizzes, canvas);
 
-    await syncModuleItemsWithCanvas(canvasId);
+    await LocalCourse.SyncModuleItemsWithCanvas(canvasId, CanvasModulesItems, canvas);
     CanvasModulesItems = await canvas.GetAllModulesItems(canvasId, CanvasModules);
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
     Console.WriteLine("done syncing with canvas\n");
-  }
-
-  private async Task syncModuleItemsWithCanvas(ulong canvasId)
-  {
-    if (LocalCourse == null)
-      throw new Exception("cannot sync modules without localcourse selected");
-    if (CanvasModulesItems == null)
-      throw new Exception("cannot sync modules with canvas if they are not loaded in the variable");
-
-    foreach (var localModule in LocalCourse.Modules)
-    {
-      var moduleCanvasId =
-        localModule.CanvasId
-        ?? throw new Exception("cannot sync canvas modules items if module not synced with canvas");
-
-      bool anyUpdated = await ensureAllItemsCreated(canvasId, localModule, moduleCanvasId);
-
-      var canvasModuleItems = anyUpdated
-        ? await canvas.GetModuleItems(canvasId, moduleCanvasId)
-        : CanvasModulesItems[moduleCanvasId];
-
-      await sortModuleItems(canvasId, localModule, moduleCanvasId, canvasModuleItems);
-    }
-  }
-
-  private async Task sortModuleItems(
-    ulong canvasId,
-    LocalModule localModule,
-    ulong moduleCanvasId,
-    IEnumerable<CanvasModuleItem> canvasModuleItems
-  )
-  {
-    var localItemsWithCorrectOrder = localModule.Assignments
-      .OrderBy(a => a.DueAt)
-      .Select((a, i) => (Assignment: a, Position: i + 1));
-
-    var canvasContentIdsByCurrentPosition =
-      canvasModuleItems.ToDictionary(item => item.Position, item => item.ContentId)
-      ?? new Dictionary<int, ulong?>();
-
-    foreach (var (localAssignment, position) in localItemsWithCorrectOrder)
-    {
-      var itemIsInCorrectOrder =
-        canvasContentIdsByCurrentPosition.ContainsKey(position)
-        && canvasContentIdsByCurrentPosition[position] == localAssignment.CanvasId;
-
-      var currentCanvasItem = canvasModuleItems.First(i => i.ContentId == localAssignment.CanvasId);
-      if (!itemIsInCorrectOrder)
-      {
-        await canvas.UpdateModuleItem(
-          canvasId,
-          moduleCanvasId,
-          currentCanvasItem with
-          {
-            Position = position
-          }
-        );
-      }
-    }
-  }
-
-  private async Task<bool> ensureAllItemsCreated(
-    ulong canvasId,
-    LocalModule localModule,
-    ulong moduleCanvasId
-  )
-  {
-    var anyUpdated = false;
-    foreach (var localAssignment in localModule.Assignments)
-    {
-      var canvasModuleItemContentIds = CanvasModulesItems[moduleCanvasId].Select(i => i.ContentId);
-      if (!canvasModuleItemContentIds.Contains(localAssignment.CanvasId))
-      {
-        var canvasAssignmentId =
-          localAssignment.CanvasId
-          ?? throw new Exception("cannot create module item if assignment does not have canvas id");
-        await canvas.CreateModuleItem(
-          canvasId,
-          moduleCanvasId,
-          localAssignment.Name,
-          "Assignment",
-          canvasAssignmentId
-        );
-        anyUpdated = true;
-      }
-    }
-
-    return anyUpdated;
   }
 
   public void Clear()

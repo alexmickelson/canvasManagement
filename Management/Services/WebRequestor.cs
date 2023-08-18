@@ -30,6 +30,7 @@ public class WebRequestor : IWebRequestor
 
   public async Task<RestResponse> PostAsync(RestRequest request)
   {
+    request.AddHeader("Content-Type", "application/json");
     var response = await client.ExecutePostAsync(request);
     if (!response.IsSuccessful)
     {
@@ -43,6 +44,7 @@ public class WebRequestor : IWebRequestor
 
   public async Task<(T?, RestResponse)> PostAsync<T>(RestRequest request)
   {
+    request.AddHeader("Content-Type", "application/json");
     var response = await client.ExecutePostAsync(request);
     return (deserialize<T>(response), response);
   }

@@ -13,16 +13,19 @@ public class CanvasService
   private readonly CanvasServiceUtils utils;
 
   public CanvasAssignmentService Assignments { get; }
+  public CanvasQuizService Quizzes { get; }
 
   public CanvasService(
     IWebRequestor webRequestor,
     CanvasServiceUtils utils,
-    CanvasAssignmentService Assignments
+    CanvasAssignmentService Assignments,
+    CanvasQuizService Quizzes
   )
   {
     this.webRequestor = webRequestor;
     this.utils = utils;
     this.Assignments = Assignments;
+    this.Quizzes = Quizzes;
   }
 
   public async Task<IEnumerable<EnrollmentTermModel>> GetTerms()
@@ -51,8 +54,8 @@ public class CanvasService
 
     if (data == null)
     {
-      System.Console.WriteLine(response.Content);
-      System.Console.WriteLine(response.ResponseUri);
+      Console.WriteLine(response.Content);
+      Console.WriteLine(response.ResponseUri);
       throw new Exception("error getting course from canvas");
     }
     return data;
@@ -151,7 +154,6 @@ public class CanvasService
     var body = new { module_item = new { title = item.Title, position = item.Position } };
     var request = new RestRequest(url);
     request.AddBody(body);
-    request.AddHeader("Content-Type", "application/json");
 
     var (newItem, response) = await webRequestor.PutAsync<CanvasModuleItem>(request);
     if (newItem == null)
@@ -179,7 +181,6 @@ public class CanvasService
     };
     var request = new RestRequest(url);
     request.AddBody(body);
-    request.AddHeader("Content-Type", "application/json");
 
     var (newItem, response) = await webRequestor.PostAsync<CanvasModuleItem>(request);
     if (newItem == null)

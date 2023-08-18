@@ -9,16 +9,9 @@ namespace Management.Planner;
 
 public static partial class QuizSyncronizationExtensions
 {
-  internal static async Task<LocalQuiz> SyncQuizToCanvas(
-    this LocalCourse localCourse,
-    ulong canvasId,
-    LocalQuiz localQuiz,
-    IEnumerable<CanvasQuiz> canvasQuizzes,
-    CanvasService canvas
-  )
+  public static bool QuizIsCreated(this LocalQuiz localQuiz, IEnumerable<CanvasQuiz> canvasQuizzes)
   {
-    // TODO actually sync
-    return localQuiz;
+    return canvasQuizzes.Any(q => q.Id == localQuiz.CanvasId);
   }
 
   internal static async Task<LocalCourse> SyncQuizzesWithCanvas(
@@ -38,6 +31,28 @@ public static partial class QuizSyncronizationExtensions
     });
 
     var modules = await Task.WhenAll(moduleTasks);
-    return localCourse;
+    return localCourse with { Modules = modules };
+  }
+
+  internal static async Task<LocalQuiz> SyncQuizToCanvas(
+    this LocalCourse localCourse,
+    ulong canvasCourseId,
+    LocalQuiz localQuiz,
+    IEnumerable<CanvasQuiz> canvasQuizzes,
+    CanvasService canvas
+  )
+  {
+    var isCreated = localQuiz.QuizIsCreated(canvasQuizzes);
+
+    if (isCreated)
+    {
+      // TODO write update
+    }
+    else
+    {
+      return await canvas.Quizzes.Create(canvasCourseId, localQuiz);
+    }
+
+    return localQuiz;
   }
 }
