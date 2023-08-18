@@ -14,7 +14,7 @@ public class YamlManager
 
   public LocalCourse ParseCourse(string rawCourse)
   {
-    var deserializer = new DeserializerBuilder().Build();
+    var deserializer = new DeserializerBuilder().IgnoreUnmatchedProperties().Build();
 
     var course = deserializer.Deserialize<LocalCourse>(rawCourse);
     return course;

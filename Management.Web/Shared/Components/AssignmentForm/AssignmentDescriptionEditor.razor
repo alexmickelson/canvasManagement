@@ -14,7 +14,8 @@
   {
     if (assignmentContext.Assignment != null)
     {
-      Description = assignmentContext.Assignment.Description;
+      description = assignmentContext.Assignment.Description;
+      descriptionForPreview = description;
       TemplateId = assignmentContext.Assignment.TemplateId;
       UseTemplate = TemplateId != null && TemplateId != "";
       VariableValues = assignmentContext.Assignment.TemplateVariables;
@@ -27,25 +28,7 @@
   }
 
   private string description { get; set; } = default!;
-  public string Description 
-  { 
-    get => description;
-    set 
-    {
-      description = value;
-      if (description != string.Empty)
-      {
-        if(assignmentContext.Assignment != null)
-        {
-          var newAssignment = assignmentContext.Assignment with 
-          {
-            Description = description
-          };
-          assignmentContext.SaveAssignment(newAssignment);
-        }
-      }
-    }
-  }
+  private string descriptionForPreview { get; set; } = default!;
   public bool? UseTemplate { get; set; } = null;
 
   public string? TemplateId { get; set; }
@@ -58,9 +41,21 @@
     .AssignmentTemplates
     .FirstOrDefault(t => t.Id == TemplateId);
 
-  private void saveDescription(ChangeEventArgs e)
+  private void handleNewDescription(ChangeEventArgs e)
   {
-    
+    var newDescription = e.Value?.ToString();
+    if (newDescription != string.Empty)
+    {
+      descriptionForPreview = newDescription;
+      if (assignmentContext.Assignment != null)
+      {
+        var newAssignment = assignmentContext.Assignment with
+        {
+          Description = newDescription
+        };
+        assignmentContext.SaveAssignment(newAssignment);
+      }
+    }
   }
 
   private void saveTemplateId(ChangeEventArgs e)
@@ -68,15 +63,15 @@
     if(assignmentContext.Assignment != null)
     {
       var newTemplateId = e.Value?.ToString();
-      var newAssignment = assignmentContext.Assignment with 
+      var newAssignment = assignmentContext.Assignment with
       {
-        Description = e.Value?.ToString() ?? ""
+        TemplateId = newTemplateId
       };
       assignmentContext.SaveAssignment(newAssignment);
     }
   }
 
-  private MarkupString preview { get => (MarkupString) Markdown.ToHtml(Description); }
+  private MarkupString preview { get => (MarkupString)Markdown.ToHtml(descriptionForPreview); }
 
 }
 
@@ -167,11 +162,11 @@
           id="description" 
           class="form-control" 
           rows=12
-          @bind="Description"
-          @bind:event="oninput"
+          @bind="description"
+          @oninput="handleNewDescription"
         />
       </div>
-      <div class="col" @key="Description">
+      <div class="col" @key="descriptionForPreview">
         @(preview)
       </div>
     </div>

@@ -74,7 +74,14 @@ public class CanvasService
     Console.WriteLine($"Creating Module: {name}");
     var url = $"courses/{courseId}/modules";
     var request = new RestRequest(url);
-    request.AddParameter("module[name]", name);
+    var body = new
+    {
+      module = new
+      {
+        name = name
+      }
+    };
+    request.AddBody(body);
 
     var (newModule, _) = await webRequestor.PostAsync<CanvasModule>(request);
     return newModule ?? throw new Exception($"failed to create new canvas module {name}");

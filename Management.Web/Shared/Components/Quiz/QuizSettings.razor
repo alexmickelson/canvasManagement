@@ -1,0 +1,74 @@
+@using Management.Web.Shared.Components
+
+@inject QuizEditorContext quizContext
+
+@code {
+  protected override void OnInitialized()
+  {
+    quizContext.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    if (quizContext.Quiz != null)
+    {
+      if (!lockAtDueDate)
+        lockAtDueDate = quizContext.Quiz.LockAtDueDate;
+      if (lockAt == null)
+        lockAt = quizContext.Quiz.LockAt;
+      if (!shuffleAnswers)
+        shuffleAnswers = quizContext.Quiz.ShuffleAnswers;
+      if (!oneQuestionAtATime)
+        oneQuestionAtATime = quizContext.Quiz.OneQuestionAtATime;
+      if (allowedAttempts == 0)
+        allowedAttempts = quizContext.Quiz.AllowedAttempts;
+
+      this.InvokeAsync(this.StateHasChanged);
+    }
+  }
+  public void Dispose()
+  {
+    quizContext.StateHasChanged -= reload;
+  }
+
+  private bool lockAtDueDate { get; set; }
+  private DateTime? lockAt { get; set; }
+  private bool shuffleAnswers { get; set; }
+  private bool oneQuestionAtATime { get; set; }
+  private int allowedAttempts { get; set; }
+
+  private void handleLockAtDueDateChange()
+  {
+    if(quizContext.Quiz != null)
+    {
+      var newValue = !quizContext.Quiz.LockAtDueDate;
+
+      var newQuiz = newValue
+        ? quizContext.Quiz with
+          {
+            LockAtDueDate = newValue,
+            LockAt = quizContext.Quiz.DueAt
+          }
+        : quizContext.Quiz with
+          {
+            LockAtDueDate = newValue
+          };
+      quizContext.SaveQuiz(newQuiz);
+    }
+  }
+}
+
+<div>
+  <div class="form-check form-switch">
+    <input 
+      class="form-check-input" 
+      type="checkbox"
+      role="switch" 
+      id="lockAtDueDate"
+      checked="lockAtDueDate"
+      @onchange="handleLockAtDueDateChange">
+    <label 
+      class="form-check-label" for="lockAtDueDate">
+      Lock at Due Date
+    </label>
+  </div>
+</div>

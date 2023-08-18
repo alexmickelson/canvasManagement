@@ -42,7 +42,9 @@
   {
     if (quizContext.Quiz != null)
     {
-      var newPoints = int.Parse(e.Value?.ToString() ?? "0");
+      var pointsString = e.Value?.ToString() ?? "0";
+
+      var newPoints = int.Parse(pointsString == string.Empty ? "0" : pointsString);
       var newQuestion = Question with
       {
         Points = newPoints
@@ -123,28 +125,20 @@
       />
     </div>
     <div class="col-auto">
-      @foreach(var typeOption in QuestionType.AllTypes)
-      {
-        <div class="form-check">
-          <input 
-            class="form-check-input" 
-            type="radio" 
-            name="@(Question.Id + "question_type")"
-            id="@(Question.Id + typeOption)"
-            value="@typeOption"
-            checked="@(typeOption == questionType)"
-            @onchange="() => handleTypeUpdate(typeOption)"
-          >
-          <label
-            class="form-check-label" 
-            for="@(Question.Id + typeOption)"
-          >
-            @typeOption
-          </label>
-        </div>
-      }
+      
     </div>
   </div>
+  @foreach (var typeOption in QuestionType.AllTypes)
+  {
+    <div class="form-check">
+      <input class="form-check-input" type="radio" name="@(Question.Id + "question_type")"
+        id="@(Question.Id + typeOption)" value="@typeOption" checked="@(typeOption == questionType)"
+      @onchange="() => handleTypeUpdate(typeOption)">
+      <label class="form-check-label" for="@(Question.Id + typeOption)">
+        @typeOption
+      </label>
+    </div>
+  }
   <div class="mb-3 row">
     <div class="col-auto">
       <label 
@@ -166,15 +160,6 @@
 
     @if(questionType == QuestionType.MULTIPLE_ANSWERS || questionType == QuestionType.MULTIPLE_CHOICE)
     {
-
-      @foreach(var answer in answers)
-      {
-        <EditableQuizAnswer
-          Answer="answer" 
-          SaveAnswer="saveAnswer" 
-          Question="Question"
-        />
-      }
       <button 
         class="btn btn-outline-danger"
         @onclick="removeAnswer"
@@ -187,6 +172,15 @@
       >
         + Add Answer
       </button>
+
+      @foreach(var answer in answers)
+      {
+        <EditableQuizAnswer
+          Answer="answer" 
+          SaveAnswer="saveAnswer" 
+          Question="Question"
+        />
+      }
       
     }
     <div>

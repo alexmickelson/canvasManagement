@@ -40,9 +40,9 @@ public class CanvasQuizService
         title = localQuiz.Name,
         description = localQuiz.Description,
         // assignment_group_id = "quiz", TODO: support specific assignment groups
-        time_limit = localQuiz.TimeLimit,
+        // time_limit = localQuiz.TimeLimit,
         shuffle_answers = localQuiz.ShuffleAnswers,
-        hide_results = localQuiz.HideResults,
+        // hide_results = localQuiz.HideResults,
         allowed_attempts = localQuiz.AllowedAttempts,
         one_question_at_a_time = true,
         cant_go_back = false,

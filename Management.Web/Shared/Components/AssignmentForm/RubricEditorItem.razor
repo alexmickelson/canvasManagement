@@ -12,6 +12,20 @@
   public Action MoveUp { get; set; } = default!;
   [Parameter, EditorRequired]
   public Action MoveDown { get; set; } = default!;
+
+  private int points { get;  set; }
+  private string label { get; set; }
+  private string lastRubricItemId { get; set; }
+  protected override void OnParametersSet()
+  {
+    if(RubricItem.Id != lastRubricItemId)
+    {
+      lastRubricItemId = RubricItem.Id;
+      points = RubricItem.Points;
+      label = RubricItem.Label;
+    }
+  }
+
   private void editItem(string label, int points)
   {
     var newRubricItem = RubricItem with
@@ -39,7 +53,7 @@
         id="rubricLabel"
         name="rubricLabel"
         @oninput="@(e => editItem(e.Value?.ToString() ?? "", RubricItem.Points))" 
-        value="@RubricItem.Label" 
+        @bind="label" 
       />
     </div>
     <div class="col">
@@ -57,7 +71,7 @@
           RubricItem.Label,
           int.Parse(e.Value?.ToString() != "" ? e.Value?.ToString() ?? "0" : "0"))
         )" 
-        value="@RubricItem.Points"
+        @bind="points"
         type="number" 
       />
     </div>
