@@ -38,7 +38,7 @@ public class CanvasAssignmentService
     Console.WriteLine($"creating assignment: {localAssignment.Name}");
     var url = $"courses/{canvasCourseId}/assignments";
     var request = new RestRequest(url);
-    var body = new CanvasAssignmentCreationRequest()
+    var body = new
     {
       name = localAssignment.Name,
       submission_types = localAssignment.SubmissionTypes.Select(t => t.ToString()),
@@ -65,7 +65,7 @@ public class CanvasAssignmentService
     Console.WriteLine($"updating assignment: {localAssignment.Name}");
     var url = $"courses/{courseId}/assignments/{localAssignment.CanvasId}";
     var request = new RestRequest(url);
-    var body = new CanvasAssignmentCreationRequest()
+    var body = new
     {
       name = localAssignment.Name,
       submission_types = localAssignment.SubmissionTypes.Select(t => t.ToString()),
