@@ -39,7 +39,7 @@ public class CanvasQuizService
       {
         title = localQuiz.Name,
         description = localQuiz.Description,
-        // assignment_group_id = "quiz", TODO: support specific assignment groups
+        // assignment_group_id = "quiz", // TODO: support specific assignment groups
         // time_limit = localQuiz.TimeLimit,
         shuffle_answers = localQuiz.ShuffleAnswers,
         // hide_results = localQuiz.HideResults,
@@ -47,7 +47,7 @@ public class CanvasQuizService
         one_question_at_a_time = true,
         cant_go_back = false,
         due_at = localQuiz.DueAt,
-        lock_at = localQuiz.LockAt,
+        lock_at = localQuiz.LockAtDueDate ? localQuiz.DueAt : localQuiz.LockAt,
       }
     };
     var request = new RestRequest(url);
@@ -59,7 +59,6 @@ public class CanvasQuizService
 
     var updatedQuiz = localQuiz with { CanvasId = canvasQuiz.Id };
     var quizWithQuestions = await CreateQuizQuestions(canvasCourseId, updatedQuiz);
-
 
     return quizWithQuestions;
   }

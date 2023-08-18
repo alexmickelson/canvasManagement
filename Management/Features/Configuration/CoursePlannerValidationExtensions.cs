@@ -9,18 +9,20 @@ public static class CoursePlannerExtensions
 {
   public static LocalCourse GeneralCourseCleanup(this LocalCourse incomingCourse)
   {
-    var cleanModules = incomingCourse.Modules.Select(
-      module =>
-        module with
-        {
-          Assignments = module.Assignments
-            .OrderBy(a => a.DueAt)
-            .DistinctBy(a => a.Id)
-            .Select(a => a.validateSubmissionTypes())
-            .Select(a => a.validateDates())
-            .ToArray()
-        }
-    ).ToArray();
+    var cleanModules = incomingCourse.Modules
+      .Select(
+        module =>
+          module with
+          {
+            Assignments = module.Assignments
+              .OrderBy(a => a.DueAt)
+              .DistinctBy(a => a.Id)
+              .Select(a => a.validateSubmissionTypes())
+              .Select(a => a.validateDates())
+              .ToArray()
+          }
+      )
+      .ToArray();
 
     var cleanStartDay = new DateTime(
       incomingCourse.StartDate.Year,
@@ -102,18 +104,16 @@ public static class CoursePlannerExtensions
     }
     return assignment;
   }
+
   private static LocalQuiz validateQuizForCanvasId(
     this LocalQuiz quiz,
     IEnumerable<CanvasQuiz> canvasQuizzes
   )
   {
-    var assignmentIdInCanvas =
-      canvasQuizzes.FirstOrDefault(cq => cq.Id == quiz.CanvasId) != null;
+    var assignmentIdInCanvas = canvasQuizzes.FirstOrDefault(cq => cq.Id == quiz.CanvasId) != null;
     if (!assignmentIdInCanvas)
     {
-      Console.WriteLine(
-        $"no id in canvas for quiz, removing old canvas id: {quiz.Name}"
-      );
+      Console.WriteLine($"no id in canvas for quiz, removing old canvas id: {quiz.Name}");
       return quiz with { CanvasId = null };
     }
     return quiz;
@@ -125,19 +125,18 @@ public static class CoursePlannerExtensions
       assignment.SubmissionTypes.FirstOrDefault(t => t == SubmissionType.DISCUSSION_TOPIC) != null;
 
     if (containsDiscussion)
-      return assignment with
-      {
-        SubmissionTypes = new string[] { SubmissionType.DISCUSSION_TOPIC }
-      };
+      return assignment with { SubmissionTypes = new string[] { SubmissionType.DISCUSSION_TOPIC } };
     return assignment;
   }
 
-    public static LocalAssignment validateDates(this LocalAssignment assignment)
+  public static LocalAssignment validateDates(this LocalAssignment assignment)
+  {
+    var dueAt = assignment.DueAt.AddMilliseconds(0).AddMilliseconds(0);
+    var lockAt = assignment.LockAt?.AddMilliseconds(0).AddMilliseconds(0);
+    return assignment with
     {
-      return assignment with 
-      {
-        DueAt=assignment.DueAt.AddMilliseconds(0).AddMilliseconds(0),
-        LockAt=assignment.LockAt?.AddMilliseconds(0).AddMilliseconds(0)
-      };
-    }
+      DueAt = dueAt,
+      LockAt = assignment.LockAtDueDate ? dueAt : lockAt
+    };
+  }
 }

@@ -134,6 +134,26 @@ public static partial class ModuleSyncronizationExtensions
       }
     }
 
+    foreach(var localQuiz in localModule.Quizzes)
+    {
+      
+      var canvasModuleItemContentIds = canvasModulesItems[moduleCanvasId].Select(i => i.ContentId);
+      if (!canvasModuleItemContentIds.Contains(localQuiz.CanvasId))
+      {
+        var canvasAssignmentId =
+          localQuiz.CanvasId
+          ?? throw new Exception("cannot create module item if assignment does not have canvas id");
+        await canvas.CreateModuleItem(
+          canvasId,
+          moduleCanvasId,
+          localQuiz.Name,
+          "Quiz",
+          canvasAssignmentId
+        );
+        anyUpdated = true;
+      }
+    }
+
     return anyUpdated;
   }
 

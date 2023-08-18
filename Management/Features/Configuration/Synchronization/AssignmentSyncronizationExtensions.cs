@@ -78,7 +78,9 @@ public static partial class AssignmentSyncronizationExtensions
       .Replace(">", "")
       .Replace("<", "")
       .Replace("&quot;", "")
-      .Replace("\"", "");
+      .Replace("\"", "")
+      .Replace("&amp;", "")
+      .Replace("&", "");
 
     var canvasHtmlDescription = canvasAssignment.Description;
     canvasHtmlDescription = CanvasScriptTagRegex().Replace(canvasHtmlDescription, "");
@@ -90,7 +92,9 @@ public static partial class AssignmentSyncronizationExtensions
       .Replace(">", "")
       .Replace("<", "")
       .Replace("&quot;", "")
-      .Replace("\"", "");
+      .Replace("\"", "")
+      .Replace("&amp;", "")
+      .Replace("&", "");
 
     var canvasComparisonDueDate =
       canvasAssignment.DueAt != null
@@ -115,12 +119,37 @@ public static partial class AssignmentSyncronizationExtensions
         )
         : new DateTime();
 
+    var canvasComparisonLockDate =
+      canvasAssignment.LockAt != null
+        ? new DateTime(
+          year: canvasAssignment.LockAt.Value.Year,
+          month: canvasAssignment.LockAt.Value.Month,
+          day: canvasAssignment.LockAt.Value.Day,
+          hour: canvasAssignment.LockAt.Value.Hour,
+          minute: canvasAssignment.LockAt.Value.Minute,
+          second: canvasAssignment.LockAt.Value.Second
+        )
+        : new DateTime();
+    var localComparisonLockDate = localAssignment.LockAtDueDate
+      ? localComparisonDueDate
+      : canvasAssignment.LockAt != null
+        ? new DateTime(
+          year: localAssignment.LockAt?.Year ?? 0,
+          month: localAssignment.LockAt?.Month ?? 0,
+          day: localAssignment.LockAt?.Day ?? 0,
+          hour: localAssignment.LockAt?.Hour ?? 0,
+          minute: localAssignment.LockAt?.Minute ?? 0,
+          second: localAssignment.LockAt?.Second ?? 0
+        )
+        : new DateTime();
+
     var dueDatesSame =
       canvasAssignment.DueAt != null && canvasComparisonDueDate == localComparisonDueDate;
+    var lockDatesSame = canvasAssignment.LockAt != null && canvasComparisonLockDate == localComparisonLockDate;
+
 
     var descriptionSame = canvasHtmlDescription == localHtmlDescription;
     var nameSame = canvasAssignment.Name == localAssignment.Name;
-    var lockDateSame = canvasAssignment.LockAt == localAssignment.LockAt;
     var pointsSame = canvasAssignment.PointsPossible == localAssignment.PointsPossible;
     var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
       localAssignment.SubmissionTypes.Select(t => t.ToString())
@@ -134,10 +163,22 @@ public static partial class AssignmentSyncronizationExtensions
         Console.WriteLine(canvasComparisonDueDate);
         Console.WriteLine(localComparisonDueDate);
         Console.WriteLine(
-          $"Due dates different for {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}"
+          $"Due dates different for assignment {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}"
         );
         Console.WriteLine(JsonSerializer.Serialize(localAssignment.DueAt));
         Console.WriteLine(JsonSerializer.Serialize(canvasAssignment.DueAt));
+      }
+
+      if (!lockDatesSame)
+      {
+        Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
+        Console.WriteLine(canvasComparisonLockDate);
+        Console.WriteLine(localComparisonLockDate);
+        Console.WriteLine(
+          $"Lock dates different for assignment {localAssignment.Name}, local: {localAssignment.LockAt}, in canvas {canvasAssignment.LockAt}"
+        );
+        Console.WriteLine(JsonSerializer.Serialize(localAssignment.LockAt));
+        Console.WriteLine(JsonSerializer.Serialize(canvasAssignment.LockAt));
       }
 
       if (!descriptionSame)
@@ -161,10 +202,6 @@ public static partial class AssignmentSyncronizationExtensions
         Console.WriteLine(
           $"names different for {localAssignment.Name}, local: {localAssignment.Name}, in canvas {canvasAssignment.Name}"
         );
-      if (!lockDateSame)
-        Console.WriteLine(
-          $"Lock Dates different for {localAssignment.Name}, local: {localAssignment.LockAt}, in canvas {canvasAssignment.LockAt}"
-        );
       if (!pointsSame)
         Console.WriteLine(
           $"Points different for {localAssignment.Name}, local: {localAssignment.PointsPossible}, in canvas {canvasAssignment.PointsPossible}"
@@ -177,7 +214,7 @@ public static partial class AssignmentSyncronizationExtensions
 
     return !nameSame
       || !dueDatesSame
-      || !lockDateSame
+      || !lockDatesSame
       || !descriptionSame
       || !pointsSame
       || !submissionTypesSame;

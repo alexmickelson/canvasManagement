@@ -44,7 +44,7 @@ public class CanvasAssignmentService
       submission_types = localAssignment.SubmissionTypes.Select(t => t.ToString()),
       description = htmlDescription,
       due_at = localAssignment.DueAt,
-      lock_at = localAssignment.LockAt,
+      lock_at = localAssignment.LockAtDueDate ? localAssignment.DueAt : localAssignment.LockAt,
       points_possible = localAssignment.PointsPossible
     };
     var bodyObj = new { assignment = body };
@@ -71,7 +71,7 @@ public class CanvasAssignmentService
       submission_types = localAssignment.SubmissionTypes.Select(t => t.ToString()),
       description = htmlDescription,
       due_at = localAssignment.DueAt,
-      lock_at = localAssignment.LockAt,
+      lock_at = localAssignment.LockAtDueDate ? localAssignment.DueAt : localAssignment.LockAt,
       points_possible = localAssignment.PointsPossible
     };
     var bodyObj = new { assignment = body };
