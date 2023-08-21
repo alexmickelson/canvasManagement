@@ -38,7 +38,6 @@
           Rubric = rubric,
           PointsPossible = totalRubricPoints,
         };
-      Console.WriteLine(assignmentContext.Assignment.Description);
       assignmentContext.SaveAssignment(newAssignment);
       StateHasChanged();
     }
