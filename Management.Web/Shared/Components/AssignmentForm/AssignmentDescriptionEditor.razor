@@ -14,12 +14,19 @@
   {
     if (assignmentContext.Assignment != null)
     {
-      description = assignmentContext.Assignment.Description;
-      descriptionForPreview = description;
-      TemplateId = assignmentContext.Assignment.TemplateId;
-      UseTemplate = TemplateId != null && TemplateId != "";
-      VariableValues = assignmentContext.Assignment.TemplateVariables;
-      this.InvokeAsync(this.StateHasChanged);
+      if(description == string.Empty)
+      {
+        description = assignmentContext.Assignment.Description;
+        descriptionForPreview = description;
+        this.InvokeAsync(this.StateHasChanged);
+      }
+      if(TemplateId == string.Empty || TemplateId == null)
+      {
+        TemplateId = assignmentContext.Assignment.TemplateId;
+        UseTemplate = TemplateId != null && TemplateId != "";
+        VariableValues = assignmentContext.Assignment.TemplateVariables;
+        this.InvokeAsync(this.StateHasChanged);
+      }
     }
   }
   public void Dispose()
@@ -27,8 +34,8 @@
     assignmentContext.StateHasChanged -= reload;
   }
 
-  private string description { get; set; } = default!;
-  private string descriptionForPreview { get; set; } = default!;
+  private string description { get; set; } = string.Empty;
+  private string descriptionForPreview { get; set; } = string.Empty;
   public bool? UseTemplate { get; set; } = null;
 
   public string? TemplateId { get; set; }

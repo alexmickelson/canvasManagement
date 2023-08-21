@@ -45,6 +45,7 @@ public class AssignmentEditorContext
         )
         .ToArray();
 
+      Assignment = newAssignment;
       planner.LocalCourse = planner.LocalCourse with { Modules = updatedModules };
     }
   }
