@@ -21,13 +21,15 @@
     <h3 >Stored Courses</h3>
     @foreach (var course in localCourses)
     {
-      <h4 
-        class="m-3 hover-underline-animation"  
-        @onclick="() => planner.LocalCourse = course" 
-        role='button'
-      >
-        @course.Name
-      </h4>
+      <div>
+        <h4 
+          class="m-3 hover-underline-animation"  
+          @onclick="() => planner.LocalCourse = course" 
+          role='button'
+        >
+          @course.Name
+        </h4>
+      </div>
     }
   }
 </div>

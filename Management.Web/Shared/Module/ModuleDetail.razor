@@ -60,7 +60,7 @@
   }
 
   private string accordionId {
-    get => Module.Name.Replace(" ", "") + "-AccordionItem";
+    get => Module.Name.Replace(" ", "").Replace("#", "") + "-AccordionItem";
   }
 
   void OnDragEnter() {
