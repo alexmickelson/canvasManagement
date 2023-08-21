@@ -17,6 +17,7 @@ public class AssignmentEditorContext
     get => _assignment;
     set
     {
+      Console.WriteLine("saving");
       _assignment = value;
       StateHasChanged?.Invoke();
     }

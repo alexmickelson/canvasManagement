@@ -22,8 +22,8 @@
       }
       if(TemplateId == string.Empty || TemplateId == null)
       {
-        TemplateId = assignmentContext.Assignment.TemplateId;
         UseTemplate = TemplateId != null && TemplateId != "";
+        TemplateId = assignmentContext.Assignment.TemplateId;
         VariableValues = assignmentContext.Assignment.TemplateVariables;
         this.InvokeAsync(this.StateHasChanged);
       }
@@ -80,6 +80,28 @@
 
   private MarkupString preview { get => (MarkupString)Markdown.ToHtml(descriptionForPreview); }
 
+  private void handleTemplateChange(ChangeEventArgs e)
+  {
+    if (assignmentContext.Assignment != null)
+    {
+      Console.WriteLine("input");
+      var newValue = bool.Parse(e.Value?.ToString() ?? "false");
+      UseTemplate = newValue;
+      StateHasChanged();
+      if(!newValue)
+      {
+        TemplateId = string.Empty;
+        VariableValues = new Dictionary<string, string>();
+        assignmentContext.SaveAssignment(
+          assignmentContext.Assignment with
+          {
+            TemplateId = TemplateId,
+            TemplateVariables = VariableValues
+          }
+        );
+      }
+    }
+  }
 }
 
 @if(assignmentContext.Assignment != null && planner.LocalCourse != null)
@@ -90,7 +112,8 @@
       type="checkbox" 
       role="switch" 
       id="useTemplateForDescription"
-      @bind="UseTemplate"
+      checked="@UseTemplate"
+      @oninput="handleTemplateChange"
     />
     <label class="form-check-label" for="useTemplateForDescription">
       use template for description
