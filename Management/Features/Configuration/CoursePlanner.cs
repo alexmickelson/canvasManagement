@@ -72,6 +72,7 @@ public class CoursePlanner
   public event Action? StateHasChanged;
 
   public IEnumerable<CanvasAssignment>? CanvasAssignments { get; internal set; }
+  public IEnumerable<CanvasAssignmentGroup>? CanvasAssignmentGroups { get; internal set; }
   public IEnumerable<CanvasQuiz>? CanvasQuizzes { get; internal set; }
   public IEnumerable<CanvasModule>? CanvasModules { get; internal set; }
   public Dictionary<ulong, IEnumerable<CanvasModuleItem>>? CanvasModulesItems { get; internal set; }
@@ -80,7 +81,8 @@ public class CoursePlanner
     IEnumerable<CanvasAssignment> CanvasAssignments,
     IEnumerable<CanvasModule> CanvasModules,
     Dictionary<ulong, IEnumerable<CanvasModuleItem>> CanvasModulesItems,
-    IEnumerable<CanvasQuiz> canvasQuizzes
+    IEnumerable<CanvasQuiz> canvasQuizzes,
+    IEnumerable<CanvasAssignmentGroup> canvasAssignmentGroups
   )> LoadCanvasData()
   {
     LoadingCanvasData = true;
@@ -92,16 +94,18 @@ public class CoursePlanner
     var assignmentsTask = canvas.Assignments.GetAll(canvasId);
     var quizzesTask = canvas.Quizzes.GetAll(canvasId);
     var modulesTask = canvas.GetModules(canvasId);
+    var assignmentGroupsTask = canvas.AssignmentGroups.GetAll(canvasId);
 
     CanvasAssignments = await assignmentsTask;
     CanvasQuizzes = await quizzesTask;
     CanvasModules = await modulesTask;
+    CanvasAssignmentGroups = await assignmentGroupsTask;
 
     CanvasModulesItems = await canvas.GetAllModulesItems(canvasId, CanvasModules);
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
-    return (CanvasAssignments, CanvasModules, CanvasModulesItems, CanvasQuizzes);
+    return (CanvasAssignments, CanvasModules, CanvasModulesItems, CanvasQuizzes, CanvasAssignmentGroups);
   }
 
   public async Task SyncWithCanvas()
@@ -119,17 +123,30 @@ public class CoursePlanner
     LoadingCanvasData = true;
     StateHasChanged?.Invoke();
 
-    var (canvasAssignments, canvasModules, canvasModuleItems, canvasQuizzes) = await LoadCanvasData();
+    var (
+      canvasAssignments,
+      canvasModules,
+      canvasModuleItems,
+      canvasQuizzes,
+      canvasAssignmentGroups
+    ) = await LoadCanvasData();
+
     LoadingCanvasData = true;
     StateHasChanged?.Invoke();
     LocalCourse = LocalCourse.deleteCanvasIdsThatNoLongerExist(
       canvasModules,
       canvasAssignments,
+      canvasAssignmentGroups,
       canvasQuizzes
     );
 
     var canvasId =
       LocalCourse.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");
+
+    var newAssignmentGroups = await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(
+      canvasId, canvasAssignmentGroups, canvas);
+    LocalCourse = LocalCourse with { AssignmentGroups = newAssignmentGroups };
+
 
     var newModules = await LocalCourse.EnsureAllModulesExistInCanvas(
       canvasId,

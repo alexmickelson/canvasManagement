@@ -17,3 +17,5 @@ Apparently the VSCode razor extension was compiled with a preview of dotnet 6...
 
 The issue can be tracked [here](https://github.com/dotnet/razor/issues/6241)
 
+
+I am looking for a TA and grader for my CS 1410/1415 class. The labs are tuesdays at 7:30 - 9:30 am. Anyone who is interested, please message me on teams or send an email to alex.mickelson@snow.edu.

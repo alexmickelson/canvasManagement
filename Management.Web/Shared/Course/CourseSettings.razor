@@ -67,6 +67,7 @@
     <h1>Course Settings</h1>
   </Title>
   <Body>
+    
     <h5 class="text-center">Select Days Of Week</h5>
     <div class="row m-3">
     @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
@@ -144,6 +145,7 @@
         </div>
       </div>
     }
+    <AssignmentGroups />
   </Body>
   <Footer>
     <button 

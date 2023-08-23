@@ -47,6 +47,7 @@ public static class CoursePlannerExtensions
     this LocalCourse localCourse,
     IEnumerable<CanvasModule> canvasModules,
     IEnumerable<CanvasAssignment> canvasAssignments,
+    IEnumerable<CanvasAssignmentGroup> canvasAssignmentGroups,
     IEnumerable<CanvasQuiz> canvasQuizzes
   )
   {
@@ -56,9 +57,21 @@ public static class CoursePlannerExtensions
       .Select((m) => m.validateCanvasIds(canvasModules, canvasAssignments, canvasQuizzes))
       .ToArray();
 
+    var canvasAssignmentGroupIds = canvasAssignmentGroups.Select(g => g.Id).ToArray();
+    var correctAssignmentGroups = localCourse.AssignmentGroups.Select(
+      g =>
+      {
+        var groupCanvasId = g.CanvasId ?? 0;
+        return canvasAssignmentGroupIds.Contains(groupCanvasId)
+          ? g
+          : g with { CanvasId = null };
+      }
+    ).ToArray();
+
     return localCourse with
     {
-      Modules = correctedModules
+      Modules = correctedModules,
+      AssignmentGroups = correctAssignmentGroups,
     };
   }
 

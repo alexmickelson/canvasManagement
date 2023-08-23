@@ -1,0 +1,113 @@
+@using Management.Web.Shared.Components
+@inject CanvasService canvas
+@inject CoursePlanner planner
+
+
+@code {
+  protected override void OnInitialized()
+  {
+    planner.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    planner.StateHasChanged -= reload;
+  }
+
+  private void AddAssignmentGroup()
+  {
+    if(planner.LocalCourse != null)
+    {
+      var newGroup = new LocalAssignmentGroup
+      {
+        Name = "",
+        Weight = 0,
+        Id = Guid.NewGuid().ToString()
+      };
+
+      var updatedGroups = planner.LocalCourse.AssignmentGroups.Append(newGroup);
+      planner.LocalCourse = planner.LocalCourse with
+      {
+        AssignmentGroups = updatedGroups
+      };
+    }
+  }
+
+  private Action<ChangeEventArgs> saveGroupName(string groupId)
+  {
+    return (e) => 
+    {
+      if(planner.LocalCourse != null)
+      {
+        var newName = e.Value?.ToString() ?? "";
+        var newGroups = planner.LocalCourse.AssignmentGroups.Select(
+          g => g.Id == groupId
+            ? g with { Name = newName }
+            : g
+        );
+        planner.LocalCourse = planner.LocalCourse with
+        {
+          AssignmentGroups = newGroups
+        };
+      }
+    };  
+  }
+  private Action<ChangeEventArgs> saveGroupWeight(string groupId)
+  {
+    return (e) => 
+    {
+      if(planner.LocalCourse != null)
+      {
+        var newWeight = double.Parse(e.Value?.ToString() ?? "0");
+        var newGroups = planner.LocalCourse.AssignmentGroups.Select(
+          g => g.Id == groupId
+            ? g with { Weight = newWeight }
+            : g
+        );
+        planner.LocalCourse = planner.LocalCourse with
+        {
+          AssignmentGroups = newGroups
+        };
+      }
+    };  
+  }
+}
+
+@if(planner.LocalCourse != null)
+{
+  <h4 class="text-center">Assignment Groups</h4>
+  @foreach (var group in planner.LocalCourse.AssignmentGroups)
+  {
+    var groupName = group.Name;
+    var nameInputCallback = saveGroupName(group.Id);
+    var weight = group.Weight;
+    var weightInputCallback = saveGroupWeight(group.Id);
+    <div class="row">
+      <div class="col-auto">
+        <label class="form-label">Group Name</label>
+        <input 
+          class="form-control"
+          @bind="groupName" @oninput="nameInputCallback">
+      </div>
+      <div class="col-auto">
+        <label class="form-label">Weight</label>
+        <input 
+          class="form-control"
+          @bind="weight"
+          @oninput="weightInputCallback"
+        >
+      </div>
+    </div>
+  }
+  <div class="d-flex justify-content-end">
+    <button 
+      class="btn btn-outline-primary"
+      @onclick="AddAssignmentGroup"
+    >
+      + Assignment Group
+    </button>
+  </div>
+}

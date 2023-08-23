@@ -35,6 +35,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddScoped<IWebRequestor, WebRequestor>();
 builder.Services.AddScoped<CanvasServiceUtils>();
 builder.Services.AddScoped<CanvasAssignmentService>();
+builder.Services.AddScoped<CanvasAssignmentGroupService>();
 builder.Services.AddScoped<CanvasQuizService>();
 builder.Services.AddScoped<CanvasService, CanvasService>();
 

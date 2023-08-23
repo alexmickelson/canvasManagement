@@ -13,18 +13,21 @@ public class CanvasService
   private readonly CanvasServiceUtils utils;
 
   public CanvasAssignmentService Assignments { get; }
+  public CanvasAssignmentGroupService AssignmentGroups { get; }
   public CanvasQuizService Quizzes { get; }
 
   public CanvasService(
     IWebRequestor webRequestor,
     CanvasServiceUtils utils,
     CanvasAssignmentService Assignments,
+    CanvasAssignmentGroupService AssignmentGroups,
     CanvasQuizService Quizzes
   )
   {
     this.webRequestor = webRequestor;
     this.utils = utils;
     this.Assignments = Assignments;
+    this.AssignmentGroups = AssignmentGroups;
     this.Quizzes = Quizzes;
   }
 

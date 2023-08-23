@@ -25,9 +25,12 @@
     assignmentContext.StateHasChanged -= reload;
   }
 
-
-  [Parameter]
-  public Action OnHide { get; set; } = () => { };
+  private void OnHide() 
+  {
+    assignmentContext.Assignment = null;
+    name = "";
+    lockAtDueDate = false;
+  }
   public Modal? AssignmentModal { get; set; } = null;
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
@@ -111,7 +114,7 @@
   }
 }
 
-<Modal @ref="AssignmentModal" OnHide="@(() => OnHide())">
+<Modal @ref="AssignmentModal" OnHide="OnHide" Size="xl">
   <Title>
     @assignmentContext.Assignment?.Name
   </Title>

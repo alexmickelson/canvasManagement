@@ -14,6 +14,9 @@
   [Parameter]
   public Action OnHide { get; set; } = () => { };
 
+  [Parameter]
+  public string Size { get; set; } = "xl"; //sm, lg, xl, xxl
+
   private string modalClass = "hide-modal";
   private bool showBackdrop = false;
   public void Show()
@@ -33,7 +36,7 @@
 }
 
 <div class="modal @modalClass" @onmousedown="Hide">
-  <div class="modal-dialog modal-xl" role="document" @onmousedown:stopPropagation="true">
+  <div class="@($"modal-dialog modal-{Size}")" role="document" @onmousedown:stopPropagation="true">
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title text-center w-100">@Title</h4>

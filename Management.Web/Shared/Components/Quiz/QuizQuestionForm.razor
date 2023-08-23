@@ -22,7 +22,7 @@
   }
   private string text { get; set; } = string.Empty;
   private string questionType { get; set; } = string.Empty;
-  private int points { get; set; }
+  private int points { get; set; } = 1;
   private IEnumerable<LocalQuizQuestionAnswer> answers { get; set; } = Enumerable.Empty<LocalQuizQuestionAnswer>();
 
   private void handleTypeUpdate(string type)

@@ -11,6 +11,8 @@ public record LocalCourse
   public SimpleTimeOnly DefaultDueTime { get; init; } = new SimpleTimeOnly();
   public IEnumerable<AssignmentTemplate> AssignmentTemplates { get; init; } =
     Enumerable.Empty<AssignmentTemplate>();
+  public IEnumerable<LocalAssignmentGroup> AssignmentGroups { get; init; } = 
+    Enumerable.Empty<LocalAssignmentGroup>();
 }
 
 public record SimpleTimeOnly
