@@ -89,4 +89,9 @@ public record LocalAssignment
 
     return Markdig.Markdown.ToHtml(Description) + "<hr>" + rubricHtml;
   }
+
+  public ulong? GetCanvasAssignmentGroupId(IEnumerable<LocalAssignmentGroup> assignmentGroups) =>
+    assignmentGroups
+      .FirstOrDefault(g => g.Id == LocalAssignmentGroupId)?
+      .CanvasId;
 }

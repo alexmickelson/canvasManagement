@@ -21,4 +21,8 @@ public record LocalQuiz
   // If “until_after_last_attempt”, students can only see results after their last attempt. (Only valid if allowed_attempts > 1). Defaults to null.
   public IEnumerable<LocalQuizQuestion> Questions { get; init; } =
     Enumerable.Empty<LocalQuizQuestion>();
+  public ulong? GetCanvasAssignmentGroupId(IEnumerable<LocalAssignmentGroup> assignmentGroups) =>
+    assignmentGroups
+      .FirstOrDefault(g => g.Id == LocalAssignmentGroupId)?
+      .CanvasId;
 }

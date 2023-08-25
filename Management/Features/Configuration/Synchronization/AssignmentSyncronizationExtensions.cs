@@ -24,6 +24,8 @@ public static partial class AssignmentSyncronizationExtensions
       localCourse.AssignmentTemplates
     );
 
+    var canvasAssignmentGroupId = localAssignment.GetCanvasAssignmentGroupId(localCourse.AssignmentGroups);
+
     return canvasAssignment != null
       ? await updateAssignmentIfNeeded(
         localCourse,
@@ -31,9 +33,10 @@ public static partial class AssignmentSyncronizationExtensions
         localAssignment,
         canvasAssignments,
         canvas,
-        localHtmlDescription
+        localHtmlDescription,
+        canvasAssignmentGroupId
       )
-      : await canvas.Assignments.Create(canvasCourseId, localAssignment, localHtmlDescription);
+      : await canvas.Assignments.Create(canvasCourseId, localAssignment, localHtmlDescription, canvasAssignmentGroupId);
   }
 
   private static async Task<LocalAssignment> updateAssignmentIfNeeded(
@@ -42,12 +45,14 @@ public static partial class AssignmentSyncronizationExtensions
     LocalAssignment localAssignment,
     IEnumerable<CanvasAssignment> canvasAssignments,
     CanvasService canvas,
-    string localHtmlDescription
+    string localHtmlDescription,
+    ulong? canvasAssignmentGroupId
   )
   {
     var assignmentNeedsUpdates = localAssignment.NeedsUpdates(
       canvasAssignments,
       localCourse.AssignmentTemplates,
+      canvasAssignmentGroupId,
       quiet: false
     );
     if (assignmentNeedsUpdates)
@@ -55,7 +60,8 @@ public static partial class AssignmentSyncronizationExtensions
       await canvas.Assignments.Update(
         courseId: canvasCourseId,
         localAssignment,
-        localHtmlDescription
+        localHtmlDescription,
+        canvasAssignmentGroupId
       );
     }
     return localAssignment;
@@ -65,6 +71,7 @@ public static partial class AssignmentSyncronizationExtensions
     this LocalAssignment localAssignment,
     IEnumerable<CanvasAssignment> canvasAssignments,
     IEnumerable<AssignmentTemplate> courseAssignmentTemplates,
+    ulong? canvasAssignmentGroupId,
     bool quiet = true
   )
   {
@@ -154,6 +161,9 @@ public static partial class AssignmentSyncronizationExtensions
     var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
       localAssignment.SubmissionTypes.Select(t => t.ToString())
     );
+    var assignmentGroupSame = 
+      canvasAssignmentGroupId != null 
+      && canvasAssignmentGroupId == canvasAssignment.AssignmentGroupId;
 
     if (!quiet)
     {
@@ -210,6 +220,10 @@ public static partial class AssignmentSyncronizationExtensions
         Console.WriteLine(
           $"Submission Types different for {localAssignment.Name}, local: {JsonSerializer.Serialize(localAssignment.SubmissionTypes.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}"
         );
+      if(!assignmentGroupSame)
+        Console.WriteLine(
+          $"Canvas assignment group ids different for {localAssignment.Name}, local: {canvasAssignmentGroupId}, in canvas {canvasAssignment.AssignmentGroupId}"
+        );
     }
 
     return !nameSame
@@ -217,7 +231,8 @@ public static partial class AssignmentSyncronizationExtensions
       || !lockDatesSame
       || !descriptionSame
       || !pointsSame
-      || !submissionTypesSame;
+      || !submissionTypesSame
+      || !assignmentGroupSame;
   }
 
   internal static async Task<LocalCourse> SyncAssignmentsWithCanvas(

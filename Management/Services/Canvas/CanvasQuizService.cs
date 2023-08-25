@@ -36,7 +36,11 @@ public class CanvasQuizService
     );
   }
 
-  public async Task<LocalQuiz> Create(ulong canvasCourseId, LocalQuiz localQuiz)
+  public async Task<LocalQuiz> Create(
+    ulong canvasCourseId, 
+    LocalQuiz localQuiz,
+    ulong? canvasAssignmentGroupId
+  )
   {
     Console.WriteLine($"Creating Quiz {localQuiz.Name}");
 
@@ -56,6 +60,7 @@ public class CanvasQuizService
         cant_go_back = false,
         due_at = localQuiz.DueAt,
         lock_at = localQuiz.LockAtDueDate ? localQuiz.DueAt : localQuiz.LockAt,
+        assignment_group_id = canvasAssignmentGroupId,
       }
     };
     var request = new RestRequest(url);

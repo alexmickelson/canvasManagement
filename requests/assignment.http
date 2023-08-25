@@ -131,7 +131,11 @@ GET https://snow.instructure.com/api/v1/courses/872095/assignments/12676639?incl
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 ###
-GET https://snow.instructure.com/api/v1/courses/871954/assignment_groups
+GET https://snow.instructure.com/api/v1/courses/871954/assignment_groups/
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+###
+GET https://snow.instructure.com/api/v1/courses/871954/assignment_groups/1943132
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 ###
 GET https://snow.instructure.com/api/v1/courses/871954

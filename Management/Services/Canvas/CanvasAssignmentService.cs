@@ -32,7 +32,8 @@ public class CanvasAssignmentService
   public async Task<LocalAssignment> Create(
     ulong canvasCourseId,
     LocalAssignment localAssignment,
-    string htmlDescription
+    string htmlDescription,
+    ulong? canvasAssignmentGroupId
   )
   {
     Console.WriteLine($"creating assignment: {localAssignment.Name}");
@@ -45,7 +46,8 @@ public class CanvasAssignmentService
       description = htmlDescription,
       due_at = localAssignment.DueAt,
       lock_at = localAssignment.LockAtDueDate ? localAssignment.DueAt : localAssignment.LockAt,
-      points_possible = localAssignment.PointsPossible
+      points_possible = localAssignment.PointsPossible,
+      assignment_group_id = canvasAssignmentGroupId,
     };
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
@@ -60,7 +62,12 @@ public class CanvasAssignmentService
     return updatedLocalAssignment;
   }
 
-  public async Task Update(ulong courseId, LocalAssignment localAssignment, string htmlDescription)
+  public async Task Update(
+    ulong courseId,
+    LocalAssignment localAssignment,
+    string htmlDescription,
+    ulong? canvasAssignmentGroupId
+  )
   {
     Console.WriteLine($"updating assignment: {localAssignment.Name}");
     var url = $"courses/{courseId}/assignments/{localAssignment.CanvasId}";
@@ -72,7 +79,8 @@ public class CanvasAssignmentService
       description = htmlDescription,
       due_at = localAssignment.DueAt,
       lock_at = localAssignment.LockAtDueDate ? localAssignment.DueAt : localAssignment.LockAt,
-      points_possible = localAssignment.PointsPossible
+      points_possible = localAssignment.PointsPossible,
+      assignment_group_id = canvasAssignmentGroupId,
     };
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
