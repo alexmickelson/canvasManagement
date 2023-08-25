@@ -11,6 +11,7 @@ public record LocalQuiz
   public DateTime DueAt { get; init; }
   public bool ShuffleAnswers { get; init; }
   public bool OneQuestionAtATime { get; init; }
+  public string? LocalAssignmentGroupId { get; init; }
   public int AllowedAttempts { get; init; } = -1; // -1 is infinite
   // public bool ShowCorrectAnswers { get; init; }
   // public int? TimeLimit { get; init; } = null;

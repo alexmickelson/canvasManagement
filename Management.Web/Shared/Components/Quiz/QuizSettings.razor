@@ -1,6 +1,8 @@
 @using Management.Web.Shared.Components
+@using Management.Web.Shared.Components.Forms
 
 @inject QuizEditorContext quizContext
+@inject CoursePlanner planner
 
 @code {
   protected override void OnInitialized()
@@ -38,37 +40,66 @@
 
   private void handleLockAtDueDateChange()
   {
-    if(quizContext.Quiz != null)
-    {
-      var newValue = !quizContext.Quiz.LockAtDueDate;
+    if(quizContext.Quiz == null)
+      return;
 
-      var newQuiz = newValue
-        ? quizContext.Quiz with
-          {
-            LockAtDueDate = newValue,
-            LockAt = quizContext.Quiz.DueAt
-          }
-        : quizContext.Quiz with
-          {
-            LockAtDueDate = newValue
-          };
-      quizContext.SaveQuiz(newQuiz);
-    }
+    var newValue = !quizContext.Quiz.LockAtDueDate;
+
+    var newQuiz = newValue
+      ? quizContext.Quiz with
+        {
+          LockAtDueDate = newValue,
+          LockAt = quizContext.Quiz.DueAt
+        }
+      : quizContext.Quiz with
+        {
+          LockAtDueDate = newValue
+        };
+    quizContext.SaveQuiz(newQuiz);
   }
-}
 
-<div>
-  <div class="form-check form-switch">
-    <input 
-      class="form-check-input" 
-      type="checkbox"
-      role="switch" 
-      id="lockAtDueDate"
-      checked="@lockAtDueDate"
-      @onchange="handleLockAtDueDateChange">
-    <label 
-      class="form-check-label" for="lockAtDueDate">
-      Lock at Due Date
-    </label>
+  private void setAssignmentGroup(LocalAssignmentGroup group)
+  {
+    if(quizContext.Quiz == null)
+      return;
+    
+    var newQuiz = quizContext.Quiz with 
+    {
+      LocalAssignmentGroupId = group.Id
+    };
+
+    quizContext.SaveQuiz(newQuiz);
+  }
+
+  private LocalAssignmentGroup? selectedAssignmentGroup =>
+    planner
+      .LocalCourse?
+      .AssignmentGroups
+      .FirstOrDefault(g => g.Id == quizContext.Quiz?.LocalAssignmentGroupId);
+}
+@if(planner.LocalCourse != null )
+{
+  <div>
+    <div class="form-check form-switch">
+      <input 
+        class="form-check-input" 
+        type="checkbox"
+        role="switch" 
+        id="lockAtDueDate"
+        checked="@lockAtDueDate"
+        @onchange="handleLockAtDueDateChange">
+      <label 
+        class="form-check-label" for="lockAtDueDate">
+        Lock at Due Date
+      </label>
+    </div>
+    <ButtonSelect
+      Label="Assignment Group"
+      Options="planner.LocalCourse.AssignmentGroups"
+      GetId="(g) => g.Id"
+      GetName="(g) => g.Name"
+      OnSelect="(g) => setAssignmentGroup(g)"
+      SelectedOption="selectedAssignmentGroup"
+    />
   </div>
-</div>
+}

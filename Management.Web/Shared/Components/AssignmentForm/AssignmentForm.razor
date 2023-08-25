@@ -1,5 +1,6 @@
 @using Management.Web.Shared.Components
 @using Management.Web.Shared.Components.AssignmentForm
+@using Management.Web.Shared.Components.Forms
 
 @inject CoursePlanner planner
 @inject CanvasService canvas
@@ -112,6 +113,25 @@
       assignmentContext.SaveAssignment(newAssignment);
     }
   }
+
+  private void setAssignmentGroup(LocalAssignmentGroup group)
+  {
+    if(assignmentContext.Assignment == null)
+      return;
+    
+    var newAssignment = assignmentContext.Assignment with 
+    {
+      LocalAssignmentGroupId = group.Id
+    };
+
+    assignmentContext.SaveAssignment(newAssignment);
+  }
+
+  private LocalAssignmentGroup? selectedAssignmentGroup =>
+    planner
+      .LocalCourse?
+      .AssignmentGroups
+      .FirstOrDefault(g => g.Id == assignmentContext.Assignment?.LocalAssignmentGroupId);
 }
 
 <Modal @ref="AssignmentModal" OnHide="OnHide" Size="xl">
@@ -132,6 +152,14 @@
           @oninput="handleNameChange" 
         />
       </div>
+      <ButtonSelect
+        Label="Assignment Group"
+        Options="planner.LocalCourse.AssignmentGroups"
+        GetId="(g) => g.Id"
+        GetName="(g) => g.Name"
+        OnSelect="(g) => setAssignmentGroup(g)"
+        SelectedOption="selectedAssignmentGroup"
+      />
       <div class="m-1">
         <AssignmentDescriptionEditor />
       </div>

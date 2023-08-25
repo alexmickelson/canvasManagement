@@ -1,0 +1,48 @@
+
+@typeparam T
+
+@code {
+  [Parameter, EditorRequired]
+  public string Label { get; set; } = string.Empty;
+  [Parameter, EditorRequired]
+  public IEnumerable<T> Options { get; set; } = default!;
+    
+  [Parameter, EditorRequired]
+  public Func<T, string> GetId { get; set; } = default!;
+  
+  [Parameter, EditorRequired]
+  public Func<T, string> GetName { get; set; } = default!;
+  
+  [Parameter, EditorRequired]
+  public Action<T?> OnSelect { get; set; } = default!;
+  
+  private string htmlLabel => Label.Replace("-", "");
+
+  private string selectedItemId { get; set; }
+
+  private void onSelect(ChangeEventArgs e)
+  {
+    var newId = e.Value?.ToString();
+    var selectedOption = Options.FirstOrDefault(o => GetId(o) == newId);
+    OnSelect(selectedOption);
+  }
+}
+
+<div>
+  <label for="@htmlLabel">@Label</label>
+  <select 
+    id="@htmlLabel"
+    name="@htmlLabel"
+    @bind="selectedItemId"
+    @oninput="onSelect"
+  >
+    @foreach(var option in Options)
+    {
+      <option
+        value="@(GetId(option))"
+      >
+        @GetName(option)
+      </option>
+    }
+  </select>
+</div>

@@ -49,6 +49,7 @@ public record LocalAssignment
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
+  public string? LocalAssignmentGroupId { get; init; }
   public int PointsPossible { get; init; }
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
 

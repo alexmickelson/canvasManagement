@@ -1,0 +1,56 @@
+
+@typeparam T
+
+@code {
+  [Parameter, EditorRequired]
+  public string Label { get; set; } = string.Empty;
+  [Parameter, EditorRequired]
+  public IEnumerable<T> Options { get; set; } = default!;
+    
+  [Parameter, EditorRequired]
+  public Func<T, string> GetId { get; set; } = default!;
+  
+  [Parameter, EditorRequired]
+  public Func<T, string> GetName { get; set; } = default!;
+  
+  [Parameter, EditorRequired]
+  public Action<T?> OnSelect { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public T? SelectedOption { get; set; }
+
+  protected override void OnParametersSet()
+  {
+    selectedItemId = SelectedOption != null ? GetId(SelectedOption) : "";
+    
+  }
+  
+  private string htmlLabel => Label.Replace("-", "");
+
+  private string selectedItemId { get; set; }
+
+  private void onSelect(T option)
+  {
+    SelectedOption = option;
+    selectedItemId = GetId(option);
+    OnSelect(SelectedOption);
+  }
+
+  private string getButtonClasS(T option)
+  {
+    var partClass = selectedItemId == GetId(option) ? "primary" : "outline-primary";
+    return $"mx-1 btn btn-{partClass}";
+  }
+}
+
+<div>
+  @foreach(var option in Options)
+  {
+    <button
+      class="@getButtonClasS(option)"
+      @onclick="() => onSelect(option)"
+    >
+      @GetName(option)
+    </button>
+  }
+</div>
