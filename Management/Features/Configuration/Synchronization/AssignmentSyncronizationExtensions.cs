@@ -17,6 +17,10 @@ public static partial class AssignmentSyncronizationExtensions
     CanvasService canvas
   )
   {
+    // ignore past assignments
+    if(localAssignment.DueAt < DateTime.Now)
+      return localAssignment;
+
     var canvasAssignment = canvasAssignments.FirstOrDefault(
       ca => ca.Id == localAssignment.CanvasId
     );

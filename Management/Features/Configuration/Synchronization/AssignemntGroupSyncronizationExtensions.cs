@@ -29,7 +29,7 @@ public static partial class AssignmentGroupSyncronizationExtensions
         var needsUpdate = canvasGroupWithSameName.GroupWeight != correctGroup.Weight;
 
         if (needsUpdate)
-          await canvas.AssignmentGroups.Update(courseCanvasId, assignmentGroup);
+          await canvas.AssignmentGroups.Update(courseCanvasId, correctGroup);
 
         return correctGroup;
       }
