@@ -2,6 +2,8 @@
 
 @inject YamlManager yamlManager
 @inject CoursePlanner planner
+@inject NavigationManager Navigation
+@inject ILogger<CurrentFiles> logger
 
 @code
 {
@@ -13,6 +15,13 @@
     localCourses = await yamlManager.LoadSavedCourses();
   }
 
+  void handleClick(MouseEventArgs e, LocalCourse course)
+  {
+    logger.LogInformation("here");
+    planner.LocalCourse = course;
+    Navigation.NavigateTo("/course/" + course.Name); 
+  }
+
 }
 
 <div class="text-center">
@@ -21,14 +30,22 @@
     <h3 >Stored Courses</h3>
     @foreach (var course in localCourses)
     {
+      var location = "/course/" + course.Name;
       <div>
         <h4 
           class="m-3 hover-underline-animation"  
-          @onclick="() => planner.LocalCourse = course" 
+          @onclick="(e) => handleClick(e, course)" 
           role='button'
         >
           @course.Name
         </h4>
+        @* <h4
+          @onclick="(e) => handleClick(e, course)" 
+          role='button'
+        >
+          @course.Name
+        </h4> *@
+
       </div>
     }
   }
