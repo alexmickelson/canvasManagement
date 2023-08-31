@@ -39,7 +39,8 @@
     {
       var newQuestion = new LocalQuizQuestion
       {
-        Id = Guid.NewGuid().ToString()
+        Id = Guid.NewGuid().ToString(),
+        Points = 1,
       };
       var newQuiz = quizContext.Quiz with
       {

@@ -9,6 +9,7 @@
 @using Management.Web.Shared.Module.Assignment
 @using Management.Web.Shared.Components
 
+@inject YamlManager yamlManager
 @inject CanvasService canvas
 @inject CoursePlanner planner
 
@@ -16,6 +17,62 @@
   [Parameter]
   public string CourseName { get; set; }
 
+  private bool loading = true;
+
+  protected override async Task OnInitializedAsync()
+  {
+    if(planner.LocalCourse == null)
+    {
+      var courses = await yamlManager.LoadSavedCourses();
+      planner.LocalCourse = courses.First(c => c.Name == CourseName);
+    }
+    base.OnInitialized();
+    loading = false;
+  }
+
 }
 
-@planner.LocalCourse?.Name
+@if(loading)
+{
+  <Spinner />
+}
+
+@if(planner.LocalCourse != null)
+{
+  <div class="mb-3 d-flex justify-content-between" style="height: 4em;">
+    <div class="my-auto">
+      <button
+        @onclick="planner.Clear"
+        class="btn btn-primary"
+      >
+        Select New Course
+      </button>
+      <CourseSettings />
+      <AssignmentTemplateManagement />
+
+      <button 
+        class="btn btn-outline-primary"
+        @onclick="planner.SyncWithCanvas"
+      >
+        Sync With Canvas
+      </button>
+      <a 
+        class="btn btn-outline-secondary"
+        target="_blank"
+        href="@($"{Environment.GetEnvironmentVariable("CANVAS_URL")}/courses/{planner.LocalCourse.CanvasId}")"
+      >
+        View In Canvas
+      </a>
+      <div class="my-auto ms-2 d-inline">
+        @planner.LocalCourse.Name
+      </div>
+    </div>
+
+    @if(planner.LoadingCanvasData)
+    {
+      <Spinner />
+    }
+  </div>
+  <CourseDetails />
+}
+<br>
