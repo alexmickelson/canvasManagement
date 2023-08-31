@@ -3,6 +3,7 @@
 
 @inject DragContainer dragContainer
 @inject CoursePlanner planner
+@inject NavigationManager Navigation
 @inject AssignmentEditorContext assignmentContext
 
 @inherits DroppableAssignment
@@ -44,6 +45,11 @@
     .FirstOrDefault(
       a => a.Id == Assignment.CanvasId
     ) != null;
+  private void OnClick() 
+  {
+    assignmentContext.Assignment = Assignment;
+    Navigation.NavigateTo("/course/" + planner.LocalCourse.Name + "/assignment/" + Assignment.Id);
+  }
 
 }
 
@@ -51,7 +57,7 @@
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
-  @onclick="@(() => assignmentContext.Assignment = Assignment)"
+  @onclick="OnClick"
   role="button"
 >
   <div class="card">

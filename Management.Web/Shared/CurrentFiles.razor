@@ -17,11 +17,11 @@
 
   void handleClick(MouseEventArgs e, LocalCourse course)
   {
-    logger.LogInformation("here");
+    @* logger.LogInformation("here"); *@
     planner.LocalCourse = course;
     Navigation.NavigateTo("/course/" + course.Name);
+    Console.WriteLine("navigated to course detail");
   }
-
 }
 
 <div class="text-center">

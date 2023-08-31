@@ -4,18 +4,19 @@
 
 @inject CoursePlanner planner
 @inject CanvasService canvas
+@inject NavigationManager Navigation
 @inject AssignmentEditorContext assignmentContext
 
 @code {
   protected override void OnInitialized()
   {
     assignmentContext.StateHasChanged += reload;
+    reload();
   }
   private void reload()
   {
     if (assignmentContext.Assignment != null)
     {
-      AssignmentModal?.Show();
       name = assignmentContext.Assignment.Name;
       lockAtDueDate = assignmentContext.Assignment.LockAtDueDate;
     }
@@ -32,7 +33,6 @@
     name = "";
     lockAtDueDate = false;
   }
-  public Modal? AssignmentModal { get; set; } = null;
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
 
@@ -48,7 +48,6 @@
 
       assignmentContext.SaveAssignment(newAssignment);
     }
-    AssignmentModal?.Hide();
     assignmentContext.Assignment = null;
   }
 
@@ -86,7 +85,6 @@
         await canvas.Assignments.Delete(courseId, assignment);
       }
     }
-    AssignmentModal?.Hide();
   }
 
   private void handleNameChange(ChangeEventArgs e)
@@ -134,65 +132,58 @@
       .FirstOrDefault(g => g.Id == assignmentContext.Assignment?.LocalAssignmentGroupId);
 }
 
-<Modal @ref="AssignmentModal" OnHide="OnHide" Size="xl">
-  <Title>
-    @assignmentContext.Assignment?.Name
-  </Title>
+@assignmentContext.Assignment?.Name
 
-  <Body>
-    @if (assignmentContext.Assignment != null)
-    {
-      <div class="m-1">
-        <label class="form-label">
-          Name
-        </label>
-        <input 
-          class="form-control" 
-          @bind="name"
-          @oninput="handleNameChange" 
-        />
-      </div>
-      <ButtonSelect
-        Label="Assignment Group"
-        Options="planner.LocalCourse.AssignmentGroups"
-        GetId="(g) => g.Id"
-        GetName="(g) => g.Name"
-        OnSelect="(g) => setAssignmentGroup(g)"
-        SelectedOption="selectedAssignmentGroup"
-      />
-      <div class="m-1">
-        <AssignmentDescriptionEditor />
-      </div>
+@if (assignmentContext.Assignment != null)
+{
+  <div class="m-1">
+    <label class="form-label">
+      Name
+    </label>
+    <input 
+      class="form-control" 
+      @bind="name"
+      @oninput="handleNameChange" 
+    />
+  </div>
+  <ButtonSelect
+    Label="Assignment Group"
+    Options="planner.LocalCourse.AssignmentGroups"
+    GetId="(g) => g.Id"
+    GetName="(g) => g.Name"
+    OnSelect="(g) => setAssignmentGroup(g)"
+    SelectedOption="selectedAssignmentGroup"
+  />
+  <div class="m-1">
+    <AssignmentDescriptionEditor />
+  </div>
 
-      <div class="form-check m-1">
-        <input 
-          class="form-check-input" 
-          id="lockAtDueDate" 
-          type="checkbox" 
-          @bind="lockAtDueDate"
-          @oninput="handleLockAtDueDateChange" 
-        />
-        <label 
-          class="form-check-label" 
-          for="lockAtDueDate"
-        >
-          Lock At Due Date
-        </label>
-      </div>
-      <RubricEditor />
-      <SubmissionTypeSelector />
-    }
-  </Body>
-  <Footer>
-    <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
-    <button 
-      class="btn btn-primary" 
-      @onclick="@(() => {
-        AssignmentModal?.Hide();
-        assignmentContext.Assignment = null;
-      })"
+  <div class="form-check m-1">
+    <input 
+      class="form-check-input" 
+      id="lockAtDueDate" 
+      type="checkbox" 
+      @bind="lockAtDueDate"
+      @oninput="handleLockAtDueDateChange" 
+    />
+    <label 
+      class="form-check-label" 
+      for="lockAtDueDate"
     >
-      Done
-    </button>
-  </Footer>
-</Modal>
+      Lock At Due Date
+    </label>
+  </div>
+  <RubricEditor />
+  <SubmissionTypeSelector />
+}
+<ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
+<button 
+  class="btn btn-primary" 
+  @onclick="@(() => {
+    assignmentContext.Assignment = null;
+    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Name);
+  })"
+>
+  Done
+</button>
+

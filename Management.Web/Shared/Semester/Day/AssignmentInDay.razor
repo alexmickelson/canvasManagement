@@ -2,8 +2,10 @@
 
 @inject DragContainer dragContainer
 @inject CoursePlanner planner
+@inject NavigationManager Navigation
 @inject AssignmentEditorContext assignmentContext
 
+@inject ILogger<AssignmentInDay> logger
 @inherits DroppableAssignment
 
 @code {
@@ -29,13 +31,23 @@
   {
     dragContainer.DropCallback = null;
   }
+
+  private void OnClick() 
+  {
+    if(planner.LocalCourse != null)
+    {
+      assignmentContext.Assignment = Assignment;
+      Navigation.NavigateTo("/course/" + planner.LocalCourse.Name + "/assignment/" + Assignment.Id);
+      logger.LogInformation("navigating to assignment page");
+    }
+  }
 }
 
 <div
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
-  @onclick="@(() => assignmentContext.Assignment = Assignment)"
+  @onclick="OnClick"
   role="button"
 >
   @Assignment.Name

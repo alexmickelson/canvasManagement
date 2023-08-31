@@ -17,8 +17,8 @@
   private bool showNewFile { get; set; } = false;
   protected override void OnInitialized()
   {
-    planner.StateHasChanged += reload;
     planner.LocalCourse = null;
+    planner.StateHasChanged += reload;
   }
 
   private void reload()
