@@ -6,6 +6,7 @@ public record RubricItem
   public string Id { get; set; } = "";
   public string Label { get; set; } = "";
   public int Points { get; set; } = 0;
+  public bool IsExtraCredit => Label.Contains(extraCredit);
 }
 
 public static class SubmissionType
