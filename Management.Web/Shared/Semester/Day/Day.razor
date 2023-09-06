@@ -112,16 +112,16 @@
   ondragover="event.preventDefault();"
 >
   @(isWeekDay ? date?.Day : "")
-  <div class="m-0 ps-3">
-  @foreach (var assignment in TodaysAssignments)
-  {
-      @* Console.WriteLine($"assignment: {assignment.Name}"); *@
-      <AssignmentInDay Assignment="assignment" @key="@assignment" />
-  }
+  <ul class="m-0 ps-3">
+    @foreach (var assignment in TodaysAssignments)
+    {
+        @* Console.WriteLine($"assignment: {assignment.Name}"); *@
+        <AssignmentInDay Assignment="assignment" @key="@assignment" />
+    }
 
-  @foreach(var quiz in todaysQuizzes)
-  {
-    <QuizInDay Quiz="quiz" @key="@quiz" />
-  }
-  </div>
+    @foreach(var quiz in todaysQuizzes)
+    {
+      <QuizInDay Quiz="quiz" @key="@quiz" />
+    }
+  </ul>
 </div>

@@ -175,17 +175,34 @@
   </div>
   <div class="container">
     <RubricEditor />
+    <hr>
+    <div class="mx-5 px-5">
+      <SubmissionTypeSelector />
+    </div>
   </div>
-  <SubmissionTypeSelector />
 }
-<ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
-<button 
-  class="btn btn-primary" 
-  @onclick="@(() => {
-    assignmentContext.Assignment = null;
-    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Name);
-  })"
->
-  Done
-</button>
 
+<div class="d-flex justify-content-end m-3">
+
+  <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
+
+  <button 
+    class="btn btn-primary mx-2" 
+    @onclick="@(() => {
+      assignmentContext.Assignment = null;
+      Navigation.NavigateTo("/course/" + planner.LocalCourse?.Name);
+    })"
+  >
+    Done
+  </button>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>

@@ -12,6 +12,7 @@
 @inject YamlManager yamlManager
 @inject CanvasService canvas
 @inject CoursePlanner planner
+@inject NavigationManager navigtion
 
 @code {
   [Parameter]
@@ -30,6 +31,12 @@
     loading = false;
   }
 
+  private void selectNewCourse()
+  {
+    planner.Clear();
+    navigtion.NavigateTo("/");
+  }
+
 }
 
 @if(loading)
@@ -42,7 +49,7 @@
   <div class="mb-3 d-flex justify-content-between" style="height: 4em;">
     <div class="my-auto">
       <button
-        @onclick="planner.Clear"
+        @onclick="selectNewCourse"
         class="btn btn-primary"
       >
         Select New Course
