@@ -37,6 +37,7 @@ builder.Services.AddScoped<CanvasServiceUtils>();
 builder.Services.AddScoped<CanvasAssignmentService>();
 builder.Services.AddScoped<CanvasAssignmentGroupService>();
 builder.Services.AddScoped<CanvasQuizService>();
+builder.Services.AddScoped<CanvasModuleService>();
 builder.Services.AddScoped<CanvasService, CanvasService>();
 
 builder.Services.AddScoped<YamlManager>();

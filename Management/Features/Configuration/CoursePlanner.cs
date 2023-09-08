@@ -93,7 +93,7 @@ public class CoursePlanner
 
     var assignmentsTask = canvas.Assignments.GetAll(canvasId);
     var quizzesTask = canvas.Quizzes.GetAll(canvasId);
-    var modulesTask = canvas.GetModules(canvasId);
+    var modulesTask = canvas.Modules.GetModules(canvasId);
     var assignmentGroupsTask = canvas.AssignmentGroups.GetAll(canvasId);
 
     CanvasAssignments = await assignmentsTask;
@@ -101,7 +101,7 @@ public class CoursePlanner
     CanvasModules = await modulesTask;
     CanvasAssignmentGroups = await assignmentGroupsTask;
 
-    CanvasModulesItems = await canvas.GetAllModulesItems(canvasId, CanvasModules);
+    CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
@@ -154,10 +154,10 @@ public class CoursePlanner
       canvas
     );
     LocalCourse = LocalCourse with { Modules = newModules };
-    CanvasModules = await canvas.GetModules(canvasId);
+    CanvasModules = await canvas.Modules.GetModules(canvasId);
 
     await LocalCourse.SortCanvasModules(canvasId, CanvasModules, canvas);
-    CanvasModulesItems = await canvas.GetAllModulesItems(canvasId, CanvasModules);
+    CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
 
     LocalCourse = await LocalCourse.SyncModulesWithCanvasData(canvasId, CanvasModules, canvas);
 
@@ -167,7 +167,7 @@ public class CoursePlanner
     LocalCourse = await LocalCourse.SyncQuizzesWithCanvas(canvasId, CanvasQuizzes, canvas);
 
     await LocalCourse.SyncModuleItemsWithCanvas(canvasId, CanvasModulesItems, canvas);
-    CanvasModulesItems = await canvas.GetAllModulesItems(canvasId, CanvasModules);
+    CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();

@@ -1,0 +1,65 @@
+@using Management.Web.Shared.Components
+
+@inject CoursePlanner planner
+
+@code {
+
+  [Parameter]
+  [EditorRequired]
+  public LocalModule Module { get; set; } = default!;
+  private Modal? modal { get; set; } = null;
+  private string Name { get; set; } = string.Empty;
+
+  protected override void OnParametersSet()
+  {
+    if (Name == string.Empty)
+      Name = Module.Name;
+  }
+
+  private void submitHandler()
+  {
+    if (planner.LocalCourse == null)
+      return;
+
+    var newModule = Module with
+      {
+        Name = Name
+      };
+
+    var newModules = planner.LocalCourse.Modules.Select(
+    m => m.Id == Module.Id
+    ? newModule
+    : m
+    ).ToArray();
+
+    planner.LocalCourse = planner.LocalCourse with
+      {
+        Modules = newModules
+      };
+    Name = "";
+    modal?.Hide();
+  }
+}
+
+<button 
+  class="btn btn-outline-secondary"
+  @onclick="() => modal?.Show()"
+>
+  Rename
+</button>
+
+<Modal @ref="modal">
+  <Title>Rename Module</Title>
+
+  <Body>
+    <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
+      <label for="moduleName">Name</label>
+      <input id="moduleName" class="form-control" @bind="Name" />
+    </form>
+  </Body>
+  <Footer>
+    <button type="button" class="btn btn-primary" @onclick="submitHandler">
+      Rename
+    </button>
+  </Footer>
+</Modal>

@@ -1,7 +1,4 @@
-using System.Text.RegularExpressions;
-using CanvasModel.Assignments;
 using CanvasModel.Modules;
-using CanvasModel.Quizzes;
 using LocalModels;
 using Management.Services.Canvas;
 
@@ -11,7 +8,7 @@ public static partial class ModuleSyncronizationExtensions
 {
   internal static async Task<IEnumerable<LocalModule>> EnsureAllModulesExistInCanvas(
     this LocalCourse localCourse,
-    ulong canvasId,
+    ulong canvasCourseId,
     IEnumerable<CanvasModule> canvasModules,
     CanvasService canvas
   )
@@ -21,11 +18,15 @@ public static partial class ModuleSyncronizationExtensions
       var canvasModule = canvasModules.FirstOrDefault(cm => cm.Id == module.CanvasId);
       if (canvasModule == null)
       {
-        var newModule = await canvas.CreateModule(canvasId, module.Name);
+        var newModule = await canvas.Modules.CreateModule(canvasCourseId, module.Name);
         return module with { CanvasId = newModule.Id };
       }
-      else
-        return module;
+
+      if (canvasModule.Name != module.Name)
+      {
+        await canvas.Modules.UpdateModule(canvasCourseId, canvasModule.Id, module.Name, canvasModule.Position);
+      }
+      return module;
     });
     var newModules = await Task.WhenAll(moduleTasks);
     return newModules ?? throw new Exception("Error ensuring all modules exist in canvas");
@@ -41,13 +42,13 @@ public static partial class ModuleSyncronizationExtensions
     var currentCanvasPositions = canvasModules.ToDictionary(m => m.Id, m => m.Position);
     foreach (var (localModule, i) in localCourse.Modules.Select((m, i) => (m, i)))
     {
-      var correctPosition = i + 1;
+      uint correctPosition = (uint)(i + 1);
       var moduleCanvasId =
         localModule.CanvasId ?? throw new Exception("cannot sort module if no module canvas id");
       var currentCanvasPosition = currentCanvasPositions[moduleCanvasId];
       if (currentCanvasPosition != correctPosition)
       {
-        await canvas.UpdateModule(canvasId, moduleCanvasId, localModule.Name, correctPosition);
+        await canvas.Modules.UpdateModule(canvasId, moduleCanvasId, localModule.Name, correctPosition);
       }
     }
   }
@@ -59,7 +60,7 @@ public static partial class ModuleSyncronizationExtensions
     CanvasService canvas
   )
   {
-    canvasModules = await canvas.GetModules(canvasId);
+    canvasModules = await canvas.Modules.GetModules(canvasId);
     return localCourse with
     {
       Modules = localCourse.Modules.Select(m =>
@@ -134,9 +135,9 @@ public static partial class ModuleSyncronizationExtensions
       }
     }
 
-    foreach(var localQuiz in localModule.Quizzes)
+    foreach (var localQuiz in localModule.Quizzes)
     {
-      
+
       var canvasModuleItemContentIds = canvasModulesItems[moduleCanvasId].Select(i => i.ContentId);
       if (!canvasModuleItemContentIds.Contains(localQuiz.CanvasId))
       {
@@ -178,7 +179,7 @@ public static partial class ModuleSyncronizationExtensions
       );
 
       var canvasModuleItems = anyUpdated
-        ? await canvas.GetModuleItems(canvasId, moduleCanvasId)
+        ? await canvas.Modules.GetModuleItems(canvasId, moduleCanvasId)
         : canvasModulesItems[moduleCanvasId];
 
       await localModule.SortModuleItems(canvasId, moduleCanvasId, canvasModuleItems, canvas);
