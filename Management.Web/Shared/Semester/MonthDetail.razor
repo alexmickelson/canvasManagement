@@ -11,32 +11,42 @@
   public DayOfWeek[] WeekDaysList { get => (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)); }
 
   public string MonthName { get => Month?.DaysByWeek.First().FirstOrDefault(d => d != null)?.ToString("MMMM") ?? ""; }
+  private string htmlLabel => "collapse"+MonthName;
 }
 
 <h3 class="text-center">
-  @MonthName
+  <a 
+    role="button"
+    data-bs-toggle="collapse" 
+    data-bs-target="@("#" + htmlLabel)"
+    aria-expanded="true" 
+    aria-controls="@htmlLabel"
+  >
+    @MonthName
+  </a>
 </h3>
 
-<div class="row text-center fw-bold">
-  @foreach (DayOfWeek day in WeekDaysList)
+<div class="collapse show" id="@htmlLabel">
+  <div class="row text-center fw-bold">
+    @foreach (DayOfWeek day in WeekDaysList)
+    {
+      <div class="@(
+          planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false 
+            ? "col" 
+            : "col text-secondary"
+        )">
+        @day
+      </div>
+    }
+  </div>
+
+  @foreach (var week in Month.DaysByWeek)
   {
-    <div class="@(
-        planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false 
-          ? "col" 
-          : "col text-secondary"
-      )"
-    >
-      @day
+    <div class="row m-3">
+    @foreach (var day in week)
+      {
+        <Day date="day"></Day>
+      }
     </div>
   }
 </div>
-
-@foreach (var week in Month.DaysByWeek)
-{
-  <div class="row m-3">
-  @foreach (var day in week)
-    {
-      <Day date="day"></Day>
-    }
-  </div>
-}
