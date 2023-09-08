@@ -56,7 +56,7 @@ public class CanvasQuizService
         shuffle_answers = localQuiz.ShuffleAnswers,
         // hide_results = localQuiz.HideResults,
         allowed_attempts = localQuiz.AllowedAttempts,
-        one_question_at_a_time = true,
+        one_question_at_a_time = false,
         cant_go_back = false,
         due_at = localQuiz.DueAt,
         lock_at = localQuiz.LockAtDueDate ? localQuiz.DueAt : localQuiz.LockAt,
@@ -117,11 +117,12 @@ public class CanvasQuizService
       var newQuestion = await createQuestionOnly(canvasCourseId, localQuiz, question);
 
       var answersWithIds = question.Answers
-        .Select(answer =>
+        .Select((answer, i) =>
         {
-          var canvasAnswer = newQuestion.Answers?.FirstOrDefault(ca => ca.Html == answer.Text);
+          var canvasAnswer = newQuestion.Answers?.ElementAt(i);
           if (canvasAnswer == null)
           {
+            Console.WriteLine(i);
             Console.WriteLine(JsonSerializer.Serialize(newQuestion));
             Console.WriteLine(JsonSerializer.Serialize(question));
             throw new NullReferenceException(
@@ -148,13 +149,13 @@ public class CanvasQuizService
   {
     var url = $"courses/{canvasCourseId}/quizzes/{localQuiz.CanvasId}/questions";
     var answers = q.Answers
-      .Select(a => new { answer_html = a.Text, answer_weight = a.Correct ? 100 : 0 })
+      .Select(a => new { answer_html = a.HtmlText, answer_weight = a.Correct ? 100 : 0 })
       .ToArray();
     var body = new
     {
       question = new
       {
-        question_text = q.Text,
+        question_text = q.HtmlText,
         question_type = q.QuestionType + "_question",
         points_possible = q.Points,
         // position

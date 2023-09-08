@@ -9,7 +9,7 @@ public record CanvasQuizAnswer
   public required string Text { get; init; }
 
   [JsonPropertyName("html")]
-  public required string Html { get; init; }
+  public string? Html { get; init; }
 
   [JsonPropertyName("weight")]
   public double Weight { get; init; }

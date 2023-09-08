@@ -59,6 +59,9 @@
       if(dragging)
         return baseClasses + " bg-secondary text-light ";
 
+      if(date?.Date == DateTime.Today)
+        baseClasses += " border-1 border-primary-subtle ";
+
       if (isWeekDay)
       {
         DayOfWeek? weekDay = date?.DayOfWeek;

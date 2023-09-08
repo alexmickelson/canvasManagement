@@ -4,7 +4,8 @@ public record LocalQuizQuestion
 {
   public ulong? CanvasId { get; set; }
   public string Id { get; set; } = "";
-  public string Text { get; init; } = string.Empty;
+  public string Text { get; init; } = string.Empty;  
+  public string HtmlText => Markdig.Markdown.ToHtml(Text);
   public string QuestionType { get; init; } = string.Empty;
   public int Points { get; init; }
   public IEnumerable<LocalQuizQuestionAnswer> Answers { get; init; } =

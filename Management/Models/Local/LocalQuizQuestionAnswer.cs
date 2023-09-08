@@ -8,4 +8,6 @@ public record LocalQuizQuestionAnswer
   //correct gets a weight of 100 in canvas
   public bool Correct { get; init; }
   public string Text { get; init; } = string.Empty;
+
+  public string HtmlText => Markdig.Markdown.ToHtml(Text);
 }
