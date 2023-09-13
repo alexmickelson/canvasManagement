@@ -12,6 +12,9 @@
 
   public string MonthName { get => Month?.DaysByWeek.First().FirstOrDefault(d => d != null)?.ToString("MMMM") ?? ""; }
   private string htmlLabel => "collapse"+MonthName;
+  private bool isInPast =>
+    new DateTime(Month.Year, Month.Month, 1) < new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
+  private string collapseClass => " collapse " + (isInPast ? "hide" : "show");
 }
 
 <h3 class="text-center">
@@ -19,14 +22,14 @@
     role="button"
     data-bs-toggle="collapse" 
     data-bs-target="@("#" + htmlLabel)"
-    aria-expanded="true" 
+    aria-expanded="@( isInPast ? "false" : "true")" 
     aria-controls="@htmlLabel"
   >
     @MonthName
   </a>
 </h3>
 
-<div class="collapse show" id="@htmlLabel">
+<div class="@collapseClass" id="@htmlLabel">
   <div class="row text-center fw-bold">
     @foreach (DayOfWeek day in WeekDaysList)
     {
