@@ -143,7 +143,7 @@ public static partial class ModuleSyncronizationExtensions
       {
         var canvasAssignmentId =
           localQuiz.CanvasId
-          ?? throw new Exception("cannot create module item if assignment does not have canvas id");
+          ?? throw new Exception("cannot create module item if quiz does not have canvas id");
         await canvas.CreateModuleItem(
           canvasId,
           moduleCanvasId,

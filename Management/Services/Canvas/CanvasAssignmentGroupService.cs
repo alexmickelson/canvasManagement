@@ -8,11 +8,17 @@ public class CanvasAssignmentGroupService
 {
   private readonly IWebRequestor webRequestor;
   private readonly CanvasServiceUtils utils;
+  private readonly ILogger<CanvasAssignmentGroupService> log;
 
-  public CanvasAssignmentGroupService(IWebRequestor webRequestor, CanvasServiceUtils utils)
+  public CanvasAssignmentGroupService(
+    IWebRequestor webRequestor, 
+    CanvasServiceUtils utils,
+    ILogger<CanvasAssignmentGroupService> logger
+  )
   {
     this.webRequestor = webRequestor;
     this.utils = utils;
+    this.log = logger;
   }
   public async Task<IEnumerable<CanvasAssignmentGroup>> GetAll(ulong courseId)
   {
@@ -29,7 +35,7 @@ public class CanvasAssignmentGroupService
     LocalAssignmentGroup localAssignmentGroup
   )
   {
-    Console.WriteLine($"creating assignment group: {localAssignmentGroup.Name}");
+    log.LogInformation($"creating assignment group: {localAssignmentGroup.Name}");
     var url = $"courses/{canvasCourseId}/assignment_groups";
     var request = new RestRequest(url);
     var body = new
@@ -53,7 +59,7 @@ public class CanvasAssignmentGroupService
     LocalAssignmentGroup localAssignmentGroup
   )
   {
-    Console.WriteLine($"updating assignment group: {localAssignmentGroup.Name}");
+    log.LogInformation($"updating assignment group: {localAssignmentGroup.Name}");
     if (localAssignmentGroup.CanvasId == null)
       throw new Exception("cannot update assignment group if canvas id is null");
     var url = $"courses/{canvasCourseId}/assignment_groups/{localAssignmentGroup.CanvasId}";

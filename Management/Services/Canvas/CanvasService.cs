@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using CanvasModel;
 using CanvasModel.Assignments;
 using CanvasModel.Courses;
@@ -11,6 +12,7 @@ public class CanvasService
 {
   private readonly IWebRequestor webRequestor;
   private readonly CanvasServiceUtils utils;
+  private readonly ILogger<CanvasService> logger;
 
   public CanvasAssignmentService Assignments { get; }
   public CanvasAssignmentGroupService AssignmentGroups { get; }
@@ -23,7 +25,8 @@ public class CanvasService
     CanvasAssignmentService Assignments,
     CanvasAssignmentGroupService AssignmentGroups,
     CanvasModuleService Modules,
-    CanvasQuizService Quizzes
+    CanvasQuizService Quizzes,
+    ILogger<CanvasService> logger
   )
   {
     this.webRequestor = webRequestor;
@@ -32,6 +35,7 @@ public class CanvasService
     this.AssignmentGroups = AssignmentGroups;
     this.Modules = Modules;
     this.Quizzes = Quizzes;
+    this.logger = logger;
   }
 
   public async Task<IEnumerable<EnrollmentTermModel>> GetTerms()
@@ -60,8 +64,8 @@ public class CanvasService
 
     if (data == null)
     {
-      Console.WriteLine(response.Content);
-      Console.WriteLine(response.ResponseUri);
+      logger.LogError(response.Content);
+      logger.LogError(response.ResponseUri?.ToString());
       throw new Exception("error getting course from canvas");
     }
     return data;
@@ -91,7 +95,7 @@ public class CanvasService
     CanvasModuleItem item
   )
   {
-    Console.WriteLine($"updating module item {item.Title}");
+    logger.LogInformation($"updating module item {item.Title}");
     var url = $"courses/{canvasCourseId}/modules/{canvasModuleId}/items/{item.Id}";
     var body = new { module_item = new { title = item.Title, position = item.Position } };
     var request = new RestRequest(url);
@@ -110,7 +114,7 @@ public class CanvasService
     ulong contentId
   )
   {
-    Console.WriteLine($"creating new module item {title}");
+    logger.LogInformation($"creating new module item {title}");
     var url = $"courses/{canvasCourseId}/modules/{canvasModuleId}/items";
     var body = new
     {

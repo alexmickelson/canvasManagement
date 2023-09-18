@@ -8,11 +8,17 @@ public class CanvasAssignmentService
 {
   private readonly IWebRequestor webRequestor;
   private readonly CanvasServiceUtils utils;
+  private readonly MyLogger<CanvasAssignmentService> log;
 
-  public CanvasAssignmentService(IWebRequestor webRequestor, CanvasServiceUtils utils)
+  public CanvasAssignmentService(
+    IWebRequestor webRequestor,
+    CanvasServiceUtils utils,
+    MyLogger<CanvasAssignmentService> logger
+  )
   {
     this.webRequestor = webRequestor;
     this.utils = utils;
+    this.log = logger;
   }
 
   public async Task<IEnumerable<CanvasAssignment>> GetAll(ulong courseId)
@@ -36,7 +42,7 @@ public class CanvasAssignmentService
     ulong? canvasAssignmentGroupId
   )
   {
-    Console.WriteLine($"creating assignment: {localAssignment.Name}");
+    log.Log($"creating assignment: {localAssignment.Name}");
     var url = $"courses/{canvasCourseId}/assignments";
     var request = new RestRequest(url);
     var body = new
@@ -69,7 +75,7 @@ public class CanvasAssignmentService
     ulong? canvasAssignmentGroupId
   )
   {
-    Console.WriteLine($"updating assignment: {localAssignment.Name}");
+    log.Log($"updating assignment: {localAssignment.Name}");
     var url = $"courses/{courseId}/assignments/{localAssignment.CanvasId}";
     var request = new RestRequest(url);
     var body = new
@@ -84,8 +90,7 @@ public class CanvasAssignmentService
     };
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
-    Console.WriteLine(url);
-    Console.WriteLine(JsonSerializer.Serialize(bodyObj));
+    
     await webRequestor.PutAsync(request);
 
     await CreateRubric(courseId, localAssignment);
@@ -93,13 +98,13 @@ public class CanvasAssignmentService
 
   public async Task Delete(ulong courseId, LocalAssignment assignment)
   {
-    Console.WriteLine($"deleting assignment from canvas {assignment.Name}");
+    log.Log($"deleting assignment from canvas {assignment.Name}");
     var url = $"courses/{courseId}/assignments/{assignment.CanvasId}";
     var request = new RestRequest(url);
     var response = await webRequestor.DeleteAsync(request);
     if (!response.IsSuccessful)
     {
-      Console.WriteLine(url);
+      log.Log(url);
       throw new Exception("Failed to delete assignment");
     }
   }
