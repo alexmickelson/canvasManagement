@@ -67,7 +67,7 @@
         DayOfWeek? weekDay = date?.DayOfWeek;
         DayOfWeek notNullDay = weekDay ?? default;
         
-        var isClassDay = planner.LocalCourse?.DaysOfWeek.Contains(notNullDay) ?? false;
+        var isClassDay = planner.LocalCourse?.Settings.DaysOfWeek.Contains(notNullDay) ?? false;
         var dayInSemester = 
           isClassDay
             && date <= planner.LocalCourse?.Settings.EndDate

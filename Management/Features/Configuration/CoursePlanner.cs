@@ -37,26 +37,12 @@ public class CoursePlanner
         StateHasChanged?.Invoke();
         return;
       }
-      
-      var courseWithSettings = value with
-      {
-        Settings = value.Settings with
-        {
-          AssignmentGroups = value.AssignmentGroups,
-          Name = value.Settings.Name,
-          DaysOfWeek = value.DaysOfWeek,
-          CanvasId = value.Settings.CanvasId,
-          StartDate = value.Settings.StartDate,
-          DefaultDueTime = value.DefaultDueTime,
-          AssignmentTemplates = value.AssignmentTemplates,
-        }
-      };
 
-      var verifiedCourse = courseWithSettings.GeneralCourseCleanup();
+      var verifiedCourse = value.GeneralCourseCleanup();
 
       _debounceTimer?.Dispose();
       _debounceTimer = new Timer(
-        async (_) => await saveCourseToFile(courseWithSettings),
+        async (_) => await saveCourseToFile(verifiedCourse),
         null,
         _debounceInterval,
         Timeout.Infinite
@@ -160,7 +146,13 @@ public class CoursePlanner
 
     var newAssignmentGroups = await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(
       canvasId, canvasAssignmentGroups, canvas);
-    LocalCourse = LocalCourse with { AssignmentGroups = newAssignmentGroups };
+    LocalCourse = LocalCourse with
+    {
+      Settings = LocalCourse.Settings with
+      {
+        AssignmentGroups = newAssignmentGroups
+      }
+    };
 
 
     var newModules = await LocalCourse.EnsureAllModulesExistInCanvas(

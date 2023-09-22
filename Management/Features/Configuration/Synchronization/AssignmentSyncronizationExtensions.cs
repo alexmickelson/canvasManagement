@@ -25,10 +25,10 @@ public static partial class AssignmentSyncronizationExtensions
       ca => ca.Id == localAssignment.CanvasId
     );
     string localHtmlDescription = localAssignment.GetDescriptionHtml(
-      localCourse.AssignmentTemplates
+      localCourse.Settings.AssignmentTemplates
     );
 
-    var canvasAssignmentGroupId = localAssignment.GetCanvasAssignmentGroupId(localCourse.AssignmentGroups);
+    var canvasAssignmentGroupId = localAssignment.GetCanvasAssignmentGroupId(localCourse.Settings.AssignmentGroups);
 
     return canvasAssignment != null
       ? await updateAssignmentIfNeeded(
@@ -55,7 +55,7 @@ public static partial class AssignmentSyncronizationExtensions
   {
     var assignmentNeedsUpdates = localAssignment.NeedsUpdates(
       canvasAssignments,
-      localCourse.AssignmentTemplates,
+      localCourse.Settings.AssignmentTemplates,
       canvasAssignmentGroupId,
       quiet: false
     );

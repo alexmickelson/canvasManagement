@@ -78,17 +78,20 @@
         <div class="col">
           <button
             class="@(
-              planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false
+              planner.LocalCourse?.Settings.DaysOfWeek.Contains(day) ?? false
                 ? "btn btn-secondary" 
                 : "btn btn-outline-secondary"
             )" 
             @onclick="() => 
             {
-              if(planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false)
+              if(planner.LocalCourse?.Settings.DaysOfWeek.Contains(day) ?? false)
               {
                 planner.LocalCourse = planner.LocalCourse with 
                 {
-                  DaysOfWeek = planner.LocalCourse.DaysOfWeek.Where((d) => d != day)
+                  Settings = planner.LocalCourse.Settings with 
+                  {
+                    DaysOfWeek = planner.LocalCourse.Settings.DaysOfWeek.Where((d) => d != day)
+                  }
                 };
               }
               else
@@ -97,7 +100,10 @@
                 {
                   planner.LocalCourse = planner.LocalCourse with 
                   {
-                    DaysOfWeek = planner.LocalCourse.DaysOfWeek.Append(day)
+                    Settings = planner.LocalCourse.Settings with 
+                    {
+                      DaysOfWeek = planner.LocalCourse.Settings.DaysOfWeek.Append(day)
+                    }
                   };
                 }
               }
@@ -137,12 +143,10 @@
       <div class="row justify-content-center m-3 text-center">
         <div class="col-auto">
           <div>Default Assignment Due Time</div>
-          <TimePicker 
-            Time="planner.LocalCourse.DefaultDueTime"
-            UpdateTime="@((newTime) => 
+          <TimePicker Time="planner.LocalCourse.Settings.DefaultDueTime" UpdateTime="@((newTime) => 
               planner.LocalCourse = 
                 planner.LocalCourse with 
-                { DefaultDueTime=newTime }
+                { Settings = planner.LocalCourse.Settings with { DefaultDueTime=newTime } }
             )"
           />
         </div>

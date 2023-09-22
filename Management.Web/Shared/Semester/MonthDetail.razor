@@ -34,7 +34,7 @@
     @foreach (DayOfWeek day in WeekDaysList)
     {
       <div class="@(
-          planner.LocalCourse?.DaysOfWeek.Contains(day) ?? false 
+          planner.LocalCourse?.Settings.DaysOfWeek.Contains(day) ?? false 
             ? "col" 
             : "col text-secondary"
         )">

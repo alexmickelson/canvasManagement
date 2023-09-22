@@ -25,8 +25,8 @@ public class DroppableAssignment : ComponentBase
       year: dropDate.Year,
       month: dropDate.Month,
       day: dropDate.Day,
-      hour: planner.LocalCourse.DefaultDueTime.Hour,
-      minute: planner.LocalCourse.DefaultDueTime.Minute,
+      hour: planner.LocalCourse.Settings.DefaultDueTime.Hour,
+      minute: planner.LocalCourse.Settings.DefaultDueTime.Minute,
       second: 0
     );
 

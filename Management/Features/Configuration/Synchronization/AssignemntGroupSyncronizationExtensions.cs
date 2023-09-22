@@ -15,7 +15,7 @@ public static partial class AssignmentGroupSyncronizationExtensions
   )
   {
     var canvasAssignmentGroupIds = canvasAssignmentGroups.Select(g => g.Id).ToArray();
-    var assignmentGroups = await Task.WhenAll((Task<LocalAssignmentGroup>[])localCourse.AssignmentGroups.Select(
+    var assignmentGroups = await Task.WhenAll((Task<LocalAssignmentGroup>[])localCourse.Settings.AssignmentGroups.Select(
       async assignmentGroup =>
       {
         var canvasGroupWithSameName = canvasAssignmentGroups.FirstOrDefault(

@@ -61,7 +61,7 @@ public static class CoursePlannerExtensions
       .ToArray();
 
     var canvasAssignmentGroupIds = canvasAssignmentGroups.Select(g => g.Id).ToArray();
-    var correctAssignmentGroups = localCourse.AssignmentGroups.Select(
+    var correctAssignmentGroups = localCourse.Settings.AssignmentGroups.Select(
       g =>
       {
         var groupCanvasId = g.CanvasId ?? 0;
@@ -74,7 +74,10 @@ public static class CoursePlannerExtensions
     return localCourse with
     {
       Modules = correctedModules,
-      AssignmentGroups = correctAssignmentGroups,
+      Settings = localCourse.Settings with
+      {
+        AssignmentGroups = correctAssignmentGroups,
+      }
     };
   }
 

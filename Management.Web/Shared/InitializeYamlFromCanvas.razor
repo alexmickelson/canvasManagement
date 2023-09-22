@@ -61,12 +61,12 @@
       var course = new LocalCourse
       {
         Modules = new LocalModule[] {},
-        DaysOfWeek = days,
         Settings = new LocalCourseSettings() {
           Name = selectedCourse.Name,
           CanvasId = selectedCourse.Id,
           StartDate = selectedTerm?.StartAt ?? new DateTime(),
           EndDate = selectedTerm?.EndAt ?? new DateTime(),
+          DaysOfWeek = days,
         }
       };
       await yamlManager.SaveCourseAsync(course);

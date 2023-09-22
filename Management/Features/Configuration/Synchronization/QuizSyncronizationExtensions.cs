@@ -43,7 +43,7 @@ public static partial class QuizSyncronizationExtensions
   )
   {
     var isCreated = localQuiz.QuizIsCreated(canvasQuizzes);
-    var canvasAssignmentGroupId = localQuiz.GetCanvasAssignmentGroupId(localCourse.AssignmentGroups);
+    var canvasAssignmentGroupId = localQuiz.GetCanvasAssignmentGroupId(localCourse.Settings.AssignmentGroups);
     if (isCreated)
     {
       // TODO write update

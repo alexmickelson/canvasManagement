@@ -3,14 +3,6 @@ namespace LocalModels;
 public record LocalCourse
 {
   public IEnumerable<LocalModule> Modules { get; init; } = Enumerable.Empty<LocalModule>();
-
-  public IEnumerable<LocalAssignmentGroup> AssignmentGroups { get; init; } =
-    Enumerable.Empty<LocalAssignmentGroup>();
-  public IEnumerable<DayOfWeek> DaysOfWeek { get; init; } = Enumerable.Empty<DayOfWeek>();
-  public SimpleTimeOnly DefaultDueTime { get; init; } = new SimpleTimeOnly();
-  public IEnumerable<AssignmentTemplate> AssignmentTemplates { get; init; } =
-    Enumerable.Empty<AssignmentTemplate>();
-
   public LocalCourseSettings Settings { get; set; }
 }
 

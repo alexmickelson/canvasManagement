@@ -128,6 +128,7 @@
   private LocalAssignmentGroup? selectedAssignmentGroup =>
     planner
       .LocalCourse?
+      .Settings
       .AssignmentGroups
       .FirstOrDefault(g => g.Id == assignmentContext.Assignment?.LocalAssignmentGroupId);
 }
@@ -148,7 +149,7 @@
   </div>
   <ButtonSelect
     Label="Assignment Group"
-    Options="planner.LocalCourse.AssignmentGroups"
+    Options="planner.LocalCourse?.Settings.AssignmentGroups"
     GetId="(g) => g.Id"
     GetName="(g) => g.Name"
     OnSelect="(g) => setAssignmentGroup(g)"

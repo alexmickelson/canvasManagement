@@ -30,6 +30,7 @@
   private AssignmentTemplate? selectedTemplate => 
     planner
     .LocalCourse?
+    .Settings
     .AssignmentTemplates
     .FirstOrDefault(t => t.Id == selectedTemplateId);
 
@@ -44,7 +45,10 @@
       };
       planner.LocalCourse = planner.LocalCourse with
       {
-        AssignmentTemplates = planner.LocalCourse.AssignmentTemplates.Append(newOne)
+        Settings = planner.LocalCourse.Settings with 
+        {
+          AssignmentTemplates = planner.LocalCourse.Settings.AssignmentTemplates.Append(newOne)
+        }
       };
       newTemplateName = "";
     }
@@ -71,7 +75,7 @@
             <label for="termselect">Templates</label>
             <select id="termselect" class="form-select" @bind="selectedTemplateId">
               <option></option>
-              @foreach (var template in planner.LocalCourse.AssignmentTemplates)
+              @foreach (var template in planner.LocalCourse.Settings.AssignmentTemplates)
               {
                 <option value="@template.Id">@template.Name</option>
               }

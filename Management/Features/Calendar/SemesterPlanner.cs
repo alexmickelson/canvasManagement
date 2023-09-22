@@ -9,8 +9,6 @@ public class SemesterPlanner
   {
     var monthsInTerm = 1 + ((endDate.Year - startDate.Year) * 12) + endDate.Month - startDate.Month;
 
-    Console.WriteLine(monthsInTerm);
-    
     return Enumerable
       .Range(0, monthsInTerm)
       .Select(monthDiff =>

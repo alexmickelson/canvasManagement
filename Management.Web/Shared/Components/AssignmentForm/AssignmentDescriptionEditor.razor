@@ -45,6 +45,7 @@
   private AssignmentTemplate? selectedTemplate =>
     planner
     .LocalCourse?
+    .Settings
     .AssignmentTemplates
     .FirstOrDefault(t => t.Id == TemplateId);
 
@@ -133,7 +134,7 @@
             @oninput="saveTemplateId"
           >
             <option value=""></option>
-            @foreach (var template in planner.LocalCourse.AssignmentTemplates)
+            @foreach (var template in planner.LocalCourse.Settings.AssignmentTemplates)
             {
               <option value="@template.Id">@template.Name</option>
             }
