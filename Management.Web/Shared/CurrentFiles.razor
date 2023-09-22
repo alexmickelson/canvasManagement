@@ -19,7 +19,7 @@
   {
     @* logger.LogInformation("here"); *@
     planner.LocalCourse = course;
-    Navigation.NavigateTo("/course/" + course.Name);
+    Navigation.NavigateTo("/course/" + course.Settings.Name);
     Console.WriteLine("navigated to course detail");
   }
 }
@@ -30,10 +30,10 @@
     <h3>Stored Courses</h3>
     @foreach (var course in localCourses)
     {
-      var location = "/course/" + course.Name;
+      var location = "/course/" + course.Settings.Name;
       <div>
         <h4 class="m-3 hover-underline-animation" @onclick="(e) => handleClick(e, course)" role='button'>
-          @course.Name
+          @course.Settings.Name
         </h4>
 
       </div>

@@ -7,6 +7,7 @@ public class YamlManager
   public string CourseToYaml(LocalCourse course)
   {
     var serializer = new SerializerBuilder().DisableAliases().Build();
+
     var yaml = serializer.Serialize(course);
 
     return yaml;
@@ -24,15 +25,59 @@ public class YamlManager
   {
     var courseString = CourseToYaml(course);
 
-    await File.WriteAllTextAsync($"../storage/{course.Name}.yml", courseString);
+    var courseDirectory = $"../storage/{course.Settings.Name}";
+    if (!Directory.Exists(courseDirectory))
+      Directory.CreateDirectory(courseDirectory);
+
+    await SaveModules(course);
+
+    await File.WriteAllTextAsync($"../storage/{course.Settings.Name}.yml", courseString);
   }
 
-  public void SaveCourse(LocalCourse course)
+  public async Task SaveModules(LocalCourse course)
   {
-    var courseString = CourseToYaml(course);
+    var courseDirectory = $"../storage/{course.Settings.Name}";
 
-    File.WriteAllText($"../storage/{course.Name}.yml", courseString);
+    foreach (var module in course.Modules)
+    {
+      var moduleDirectory = courseDirectory + "/" + module.Name;
+      if (!Directory.Exists(moduleDirectory))
+        Directory.CreateDirectory(moduleDirectory);
+
+      await SaveQuizzes(course, module);
+      await SaveAssignments(course, module);
+    }
+
   }
+
+  public async Task SaveQuizzes(LocalCourse course, LocalModule module)
+  {
+    var quizzesDirectory = $"../storage/{course.Settings.Name}/{module.Name}/quizzes";
+    if (!Directory.Exists(quizzesDirectory))
+      Directory.CreateDirectory(quizzesDirectory);
+
+    foreach(var quiz in module.Quizzes)
+    {
+      var filePath = quizzesDirectory + "/" + quiz.Name+ ".yml"; ;
+      var quizYaml = quiz.ToYaml();
+      await File.WriteAllTextAsync(filePath, quizYaml);
+    }
+  }
+
+  public async Task SaveAssignments(LocalCourse course, LocalModule module)
+  {
+    var assignmentsDirectory = $"../storage/{course.Settings.Name}/{module.Name}/assignments";
+    if (!Directory.Exists(assignmentsDirectory))
+      Directory.CreateDirectory(assignmentsDirectory);
+
+    foreach (var assignment in module.Assignments)
+    {
+      var filePath = assignmentsDirectory + "/" + assignment.Name + ".yml";
+      var assignmentYaml = assignment.ToYaml();
+      await File.WriteAllTextAsync(filePath, assignmentYaml);
+    }
+  }
+
 
   public async Task<IEnumerable<LocalCourse>> LoadSavedCourses()
   {

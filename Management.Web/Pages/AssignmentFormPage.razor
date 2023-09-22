@@ -34,8 +34,8 @@
       if(planner.LocalCourse == null)
       {
         var courses = await yamlManager.LoadSavedCourses();
-        planner.LocalCourse = courses.First(c => c.Name == CourseName);
-        logger.LogInformation($"set course to '{planner.LocalCourse?.Name}'");
+        planner.LocalCourse = courses.First(c => c.Settings.Name == CourseName);
+        logger.LogInformation($"set course to '{planner.LocalCourse?.Settings.Name}'");
       }
 
       if(assignmentContext.Assignment == null)

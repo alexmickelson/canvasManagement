@@ -28,8 +28,11 @@
       {
         planner.LocalCourse = planner.LocalCourse with 
         {
-          StartDate=selectedTerm.StartAt ?? new DateTime(),
-          EndDate=selectedTerm.EndAt ?? new DateTime(),
+          Settings = planner.LocalCourse.Settings with 
+          {
+            StartDate=selectedTerm.StartAt ?? new DateTime(),
+            EndDate=selectedTerm.EndAt ?? new DateTime(),
+          }
         };
       }
     } 
@@ -43,10 +46,10 @@
   {
     if (firstRender)
     {
-      if(planner.LocalCourse != null && planner.LocalCourse.CanvasId != null)
+      if(planner.LocalCourse != null && planner.LocalCourse.Settings.CanvasId != null)
       {
         loading = true;
-        ulong id = planner.LocalCourse?.CanvasId ?? throw new Exception("wtf how did i get here");
+        ulong id = planner.LocalCourse?.Settings.CanvasId ?? throw new Exception("wtf how did i get here");
         var canvasCourse = await canvas.GetCourse(id);
         terms = await canvas.GetCurrentTermsFor(canvasCourse.StartAt);
         loading = false;

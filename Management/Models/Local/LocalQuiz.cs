@@ -1,3 +1,5 @@
+using YamlDotNet.Serialization;
+
 namespace LocalModels;
 
 public record LocalQuiz
@@ -25,4 +27,11 @@ public record LocalQuiz
     assignmentGroups
       .FirstOrDefault(g => g.Id == LocalAssignmentGroupId)?
       .CanvasId;
+
+  public string ToYaml()
+  {
+    var serializer = new SerializerBuilder().DisableAliases().Build();
+    var yaml = serializer.Serialize(this);
+    return yaml;
+  }
 }

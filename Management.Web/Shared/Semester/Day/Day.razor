@@ -70,8 +70,8 @@
         var isClassDay = planner.LocalCourse?.DaysOfWeek.Contains(notNullDay) ?? false;
         var dayInSemester = 
           isClassDay
-            && date <= planner.LocalCourse?.EndDate
-            && date >= planner.LocalCourse?.StartDate;
+            && date <= planner.LocalCourse?.Settings.EndDate
+            && date >= planner.LocalCourse?.Settings.StartDate;
         
         var totalClasses = dayInSemester 
           ? "bg-light-subtle text-light " + baseClasses 

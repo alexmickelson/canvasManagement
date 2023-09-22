@@ -21,7 +21,7 @@
       if(
         planner.CanvasAssignments == null 
         && planner.LocalCourse != null 
-        && planner.LocalCourse.CanvasId != null
+        && planner.LocalCourse.Settings.CanvasId != null
       )
       {
         await planner.LoadCanvasData();
@@ -48,7 +48,7 @@
     {
       <div class="py-2">
 
-        @foreach (var month in SemesterPlanner.GetMonthsBetweenDates(planner.LocalCourse.StartDate, planner.LocalCourse.EndDate))
+        @foreach (var month in SemesterPlanner.GetMonthsBetweenDates(planner.LocalCourse.Settings.StartDate, planner.LocalCourse.Settings.EndDate))
         {
           <MonthDetail Month="month" />
           <hr />

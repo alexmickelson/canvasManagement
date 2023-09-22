@@ -61,11 +61,13 @@
       var course = new LocalCourse
       {
         Modules = new LocalModule[] {},
-        Name = selectedCourse.Name,
-        CanvasId = selectedCourse.Id,
         DaysOfWeek = days,
-        StartDate = selectedTerm?.StartAt ?? new DateTime(),
-        EndDate = selectedTerm?.EndAt ?? new DateTime(),
+        Settings = new LocalCourseSettings() {
+          Name = selectedCourse.Name,
+          CanvasId = selectedCourse.Id,
+          StartDate = selectedTerm?.StartAt ?? new DateTime(),
+          EndDate = selectedTerm?.EndAt ?? new DateTime(),
+        }
       };
       await yamlManager.SaveCourseAsync(course);
       NewFileCreated();
@@ -80,7 +82,7 @@
       loadingCourses = true;
       
       localCourses = await yamlManager.LoadSavedCourses();
-      var storedCourseIds = localCourses.Select(c => c.CanvasId);
+      var storedCourseIds = localCourses.Select(c => c.Settings.CanvasId);
       var allCourses = await canvas.GetCourses((ulong)selectedTermId);
       courses = allCourses.Where(c => !storedCourseIds.Contains(c.Id));
       loadingCourses = false;

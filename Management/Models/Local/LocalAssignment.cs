@@ -1,3 +1,5 @@
+using YamlDotNet.Serialization;
+
 namespace LocalModels;
 
 public record RubricItem
@@ -95,4 +97,12 @@ public record LocalAssignment
     assignmentGroups
       .FirstOrDefault(g => g.Id == LocalAssignmentGroupId)?
       .CanvasId;
+
+
+  public string ToYaml()
+  {
+    var serializer = new SerializerBuilder().DisableAliases().Build();
+    var yaml = serializer.Serialize(this);
+    return yaml;
+  }
 }

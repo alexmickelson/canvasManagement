@@ -79,9 +79,9 @@
       {
         Modules = newModules
       };
-      if (assignment.CanvasId != null && planner.LocalCourse.CanvasId != null)
+      if (assignment.CanvasId != null && planner.LocalCourse.Settings.CanvasId != null)
       {
-        ulong courseId = planner.LocalCourse.CanvasId ?? throw new Exception("cannot delete if no course id");
+        ulong courseId = planner.LocalCourse.Settings.CanvasId ?? throw new Exception("cannot delete if no course id");
         await canvas.Assignments.Delete(courseId, assignment);
       }
     }
@@ -190,7 +190,7 @@
     class="btn btn-primary mx-2" 
     @onclick="@(() => {
       assignmentContext.Assignment = null;
-      Navigation.NavigateTo("/course/" + planner.LocalCourse?.Name);
+      Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
     })"
   >
     Done

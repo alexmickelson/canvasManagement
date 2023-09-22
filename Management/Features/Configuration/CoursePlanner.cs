@@ -30,18 +30,33 @@ public class CoursePlanner
     get => _localCourse;
     set
     {
+
       if (value == null)
       {
         _localCourse = null;
         StateHasChanged?.Invoke();
         return;
       }
+      
+      var courseWithSettings = value with
+      {
+        Settings = value.Settings with
+        {
+          AssignmentGroups = value.AssignmentGroups,
+          Name = value.Settings.Name,
+          DaysOfWeek = value.DaysOfWeek,
+          CanvasId = value.Settings.CanvasId,
+          StartDate = value.Settings.StartDate,
+          DefaultDueTime = value.DefaultDueTime,
+          AssignmentTemplates = value.AssignmentTemplates,
+        }
+      };
 
-      var verifiedCourse = value.GeneralCourseCleanup();
+      var verifiedCourse = courseWithSettings.GeneralCourseCleanup();
 
       _debounceTimer?.Dispose();
       _debounceTimer = new Timer(
-        (_) => saveCourseToFile(value),
+        async (_) => await saveCourseToFile(courseWithSettings),
         null,
         _debounceInterval,
         Timeout.Infinite
@@ -52,7 +67,7 @@ public class CoursePlanner
     }
   }
 
-  private void saveCourseToFile(LocalCourse courseAsOfDebounce)
+  private async Task saveCourseToFile(LocalCourse courseAsOfDebounce)
   {
     _debounceTimer?.Dispose();
 
@@ -60,12 +75,12 @@ public class CoursePlanner
     if (LocalCourse == null)
     {
       Console.WriteLine("saving course as of debounce call time");
-      yamlManager.SaveCourse(courseAsOfDebounce);
+      await yamlManager.SaveCourseAsync(courseAsOfDebounce);
     }
     else
     {
       Console.WriteLine("Saving latest version of file");
-      yamlManager.SaveCourse(LocalCourse);
+      await yamlManager.SaveCourseAsync(LocalCourse);
     }
   }
 
@@ -89,7 +104,7 @@ public class CoursePlanner
     StateHasChanged?.Invoke();
 
     var canvasId =
-      LocalCourse?.CanvasId ?? throw new Exception("no canvas id found for selected course");
+      LocalCourse?.Settings.CanvasId ?? throw new Exception("no canvas id found for selected course");
 
     var assignmentsTask = canvas.Assignments.GetAll(canvasId);
     var quizzesTask = canvas.Quizzes.GetAll(canvasId);
@@ -112,7 +127,7 @@ public class CoursePlanner
   {
     if (
       LocalCourse == null
-      || LocalCourse.CanvasId == null
+      || LocalCourse.Settings.CanvasId == null
       || CanvasAssignments == null
       || CanvasModules == null
       || CanvasQuizzes == null
@@ -141,7 +156,7 @@ public class CoursePlanner
     );
 
     var canvasId =
-      LocalCourse.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");
+      LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");
 
     var newAssignmentGroups = await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(
       canvasId, canvasAssignmentGroups, canvas);

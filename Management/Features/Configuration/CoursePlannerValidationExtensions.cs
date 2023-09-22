@@ -25,21 +25,24 @@ public static class CoursePlannerExtensions
       .ToArray();
 
     var cleanStartDay = new DateTime(
-      incomingCourse.StartDate.Year,
-      incomingCourse.StartDate.Month,
-      incomingCourse.StartDate.Day
+      incomingCourse.Settings.StartDate.Year,
+      incomingCourse.Settings.StartDate.Month,
+      incomingCourse.Settings.StartDate.Day
     );
     var cleanEndDay = new DateTime(
-      incomingCourse.EndDate.Year,
-      incomingCourse.EndDate.Month,
-      incomingCourse.EndDate.Day
+      incomingCourse.Settings.EndDate.Year,
+      incomingCourse.Settings.EndDate.Month,
+      incomingCourse.Settings.EndDate.Day
     );
 
     return incomingCourse with
     {
       Modules = cleanModules,
-      StartDate = cleanStartDay,
-      EndDate = cleanEndDay,
+      Settings = incomingCourse.Settings with
+      {
+        StartDate = cleanStartDay,
+        EndDate = cleanEndDay,
+      }
     };
   }
 

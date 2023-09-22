@@ -48,7 +48,7 @@
   private void OnClick() 
   {
     assignmentContext.Assignment = Assignment;
-    Navigation.NavigateTo("/course/" + planner.LocalCourse.Name + "/assignment/" + Assignment.Id);
+    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name + "/assignment/" + Assignment.Id);
   }
 
 }
@@ -73,7 +73,7 @@
             @if(isSyncedWithCanvas)
             {
               @if(planner.LocalCourse != null
-                && planner.LocalCourse.CanvasId != null
+                && planner.LocalCourse.Settings.CanvasId != null
                 && planner.CanvasAssignments != null
                 && planner.CanvasModules != null 
                 && Assignment.NeedsUpdates(
