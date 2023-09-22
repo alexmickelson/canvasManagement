@@ -38,20 +38,20 @@ public class YamlManager
   {
     var courseDirectory = $"../storage/{course.Settings.Name}";
 
-      await SaveSettings(course, courseDirectory);
+    await SaveSettings(course, courseDirectory);
     foreach (var module in course.Modules)
     {
       var moduleDirectory = courseDirectory + "/" + module.Name;
       if (!Directory.Exists(moduleDirectory))
         Directory.CreateDirectory(moduleDirectory);
-      
+
       await SaveQuizzes(course, module);
       await SaveAssignments(course, module);
     }
 
   }
 
-  private static async Task SaveSettings(LocalCourse course, string courseDirectory)
+  public async Task SaveSettings(LocalCourse course, string courseDirectory)
   {
     var settingsFilePath = courseDirectory + "/settings.yml"; ;
     var settingsYaml = course.Settings.ToYaml();
@@ -64,9 +64,9 @@ public class YamlManager
     if (!Directory.Exists(quizzesDirectory))
       Directory.CreateDirectory(quizzesDirectory);
 
-    foreach(var quiz in module.Quizzes)
+    foreach (var quiz in module.Quizzes)
     {
-      var filePath = quizzesDirectory + "/" + quiz.Name+ ".yml"; ;
+      var filePath = quizzesDirectory + "/" + quiz.Name + ".yml"; ;
       var quizYaml = quiz.ToYaml();
       await File.WriteAllTextAsync(filePath, quizYaml);
     }
@@ -80,12 +80,18 @@ public class YamlManager
 
     foreach (var assignment in module.Assignments)
     {
-      var filePath = assignmentsDirectory + "/" + assignment.Name + ".yml";
       var assignmentYaml = assignment.ToYaml();
-      await File.WriteAllTextAsync(filePath, assignmentYaml);
+      var assignmentMarkdown =
+        "```yaml" + Environment.NewLine
+        + assignmentYaml
+        + "```" + Environment.NewLine
+        + "<!-- assignment markdown below -->" + Environment.NewLine
+        + assignment.Description;
+
+      var filePath = assignmentsDirectory + "/" + assignment.Name + ".md";
+      await File.WriteAllTextAsync(filePath, assignmentMarkdown);
     }
   }
-
 
   public async Task<IEnumerable<LocalCourse>> LoadSavedCourses()
   {
