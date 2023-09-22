@@ -1,3 +1,5 @@
+using YamlDotNet.Serialization;
+
 namespace LocalModels;
 
 public record LocalCourse
@@ -18,6 +20,13 @@ public record LocalCourseSettings
   public SimpleTimeOnly DefaultDueTime { get; init; } = new SimpleTimeOnly();
   public IEnumerable<AssignmentTemplate> AssignmentTemplates { get; init; } =
     Enumerable.Empty<AssignmentTemplate>();
+
+  public string ToYaml()
+  {
+    var serializer = new SerializerBuilder().DisableAliases().Build();
+    var yaml = serializer.Serialize(this);
+    return yaml;
+  }
 }
 
 public record SimpleTimeOnly

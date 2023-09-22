@@ -38,16 +38,24 @@ public class YamlManager
   {
     var courseDirectory = $"../storage/{course.Settings.Name}";
 
+      await SaveSettings(course, courseDirectory);
     foreach (var module in course.Modules)
     {
       var moduleDirectory = courseDirectory + "/" + module.Name;
       if (!Directory.Exists(moduleDirectory))
         Directory.CreateDirectory(moduleDirectory);
-
+      
       await SaveQuizzes(course, module);
       await SaveAssignments(course, module);
     }
 
+  }
+
+  private static async Task SaveSettings(LocalCourse course, string courseDirectory)
+  {
+    var settingsFilePath = courseDirectory + "/settings.yml"; ;
+    var settingsYaml = course.Settings.ToYaml();
+    await File.WriteAllTextAsync(settingsFilePath, settingsYaml);
   }
 
   public async Task SaveQuizzes(LocalCourse course, LocalModule module)
