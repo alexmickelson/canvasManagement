@@ -10,4 +10,5 @@ public record LocalQuizQuestionAnswer
   public string Text { get; init; } = string.Empty;
 
   public string HtmlText => Markdig.Markdown.ToHtml(Text);
+
 }

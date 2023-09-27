@@ -4,15 +4,15 @@ namespace LocalModels;
 
 public record LocalQuiz
 {
-  public string Id { get; init; } = "";
+  public required string Id { get; init; }
   public ulong? CanvasId { get; init; } = null;
-  public string Name { get; init; } = "";
-  public string Description { get; init; } = "";
-  public bool LockAtDueDate { get; init; }
+  public required string Name { get; init; }
+  public required string Description { get; init; }
+  public bool LockAtDueDate { get; init; } = true;
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
-  public bool ShuffleAnswers { get; init; }
-  public bool OneQuestionAtATime { get; init; }
+  public bool ShuffleAnswers { get; init; } = true;
+  public bool OneQuestionAtATime { get; init; } = false;
   public string? LocalAssignmentGroupId { get; init; }
   public int AllowedAttempts { get; init; } = -1; // -1 is infinite
   // public bool ShowCorrectAnswers { get; init; }
@@ -33,5 +33,27 @@ public record LocalQuiz
     var serializer = new SerializerBuilder().DisableAliases().Build();
     var yaml = serializer.Serialize(this);
     return yaml;
+  }
+
+  public string ToMarkdown()
+  {
+    var questionMarkdownArray = Questions.Select(q => q.ToMarkdown()).ToArray();
+    var questionDelimiter = Environment.NewLine + "---" + Environment.NewLine;
+    var questionMarkdown = string.Join(questionDelimiter, questionMarkdownArray);
+
+    return $@"Name: {Name}
+Id: {Id}
+CanvasId: {CanvasId}
+LockAtDueDate: {LockAtDueDate.ToString().ToLower()}
+LockAt: {LockAt}
+DueAt: {DueAt}
+ShuffleAnswers: {ShuffleAnswers.ToString().ToLower()}
+OneQuestionAtATime: {OneQuestionAtATime.ToString().ToLower()}
+LocalAssignmentGroupId: {LocalAssignmentGroupId}
+AllowedAttempts: {AllowedAttempts}
+Description: {Description}
+---
+{questionMarkdown}
+";
   }
 }
