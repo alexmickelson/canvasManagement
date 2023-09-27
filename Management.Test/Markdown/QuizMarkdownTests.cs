@@ -100,58 +100,49 @@ b) false
 ";
     markdown.Should().Contain(expectedQuestionString);
   }
-//   [Test]
-//   public void QuzMarkdownIncludesMultipleAnswerQuestion()
-//   {
-//     var quiz = new LocalQuiz()
-//     {
-//       Id = "string",
-//       CanvasId = 8324723,
-//       Name = "Test Quiz",
-//       Description = "desc",
-//       LockAtDueDate = true,
-//       LockAt = DateTime.MaxValue,
-//       DueAt = DateTime.MaxValue,
-//       ShuffleAnswers = true,
-//       OneQuestionAtATime = false,
-//       LocalAssignmentGroupId = "someId",
-//       AllowedAttempts = -1,
-//       Questions = new LocalQuizQuestion[]
-//       {
-//         new LocalQuizQuestion()
-//         {
-//           CanvasId = 32423,
-//           Id = "someid",
-//           Text = @"
-// `some type` of question
-
-// with many 
-
-// ```
-// lines
-// ```
-// ",
-//           QuestionType = QuestionType.MULTIPLE_CHOICE,
-//           Answers = new LocalQuizQuestionAnswer[]
-//           {
-//             new LocalQuizQuestionAnswer() { CanvasId = 324, Id = "asdfa", Correct = true, Text = "true" },
-//             new LocalQuizQuestionAnswer() { CanvasId = 32544, Id = "wef", Correct = false, Text = "false" + Environment.NewLine +Environment.NewLine + "endline" },
-//           }
-//         },
-//         new LocalQuizQuestion()
-//         {
-//           CanvasId = 3253,
-//           Id = "somesdid",
-//           Text = "oneline question",
-//           QuestionType = QuestionType.MULTIPLE_ANSWERS,
-//           Answers = new LocalQuizQuestionAnswer[]
-//           {
-//             new LocalQuizQuestionAnswer() { CanvasId = 3324, Id = "asdfsa", Correct = true, Text = "true" },
-//             new LocalQuizQuestionAnswer() { CanvasId = 325344, Id = "wsef", Correct = true, Text = "false"},
-//           }
-//         }
-//       }
-//     };
-//     var markdown = quiz.ToMarkdown();
-//   }
+  [Test]
+  public void QuzMarkdownIncludesMultipleAnswerQuestion()
+  {
+    var quiz = new LocalQuiz()
+    {
+      Id = "string",
+      CanvasId = 8324723,
+      Name = "Test Quiz",
+      Description = "desc",
+      LockAtDueDate = true,
+      LockAt = DateTime.MaxValue,
+      DueAt = DateTime.MaxValue,
+      ShuffleAnswers = true,
+      OneQuestionAtATime = false,
+      LocalAssignmentGroupId = "someId",
+      AllowedAttempts = -1,
+      Questions = new LocalQuizQuestion[]
+      {
+        new LocalQuizQuestion()
+        {
+          CanvasId = 3253,
+          Id = "somesdid",
+          Text = "oneline question",
+          Points = 1,
+          QuestionType = QuestionType.MULTIPLE_ANSWERS,
+          Answers = new LocalQuizQuestionAnswer[]
+          {
+            new LocalQuizQuestionAnswer() { CanvasId = 3324, Id = "asdfsa", Correct = true, Text = "true" },
+            new LocalQuizQuestionAnswer() { CanvasId = 325344, Id = "wsef", Correct = true, Text = "false"},
+            new LocalQuizQuestionAnswer() { CanvasId = 3253244, Id = "ws5ef", Correct = false, Text = "neither"},
+          }
+        }
+      }
+    };
+    var markdown = quiz.ToMarkdown();
+    var expectedQuestionString = @"
+Points: 1
+oneline question
+[*] true
+[*] false
+[ ] neither
+---
+";
+    markdown.Should().Contain(expectedQuestionString);
+  }
 }
