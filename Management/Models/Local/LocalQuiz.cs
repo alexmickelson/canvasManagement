@@ -61,9 +61,22 @@ Description: {Description}
   public static LocalQuiz ParseMarkdown(string input)
   {
 
-    var splitInput = input.Split(Environment.NewLine + Environment.NewLine);
+    var splitInput = input.Split("---" + Environment.NewLine);
     var settings = splitInput[0];
+    var quizWithoutQuestions = getQuizWithOnlySettings(settings);
 
+    var questions = splitInput[1..]
+      .Where(str => !string.IsNullOrWhiteSpace(str))
+      .Select(q => LocalQuizQuestion.ParseMarkdown(q))
+      .ToArray();
+    return quizWithoutQuestions with
+    {
+      Questions = questions
+    };
+  }
+
+  private static LocalQuiz getQuizWithOnlySettings(string settings)
+  {
     var name = extractLabelValue(settings, "Name");
     var lockAtDueDate = bool.Parse(extractLabelValue(settings, "LockAtDueDate"));
     var shuffleAnswers = bool.Parse(extractLabelValue(settings, "ShuffleAnswers"));
@@ -89,6 +102,7 @@ Description: {Description}
       Questions = new LocalQuizQuestion[] { }
     };
   }
+
   static string extractLabelValue(string input, string label)
   {
     string pattern = $@"{label}: (.*?)\n";

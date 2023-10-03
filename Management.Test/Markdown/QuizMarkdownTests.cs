@@ -161,6 +161,7 @@ AllowedAttempts: -1
 Description: this is the 
 multi line
 description
+---
 ";
     var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
 
@@ -172,5 +173,48 @@ description
     quiz.Description.Should().Be(@"this is the 
 multi line
 description");
+  }
+
+  [Test]
+  public void TestCanParseQuizWithQuestions()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+LockAtDueDate: true
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the 
+multi line
+description
+---
+Points: 2
+`some type` of question
+
+with many 
+
+```
+lines
+```
+
+*a) true
+b) false
+   
+   endline
+---
+";
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    var firstQuestion = quiz.Questions.First();
+    firstQuestion.Points.Should().Be(2);
+    firstQuestion.Text.Should().Contain("```");
+    firstQuestion.Text.Should().Contain("`some type` of question");
+    firstQuestion.Answers.First().Text.Should().Be("true");
+    firstQuestion.Answers.First().Correct.Should().BeTrue();
+    firstQuestion.Answers.ElementAt(1).Correct.Should().BeFalse();
+    firstQuestion.Answers.ElementAt(1).Text.Should().Contain("endline");
   }
 }
