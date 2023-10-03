@@ -116,7 +116,7 @@ public static partial class ModuleSyncronizationExtensions
   )
   {
     var anyUpdated = false;
-    foreach (var localAssignment in localModule.Assignments)
+    foreach (var localAssignment in localModule.Assignments.Where(a => a.DueAt > DateTime.Now))
     {
       var canvasModuleItemContentIds = canvasModulesItems[moduleCanvasId].Select(i => i.ContentId);
       if (!canvasModuleItemContentIds.Contains(localAssignment.CanvasId))
@@ -135,7 +135,7 @@ public static partial class ModuleSyncronizationExtensions
       }
     }
 
-    foreach (var localQuiz in localModule.Quizzes)
+    foreach (var localQuiz in localModule.Quizzes.Where(q => q.DueAt > DateTime.Now))
     {
 
       var canvasModuleItemContentIds = canvasModulesItems[moduleCanvasId].Select(i => i.ContentId);

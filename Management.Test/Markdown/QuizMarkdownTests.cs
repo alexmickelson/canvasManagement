@@ -145,4 +145,32 @@ oneline question
 ";
     markdown.Should().Contain(expectedQuestionString);
   }
+
+  [Test]
+  public void TestCanParseMarkdownQuizWithNoQuestions()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+LockAtDueDate: true
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the 
+multi line
+description
+";
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+
+    quiz.Name.Should().Be("Test Quiz");
+    quiz.LockAtDueDate.Should().Be(true);
+    quiz.ShuffleAnswers.Should().Be(true);
+    quiz.OneQuestionAtATime.Should().BeFalse();
+    quiz.AllowedAttempts.Should().Be(-1);
+    quiz.Description.Should().Be(@"this is the 
+multi line
+description");
+  }
 }

@@ -23,8 +23,12 @@ public static partial class QuizSyncronizationExtensions
   {
     var moduleTasks = localCourse.Modules.Select(async m =>
     {
-      var quizTasks = m.Quizzes.Select(
-        (q) => localCourse.SyncQuizToCanvas(canvasId, q, canvasQuizzes, canvas)
+
+      var quizTasks = m.Quizzes
+      .Select(
+        async (q) => q.DueAt > DateTime.Now
+        ? await localCourse.SyncQuizToCanvas(canvasId, q, canvasQuizzes, canvas)
+        : q
       );
       var quizzes = await Task.WhenAll(quizTasks);
       return m with { Quizzes = quizzes };

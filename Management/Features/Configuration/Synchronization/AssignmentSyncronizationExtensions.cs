@@ -249,7 +249,7 @@ public static partial class AssignmentSyncronizationExtensions
     var moduleTasks = localCourse.Modules.Select(async m =>
     {
       var assignmentTasks = m.Assignments.Select(
-        (a) => localCourse.SyncAssignmentToCanvas(canvasCourseId, a, canvasAssignments, canvas)
+        async (a) => await localCourse.SyncAssignmentToCanvas(canvasCourseId, a, canvasAssignments, canvas)
       );
       var assignments = await Task.WhenAll(assignmentTasks);
       return m with { Assignments = assignments };
