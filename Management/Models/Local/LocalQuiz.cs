@@ -14,7 +14,7 @@ public record LocalQuiz
   public DateTime DueAt { get; init; }
   public bool ShuffleAnswers { get; init; } = true;
   public bool OneQuestionAtATime { get; init; } = false;
-  public string? LocalAssignmentGroupId { get; init; }
+  public string? LocalAssignmentGroupName { get; init; }
   public int AllowedAttempts { get; init; } = -1; // -1 is infinite
   // public bool ShowCorrectAnswers { get; init; }
   // public int? TimeLimit { get; init; } = null;
@@ -26,7 +26,7 @@ public record LocalQuiz
     Enumerable.Empty<LocalQuizQuestion>();
   public ulong? GetCanvasAssignmentGroupId(IEnumerable<LocalAssignmentGroup> assignmentGroups) =>
     assignmentGroups
-      .FirstOrDefault(g => g.Id == LocalAssignmentGroupId)?
+      .FirstOrDefault(g => g.Name == LocalAssignmentGroupName)?
       .CanvasId;
 
   public string ToYaml()
@@ -50,7 +50,7 @@ LockAt: {LockAt}
 DueAt: {DueAt}
 ShuffleAnswers: {ShuffleAnswers.ToString().ToLower()}
 OneQuestionAtATime: {OneQuestionAtATime.ToString().ToLower()}
-LocalAssignmentGroupId: {LocalAssignmentGroupId}
+LocalAssignmentGroupName: {LocalAssignmentGroupName}
 AllowedAttempts: {AllowedAttempts}
 Description: {Description}
 ---

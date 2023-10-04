@@ -58,14 +58,14 @@
     quizContext.SaveQuiz(newQuiz);
   }
 
-  private void setAssignmentGroup(LocalAssignmentGroup group)
+  private void setAssignmentGroup(LocalAssignmentGroup? group)
   {
     if(quizContext.Quiz == null)
       return;
     
     var newQuiz = quizContext.Quiz with 
     {
-      LocalAssignmentGroupId = group.Id
+      LocalAssignmentGroupName = group?.Name
     };
 
     quizContext.SaveQuiz(newQuiz);
@@ -76,7 +76,7 @@
       .LocalCourse?
       .Settings
       .AssignmentGroups
-      .FirstOrDefault(g => g.Id == quizContext.Quiz?.LocalAssignmentGroupId);
+      .FirstOrDefault(g => g.Name == quizContext.Quiz?.LocalAssignmentGroupName);
 }
 @if(planner.LocalCourse != null )
 {
@@ -97,7 +97,6 @@
     <ButtonSelect
       Label="Assignment Group"
       Options="planner.LocalCourse.Settings.AssignmentGroups"
-      GetId="(g) => g?.Id"
       GetName="(g) => g?.Name"
       OnSelect="(g) => setAssignmentGroup(g)"
       SelectedOption="selectedAssignmentGroup"

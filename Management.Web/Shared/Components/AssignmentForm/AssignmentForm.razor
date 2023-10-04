@@ -112,14 +112,14 @@
     }
   }
 
-  private void setAssignmentGroup(LocalAssignmentGroup group)
+  private void setAssignmentGroup(LocalAssignmentGroup? group)
   {
     if(assignmentContext.Assignment == null)
       return;
     
     var newAssignment = assignmentContext.Assignment with 
     {
-      LocalAssignmentGroupId = group.Id
+      LocalAssignmentGroupId = group?.Id
     };
 
     assignmentContext.SaveAssignment(newAssignment);
@@ -150,8 +150,7 @@
   <ButtonSelect
     Label="Assignment Group"
     Options="planner.LocalCourse?.Settings.AssignmentGroups"
-    GetId="(g) => g.Id"
-    GetName="(g) => g.Name"
+    GetName="(g) => g?.Name"
     OnSelect="(g) => setAssignmentGroup(g)"
     SelectedOption="selectedAssignmentGroup"
   />
