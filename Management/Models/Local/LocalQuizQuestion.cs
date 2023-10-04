@@ -33,9 +33,7 @@ public record LocalQuizQuestion
 
     return $@"Points: {Points}
 {Text}
-{answersText}
----
-";
+{answersText}";
   }
 
   private static readonly string[] validFirstAnswerDelimiters = new string[] { "*a)", "a)", "[ ]", "[*]" };
@@ -52,18 +50,19 @@ public record LocalQuizQuestion
       .ToArray();
     var description = string.Join(Environment.NewLine, linesWithoutAnswers);
 
-    
-    LocalQuizQuestionAnswer[] answers = getAnswers(linesWithoutPoints);
+
+    var (answers, questionType) = getAnswers(linesWithoutPoints);
 
     return new LocalQuizQuestion()
     {
       Text = description,
       Points = points,
-      Answers = answers
+      Answers = answers,
+      QuestionType = questionType
     };
   }
 
-  private static LocalQuizQuestionAnswer[] getAnswers(string[] linesWithoutPoints)
+  private static (LocalQuizQuestionAnswer[], string questionType) getAnswers(string[] linesWithoutPoints)
   {
     var indexOfAnswerStart = linesWithoutPoints
           .ToList()
@@ -96,7 +95,22 @@ public record LocalQuizQuestion
     });
 
     var answers = answerLines.Select(LocalQuizQuestionAnswer.ParseMarkdown).ToArray();
-    return answers;
+
+    var isMultipleChoice =
+      answerLines.First().StartsWith("a)")
+      || answerLines.First().StartsWith("*a)");
+
+    var isMultipleAnswer =
+      answerLines.First().StartsWith("[ ]")
+      || answerLines.First().StartsWith("[*]");
+
+    var questionType = isMultipleChoice
+      ? "multiple_choice"
+      : isMultipleAnswer
+        ? "multiple_answers"
+        : "";
+
+    return (answers, questionType);
   }
 }
 

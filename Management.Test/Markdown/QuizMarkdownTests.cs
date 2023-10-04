@@ -209,6 +209,7 @@ b) false
 
     var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
     var firstQuestion = quiz.Questions.First();
+    firstQuestion.QuestionType.Should().Be(QuestionType.MULTIPLE_CHOICE);
     firstQuestion.Points.Should().Be(2);
     firstQuestion.Text.Should().Contain("```");
     firstQuestion.Text.Should().Contain("`some type` of question");
@@ -216,5 +217,76 @@ b) false
     firstQuestion.Answers.First().Correct.Should().BeTrue();
     firstQuestion.Answers.ElementAt(1).Correct.Should().BeFalse();
     firstQuestion.Answers.ElementAt(1).Text.Should().Contain("endline");
+  }
+
+  [Test]
+  public void CanParseQuestionWithMultipleAnswers()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+LockAtDueDate: true
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the 
+multi line
+description
+---
+Which events are triggered when the user clicks on an input field?
+[*] click
+[*] focus
+[*] mousedown
+[] submit
+[] change
+[] mouseout
+[] keydown
+---
+";
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    var firstQuestion = quiz.Questions.First();
+    firstQuestion.Points.Should().Be(1);
+    firstQuestion.QuestionType.Should().Be(QuestionType.MULTIPLE_ANSWERS);
+    firstQuestion.Text.Should().Contain("Which events are triggered when the user clicks on an input field?");
+    firstQuestion.Answers.First().Text.Should().Be("click");
+    firstQuestion.Answers.First().Correct.Should().BeTrue();
+    firstQuestion.Answers.ElementAt(3).Correct.Should().BeFalse();
+    firstQuestion.Answers.ElementAt(3).Text.Should().Be("submit");
+  }
+  [Test]
+  public void CanParseMultipleQuestions()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+LockAtDueDate: true
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the 
+multi line
+description
+---
+Which events are triggered when the user clicks on an input field?
+[*] click
+---
+points: 2
+`some type` of question
+*a) true
+b) false
+";
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    var firstQuestion = quiz.Questions.First();
+    firstQuestion.Points.Should().Be(1);
+    firstQuestion.QuestionType.Should().Be(QuestionType.MULTIPLE_ANSWERS);
+    var secondQuestion = quiz.Questions.ElementAt(1);
+    secondQuestion.Points.Should().Be(2);
+    secondQuestion.QuestionType.Should().Be(QuestionType.MULTIPLE_CHOICE);
   }
 }

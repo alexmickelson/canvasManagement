@@ -29,36 +29,36 @@ public class YamlManager
     if (!Directory.Exists(courseDirectory))
       Directory.CreateDirectory(courseDirectory);
 
-    await SaveModules(course);
+    await saveModules(course);
 
     await File.WriteAllTextAsync($"../storage/{course.Settings.Name}.yml", courseString);
   }
 
-  public async Task SaveModules(LocalCourse course)
+  private static async Task saveModules(LocalCourse course)
   {
     var courseDirectory = $"../storage/{course.Settings.Name}";
 
-    await SaveSettings(course, courseDirectory);
+    await saveSettings(course, courseDirectory);
     foreach (var module in course.Modules)
     {
       var moduleDirectory = courseDirectory + "/" + module.Name;
       if (!Directory.Exists(moduleDirectory))
         Directory.CreateDirectory(moduleDirectory);
 
-      await SaveQuizzes(course, module);
-      await SaveAssignments(course, module);
+      await saveQuizzes(course, module);
+      await saveAssignments(course, module);
     }
 
   }
 
-  public async Task SaveSettings(LocalCourse course, string courseDirectory)
+  private static async Task saveSettings(LocalCourse course, string courseDirectory)
   {
     var settingsFilePath = courseDirectory + "/settings.yml"; ;
     var settingsYaml = course.Settings.ToYaml();
     await File.WriteAllTextAsync(settingsFilePath, settingsYaml);
   }
 
-  public async Task SaveQuizzes(LocalCourse course, LocalModule module)
+  private static async Task saveQuizzes(LocalCourse course, LocalModule module)
   {
     var quizzesDirectory = $"../storage/{course.Settings.Name}/{module.Name}/quizzes";
     if (!Directory.Exists(quizzesDirectory))
@@ -69,10 +69,14 @@ public class YamlManager
       var filePath = quizzesDirectory + "/" + quiz.Name + ".yml"; ;
       var quizYaml = quiz.ToYaml();
       await File.WriteAllTextAsync(filePath, quizYaml);
+
+      var markdownPath = quizzesDirectory + "/" + quiz.Name + ".md"; ;
+      var quizMarkdown = quiz.ToMarkdown();
+      await File.WriteAllTextAsync(markdownPath, quizMarkdown);
     }
   }
 
-  public async Task SaveAssignments(LocalCourse course, LocalModule module)
+  private static async Task saveAssignments(LocalCourse course, LocalModule module)
   {
     var assignmentsDirectory = $"../storage/{course.Settings.Name}/{module.Name}/assignments";
     if (!Directory.Exists(assignmentsDirectory))
