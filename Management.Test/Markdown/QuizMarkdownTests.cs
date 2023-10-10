@@ -23,7 +23,7 @@ this is my description in markdown
       DueAt = DateTime.MaxValue,
       ShuffleAnswers = true,
       OneQuestionAtATime = false,
-      LocalAssignmentGroupId = "someId",
+      LocalAssignmentGroupName = "someId",
       AllowedAttempts = -1,
       Questions = new LocalQuizQuestion[] { }
     };
@@ -54,7 +54,7 @@ this is my description in markdown
       DueAt = DateTime.MaxValue,
       ShuffleAnswers = true,
       OneQuestionAtATime = false,
-      LocalAssignmentGroupId = "someId",
+      LocalAssignmentGroupName = "someId",
       AllowedAttempts = -1,
       Questions = new LocalQuizQuestion[]
       {
@@ -114,7 +114,7 @@ b) false
       DueAt = DateTime.MaxValue,
       ShuffleAnswers = true,
       OneQuestionAtATime = false,
-      LocalAssignmentGroupId = "someId",
+      LocalAssignmentGroupName = "someId",
       AllowedAttempts = -1,
       Questions = new LocalQuizQuestion[]
       {

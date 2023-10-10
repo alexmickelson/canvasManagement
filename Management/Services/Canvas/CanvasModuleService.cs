@@ -57,7 +57,7 @@ public class CanvasModuleService
 
   public async Task<IEnumerable<CanvasModuleItem>> GetModuleItems(ulong courseId, ulong moduleId)
   {
-    var url = $"courses/{courseId}/modules/{moduleId}/items";
+    var url = $"courses/{courseId}/modules/{moduleId}/items?include[]=content_details";
     var request = new RestRequest(url);
     var (items, response) = await webRequestor.GetAsync<IEnumerable<CanvasModuleItem>>(request);
     if (items == null)

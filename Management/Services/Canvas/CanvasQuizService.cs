@@ -36,7 +36,7 @@ public class CanvasQuizService
     );
   }
 
-  public async Task<LocalQuiz> Create(
+  public async Task<ulong> Create(
     ulong canvasCourseId, 
     LocalQuiz localQuiz,
     ulong? canvasAssignmentGroupId
@@ -69,19 +69,15 @@ public class CanvasQuizService
     if (canvasQuiz == null)
       throw new Exception("Created canvas quiz was null");
 
-    var updatedQuiz = localQuiz with { CanvasId = canvasQuiz.Id };
-    var quizWithQuestions = await CreateQuizQuestions(canvasCourseId, updatedQuiz);
-
-    return quizWithQuestions;
+    await CreateQuizQuestions(canvasCourseId, localQuiz);
+    return canvasQuiz.Id;
   }
 
-  public async Task<LocalQuiz> CreateQuizQuestions(ulong canvasCourseId, LocalQuiz localQuiz)
+  public async Task CreateQuizQuestions(ulong canvasCourseId, LocalQuiz localQuiz)
   {
     var tasks = localQuiz.Questions.Select(createQuestion(canvasCourseId, localQuiz)).ToArray();
-    var updatedQuestions = await Task.WhenAll(tasks);
-
+    await Task.WhenAll(tasks);
     await hackFixRedundantAssignments(canvasCourseId);
-    return localQuiz with { Questions = updatedQuestions };
   }
 
   private async Task hackFixRedundantAssignments(ulong canvasCourseId)

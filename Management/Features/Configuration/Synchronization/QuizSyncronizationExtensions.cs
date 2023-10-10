@@ -16,47 +16,45 @@ public static partial class QuizSyncronizationExtensions
 
   internal static async Task<LocalCourse> SyncQuizzesWithCanvas(
     this LocalCourse localCourse,
-    ulong canvasId,
     IEnumerable<CanvasQuiz> canvasQuizzes,
     CanvasService canvas
   )
   {
-    var moduleTasks = localCourse.Modules.Select(async m =>
-    {
+    return localCourse;
+    // var moduleTasks = localCourse.Modules.Select(async m =>
+    // {
 
-      var quizTasks = m.Quizzes
-      .Select(
-        async (q) => q.DueAt > DateTime.Now
-        ? await localCourse.SyncQuizToCanvas(canvasId, q, canvasQuizzes, canvas)
-        : q
-      );
-      var quizzes = await Task.WhenAll(quizTasks);
-      return m with { Quizzes = quizzes };
-    });
+    //   var quizTasks = m.Quizzes
+    //   .Select(
+    //     async (q) => q.DueAt > DateTime.Now
+    //     ? await localCourse.AddQuizToCanvas(q, canvasQuizzes, canvas)
+    //     : q
+    //   );
+    //   var quizzes = await Task.WhenAll(quizTasks);
+    //   return m with { Quizzes = quizzes };
+    // });
 
-    var modules = await Task.WhenAll(moduleTasks);
-    return localCourse with { Modules = modules };
+    // var modules = await Task.WhenAll(moduleTasks);
+    // return localCourse with { Modules = modules };
   }
 
-  internal static async Task<LocalQuiz> SyncQuizToCanvas(
+  public static async Task<LocalQuiz> AddQuizToCanvas(
     this LocalCourse localCourse,
-    ulong canvasCourseId,
     LocalQuiz localQuiz,
     IEnumerable<CanvasQuiz> canvasQuizzes,
     CanvasService canvas
   )
   {
-    var isCreated = localQuiz.QuizIsCreated(canvasQuizzes);
-    var canvasAssignmentGroupId = localQuiz.GetCanvasAssignmentGroupId(localCourse.Settings.AssignmentGroups);
-    if (isCreated)
+    if (localCourse.Settings.CanvasId == null)
     {
-      // TODO write update
+      Console.WriteLine("Cannot add quiz to canvas without canvas course id");
+      return localQuiz;
     }
-    else
-    {
-      return await canvas.Quizzes.Create(canvasCourseId, localQuiz, canvasAssignmentGroupId);
-    }
+    ulong courseCanvasId = (ulong)localCourse.Settings.CanvasId;
 
-    return localQuiz;
+    var canvasAssignmentGroupId = localQuiz.GetCanvasAssignmentGroupId(localCourse.Settings.AssignmentGroups);
+
+    var canvasQuizId = await canvas.Quizzes.Create(courseCanvasId, localQuiz, canvasAssignmentGroupId);
+    return localQuiz with { CanvasId = canvasQuizId };
   }
 }

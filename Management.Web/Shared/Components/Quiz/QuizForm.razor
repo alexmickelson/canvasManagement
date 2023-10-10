@@ -102,6 +102,11 @@
       quizContext.SaveQuiz(newQuiz);
     }
   }
+
+  private async Task addToCanvas()
+  {
+    await quizContext.AddQuizToCanvas();
+  }
 }
 
 <Modal @ref="modal" OnHide="() => quizContext.Quiz = null" >
@@ -166,6 +171,13 @@
   <Footer>
     <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirm="deleteQuiz" />
 
+
+    <button 
+      class="btn btn-outline-secondary"
+      @onclick="addToCanvas"
+    >
+      Add to Canvas
+    </button>
     <button 
       class="btn btn-primary" 
       @onclick="() => modal?.Hide()"

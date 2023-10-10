@@ -16,5 +16,13 @@ public record CanvasModuleItem(
   // [OptIn]
   [property: JsonPropertyName("completion_requirement")]
     CanvasCompletionRequirement? CompletionRequirement,
-  [property: JsonPropertyName("published")] bool? Published
+  [property: JsonPropertyName("published")] bool? Published,
+  [property: JsonPropertyName("content_details")] CanvasModuleItemContentDetails? ContentDetails
+);
+
+public record CanvasModuleItemContentDetails(
+  [property: JsonPropertyName("due_at")] DateTime? DueAt,
+  [property: JsonPropertyName("lock_at")] DateTime? LockAt,
+  [property: JsonPropertyName("points_possible")] double PointsPossible,
+  [property: JsonPropertyName("locked_for_user")] bool LockedForUser
 );

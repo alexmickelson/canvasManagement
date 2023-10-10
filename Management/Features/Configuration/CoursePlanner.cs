@@ -155,7 +155,7 @@ public class CoursePlanner
     };
 
 
-    var newModules = await LocalCourse.EnsureAllModulesExistInCanvas(
+    var newModules = await LocalCourse.CreateAllModules(
       canvasId,
       CanvasModules,
       canvas
@@ -163,15 +163,16 @@ public class CoursePlanner
     LocalCourse = LocalCourse with { Modules = newModules };
     CanvasModules = await canvas.Modules.GetModules(canvasId);
 
-    await LocalCourse.SortCanvasModules(canvasId, CanvasModules, canvas);
+    await LocalCourse.SortCanvasModulesByLocalOrder(canvasId, CanvasModules, canvas);
     CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
 
-    LocalCourse = await LocalCourse.SyncModulesWithCanvasData(canvasId, CanvasModules, canvas);
+    LocalCourse = await LocalCourse.GetCanvasIdsForLocalModules(canvasId, canvas);
 
     LocalCourse = await LocalCourse.SyncAssignmentsWithCanvas(canvasId, CanvasAssignments, canvas);
     CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
 
-    LocalCourse = await LocalCourse.SyncQuizzesWithCanvas(canvasId, CanvasQuizzes, canvas);
+    CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
+    LocalCourse = await LocalCourse.SyncQuizzesWithCanvas(CanvasQuizzes, canvas);
 
     await LocalCourse.SyncModuleItemsWithCanvas(canvasId, CanvasModulesItems, canvas);
     CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
@@ -180,6 +181,7 @@ public class CoursePlanner
     StateHasChanged?.Invoke();
     Console.WriteLine("done syncing with canvas\n");
   }
+
 
   public void Clear()
   {

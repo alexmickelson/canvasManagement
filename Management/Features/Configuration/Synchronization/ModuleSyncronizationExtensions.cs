@@ -6,7 +6,7 @@ namespace Management.Planner;
 
 public static partial class ModuleSyncronizationExtensions
 {
-  internal static async Task<IEnumerable<LocalModule>> EnsureAllModulesExistInCanvas(
+  internal static async Task<IEnumerable<LocalModule>> CreateAllModules(
     this LocalCourse localCourse,
     ulong canvasCourseId,
     IEnumerable<CanvasModule> canvasModules,
@@ -32,7 +32,7 @@ public static partial class ModuleSyncronizationExtensions
     return newModules ?? throw new Exception("Error ensuring all modules exist in canvas");
   }
 
-  internal static async Task SortCanvasModules(
+  internal static async Task SortCanvasModulesByLocalOrder(
     this LocalCourse localCourse,
     ulong canvasId,
     IEnumerable<CanvasModule> canvasModules,
@@ -53,14 +53,13 @@ public static partial class ModuleSyncronizationExtensions
     }
   }
 
-  internal static async Task<LocalCourse> SyncModulesWithCanvasData(
+  internal static async Task<LocalCourse> GetCanvasIdsForLocalModules(
     this LocalCourse localCourse,
     ulong canvasId,
-    IEnumerable<CanvasModule> canvasModules,
     CanvasService canvas
   )
   {
-    canvasModules = await canvas.Modules.GetModules(canvasId);
+    var canvasModules = await canvas.Modules.GetModules(canvasId);
     return localCourse with
     {
       Modules = localCourse.Modules.Select(m =>
@@ -70,35 +69,38 @@ public static partial class ModuleSyncronizationExtensions
       })
     };
   }
-  internal static async Task SortModuleItems(
+
+  public static async Task SortModuleItems(
     this LocalModule localModule,
     ulong canvasId,
     ulong moduleCanvasId,
-    IEnumerable<CanvasModuleItem> canvasModuleItems,
     CanvasService canvas
   )
   {
-    var localItemsWithCorrectOrder = localModule.Assignments
-      .OrderBy(a => a.DueAt)
-      .Select((a, i) => (Assignment: a, Position: i + 1));
+    
+    var canvasModuleItems = await canvas.Modules.GetModuleItems(canvasId, moduleCanvasId);
+    var moduleItemsInCorrectOrder = canvasModuleItems
+      .OrderBy(i => i.ContentDetails?.DueAt)
+      .Select((a, i) => (Item: a, Position: i + 1));
+    // var localItemsWithCorrectOrder = localModule.Assignments
+    //   .OrderBy(a => a.DueAt)
+    //   .Select((a, i) => (Assignment: a, Position: i + 1));
 
-    var canvasContentIdsByCurrentPosition =
-      canvasModuleItems.ToDictionary(item => item.Position, item => item.ContentId)
-      ?? new Dictionary<int, ulong?>();
+    // var canvasContentIdsByCurrentPosition =
+    //   canvasModuleItems.ToDictionary(item => item.Position, item => item.ContentId)
+    //   ?? new Dictionary<int, ulong?>();
 
-    foreach (var (localAssignment, position) in localItemsWithCorrectOrder)
+    foreach (var (moduleItem, position) in moduleItemsInCorrectOrder)
     {
-      var itemIsInCorrectOrder =
-        canvasContentIdsByCurrentPosition.ContainsKey(position)
-        && canvasContentIdsByCurrentPosition[position] == localAssignment.CanvasId;
+      var itemIsInCorrectOrder = moduleItem.Position == position;
 
-      var currentCanvasItem = canvasModuleItems.First(i => i.ContentId == localAssignment.CanvasId);
+      // var currentCanvasItem = canvasModuleItems.First(i => i.ContentId == moduleItem.CanvasId);
       if (!itemIsInCorrectOrder)
       {
         await canvas.UpdateModuleItem(
           canvasId,
           moduleCanvasId,
-          currentCanvasItem with
+          moduleItem with
           {
             Position = position
           }
@@ -182,7 +184,7 @@ public static partial class ModuleSyncronizationExtensions
         ? await canvas.Modules.GetModuleItems(canvasId, moduleCanvasId)
         : canvasModulesItems[moduleCanvasId];
 
-      await localModule.SortModuleItems(canvasId, moduleCanvasId, canvasModuleItems, canvas);
+      await localModule.SortModuleItems(canvasId, moduleCanvasId, canvas);
     }
   }
 }
