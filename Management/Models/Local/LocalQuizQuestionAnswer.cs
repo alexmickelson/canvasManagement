@@ -13,7 +13,7 @@ public record LocalQuizQuestionAnswer
   public static LocalQuizQuestionAnswer ParseMarkdown(string input)
   {
     var isCorrect = input[0] == '*' || input[1] == '*';
-    string startingQuestionPattern = @"^(?:\*[a-z]\))|\[\s*\]|\[\*\] ";
+    string startingQuestionPattern = @"^(\*?[a-z]\))|\[\s*\]|\[\*\] ";
     var text = Regex.Replace(input, startingQuestionPattern, string.Empty).Trim();
 
     return new LocalQuizQuestionAnswer()
@@ -22,5 +22,4 @@ public record LocalQuizQuestionAnswer
       Text=text,
     };
   }
-
 }

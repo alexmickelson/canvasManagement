@@ -1,0 +1,48 @@
+@using Management.Web.Shared.Components
+
+@inject QuizEditorContext quizContext
+
+
+@code {
+
+  [Parameter, EditorRequired]
+  public LocalQuiz Quiz { get; set; } = default!;
+  protected override void OnInitialized()
+  {
+    quizContext.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    Console.WriteLine(JsonSerializer.Serialize(quizContext.Quiz));
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    quizContext.StateHasChanged -= reload;
+  }
+}
+
+
+@if(Quiz != null)
+{
+  <div>Name: @Quiz.Name</div>
+  <div>Due At: @Quiz.DueAt</div>
+  <div>Lock At: @Quiz.LockAt</div>
+  <div>Shuffle Answers: @Quiz.ShuffleAnswers</div>
+  <div>Allowed Attempts: @Quiz.AllowedAttempts</div>
+  <div>One question at a time: @Quiz.OneQuestionAtATime</div>
+  <div>Assignment Group: @Quiz.LocalAssignmentGroupName</div>
+
+  <div class="p-3">@Quiz.Description</div>
+
+  @foreach(var question in Quiz.Questions)
+  {
+    
+    <div class="bg-dark-subtle mt-1 p-1 rounded rounded-2">
+      <MarkdownQuestionPreview
+        Question="question"
+        @key="question"
+      />
+    </div>
+  }
+}

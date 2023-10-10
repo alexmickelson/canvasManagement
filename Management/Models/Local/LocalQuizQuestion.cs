@@ -64,10 +64,10 @@ public record LocalQuizQuestion
   private static (LocalQuizQuestionAnswer[], string questionType) getAnswers(string[] linesWithoutPoints)
   {
     var indexOfAnswerStart = linesWithoutPoints
-          .ToList()
-          .FindIndex(
-            l => validFirstAnswerDelimiters.Any(prefix => l.TrimStart().StartsWith(prefix))
-          );
+      .ToList()
+      .FindIndex(
+        l => validFirstAnswerDelimiters.Any(prefix => l.TrimStart().StartsWith(prefix))
+      );
     var answerLinesRaw = linesWithoutPoints[indexOfAnswerStart..];
 
     var answerStartPattern = @"^(\*?[a-z]\))|\[\s*\]|\[\*\]";

@@ -49,7 +49,7 @@ LockAt: {LockAt}
 DueAt: {DueAt}
 ShuffleAnswers: {ShuffleAnswers.ToString().ToLower()}
 OneQuestionAtATime: {OneQuestionAtATime.ToString().ToLower()}
-LocalAssignmentGroupName: {LocalAssignmentGroupName}
+AssignmentGroup: {LocalAssignmentGroupName}
 AllowedAttempts: {AllowedAttempts}
 Description: {Description}
 ---
@@ -84,8 +84,8 @@ Description: {Description}
     var dueAt = DateTime.Parse(extractLabelValue(settings, "DueAt"));
     var lockAt = DateTime.Parse(extractLabelValue(settings, "LockAt"));
     var description = extractDescription(settings);
+    var assignmentGroup = extractLabelValue(settings, "AssignmentGroup");
 
-    // var assignmentGroup = ExtractLabelValue(settings, "AssignmentGroup");
     return new LocalQuiz()
     {
       Id = "id-" + name,
@@ -96,7 +96,7 @@ Description: {Description}
       DueAt = dueAt,
       ShuffleAnswers = shuffleAnswers,
       OneQuestionAtATime = oneQuestionAtATime,
-      // LocalAssignmentGroupId = "someId",
+      LocalAssignmentGroupName = assignmentGroup,
       AllowedAttempts = allowedAttempts,
       Questions = new LocalQuizQuestion[] { }
     };

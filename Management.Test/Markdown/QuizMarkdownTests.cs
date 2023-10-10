@@ -35,7 +35,7 @@ this is my description in markdown
     markdown.Should().Contain("LockAtDueDate: true");
     markdown.Should().Contain("ShuffleAnswers: true");
     markdown.Should().Contain("OneQuestionAtATime: false");
-    markdown.Should().Contain("LocalAssignmentGroupName: someId");
+    markdown.Should().Contain("AssignmentGroup: someId");
     markdown.Should().Contain("AllowedAttempts: -1");
   }
   [Test]
@@ -70,8 +70,8 @@ lines
           QuestionType = QuestionType.MULTIPLE_CHOICE,
           Answers = new LocalQuizQuestionAnswer[]
           {
-            new LocalQuizQuestionAnswer() { Id = "asdfa", Correct = true, Text = "true" },
-            new LocalQuizQuestionAnswer() { Id = "wef", Correct = false, Text = "false" + Environment.NewLine +Environment.NewLine + "endline" },
+            new LocalQuizQuestionAnswer() { Correct = true, Text = "true" },
+            new LocalQuizQuestionAnswer() { Correct = false, Text = "false" + Environment.NewLine +Environment.NewLine + "endline" },
           }
         }
       }
@@ -120,9 +120,9 @@ b) false
           QuestionType = QuestionType.MULTIPLE_ANSWERS,
           Answers = new LocalQuizQuestionAnswer[]
           {
-            new LocalQuizQuestionAnswer() { Id = "asdfsa", Correct = true, Text = "true" },
-            new LocalQuizQuestionAnswer() { Id = "wsef", Correct = true, Text = "false"},
-            new LocalQuizQuestionAnswer() { Id = "ws5ef", Correct = false, Text = "neither"},
+            new LocalQuizQuestionAnswer() { Correct = true, Text = "true" },
+            new LocalQuizQuestionAnswer() { Correct = true, Text = "false"},
+            new LocalQuizQuestionAnswer() { Correct = false, Text = "neither"},
           }
         }
       }

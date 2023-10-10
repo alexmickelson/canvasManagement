@@ -1,0 +1,45 @@
+@using Markdig
+
+@code {
+  [Parameter, EditorRequired]
+  public LocalQuizQuestion Question { get; set; } = default!;
+
+}
+
+@((MarkupString)Question.HtmlText)
+
+@foreach(var answer in Question.Answers)
+{
+
+  <div class="mx-3 mb-1 bg-dark px-2  rounded rounded-2 d-flex flex-row border">
+    <div>
+      @if(answer.Correct)
+      {
+        <svg 
+          style="width: 1em;" 
+          class="me-1"
+          viewBox="0 0 24 24" 
+          fill="none" 
+        >
+          <path 
+            d="M4 12.6111L8.92308 17.5L20 6.5" 
+            stroke="var(--bs-success)" 
+            stroke-width="2" 
+            stroke-linecap="round" 
+            stroke-linejoin="round"
+            />
+        </svg>
+      }
+      else
+      {
+        <div
+          class="me-1"
+          style="width: 1em;" 
+        ></div>
+      }
+    </div>
+    <div>
+      @((MarkupString)answer.HtmlText)
+    </div>
+  </div>
+}
