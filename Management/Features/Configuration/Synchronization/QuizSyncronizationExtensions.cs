@@ -11,10 +11,10 @@ public static partial class QuizSyncronizationExtensions
 {
   public static bool QuizIsCreated(this LocalQuiz localQuiz, IEnumerable<CanvasQuiz> canvasQuizzes)
   {
-    return canvasQuizzes.Any(q => q.Id == localQuiz.CanvasId);
+    return canvasQuizzes.Any(q => q.Title == localQuiz.Name);
   }
 
-  public static async Task<LocalQuiz> AddQuizToCanvas(
+  public static async Task<ulong?> AddQuizToCanvas(
     this LocalCourse localCourse,
     LocalQuiz localQuiz,
     CanvasService canvas
@@ -23,13 +23,13 @@ public static partial class QuizSyncronizationExtensions
     if (localCourse.Settings.CanvasId == null)
     {
       Console.WriteLine("Cannot add quiz to canvas without canvas course id");
-      return localQuiz;
+      return null;
     }
     ulong courseCanvasId = (ulong)localCourse.Settings.CanvasId;
 
     var canvasAssignmentGroupId = localQuiz.GetCanvasAssignmentGroupId(localCourse.Settings.AssignmentGroups);
 
     var canvasQuizId = await canvas.Quizzes.Create(courseCanvasId, localQuiz, canvasAssignmentGroupId);
-    return localQuiz with { CanvasId = canvasQuizId };
+    return canvasQuizId;
   }
 }

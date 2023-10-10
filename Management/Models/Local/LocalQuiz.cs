@@ -6,7 +6,7 @@ namespace LocalModels;
 public record LocalQuiz
 {
   public required string Id { get; init; }
-  public ulong? CanvasId { get; init; } = null;
+  // public ulong? CanvasId { get; init; } = null;
   public required string Name { get; init; }
   public required string Description { get; init; }
   public bool LockAtDueDate { get; init; } = true;
@@ -44,7 +44,6 @@ public record LocalQuiz
 
     return $@"Name: {Name}
 Id: {Id}
-CanvasId: {CanvasId}
 LockAtDueDate: {LockAtDueDate.ToString().ToLower()}
 LockAt: {LockAt}
 DueAt: {DueAt}

@@ -37,7 +37,7 @@ public class CanvasQuizService
   }
 
   public async Task<ulong> Create(
-    ulong canvasCourseId, 
+    ulong canvasCourseId,
     LocalQuiz localQuiz,
     ulong? canvasAssignmentGroupId
   )
@@ -69,13 +69,17 @@ public class CanvasQuizService
     if (canvasQuiz == null)
       throw new Exception("Created canvas quiz was null");
 
-    await CreateQuizQuestions(canvasCourseId, localQuiz);
+    await CreateQuizQuestions(canvasCourseId, canvasQuiz.Id, localQuiz);
     return canvasQuiz.Id;
   }
 
-  public async Task CreateQuizQuestions(ulong canvasCourseId, LocalQuiz localQuiz)
+  public async Task CreateQuizQuestions(
+    ulong canvasCourseId,
+    ulong canvasQuizId,
+    LocalQuiz localQuiz
+  )
   {
-    var tasks = localQuiz.Questions.Select(createQuestion(canvasCourseId, localQuiz)).ToArray();
+    var tasks = localQuiz.Questions.Select(createQuestion(canvasCourseId, canvasQuizId, localQuiz)).ToArray();
     await Task.WhenAll(tasks);
     await hackFixRedundantAssignments(canvasCourseId);
   }
@@ -105,12 +109,13 @@ public class CanvasQuizService
 
   private Func<LocalQuizQuestion, Task<LocalQuizQuestion>> createQuestion(
     ulong canvasCourseId,
+    ulong canvasQuizId,
     LocalQuiz localQuiz
   )
   {
     return async (question) =>
     {
-      var newQuestion = await createQuestionOnly(canvasCourseId, localQuiz, question);
+      var newQuestion = await createQuestionOnly(canvasCourseId, canvasQuizId, localQuiz, question);
 
       var answersWithIds = question.Answers
         .Select((answer, i) =>
@@ -139,11 +144,12 @@ public class CanvasQuizService
 
   private async Task<CanvasQuizQuestion> createQuestionOnly(
     ulong canvasCourseId,
+    ulong canvasQuizId,
     LocalQuiz localQuiz,
     LocalQuizQuestion q
   )
   {
-    var url = $"courses/{canvasCourseId}/quizzes/{localQuiz.CanvasId}/questions";
+    var url = $"courses/{canvasCourseId}/quizzes/{canvasQuizId}/questions";
     var answers = q.Answers
       .Select(a => new { answer_html = a.HtmlText, answer_weight = a.Correct ? 100 : 0 })
       .ToArray();

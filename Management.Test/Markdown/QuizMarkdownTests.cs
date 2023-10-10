@@ -9,7 +9,6 @@ public class QuizMarkdownTests
     var quiz = new LocalQuiz()
     {
       Id = "string",
-      CanvasId = 8324723,
       Name = "Test Quiz",
       Description = @"
 # quiz description
@@ -31,13 +30,12 @@ this is my description in markdown
     var markdown = quiz.ToMarkdown();
 
     markdown.Should().Contain("Id: string");
-    markdown.Should().Contain("CanvasId: 8324723");
     markdown.Should().Contain("Name: Test Quiz");
     markdown.Should().Contain(quiz.Description);
     markdown.Should().Contain("LockAtDueDate: true");
     markdown.Should().Contain("ShuffleAnswers: true");
     markdown.Should().Contain("OneQuestionAtATime: false");
-    markdown.Should().Contain("LocalAssignmentGroupId: someId");
+    markdown.Should().Contain("LocalAssignmentGroupName: someId");
     markdown.Should().Contain("AllowedAttempts: -1");
   }
   [Test]
@@ -46,7 +44,6 @@ this is my description in markdown
     var quiz = new LocalQuiz()
     {
       Id = "string",
-      CanvasId = 8324723,
       Name = "Test Quiz",
       Description = "desc",
       LockAtDueDate = true,
@@ -60,7 +57,6 @@ this is my description in markdown
       {
         new LocalQuizQuestion()
         {
-          CanvasId = 32423,
           Id = "someid",
           Points = 2,
           Text = @"`some type` of question
@@ -74,8 +70,8 @@ lines
           QuestionType = QuestionType.MULTIPLE_CHOICE,
           Answers = new LocalQuizQuestionAnswer[]
           {
-            new LocalQuizQuestionAnswer() { CanvasId = 324, Id = "asdfa", Correct = true, Text = "true" },
-            new LocalQuizQuestionAnswer() { CanvasId = 32544, Id = "wef", Correct = false, Text = "false" + Environment.NewLine +Environment.NewLine + "endline" },
+            new LocalQuizQuestionAnswer() { Id = "asdfa", Correct = true, Text = "true" },
+            new LocalQuizQuestionAnswer() { Id = "wef", Correct = false, Text = "false" + Environment.NewLine +Environment.NewLine + "endline" },
           }
         }
       }
@@ -96,7 +92,6 @@ lines
 b) false
    
    endline
----
 ";
     markdown.Should().Contain(expectedQuestionString);
   }
@@ -106,7 +101,6 @@ b) false
     var quiz = new LocalQuiz()
     {
       Id = "string",
-      CanvasId = 8324723,
       Name = "Test Quiz",
       Description = "desc",
       LockAtDueDate = true,
@@ -120,16 +114,15 @@ b) false
       {
         new LocalQuizQuestion()
         {
-          CanvasId = 3253,
           Id = "somesdid",
           Text = "oneline question",
           Points = 1,
           QuestionType = QuestionType.MULTIPLE_ANSWERS,
           Answers = new LocalQuizQuestionAnswer[]
           {
-            new LocalQuizQuestionAnswer() { CanvasId = 3324, Id = "asdfsa", Correct = true, Text = "true" },
-            new LocalQuizQuestionAnswer() { CanvasId = 325344, Id = "wsef", Correct = true, Text = "false"},
-            new LocalQuizQuestionAnswer() { CanvasId = 3253244, Id = "ws5ef", Correct = false, Text = "neither"},
+            new LocalQuizQuestionAnswer() { Id = "asdfsa", Correct = true, Text = "true" },
+            new LocalQuizQuestionAnswer() { Id = "wsef", Correct = true, Text = "false"},
+            new LocalQuizQuestionAnswer() { Id = "ws5ef", Correct = false, Text = "neither"},
           }
         }
       }
@@ -141,7 +134,6 @@ oneline question
 [*] true
 [*] false
 [ ] neither
----
 ";
     markdown.Should().Contain(expectedQuestionString);
   }
@@ -203,9 +195,7 @@ lines
 *a) true
 b) false
    
-   endline
----
-";
+   endline";
 
     var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
     var firstQuestion = quiz.Questions.First();

@@ -91,27 +91,38 @@ public class QuizEditorContext
       logger.Log("cannot add quiz to canvas, no course stored in planner");
       return;
     }
-    var updatedQuiz = await planner.LocalCourse.AddQuizToCanvas(Quiz, canvas);
+    var canvasQuizId = await planner.LocalCourse.AddQuizToCanvas(Quiz, canvas);
 
 
 
     var courseCanvasId = planner.LocalCourse.Settings.CanvasId;
+    if (courseCanvasId == null)
+    {
+      logger.Log("was able to add course to canvas, but errored while making module item. CourseCanvasId is null");
+      return;
+    }
+
     var currentModule = getCurrentModule(Quiz, planner.LocalCourse);
+    if (currentModule.CanvasId == null)
+    {
+      logger.Log("was able to add course to canvas, but errored while making module item. module canvasId is null");
+      return;
+    }
 
     await canvas.CreateModuleItem(
-              (ulong)courseCanvasId,
-              (ulong)currentModule.CanvasId,
-              updatedQuiz.Name,
-              "Quiz",
-              (ulong)updatedQuiz.CanvasId
-            );
+      (ulong)courseCanvasId,
+      (ulong)currentModule.CanvasId,
+      Quiz.Name,
+      "Quiz",
+      (ulong)canvasQuizId
+    );
 
     await planner.LocalCourse.Modules.First().SortModuleItems(
       (ulong)courseCanvasId,
       (ulong)currentModule.CanvasId,
       canvas
     );
-    logger.Log("added quiz to canvas");
+    logger.Log($"finished adding quiz {Quiz.Name} to canvas");
   }
 
   private static LocalModule getCurrentModule(LocalQuiz newQuiz, LocalCourse course)
