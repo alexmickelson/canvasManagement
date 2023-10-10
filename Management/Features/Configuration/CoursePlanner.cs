@@ -172,7 +172,6 @@ public class CoursePlanner
     CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
 
     CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
-    LocalCourse = await LocalCourse.SyncQuizzesWithCanvas(CanvasQuizzes, canvas);
 
     await LocalCourse.SyncModuleItemsWithCanvas(canvasId, CanvasModulesItems, canvas);
     CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);

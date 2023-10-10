@@ -120,7 +120,7 @@ public class CanvasService
     {
       module_item = new
       {
-        title = title,
+        title,
         type = type.ToString(),
         content_id = contentId,
       }
@@ -128,7 +128,7 @@ public class CanvasService
     var request = new RestRequest(url);
     request.AddBody(body);
 
-    var (newItem, response) = await webRequestor.PostAsync<CanvasModuleItem>(request);
+    var (newItem, _response) = await webRequestor.PostAsync<CanvasModuleItem>(request);
     if (newItem == null)
       throw new Exception("something went wrong updating module item");
   }

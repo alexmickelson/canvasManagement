@@ -14,34 +14,9 @@ public static partial class QuizSyncronizationExtensions
     return canvasQuizzes.Any(q => q.Id == localQuiz.CanvasId);
   }
 
-  internal static async Task<LocalCourse> SyncQuizzesWithCanvas(
-    this LocalCourse localCourse,
-    IEnumerable<CanvasQuiz> canvasQuizzes,
-    CanvasService canvas
-  )
-  {
-    return localCourse;
-    // var moduleTasks = localCourse.Modules.Select(async m =>
-    // {
-
-    //   var quizTasks = m.Quizzes
-    //   .Select(
-    //     async (q) => q.DueAt > DateTime.Now
-    //     ? await localCourse.AddQuizToCanvas(q, canvasQuizzes, canvas)
-    //     : q
-    //   );
-    //   var quizzes = await Task.WhenAll(quizTasks);
-    //   return m with { Quizzes = quizzes };
-    // });
-
-    // var modules = await Task.WhenAll(moduleTasks);
-    // return localCourse with { Modules = modules };
-  }
-
   public static async Task<LocalQuiz> AddQuizToCanvas(
     this LocalCourse localCourse,
     LocalQuiz localQuiz,
-    IEnumerable<CanvasQuiz> canvasQuizzes,
     CanvasService canvas
   )
   {

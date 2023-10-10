@@ -91,7 +91,7 @@ public class QuizEditorContext
       logger.Log("cannot add quiz to canvas, no course stored in planner");
       return;
     }
-    var updatedQuiz = await planner.LocalCourse.AddQuizToCanvas(Quiz, planner.CanvasQuizzes, canvas);
+    var updatedQuiz = await planner.LocalCourse.AddQuizToCanvas(Quiz, canvas);
 
 
 
