@@ -79,7 +79,7 @@ public class CanvasQuizService
     LocalQuiz localQuiz
   )
   {
-    var tasks = localQuiz.Questions.Select(createQuestion(canvasCourseId, canvasQuizId, localQuiz)).ToArray();
+    var tasks = localQuiz.Questions.Select(createQuestion(canvasCourseId, canvasQuizId)).ToArray();
     await Task.WhenAll(tasks);
     await hackFixRedundantAssignments(canvasCourseId);
   }
@@ -107,45 +107,17 @@ public class CanvasQuizService
     await Task.WhenAll(tasks);
   }
 
-  private Func<LocalQuizQuestion, Task<LocalQuizQuestion>> createQuestion(
+  private Func<LocalQuizQuestion, Task> createQuestion(
     ulong canvasCourseId,
-    ulong canvasQuizId,
-    LocalQuiz localQuiz
+    ulong canvasQuizId
   )
   {
-    return async (question) =>
-    {
-      var newQuestion = await createQuestionOnly(canvasCourseId, canvasQuizId, localQuiz, question);
-
-      var answersWithIds = question.Answers
-        .Select((answer, i) =>
-        {
-          var canvasAnswer = newQuestion.Answers?.ElementAt(i);
-          if (canvasAnswer == null)
-          {
-            Console.WriteLine(i);
-            Console.WriteLine(JsonSerializer.Serialize(newQuestion));
-            Console.WriteLine(JsonSerializer.Serialize(question));
-            throw new NullReferenceException(
-              "Could not find canvas answer to update local answer id"
-            );
-          }
-          return answer with { CanvasId = canvasAnswer.Id };
-        })
-        .ToArray();
-
-      return question with
-      {
-        CanvasId = newQuestion.Id,
-        Answers = answersWithIds
-      };
-    };
+    return async (question) => await createQuestionOnly(canvasCourseId, canvasQuizId, question);
   }
 
   private async Task<CanvasQuizQuestion> createQuestionOnly(
     ulong canvasCourseId,
     ulong canvasQuizId,
-    LocalQuiz localQuiz,
     LocalQuizQuestion q
   )
   {

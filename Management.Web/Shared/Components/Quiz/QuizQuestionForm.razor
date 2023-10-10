@@ -4,6 +4,8 @@
   [Parameter, EditorRequired]
   public LocalQuizQuestion Question { get; set; } = default!;
   [Parameter, EditorRequired]
+  public int Index { get; set; } = default!;
+  [Parameter, EditorRequired]
   public Action<LocalQuizQuestion> UpdateQuestion { get; set; } = (_) => {};
 
   protected override void OnParametersSet()
@@ -57,8 +59,7 @@
   {
     if(quizContext.Quiz != null)
     {
-      var newAnswer = new LocalQuizQuestionAnswer
-        { Id = Guid.NewGuid().ToString() };
+      var newAnswer = new LocalQuizQuestionAnswer();
       
       answers = answers.Append(newAnswer);
       UpdateQuestion(Question with { Answers = answers });
@@ -69,29 +70,26 @@
   {
 
     if(quizContext.Quiz != null)
-    {
-      var newAnswer = new LocalQuizQuestionAnswer
-        { Id = Guid.NewGuid().ToString() };
-      
+    {      
       answers = answers.Take(Question.Answers.Count() - 1);
       UpdateQuestion(Question with { Answers = answers });
     }
   }
 
-  private void saveAnswer(LocalQuizQuestionAnswer newAnswer)
+  private void saveAnswer(LocalQuizQuestionAnswer newAnswer, int index)
   {
     if(questionType == QuestionType.MULTIPLE_CHOICE && newAnswer.Correct)
     {
-      answers = answers.Select(a => 
-       a.Id == newAnswer.Id
+      answers = answers.Select((a, i) => 
+        index == i
           ? newAnswer
           : a with { Correct = false }
       ).ToArray();
     }
     else
     {
-      answers = answers.Select(a => 
-        a.Id == newAnswer.Id
+      answers = answers.Select((a, i) => 
+        index == i
           ? newAnswer
           : a
       ).ToArray();
@@ -173,11 +171,13 @@
         + Add Answer
       </button>
 
-      @foreach(var answer in answers)
+      @foreach(var (answer, i) in answers.Select((a, i) => (a, i)))
       {
         <EditableQuizAnswer
           Answer="answer" 
-          SaveAnswer="saveAnswer" 
+          AnswerIndex="i" 
+          QuestionIndex="Index"
+          SaveAnswer="saveAnswer"
           Question="Question"
         />
       }

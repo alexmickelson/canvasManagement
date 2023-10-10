@@ -4,11 +4,16 @@
   [Parameter, EditorRequired]
   public LocalQuizQuestionAnswer Answer { get; set; } = default!;
   [Parameter, EditorRequired]
+  public int AnswerIndex { get; set; } = default!;
+  [Parameter, EditorRequired]
+  public int QuestionIndex { get; set; } = default!;
+  [Parameter, EditorRequired]
   public LocalQuizQuestion Question { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public Action<LocalQuizQuestionAnswer> SaveAnswer { get; set; } = (_) => {};
+  public Action<LocalQuizQuestionAnswer, int> SaveAnswer { get; set; } = (_, _) => {};
 
+  private string label => "question_" + QuestionIndex + "_answer_" + AnswerIndex;
   private string _text { get; set; } = string.Empty;
   private string text 
   { 
@@ -16,7 +21,7 @@
     set
     {
       _text = value;
-      SaveAnswer(Answer with { Text = _text });
+      SaveAnswer(Answer with { Text = _text }, AnswerIndex);
     }
   }
 
@@ -29,7 +34,7 @@
 
   private void handleOneAnswerChange()
   {
-    SaveAnswer(Answer with {Correct = !Answer.Correct});
+    SaveAnswer(Answer with {Correct = !Answer.Correct}, AnswerIndex);
   }
 }
 
@@ -43,14 +48,12 @@
           class="form-check-input" 
           type="checkbox"
           role="switch" 
-          id="@("answer_" + Answer.Id)"
+          id="@label"
           checked="@Answer.Correct"
           @onchange="@(() => handleOneAnswerChange())"
         >
         <label 
-          class="form-check-label" 
-          for="@("answer_" + Answer.Id)"
-        >
+          class="form-check-label" for="@label">
           Is Correct
         </label>
       </div>
@@ -61,16 +64,13 @@
         <input 
           class="form-check-input" 
           type="radio" 
-          name="@("correct_answer_" + Question.Id)"
-          id="@("answer_" + Answer.Id)"
+          id="@label"
           checked="@Answer.Correct"
 
           @onchange="@(() => handleOneAnswerChange())"
         >
         <label
-          class="form-check-label" 
-          for="@("answer_" + Answer.Id)"
-        >
+          class="form-check-label" for="@label">
           Is Correct
         </label>
       </div>

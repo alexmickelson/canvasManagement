@@ -145,10 +145,11 @@
       </div>
       <QuizSettings />
 
-      @foreach(var question in quizContext.Quiz.Questions)
+      @foreach(var (question, i) in quizContext.Quiz.Questions.Select((q, i) => (q, i)))
       {
         <QuizQuestionForm 
           @key="@question.Id" 
+          Index="i"
           Question="question"
           UpdateQuestion="updateQuestion"  
         />
