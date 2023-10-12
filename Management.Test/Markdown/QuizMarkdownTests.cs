@@ -8,7 +8,6 @@ public class QuizMarkdownTests
   {
     var quiz = new LocalQuiz()
     {
-      Id = "string",
       Name = "Test Quiz",
       Description = @"
 # quiz description
@@ -29,7 +28,6 @@ this is my description in markdown
 
     var markdown = quiz.ToMarkdown();
 
-    markdown.Should().Contain("Id: string");
     markdown.Should().Contain("Name: Test Quiz");
     markdown.Should().Contain(quiz.Description);
     markdown.Should().Contain("LockAtDueDate: true");
@@ -43,7 +41,6 @@ this is my description in markdown
   {
     var quiz = new LocalQuiz()
     {
-      Id = "string",
       Name = "Test Quiz",
       Description = "desc",
       LockAtDueDate = true,
@@ -100,7 +97,6 @@ b) false
   {
     var quiz = new LocalQuiz()
     {
-      Id = "string",
       Name = "Test Quiz",
       Description = "desc",
       LockAtDueDate = true,
@@ -112,7 +108,7 @@ b) false
       AllowedAttempts = -1,
       Questions = new LocalQuizQuestion[]
       {
-        new LocalQuizQuestion()
+        new()
         {
           Id = "somesdid",
           Text = "oneline question",
@@ -120,9 +116,9 @@ b) false
           QuestionType = QuestionType.MULTIPLE_ANSWERS,
           Answers = new LocalQuizQuestionAnswer[]
           {
-            new LocalQuizQuestionAnswer() { Correct = true, Text = "true" },
-            new LocalQuizQuestionAnswer() { Correct = true, Text = "false"},
-            new LocalQuizQuestionAnswer() { Correct = false, Text = "neither"},
+            new() { Correct = true, Text = "true" },
+            new() { Correct = true, Text = "false"},
+            new() { Correct = false, Text = "neither"},
           }
         }
       }

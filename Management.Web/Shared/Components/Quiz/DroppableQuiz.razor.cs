@@ -28,7 +28,7 @@ public class DroppableQuiz : ComponentBase
     if (planner.LocalCourse == null)
       return;
     var currentModule =
-      planner.LocalCourse.Modules.First(m => m.Quizzes.Select(q => q.Id).Contains(Quiz.Id))
+      planner.LocalCourse.Modules.First(m => m.Quizzes.Select(q => q.Name + q.Description).Contains(Quiz.Name + Quiz.Description))
       ?? throw new Exception("in quiz callback, could not find module");
 
     var defaultDueTimeDate = new DateTime(
@@ -41,7 +41,7 @@ public class DroppableQuiz : ComponentBase
     );
 
     var NewQuizList = currentModule.Quizzes
-      .Select(q => q.Id != Quiz.Id ? q : q with { DueAt = defaultDueTimeDate })
+      .Select(q => q.Name + q.Description != Quiz.Name + Quiz.Description ? q : q with { DueAt = defaultDueTimeDate })
       .ToArray();
 
     var updatedModule = currentModule with { Quizzes = NewQuizList };
@@ -62,11 +62,11 @@ public class DroppableQuiz : ComponentBase
           m.Name != dropModule.Name
             ? m with
             {
-              Quizzes = m.Quizzes.Where(q => q.Id != Quiz.Id).DistinctBy(q => q.Id)
+              Quizzes = m.Quizzes.Where(q => q.Name + q.Description != Quiz.Name + Quiz.Description).DistinctBy(q => q.Name + q.Description)
             }
             : m with
             {
-              Quizzes = m.Quizzes.Append(Quiz).DistinctBy(q => q.Id)
+              Quizzes = m.Quizzes.Append(Quiz).DistinctBy(q => q.Name + q.Description)
             }
       )
       .ToArray();

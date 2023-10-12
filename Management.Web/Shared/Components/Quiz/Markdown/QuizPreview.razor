@@ -24,13 +24,35 @@
 
 @if(Quiz != null)
 {
-  <div>Name: @Quiz.Name</div>
-  <div>Due At: @Quiz.DueAt</div>
-  <div>Lock At: @Quiz.LockAt</div>
-  <div>Shuffle Answers: @Quiz.ShuffleAnswers</div>
-  <div>Allowed Attempts: @Quiz.AllowedAttempts</div>
-  <div>One question at a time: @Quiz.OneQuestionAtATime</div>
-  <div>Assignment Group: @Quiz.LocalAssignmentGroupName</div>
+  
+  <div class="row">
+    <div class="col-6 text-end">Name: </div>
+    <div class="col-6">@Quiz.Name</div>
+  </div>
+  <div class="row">
+    <div class="col-6 text-end">Due At: </div>
+    <div class="col-6">@Quiz.DueAt</div>
+  </div>
+  <div class="row">
+    <div class="col-6 text-end">Lock At: </div>
+    <div class="col-6">@Quiz.LockAt</div>
+  </div>
+  <div class="row">
+    <div class="col-6 text-end">Shuffle Answers: </div>
+    <div class="col-6">@Quiz.ShuffleAnswers</div>
+  </div>
+  <div class="row">
+    <div class="col-6 text-end">Allowed Attempts: </div>
+    <div class="col-6">@Quiz.AllowedAttempts</div>
+  </div>
+  <div class="row">
+    <div class="col-6 text-end">One question at a time: </div>
+    <div class="col-6">@Quiz.OneQuestionAtATime</div>
+  </div>
+  <div class="row">
+    <div class="col-6 text-end">Assignment Group: </div>
+    <div class="col-6">@Quiz.LocalAssignmentGroupName</div>
+  </div>
 
   <div class="p-3">@Quiz.Description</div>
 

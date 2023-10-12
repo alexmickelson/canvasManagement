@@ -6,14 +6,17 @@
 
 }
 
-<div class="row justify-content-between">
+<div class="row justify-content-between text-secondary">
   <div class="col">
-    @((MarkupString)Question.HtmlText)
+    points: @Question.Points
   </div>
   <div class="col-auto">
     @Question.QuestionType
   </div>
 </div>
+
+
+@((MarkupString)Question.HtmlText)
 
 @foreach(var answer in Question.Answers)
 {

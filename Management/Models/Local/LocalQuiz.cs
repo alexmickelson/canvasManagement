@@ -5,7 +5,7 @@ namespace LocalModels;
 
 public record LocalQuiz
 {
-  public required string Id { get; init; }
+  // public required string Id { get; init; }
   // public ulong? CanvasId { get; init; } = null;
   public required string Name { get; init; }
   public required string Description { get; init; }
@@ -43,7 +43,6 @@ public record LocalQuiz
     var questionMarkdown = string.Join(questionDelimiter, questionMarkdownArray);
 
     return $@"Name: {Name}
-Id: {Id}
 LockAtDueDate: {LockAtDueDate.ToString().ToLower()}
 LockAt: {LockAt}
 DueAt: {DueAt}
@@ -88,7 +87,6 @@ Description: {Description}
 
     return new LocalQuiz()
     {
-      Id = "id-" + name,
       Name = name,
       Description = description,
       LockAtDueDate = lockAtDueDate,
