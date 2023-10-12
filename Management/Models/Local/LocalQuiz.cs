@@ -66,7 +66,7 @@ Description: {Description}
 
     var questions = splitInput[1..]
       .Where(str => !string.IsNullOrWhiteSpace(str))
-      .Select(q => LocalQuizQuestion.ParseMarkdown(q))
+      .Select((q, i) => LocalQuizQuestion.ParseMarkdown(q, i))
       .ToArray();
     return quizWithoutQuestions with
     {
@@ -126,5 +126,13 @@ Description: {Description}
     }
 
     return string.Empty;
+  }
+}
+
+public class QuizMarkdownParseException : Exception
+{
+  public QuizMarkdownParseException(string message): base(message)
+  {
+    
   }
 }

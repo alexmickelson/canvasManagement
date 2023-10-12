@@ -13,7 +13,6 @@
   }
   private void reload()
   {
-    Console.WriteLine(JsonSerializer.Serialize(quizContext.Quiz));
     this.InvokeAsync(this.StateHasChanged);
   }
   public void Dispose()
@@ -38,7 +37,7 @@
   @foreach(var question in Quiz.Questions)
   {
     
-    <div class="bg-dark-subtle mt-1 p-1 rounded rounded-2">
+    <div class="bg-dark-subtle mt-1 p-1 ps-2 rounded rounded-2">
       <MarkdownQuestionPreview
         Question="question"
         @key="question"

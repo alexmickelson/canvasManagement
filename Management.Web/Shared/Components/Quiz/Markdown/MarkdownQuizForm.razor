@@ -23,7 +23,7 @@
         error = null;
         testQuiz = newQuiz;
       }
-      catch(Exception e)
+      catch(QuizMarkdownParseException e)
       {
         error = e.Message;
       }
@@ -38,8 +38,6 @@
   {
     if (quizContext.Quiz != null)
     {
-      Console.WriteLine("reloading quiz editor");
-
       if(quizMarkdownInput == "")
       {
         quizMarkdownInput = quizContext.Quiz.ToMarkdown();
@@ -66,7 +64,7 @@
   
   private void onHide()
   {
-    quizMarkdownInput = "";
+    _quizMarkdownInput = "";
     quizContext.Quiz = null;
   }
 }
@@ -95,7 +93,7 @@
       <div class="col-6">
         @if(error != null)
         {
-          <p class="text-danger">@error</p>
+          <p class="text-danger text-truncate">@error</p>
         }
         <QuizPreview Quiz="testQuiz" />
       </div>

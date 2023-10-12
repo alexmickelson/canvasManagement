@@ -6,40 +6,53 @@
 
 }
 
-@((MarkupString)Question.HtmlText)
+<div class="row justify-content-between">
+  <div class="col">
+    @((MarkupString)Question.HtmlText)
+  </div>
+  <div class="col-auto">
+    @Question.QuestionType
+  </div>
+</div>
 
 @foreach(var answer in Question.Answers)
 {
+  string answerPreview = answer.HtmlText.StartsWith("<p>") 
+    ? answer.HtmlText.Replace("<p>", "<p class='m-0'>")
+    : answer.HtmlText;
 
   <div class="mx-3 mb-1 bg-dark px-2  rounded rounded-2 d-flex flex-row border">
-    <div>
-      @if(answer.Correct)
-      {
-        <svg 
-          style="width: 1em;" 
-          class="me-1"
-          viewBox="0 0 24 24" 
-          fill="none" 
-        >
-          <path 
-            d="M4 12.6111L8.92308 17.5L20 6.5" 
-            stroke="var(--bs-success)" 
-            stroke-width="2" 
-            stroke-linecap="round" 
-            stroke-linejoin="round"
-            />
-        </svg>
-      }
-      else
-      {
-        <div
-          class="me-1"
-          style="width: 1em;" 
-        ></div>
-      }
-    </div>
-    <div>
-      @((MarkupString)answer.HtmlText)
+    @if(answer.Correct)
+    {
+      <svg
+        style="width: 1em;" 
+        class="me-1 my-auto"
+        viewBox="0 0 24 24" 
+        fill="none" 
+      >
+        <path 
+          d="M4 12.6111L8.92308 17.5L20 6.5" 
+          stroke="var(--bs-success)" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          />
+      </svg>
+    }
+    else
+    {
+      <div
+        class="me-1 my-auto"
+        style="width: 1em;" 
+      >
+        @if(Question.QuestionType == QuestionType.MULTIPLE_ANSWERS)
+        {
+          <span>[ ]</span>
+        }
+      </div>
+    }
+    <div class="markdownQuizAnswerPreview p-1">
+      @((MarkupString)answerPreview)
     </div>
   </div>
 }
