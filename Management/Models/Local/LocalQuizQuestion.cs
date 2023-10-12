@@ -30,10 +30,12 @@ public record LocalQuizQuestion
       return $"{questionTypeIndicator}{textWithSpecificNewline}";
     });
     var answersText = string.Join(Environment.NewLine, answerArray);
+    var questionTypeIndicator = QuestionType == "essay" || QuestionType == "short_answer" ? QuestionType : "";
 
     return $@"Points: {Points}
 {Text}
-{answersText}";
+{answersText}
+{questionTypeIndicator}";
   }
 
   private static readonly string[] validFirstAnswerDelimiters = new string[] { "*a)", "a)", "[ ]", "[*]" };
