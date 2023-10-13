@@ -75,17 +75,34 @@ Description: {Description}
   {
 
     var name = extractLabelValue(settings, "Name");
-    
-    var shuffleAnswers = bool.Parse(extractLabelValue(settings, "ShuffleAnswers"));
-    var oneQuestionAtATime = bool.Parse(extractLabelValue(settings, "OneQuestionAtATime"));
-    var allowedAttempts = int.Parse(extractLabelValue(settings, "AllowedAttempts"));
-    var dueAt = DateTime.Parse(extractLabelValue(settings, "DueAt"));
+
+    var rawShuffleAnswers = extractLabelValue(settings, "ShuffleAnswers");
+    var shuffleAnswers = bool.TryParse(rawShuffleAnswers, out bool parsedShuffleAnswers)
+      ? parsedShuffleAnswers
+      : throw new QuizMarkdownParseException($"Error with ShuffleAnswers: {rawShuffleAnswers}");
+
+
+    var rawOneQuestionAtATime = extractLabelValue(settings, "OneQuestionAtATime");
+    var oneQuestionAtATime = bool.TryParse(rawOneQuestionAtATime, out bool parsedOneQuestion)
+      ? parsedOneQuestion
+      : throw new QuizMarkdownParseException($"Error with oneQuestionAtATime: {rawOneQuestionAtATime}");
+
+    var rawAllowedAttempts = extractLabelValue(settings, "AllowedAttempts");
+    var allowedAttempts = int.TryParse(rawAllowedAttempts, out int parsedAllowedAttempts)
+      ? parsedAllowedAttempts
+      : throw new QuizMarkdownParseException($"Error with AllowedAttempts: {rawAllowedAttempts}");
+
+
+    var rawDueAt = extractLabelValue(settings, "DueAt");
+    var dueAt = DateTime.TryParse(rawDueAt, out DateTime parsedDueAt)
+      ? parsedDueAt
+      : throw new QuizMarkdownParseException($"Error with DueAt: {rawDueAt}");
 
 
     var rawLockAt = extractLabelValue(settings, "LockAt");
     DateTime? lockAt = DateTime.TryParse(rawLockAt, out DateTime parsedLockAt) 
-    ? parsedLockAt
-    : null;
+      ? parsedLockAt
+      : null;
 
 
     var description = extractDescription(settings);

@@ -19,6 +19,8 @@ public class QuizEditorContext
 
 
   private LocalQuiz? _quiz;
+
+  private LocalModule? _module;
   private readonly MyLogger<CanvasAssignmentService> logger;
 
   public LocalQuiz? Quiz
@@ -26,6 +28,10 @@ public class QuizEditorContext
     get => _quiz;
     set
     {
+      if(_quiz == null)
+      {
+        _module = getCurrentModule(value, planner.LocalCourse);
+      }
       _quiz = value;
       StateHasChanged?.Invoke();
     }
@@ -33,18 +39,18 @@ public class QuizEditorContext
 
   public void SaveQuiz(LocalQuiz newQuiz)
   {
-    if (planner.LocalCourse != null)
+    if (planner.LocalCourse != null && _module != null && Quiz != null)
     {
-      var currentModule = getCurrentModule(newQuiz, planner.LocalCourse);
+      // use Quiz not newQuiz because it is the version that was last stored
 
       var updatedModules = planner.LocalCourse.Modules
         .Select(
           m =>
-            m.Name == currentModule.Name
-              ? currentModule with
+            m.Name == _module.Name
+              ? m with
               {
-                Quizzes = currentModule.Quizzes
-                  .Select(q => q.Name + q.Description == newQuiz.Name + newQuiz.Description ? newQuiz : q)
+                Quizzes = m.Quizzes
+                  .Select(q => q.Name + q.Description == Quiz.Name + Quiz.Description ? newQuiz : q)
                   .ToArray()
               }
               : m
@@ -58,12 +64,11 @@ public class QuizEditorContext
 
   public void DeleteQuiz()
   {
-    if (planner.LocalCourse != null && Quiz != null)
+    if (planner.LocalCourse != null && Quiz != null && _module != null)
     {
-      var currentModule = getCurrentModule(Quiz, planner.LocalCourse);
 
       var updatedModules = planner.LocalCourse.Modules
-        .Select(m => m.Name != currentModule.Name
+        .Select(m => m.Name != _module.Name
           ? m
           : m with {
             Quizzes = m.Quizzes.Where(q => q.Name + q.Description != Quiz.Name + Quiz.Description).ToArray()
@@ -132,7 +137,9 @@ public class QuizEditorContext
 
   private static LocalModule getCurrentModule(LocalQuiz newQuiz, LocalCourse course)
   {
-    return course.Modules.FirstOrDefault(m => m.Quizzes.Select(q => q.Name + q.Description).Contains(newQuiz.Name + newQuiz.Description))
+    return course.Modules.FirstOrDefault(
+      m => m.Quizzes.Select(q => q.Name + q.Description).Contains(newQuiz.Name + newQuiz.Description)
+    )
       ?? throw new Exception("could not find current module in quiz editor context");
   }
 }
