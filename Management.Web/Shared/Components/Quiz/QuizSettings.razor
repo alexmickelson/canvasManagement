@@ -13,8 +13,6 @@
   {
     if (quizContext.Quiz != null)
     {
-      if (!lockAtDueDate)
-        lockAtDueDate = quizContext.Quiz.LockAtDueDate;
       if (lockAt == null)
         lockAt = quizContext.Quiz.LockAt;
       if (!shuffleAnswers)
@@ -32,31 +30,10 @@
     quizContext.StateHasChanged -= reload;
   }
 
-  private bool lockAtDueDate { get; set; }
   private DateTime? lockAt { get; set; }
   private bool shuffleAnswers { get; set; }
   private bool oneQuestionAtATime { get; set; }
   private int allowedAttempts { get; set; }
-
-  private void handleLockAtDueDateChange()
-  {
-    if(quizContext.Quiz == null)
-      return;
-
-    var newValue = !quizContext.Quiz.LockAtDueDate;
-
-    var newQuiz = newValue
-      ? quizContext.Quiz with
-        {
-          LockAtDueDate = newValue,
-          LockAt = quizContext.Quiz.DueAt
-        }
-      : quizContext.Quiz with
-        {
-          LockAtDueDate = newValue
-        };
-    quizContext.SaveQuiz(newQuiz);
-  }
 
   private void setAssignmentGroup(LocalAssignmentGroup? group)
   {
@@ -81,19 +58,6 @@
 @if(planner.LocalCourse != null )
 {
   <div>
-    <div class="form-check form-switch">
-      <input 
-        class="form-check-input" 
-        type="checkbox"
-        role="switch" 
-        id="lockAtDueDate"
-        checked="@lockAtDueDate"
-        @onchange="handleLockAtDueDateChange">
-      <label 
-        class="form-check-label" for="lockAtDueDate">
-        Lock at Due Date
-      </label>
-    </div>
     <ButtonSelect
       Label="Assignment Group"
       Options="planner.LocalCourse.Settings.AssignmentGroups"

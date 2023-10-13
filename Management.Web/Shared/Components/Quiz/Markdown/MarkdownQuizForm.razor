@@ -27,6 +27,7 @@
       catch(QuizMarkdownParseException e)
       {
         error = e.Message;
+        StateHasChanged();
       }
     }
   }

@@ -9,7 +9,6 @@ public record LocalQuiz
   // public ulong? CanvasId { get; init; } = null;
   public required string Name { get; init; }
   public required string Description { get; init; }
-  public bool LockAtDueDate { get; init; } = true;
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
   public bool ShuffleAnswers { get; init; } = true;
@@ -43,7 +42,6 @@ public record LocalQuiz
     var questionMarkdown = string.Join(questionDelimiter, questionMarkdownArray);
 
     return $@"Name: {Name}
-LockAtDueDate: {LockAtDueDate.ToString().ToLower()}
 LockAt: {LockAt}
 DueAt: {DueAt}
 ShuffleAnswers: {ShuffleAnswers.ToString().ToLower()}
@@ -75,13 +73,21 @@ Description: {Description}
 
   private static LocalQuiz getQuizWithOnlySettings(string settings)
   {
+
     var name = extractLabelValue(settings, "Name");
-    var lockAtDueDate = bool.Parse(extractLabelValue(settings, "LockAtDueDate"));
+    
     var shuffleAnswers = bool.Parse(extractLabelValue(settings, "ShuffleAnswers"));
     var oneQuestionAtATime = bool.Parse(extractLabelValue(settings, "OneQuestionAtATime"));
     var allowedAttempts = int.Parse(extractLabelValue(settings, "AllowedAttempts"));
     var dueAt = DateTime.Parse(extractLabelValue(settings, "DueAt"));
-    var lockAt = DateTime.Parse(extractLabelValue(settings, "LockAt"));
+
+
+    var rawLockAt = extractLabelValue(settings, "LockAt");
+    DateTime? lockAt = DateTime.TryParse(rawLockAt, out DateTime parsedLockAt) 
+    ? parsedLockAt
+    : null;
+
+
     var description = extractDescription(settings);
     var assignmentGroup = extractLabelValue(settings, "AssignmentGroup");
 
@@ -89,7 +95,6 @@ Description: {Description}
     {
       Name = name,
       Description = description,
-      LockAtDueDate = lockAtDueDate,
       LockAt = lockAt,
       DueAt = dueAt,
       ShuffleAnswers = shuffleAnswers,

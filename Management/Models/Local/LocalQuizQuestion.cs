@@ -26,8 +26,8 @@ public record LocalQuizQuestion
         ? $"{correctIndicator}{questionLetter}) "
         : $"[{correctIndicator}] ";
 
-      var textWithSpecificNewline = answer.Text.Replace(Environment.NewLine, Environment.NewLine + "   ");
-      return $"{questionTypeIndicator}{textWithSpecificNewline}";
+      // var textWithSpecificNewline = answer.Text.Replace(Environment.NewLine, Environment.NewLine + "   ");
+      return $"{questionTypeIndicator}{answer.Text}";
     });
     var answersText = string.Join(Environment.NewLine, answerArray);
     var questionTypeIndicator = QuestionType == "essay" || QuestionType == "short_answer" ? QuestionType : "";

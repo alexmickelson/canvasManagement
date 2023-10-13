@@ -16,7 +16,6 @@ this is my description in markdown
 
 `here is code`
 ",
-      LockAtDueDate = true,
       LockAt = DateTime.MaxValue,
       DueAt = DateTime.MaxValue,
       ShuffleAnswers = true,
@@ -30,7 +29,6 @@ this is my description in markdown
 
     markdown.Should().Contain("Name: Test Quiz");
     markdown.Should().Contain(quiz.Description);
-    markdown.Should().Contain("LockAtDueDate: true");
     markdown.Should().Contain("ShuffleAnswers: true");
     markdown.Should().Contain("OneQuestionAtATime: false");
     markdown.Should().Contain("AssignmentGroup: someId");
@@ -43,7 +41,6 @@ this is my description in markdown
     {
       Name = "Test Quiz",
       Description = "desc",
-      LockAtDueDate = true,
       LockAt = DateTime.MaxValue,
       DueAt = DateTime.MaxValue,
       ShuffleAnswers = true,
@@ -87,11 +84,12 @@ lines
 
 *a) true
 b) false
-   
-   endline
+
+endline
 ";
     markdown.Should().Contain(expectedQuestionString);
   }
+
   [Test]
   public void QuzMarkdownIncludesMultipleAnswerQuestion()
   {
@@ -99,7 +97,6 @@ b) false
     {
       Name = "Test Quiz",
       Description = "desc",
-      LockAtDueDate = true,
       LockAt = DateTime.MaxValue,
       DueAt = DateTime.MaxValue,
       ShuffleAnswers = true,
@@ -139,7 +136,6 @@ oneline question
   {
     var rawMarkdownQuiz = @"
 Name: Test Quiz
-LockAtDueDate: true
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 2023-08-21T23:59:00
@@ -154,7 +150,6 @@ description
     var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
 
     quiz.Name.Should().Be("Test Quiz");
-    quiz.LockAtDueDate.Should().Be(true);
     quiz.ShuffleAnswers.Should().Be(true);
     quiz.OneQuestionAtATime.Should().BeFalse();
     quiz.AllowedAttempts.Should().Be(-1);
@@ -168,7 +163,6 @@ description");
   {
     var rawMarkdownQuiz = @"
 Name: Test Quiz
-LockAtDueDate: true
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 2023-08-21T23:59:00
@@ -210,7 +204,6 @@ b) false
   {
     var rawMarkdownQuiz = @"
 Name: Test Quiz
-LockAtDueDate: true
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 2023-08-21T23:59:00
@@ -247,7 +240,6 @@ Which events are triggered when the user clicks on an input field?
   {
     var rawMarkdownQuiz = @"
 Name: Test Quiz
-LockAtDueDate: true
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 2023-08-21T23:59:00
@@ -280,7 +272,6 @@ b) false
   {
     var rawMarkdownQuiz = @"
 Name: Test Quiz
-LockAtDueDate: true
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 2023-08-21T23:59:00
@@ -306,7 +297,6 @@ essay
   {
     var rawMarkdownQuiz = @"
 Name: Test Quiz
-LockAtDueDate: true
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 2023-08-21T23:59:00

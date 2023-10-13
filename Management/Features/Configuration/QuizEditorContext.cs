@@ -63,7 +63,12 @@ public class QuizEditorContext
       var currentModule = getCurrentModule(Quiz, planner.LocalCourse);
 
       var updatedModules = planner.LocalCourse.Modules
-        .Where(m => m.Name != currentModule.Name)
+        .Select(m => m.Name != currentModule.Name
+          ? m
+          : m with {
+            Quizzes = m.Quizzes.Where(q => q.Name + q.Description != Quiz.Name + Quiz.Description).ToArray()
+          }
+        )
         .ToArray();
 
       planner.LocalCourse = planner.LocalCourse with { Modules = updatedModules };
@@ -127,7 +132,7 @@ public class QuizEditorContext
 
   private static LocalModule getCurrentModule(LocalQuiz newQuiz, LocalCourse course)
   {
-    return course.Modules.First(m => m.Quizzes.Select(q => q.Name + q.Description).Contains(newQuiz.Name + newQuiz.Description))
+    return course.Modules.FirstOrDefault(m => m.Quizzes.Select(q => q.Name + q.Description).Contains(newQuiz.Name + newQuiz.Description))
       ?? throw new Exception("could not find current module in quiz editor context");
   }
 }

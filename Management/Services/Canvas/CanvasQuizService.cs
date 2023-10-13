@@ -59,7 +59,7 @@ public class CanvasQuizService
         one_question_at_a_time = false,
         cant_go_back = false,
         due_at = localQuiz.DueAt,
-        lock_at = localQuiz.LockAtDueDate ? localQuiz.DueAt : localQuiz.LockAt,
+        lock_at = localQuiz.LockAt,
         assignment_group_id = canvasAssignmentGroupId,
       }
     };
