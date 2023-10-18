@@ -1,0 +1,100 @@
+@page "/course/{CourseName}/quiz/{QuizName}"
+
+@using CanvasModel.EnrollmentTerms
+@using Management.Web.Shared.Components.AssignmentForm
+@using Management.Web.Shared.Course
+@using Management.Web.Shared.Module.Assignment.Templates
+@using Management.Web.Shared.Semester
+@using CanvasModel.Courses
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using LocalModels
+@using Management.Web.Shared.Module.Assignment
+@using Management.Web.Shared.Components
+@using Management.Web.Shared.Components.Quiz.Markdown
+
+@inject YamlManager yamlManager
+@inject CanvasService canvas
+@inject CoursePlanner planner
+@inject QuizEditorContext quizContext
+@inject ILogger<QuizFormPage> logger
+@inject NavigationManager Navigation
+
+@code {
+  [Parameter]
+  public string? CourseName { get; set; } = default!;
+  [Parameter]
+  public string? QuizName { get; set; } = default!;
+
+  private bool loading { get; set; }= true;
+  
+  protected override async Task OnInitializedAsync()
+  {
+    if(loading)
+    {
+      loading = false;
+      logger.LogInformation($"loading quiz {CourseName} {QuizName}");
+      if(planner.LocalCourse == null)
+      {
+        var courses = await yamlManager.LoadSavedCourses();
+        planner.LocalCourse = courses.First(c => c.Settings.Name == CourseName);
+        logger.LogInformation($"set course to '{planner.LocalCourse?.Settings.Name}'");
+      }
+
+      if(quizContext.Quiz == null)
+      {
+        var quiz = planner
+          .LocalCourse?
+          .Modules
+          .SelectMany(m => m.Quizzes)
+          .FirstOrDefault(q => q.Name == QuizName);
+
+        quizContext.Quiz = quiz;
+        logger.LogInformation($"set quiz to '{quizContext.Quiz?.Name}'");
+      }
+      base.OnInitialized();
+      StateHasChanged();
+    }
+  }
+
+  private void deleteQuiz()
+  {
+    quizContext.DeleteQuiz();
+    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
+  }
+
+  private async Task addToCanvas()
+  {
+    await quizContext.AddQuizToCanvas();
+  }
+  private void done()
+  {
+    quizContext.Quiz = null;
+    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
+  }
+}
+
+@if(quizContext.Quiz == null)
+{
+  <Spinner />
+}
+
+@if(quizContext.Quiz != null)
+{
+  <MarkdownQuizForm />
+}
+
+
+@if(quizContext.Quiz != null)
+{
+  <div class="row justify-content-end">
+    <div class="col-auto">
+    <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirm="deleteQuiz" />
+    <button class="btn btn-outline-secondary" @onclick="addToCanvas">
+      Add to Canvas
+    </button>
+    <button class="btn btn-primary" @onclick="done">
+      Done
+    </button>
+    </div>
+  </div>
+}

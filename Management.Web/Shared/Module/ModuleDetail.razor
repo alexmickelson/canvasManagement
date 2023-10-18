@@ -148,12 +148,12 @@
       <div class="row">
       @foreach (var a in Module.Assignments)
       {
-        <AssignmentDetails Assignment="a" Module="Module" />
+        <AssignmentListItem Assignment="a" Module="Module" />
       }
       <br>
       @foreach(var quiz in Module.Quizzes)
       {
-        <QuizDetail Quiz="quiz" />
+        <QuizListItem Quiz="quiz" />
       }
       </div>
     </div>

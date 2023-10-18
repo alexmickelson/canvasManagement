@@ -28,7 +28,7 @@ public class QuizEditorContext
     get => _quiz;
     set
     {
-      if(_quiz == null)
+      if(_quiz == null && value != null)
       {
         _module = getCurrentModule(value, planner.LocalCourse);
       }
@@ -135,10 +135,10 @@ public class QuizEditorContext
     logger.Log($"finished adding quiz {Quiz.Name} to canvas");
   }
 
-  private static LocalModule getCurrentModule(LocalQuiz newQuiz, LocalCourse course)
+  private static LocalModule getCurrentModule(LocalQuiz quiz, LocalCourse course)
   {
     return course.Modules.FirstOrDefault(
-      m => m.Quizzes.Select(q => q.Name + q.Description).Contains(newQuiz.Name + newQuiz.Description)
+      m => m.Quizzes.Select(q => q.Name + q.Description).Contains(quiz.Name + quiz.Description)
     )
       ?? throw new Exception("could not find current module in quiz editor context");
   }

@@ -2,6 +2,7 @@
 @inject DragContainer dragContainer
 @inject CoursePlanner planner
 @inject QuizEditorContext quizContext
+@inject NavigationManager Navigation
 
 @inherits DroppableQuiz
 
@@ -16,13 +17,18 @@
   {
     dragContainer.DropCallback = null;
   }
+  private void OnClick() 
+  {
+    quizContext.Quiz = Quiz;
+    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name + "/quiz/" + Quiz.Name);
+  }
 }
 
 <li
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
-  @onclick="@(() => quizContext.Quiz = Quiz)"
+  @onclick="OnClick"
   role="button"
 >
   @Quiz.Name

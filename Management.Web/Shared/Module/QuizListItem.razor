@@ -4,6 +4,7 @@
 @inject DragContainer dragContainer
 @inject QuizEditorContext quizContext
 @inject CoursePlanner planner
+@inject NavigationManager Navigation
 
 @inherits DroppableQuiz
 
@@ -21,6 +22,13 @@
     planner.CanvasQuizzes != null 
       ? Quiz.QuizIsCreated(planner.CanvasQuizzes) 
       : false;
+
+
+  private void OnClick() 
+  {
+    quizContext.Quiz = Quiz;
+    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name + "/quiz/" + Quiz.Name);
+  }
 }
 
 
@@ -29,7 +37,7 @@
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
-  @onclick="@(() => quizContext.Quiz = Quiz)"
+  @onclick="OnClick"
   role="button"
 >
   <div class="card">
