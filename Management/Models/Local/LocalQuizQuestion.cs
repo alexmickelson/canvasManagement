@@ -34,8 +34,7 @@ public record LocalQuizQuestion
 
     return $@"Points: {Points}
 {Text}
-{answersText}
-{questionTypeIndicator}";
+{answersText}{questionTypeIndicator}";
   }
 
   private static readonly string[] validFirstAnswerDelimiters = new string[] { "*a)", "a)", "[ ]", "[*]" };

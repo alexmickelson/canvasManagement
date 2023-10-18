@@ -29,6 +29,18 @@
   private bool loading { get; set; }= true;
   private bool addingQuizToCanvas = false;
   
+  protected override void OnInitialized()
+  {
+    quizContext.StateHasChanged += reload;
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    quizContext.StateHasChanged -= reload;
+  }
   protected override async Task OnInitializedAsync()
   {
     if(loading)
@@ -87,12 +99,22 @@
   private CanvasQuiz? quizInCanvas => planner.CanvasQuizzes?.FirstOrDefault(q => q.Title == quizContext.Quiz?.Name);
 
   private string canvasQuizUrl => $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/quizzes/{quizInCanvas?.Id}";
+
+  private int? quizPoints => quizContext.Quiz?.Questions.Sum(q => q.Points);
 }
 
 <div class="d-flex flex-column py-3" style="height: 100vh;">
 
   <section>
     <div class="row justify-content-between">
+      <div class="col-auto my-auto">
+        <button 
+          class="btn btn-outline-secondary"
+          @onclick="done"
+        >
+          ← go back
+        </button>
+      </div>
       <div class="col-auto my-auto">
         <h2>
           @quizContext.Quiz?.Name
@@ -107,7 +129,7 @@
       }
       <div class="col-auto me-3">
         <h3>
-          Points: @quizContext.Quiz?.Questions.Sum(q => q.Points)
+          Points: @quizPoints
         </h3>
         @if(quizInCanvas != null)
         {

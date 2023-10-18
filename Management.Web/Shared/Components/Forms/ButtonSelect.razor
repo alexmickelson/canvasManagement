@@ -12,7 +12,7 @@
   [Parameter, EditorRequired]
   public Action<T?> OnSelect { get; set; } = default!;
 
-  [Parameter, EditorRequired]
+  [Parameter]
   public T? SelectedOption { get; set; }
 
   private string htmlLabel => Label.Replace("-", "");

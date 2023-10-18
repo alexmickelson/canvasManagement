@@ -1,4 +1,5 @@
 @using Management.Web.Shared.Components
+@using Management.Web.Shared.Components.Forms
 
 @inject CoursePlanner planner
 @code {
@@ -16,10 +17,18 @@
   private void submitHandler()
   {
     Console.WriteLine("new quiz");
+    Console.WriteLine(selectedAssignmentGroup);
+    if(Name.Trim() == string.Empty)
+    {
+      return;
+    }
+
+
     var newQuiz = new LocalQuiz
     {
       Name=Name,
       Description = "",
+      LocalAssignmentGroupName = selectedAssignmentGroup?.Name,
     };
     if(planner.LocalCourse != null)
     {
@@ -38,6 +47,13 @@
     }
     modal?.Hide();
   }
+
+
+  private void setAssignmentGroup(LocalAssignmentGroup? group)
+  {
+    selectedAssignmentGroup = group;
+  }
+  private LocalAssignmentGroup? selectedAssignmentGroup { get; set; }
 }
 
 <button
@@ -53,7 +69,15 @@
     <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
       <label for="Assignment Name">Name</label>
       <input id="moduleName" class="form-control" @bind="Name" />
+      <br>
+      <label class="form-label">Assignment Group</label>
     </form>
+    <ButtonSelect
+      Label="Assignment Group"
+      Options="planner.LocalCourse.Settings.AssignmentGroups"
+      GetName="(g) => g?.Name"
+      OnSelect="(g) => setAssignmentGroup(g)"
+    />
   </Body>
   <Footer>
     <button
