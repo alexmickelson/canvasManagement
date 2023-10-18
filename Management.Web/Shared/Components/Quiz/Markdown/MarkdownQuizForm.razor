@@ -53,7 +53,7 @@
     quizContext.StateHasChanged -= reload;
   }
 
-  private readonly static string exampleMarkdownQuestion = @"HELP
+  private readonly static string exampleMarkdownQuestion = @"QUESTION REFERENCE
 ---
 Points: 2
 this is a question?
@@ -78,7 +78,13 @@ Markdown is supported
 
 [*] true
 [ ] false
-";
+---
+This is a one point essay question
+essay
+---
+points: 4
+this is a short answer question
+short_answer";
 
 }
 
