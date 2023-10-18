@@ -1,6 +1,7 @@
 @page "/course/{CourseName}/quiz/{QuizName}"
 
 @using CanvasModel.EnrollmentTerms
+@using CanvasModel.Quizzes
 @using Management.Web.Shared.Components.AssignmentForm
 @using Management.Web.Shared.Course
 @using Management.Web.Shared.Module.Assignment.Templates
@@ -26,6 +27,7 @@
   public string? QuizName { get; set; } = default!;
 
   private bool loading { get; set; }= true;
+  private bool addingQuizToCanvas = false;
   
   protected override async Task OnInitializedAsync()
   {
@@ -51,6 +53,13 @@
         quizContext.Quiz = quiz;
         logger.LogInformation($"set quiz to '{quizContext.Quiz?.Name}'");
       }
+      StateHasChanged();
+
+      if(planner.CanvasQuizzes == null)
+      {
+        await planner.LoadCanvasData();
+      }
+
       base.OnInitialized();
       StateHasChanged();
     }
@@ -64,37 +73,116 @@
 
   private async Task addToCanvas()
   {
+    addingQuizToCanvas = true;
     await quizContext.AddQuizToCanvas();
+    await planner.LoadCanvasData();
+    addingQuizToCanvas = false;
   }
   private void done()
   {
     quizContext.Quiz = null;
     Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
   }
+
+  private CanvasQuiz? quizInCanvas => planner.CanvasQuizzes?.FirstOrDefault(q => q.Title == quizContext.Quiz?.Name);
+
+  private string canvasQuizUrl => $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/quizzes/{quizInCanvas?.Id}";
 }
 
-@if(quizContext.Quiz == null)
-{
-  <Spinner />
-}
+<div class="d-flex flex-column py-3" style="height: 100vh;">
 
-@if(quizContext.Quiz != null)
-{
-  <MarkdownQuizForm />
-}
+  <section>
+    <div class="row justify-content-between">
+      <div class="col-auto my-auto">
+        <h2>
+          @quizContext.Quiz?.Name
+        </h2>
+      </div>
 
-
-@if(quizContext.Quiz != null)
-{
-  <div class="row justify-content-end">
-    <div class="col-auto">
-    <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirm="deleteQuiz" />
-    <button class="btn btn-outline-secondary" @onclick="addToCanvas">
-      Add to Canvas
-    </button>
-    <button class="btn btn-primary" @onclick="done">
-      Done
-    </button>
+      @if(quizContext.Quiz == null)
+      {
+        <div class="col-auto">
+          <Spinner />
+        </div>
+      }
+      <div class="col-auto me-3">
+        <h3>
+          Points: @quizContext.Quiz?.Questions.Sum(q => q.Points)
+        </h3>
+        @if(quizInCanvas != null)
+        {
+          @if(quizInCanvas?.Published == true)
+          {
+            <div class="text-success">
+              Published!
+            </div>
+          }
+          else
+          {
+            <div class="text-danger">
+              Not Published
+            </div>
+          }
+        }
+      </div>
     </div>
-  </div>
-}
+  </section>
+
+  <section 
+    class="flex-grow-1 w-100 d-flex justify-content-center overflow-y-auto overflow-x-hidden  border rounded-4 bg-dark-subtle py-3 px-1"  
+    style="min-height: 10%;max-width: 100%;"
+  >
+    <div class="w-100" style="max-width: 120em; max-height: 100%;">
+      @if(quizContext.Quiz != null)
+      {
+        <MarkdownQuizForm />
+      }
+    </div>
+  </section>
+
+  <hr>
+  <section>
+    @if(quizContext.Quiz != null)
+    {
+      <div class="row justify-content-end">
+        <div class="col-auto">
+          <ConfirmationModal 
+            Label="Delete" 
+            Class="btn btn-danger" 
+            OnConfirm="deleteQuiz" 
+            Disabled="@addingQuizToCanvas"
+          />
+          <button 
+            class="btn btn-outline-secondary me-1" 
+            @onclick="addToCanvas"
+            disabled="@addingQuizToCanvas"
+          >
+            Add to Canvas
+          </button>
+          @if(quizInCanvas != null)
+          {
+            <a 
+              class="btn btn-outline-secondary me-1"
+              href="@canvasQuizUrl"
+              target="_blank"
+            >
+              View in Canvas
+            </a>
+          }
+          <button 
+            class="btn btn-primary" 
+            @onclick="done"
+            disabled="@addingQuizToCanvas"
+          >
+            Done
+          </button>
+        </div>
+      </div>
+    }
+
+    @if(addingQuizToCanvas)
+    {
+      <Spinner />
+    }
+  </section>
+</div>

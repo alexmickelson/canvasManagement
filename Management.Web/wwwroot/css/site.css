@@ -1,6 +1,6 @@
 @import url("open-iconic/font/css/open-iconic-bootstrap.min.css");
 
-html,
+/* html,
 body {
   font-family: "DM Sans", sans-serif;
 }
@@ -42,7 +42,7 @@ a,
 
 .validation-message {
   color: red;
-}
+} */
 
 #blazor-error-ui {
   background: lightyellow;
@@ -89,3 +89,33 @@ a,
 .decorationContentClass {
   background: lightblue;
 } */
+
+
+
+/* scroll bar */
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  /* box-shadow: inset 0 0 5px grey;  */
+  border-radius: 8px;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.6); 
+  border-radius: 8px;
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.3);
+  border-width: 1px;
+  /* outline-offset: 2px; */
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(31, 31, 31); 
+}

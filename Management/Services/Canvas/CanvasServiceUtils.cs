@@ -20,8 +20,8 @@ public class CanvasServiceUtils
 
     if (response.ErrorMessage?.Length > 0)
     {
-      System.Console.WriteLine("error in response");
-      System.Console.WriteLine(response.ErrorMessage);
+      Console.WriteLine("error in response");
+      Console.WriteLine(response.ErrorMessage);
       throw new Exception("error in response");
     }
 
@@ -39,7 +39,7 @@ public class CanvasServiceUtils
     }
 
     if (requestCount > 1)
-      System.Console.WriteLine($"Requesting {typeof(T)} took {requestCount} requests");
+      Console.WriteLine($"Requesting {typeof(T)} took {requestCount} requests");
 
     return returnData;
   }
