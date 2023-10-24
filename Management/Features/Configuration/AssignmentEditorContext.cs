@@ -92,7 +92,7 @@ public class AssignmentEditorContext
       return;
     }
 
-    var createdAssignment = await planner.LocalCourse.SyncAssignmentToCanvas(
+    var createdAssignmentCanvasId = await planner.LocalCourse.SyncAssignmentToCanvas(
       canvasCourseId: (ulong)courseCanvasId,
       localAssignment: Assignment,
       canvasAssignments: planner.CanvasAssignments,
@@ -111,7 +111,7 @@ public class AssignmentEditorContext
       (ulong)currentModule.CanvasId,
       Assignment.Name,
       "Assignment",
-      (ulong)createdAssignment.CanvasId
+      createdAssignmentCanvasId
     );
 
     await planner.LocalCourse.Modules.First().SortModuleItems(

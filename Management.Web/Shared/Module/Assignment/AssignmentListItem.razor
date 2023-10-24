@@ -1,5 +1,6 @@
 @using Management.Web.Shared.Components
 @using Management.Web.Shared.Components.AssignmentForm
+@using CanvasModel.Assignments;
 
 @inject DragContainer dragContainer
 @inject CoursePlanner planner
@@ -39,12 +40,14 @@
     dragContainer.DropCallback = null;
   }
 
-  private bool isSyncedWithCanvas => 
-    planner
+  private CanvasAssignment? assignmentInCanvas => planner
     .CanvasAssignments?
     .FirstOrDefault(
-      a => a.Id == Assignment.CanvasId
-    ) != null;
+      a => a.Name == Assignment.Name
+    );
+
+  private bool isSyncedWithCanvas => 
+    assignmentInCanvas != null;
   private void OnClick() 
   {
     assignmentContext.Assignment = Assignment;
@@ -76,7 +79,7 @@
                 && planner.CanvasAssignments != null
                 && planner.CanvasModules != null 
                 && Assignment.NeedsUpdates(
-                  planner.CanvasAssignments, 
+                  assignmentInCanvas, 
                   Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups)
                 )
               )

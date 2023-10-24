@@ -35,7 +35,7 @@ public class CanvasAssignmentService
     );
   }
 
-  public async Task<LocalAssignment> Create(
+  public async Task<ulong> Create(
     ulong canvasCourseId,
     LocalAssignment localAssignment,
     string htmlDescription,
@@ -61,11 +61,10 @@ public class CanvasAssignmentService
     if (canvasAssignment == null)
       throw new Exception("created canvas assignment was null");
 
-    var updatedLocalAssignment = localAssignment with { CanvasId = canvasAssignment.Id };
 
-    await CreateRubric(canvasCourseId, updatedLocalAssignment);
+    await CreateRubric(canvasCourseId, canvasAssignment.Id, localAssignment);
 
-    return updatedLocalAssignment;
+    return canvasAssignment.Id;
   }
 
   public async Task Update(
@@ -93,7 +92,7 @@ public class CanvasAssignmentService
     
     await webRequestor.PutAsync(request);
 
-    await CreateRubric(courseId, localAssignment);
+    await CreateRubric(courseId, (ulong)localAssignment.CanvasId, localAssignment);
   }
 
   public async Task Delete(ulong courseId, ulong assignmentCanvasId, string assignmentName)
@@ -109,10 +108,8 @@ public class CanvasAssignmentService
     }
   }
 
-  public async Task CreateRubric(ulong courseId, LocalAssignment localAssignment)
+  public async Task CreateRubric(ulong courseId, ulong assignmentCanvasId, LocalAssignment localAssignment)
   {
-    if (localAssignment.CanvasId == null)
-      throw new Exception("cannot create rubric if no canvas id in assignment");
 
     var criterion = new Dictionary<int, object>();
 
@@ -136,18 +133,18 @@ public class CanvasAssignmentService
     // https://canvas.instructure.com/doc/api/rubrics.html#method.rubrics.create
     var body = new
     {
-      rubric_association_id = localAssignment.CanvasId,
+      rubric_association_id = assignmentCanvasId,
       rubric = new
       {
         title = $"Rubric for Assignment: {localAssignment.Name}",
-        association_id = localAssignment.CanvasId,
+        association_id = assignmentCanvasId,
         association_type = "Assignment",
         use_for_grading = true,
         criteria = criterion,
       },
       rubric_association = new
       {
-        association_id = localAssignment.CanvasId,
+        association_id = assignmentCanvasId,
         association_type = "Assignment",
         purpose = "grading",
         use_for_grading = true,
@@ -167,7 +164,7 @@ public class CanvasAssignmentService
     {
       assignment = new { points_possible = localAssignment.PointsPossible }
     };
-    var adjustmentUrl = $"courses/{courseId}/assignments/{localAssignment.CanvasId}";
+    var adjustmentUrl = $"courses/{courseId}/assignments/{assignmentCanvasId}";
     var pointAdjustmentRequest = new RestRequest(adjustmentUrl);
     pointAdjustmentRequest.AddBody(assignmentPointCorrectionBody);
     var (_, _) = await webRequestor.PutAsync<CanvasAssignment>(pointAdjustmentRequest);

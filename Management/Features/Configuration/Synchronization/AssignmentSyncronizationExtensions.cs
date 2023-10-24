@@ -12,7 +12,7 @@ public static partial class AssignmentSyncronizationExtensions
 {
 
 
-  internal static async Task<LocalAssignment> SyncAssignmentToCanvas(
+  internal static async Task<ulong> SyncAssignmentToCanvas(
     this LocalCourse localCourse,
     ulong canvasCourseId,
     LocalAssignment localAssignment,
@@ -22,7 +22,7 @@ public static partial class AssignmentSyncronizationExtensions
   {
     // ignore past assignments
     if(localAssignment.DueAt < DateTime.Now)
-      return localAssignment;
+      return (ulong)localAssignment.CanvasId;
 
     var canvasAssignment = canvasAssignments.FirstOrDefault(
       ca => ca.Id == localAssignment.CanvasId
@@ -36,7 +36,7 @@ public static partial class AssignmentSyncronizationExtensions
         localCourse,
         canvasCourseId,
         localAssignment,
-        canvasAssignments,
+        canvasAssignment,
         canvas,
         localHtmlDescription,
         canvasAssignmentGroupId
@@ -44,18 +44,19 @@ public static partial class AssignmentSyncronizationExtensions
       : await canvas.Assignments.Create(canvasCourseId, localAssignment, localHtmlDescription, canvasAssignmentGroupId);
   }
 
-  private static async Task<LocalAssignment> updateAssignmentIfNeeded(
+  private static async Task<ulong> updateAssignmentIfNeeded(
     LocalCourse localCourse,
     ulong canvasCourseId,
     LocalAssignment localAssignment,
-    IEnumerable<CanvasAssignment> canvasAssignments,
+    CanvasAssignment canvasAssignment,
     CanvasService canvas,
     string localHtmlDescription,
     ulong? canvasAssignmentGroupId
   )
   {
+
     var assignmentNeedsUpdates = localAssignment.NeedsUpdates(
-      canvasAssignments,
+      canvasAssignment,
       canvasAssignmentGroupId,
       quiet: false
     );
@@ -68,17 +69,16 @@ public static partial class AssignmentSyncronizationExtensions
         canvasAssignmentGroupId
       );
     }
-    return localAssignment;
+    return canvasAssignment.Id;
   }
 
   public static bool NeedsUpdates(
     this LocalAssignment localAssignment,
-    IEnumerable<CanvasAssignment> canvasAssignments,
+    CanvasAssignment canvasAssignment,
     ulong? canvasAssignmentGroupId,
     bool quiet = true
   )
   {
-    var canvasAssignment = canvasAssignments.First(ca => ca.Id == localAssignment.CanvasId);
 
     var localHtmlDescription = localAssignment
       .GetDescriptionHtml()
@@ -252,8 +252,8 @@ public static partial class AssignmentSyncronizationExtensions
       var assignmentTasks = m.Assignments.Select(
         async (a) => await localCourse.SyncAssignmentToCanvas(canvasCourseId, a, canvasAssignments, canvas)
       );
-      var assignments = await Task.WhenAll(assignmentTasks);
-      return m with { Assignments = assignments };
+      await Task.WhenAll(assignmentTasks);
+      return m;
     });
 
     var modules = await Task.WhenAll(moduleTasks);
