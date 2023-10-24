@@ -105,4 +105,17 @@ public record LocalAssignment
     var yaml = serializer.Serialize(this);
     return yaml;
   }
+
+  public string ToMarkdown()
+  {
+    var assignmentYaml = ToYaml();
+    var assignmentMarkdown =
+      "```yaml" + Environment.NewLine
+      + assignmentYaml
+      + "```" + Environment.NewLine
+      + "<!-- assignment markdown below -->" + Environment.NewLine
+      + Description;
+
+    return assignmentMarkdown;
+  }
 }

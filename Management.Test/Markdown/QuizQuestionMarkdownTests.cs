@@ -19,7 +19,6 @@ public class QuizQuestionMarkdownTests
       {
         new LocalQuizQuestion()
         {
-          Id = "someid",
           Points = 2,
           Text = @"`some type` of question
 
@@ -75,7 +74,6 @@ endline
       {
         new()
         {
-          Id = "somesdid",
           Text = "oneline question",
           Points = 1,
           QuestionType = QuestionType.MULTIPLE_ANSWERS,

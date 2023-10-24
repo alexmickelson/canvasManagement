@@ -96,7 +96,7 @@ public class FileStorageManager
       return true;
     });
 
-    foreach(var file in filesToDelete)
+    foreach (var file in filesToDelete)
     {
       logger.Log($"removing old quiz, it has probably been renamed {file}");
       File.Delete(file);
@@ -104,7 +104,7 @@ public class FileStorageManager
 
   }
 
-  private static async Task saveAssignments(LocalCourse course, LocalModule module)
+  private async Task saveAssignments(LocalCourse course, LocalModule module)
   {
     var assignmentsDirectory = $"../storage/{course.Settings.Name}/{module.Name}/assignments";
     if (!Directory.Exists(assignmentsDirectory))
@@ -112,17 +112,34 @@ public class FileStorageManager
 
     foreach (var assignment in module.Assignments)
     {
-      var assignmentYaml = assignment.ToYaml();
-      var assignmentMarkdown =
-        "```yaml" + Environment.NewLine
-        + assignmentYaml
-        + "```" + Environment.NewLine
-        + "<!-- assignment markdown below -->" + Environment.NewLine
-        + assignment.Description;
+      var assignmentMarkdown = assignment.ToMarkdown();
 
       var filePath = assignmentsDirectory + "/" + assignment.Name + ".md";
       await File.WriteAllTextAsync(filePath, assignmentMarkdown);
     }
+    removeOldAssignments(assignmentsDirectory, module);
+  }
+  private void removeOldAssignments(string path, LocalModule module)
+  {
+    var existingFiles = Directory.EnumerateFiles(path);
+
+    var filesToDelete = existingFiles.Where((f) =>
+    {
+      foreach (var assignment in module.Assignments)
+      {
+        var markdownPath = path + "/" + assignment.Name + ".md";
+        if (f == markdownPath)
+          return false;
+      }
+      return true;
+    });
+
+    foreach (var file in filesToDelete)
+    {
+      logger.Log($"removing old assignment, it has probably been renamed {file}");
+      File.Delete(file);
+    }
+
   }
 
   public async Task<IEnumerable<LocalCourse>> LoadSavedCourses()

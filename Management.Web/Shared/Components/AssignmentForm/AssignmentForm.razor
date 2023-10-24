@@ -61,16 +61,14 @@
         .LocalCourse
         .Modules
         .First(m =>
-          m.Assignments
-          .Select(a => a.Id)
-          .Contains(assignment.Id)
+          m.Assignments.Contains(assignment)
         ) ?? throw new Exception("handling assignment delete, could not find module");
 
       var newModules = planner.LocalCourse.Modules.Select(m =>
         m.Name == currentModule.Name
         ? m with
           {
-            Assignments = m.Assignments.Where(a => a.Id != assignment.Id).ToArray()
+            Assignments = m.Assignments.Where(a => a != assignment).ToArray()
           }
         : m
       ).ToArray();

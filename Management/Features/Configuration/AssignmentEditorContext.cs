@@ -26,9 +26,10 @@ public class AssignmentEditorContext
   {
     if (planner.LocalCourse != null)
     {
+      // run discovery on Assignment, it was the last stored version of the assignment
       var currentModule =
         planner.LocalCourse.Modules.First(
-          m => m.Assignments.Select(a => a.Id).Contains(newAssignment.Id)
+          m => m.Assignments.Contains(Assignment)
         ) ?? throw new Exception("could not find current module in assignment editor context");
 
       var updatedModules = planner.LocalCourse.Modules
@@ -38,7 +39,7 @@ public class AssignmentEditorContext
               ? currentModule with
               {
                 Assignments = currentModule.Assignments
-                  .Select(a => a.Id == newAssignment.Id ? newAssignment : a)
+                  .Select(a => a == Assignment ? newAssignment : a)
                   .ToArray()
               }
               : m
