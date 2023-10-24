@@ -16,7 +16,6 @@ public static class CoursePlannerExtensions
           {
             Assignments = module.Assignments
               .OrderBy(a => a.DueAt)
-              .DistinctBy(a => a.Id)
               .Select(a => a.validateSubmissionTypes())
               .Select(a => a.validateDates())
               .ToArray()

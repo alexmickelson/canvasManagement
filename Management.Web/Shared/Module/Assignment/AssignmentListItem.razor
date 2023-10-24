@@ -48,9 +48,8 @@
   private void OnClick() 
   {
     assignmentContext.Assignment = Assignment;
-    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name + "/assignment/" + Assignment.Id);
+    Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name + "/assignment/" + Assignment.Name);
   }
-
 }
 
 <div 

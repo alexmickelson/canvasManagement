@@ -1,4 +1,4 @@
-@page "/course/{CourseName}/assignment/{AssignmentId}"
+@page "/course/{CourseName}/assignment/{AssignmentName}"
 
 @using CanvasModel.EnrollmentTerms
 @using Management.Web.Shared.Components.AssignmentForm
@@ -21,7 +21,7 @@
   [Parameter]
   public string? CourseName { get; set; } = default!;
   [Parameter]
-  public string? AssignmentId { get; set; } = default!;
+  public string? AssignmentName { get; set; } = default!;
 
   private bool loading { get; set; } = true;
 
@@ -30,7 +30,7 @@
     if (loading)
     {
       loading = false;
-      logger.LogInformation($"loading assignment {CourseName} {AssignmentId}");
+      logger.LogInformation($"loading assignment {CourseName} {AssignmentName}");
       if (planner.LocalCourse == null)
       {
         var courses = await fileStorageManager.LoadSavedCourses();
@@ -44,7 +44,7 @@
         .LocalCourse?
         .Modules
         .SelectMany(m => m.Assignments)
-        .FirstOrDefault(a => a.Id == AssignmentId);
+        .FirstOrDefault(a => a.Name == AssignmentName);
 
         assignmentContext.Assignment = assignment;
         logger.LogInformation($"set assignment to '{assignmentContext.Assignment?.Name}'");
