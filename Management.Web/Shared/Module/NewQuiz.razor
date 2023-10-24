@@ -48,7 +48,6 @@
     modal?.Hide();
   }
 
-
   private void setAssignmentGroup(LocalAssignmentGroup? group)
   {
     selectedAssignmentGroup = group;
@@ -69,9 +68,9 @@
     <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
       <label for="Assignment Name">Name</label>
       <input id="moduleName" class="form-control" @bind="Name" />
-      <br>
-      <label class="form-label">Assignment Group</label>
     </form>
+    <br>
+    <label class="form-label">Assignment Group</label>
     <ButtonSelect
       Label="Assignment Group"
       Options="planner.LocalCourse.Settings.AssignmentGroups"

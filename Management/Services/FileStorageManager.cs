@@ -2,7 +2,7 @@ using LocalModels;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
-public class YamlManager
+public class FileStorageManager
 {
   public string CourseToYaml(LocalCourse course)
   {
@@ -66,10 +66,6 @@ public class YamlManager
 
     foreach (var quiz in module.Quizzes)
     {
-      var filePath = quizzesDirectory + "/" + quiz.Name + ".yml"; ;
-      var quizYaml = quiz.ToYaml();
-      await File.WriteAllTextAsync(filePath, quizYaml);
-
       var markdownPath = quizzesDirectory + "/" + quiz.Name + ".md"; ;
       var quizMarkdown = quiz.ToMarkdown();
       await File.WriteAllTextAsync(markdownPath, quizMarkdown);

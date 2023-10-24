@@ -9,7 +9,7 @@
 @using Management.Web.Shared.Module.Assignment
 @using Management.Web.Shared.Components
 
-@inject YamlManager yamlManager
+@inject FileStorageManager fileStorageManager
 @inject CanvasService canvas
 @inject CoursePlanner planner
 @inject NavigationManager navigtion
@@ -22,9 +22,9 @@
 
   protected override async Task OnInitializedAsync()
   {
-    if(planner.LocalCourse == null)
+    if (planner.LocalCourse == null)
     {
-      var courses = await yamlManager.LoadSavedCourses();
+      var courses = await fileStorageManager.LoadSavedCourses();
       planner.LocalCourse = courses.First(c => c.Settings.Name == CourseName);
     }
     base.OnInitialized();
@@ -39,43 +39,34 @@
 
 }
 
-@if(loading)
+@if (loading)
 {
   <Spinner />
 }
 
-@if(planner.LocalCourse != null)
+@if (planner.LocalCourse != null)
 {
   <div class="mb-3 d-flex justify-content-between" style="height: 4em;">
-    <div class="my-auto">
-      <button
-        @onclick="selectNewCourse"
-        class="btn btn-primary"
-      >
-        Select New Course
-      </button>
-      <CourseSettings />
-      <AssignmentTemplateManagement />
+  <div class="my-auto">
+    <button @onclick="selectNewCourse" class="btn btn-primary">
+      Select New Course
+    </button>
+    <CourseSettings />
+    <AssignmentTemplateManagement />
 
-      <button 
-        class="btn btn-outline-primary"
-        @onclick="planner.SyncWithCanvas"
-      >
-        Sync With Canvas
-      </button>
-      <a 
-        class="btn btn-outline-secondary"
-        target="_blank"
-        href="@($"{Environment.GetEnvironmentVariable("CANVAS_URL")}/courses/{planner.LocalCourse.Settings.CanvasId}")"
-      >
-        View In Canvas
-      </a>
-      <div class="my-auto ms-2 d-inline">
-        @planner.LocalCourse.Settings.Name
-      </div>
+    <button class="btn btn-outline-primary" @onclick="planner.SyncWithCanvas">
+      Sync With Canvas
+    </button>
+    <a class="btn btn-outline-secondary" target="_blank"
+      href="@($"{Environment.GetEnvironmentVariable("CANVAS_URL")}/courses/{planner.LocalCourse.Settings.CanvasId}")">
+      View In Canvas
+    </a>
+    <div class="my-auto ms-2 d-inline">
+      @planner.LocalCourse.Settings.Name
     </div>
+  </div>
 
-    @if(planner.LoadingCanvasData)
+  @if (planner.LoadingCanvasData)
     {
       <Spinner />
     }

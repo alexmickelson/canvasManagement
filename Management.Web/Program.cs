@@ -10,6 +10,7 @@ global using LocalModels;
 global using Management.Planner;
 global using Management.Web.Shared.Components;
 global using Management.Web.Shared;
+global using Management.Web.Shared.Components.Forms;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -44,7 +45,7 @@ builder.Services.AddScoped<CanvasQuizService>();
 builder.Services.AddScoped<CanvasModuleService>();
 builder.Services.AddScoped<CanvasService, CanvasService>();
 
-builder.Services.AddScoped<YamlManager>();
+builder.Services.AddScoped<FileStorageManager>();
 builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentEditorContext>();
 builder.Services.AddScoped<QuizEditorContext>();

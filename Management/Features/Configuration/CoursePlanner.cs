@@ -12,13 +12,13 @@ namespace Management.Planner;
 
 public class CoursePlanner
 {
-  private readonly YamlManager yamlManager;
+  private readonly FileStorageManager fileStorageManager;
   private readonly CanvasService canvas;
   public bool LoadingCanvasData { get; internal set; } = false;
 
-  public CoursePlanner(YamlManager yamlManager, CanvasService canvas)
+  public CoursePlanner(FileStorageManager fileStorageManager, CanvasService canvas)
   {
-    this.yamlManager = yamlManager;
+    this.fileStorageManager = fileStorageManager;
     this.canvas = canvas;
   }
 
@@ -61,12 +61,12 @@ public class CoursePlanner
     if (LocalCourse == null)
     {
       Console.WriteLine("saving course as of debounce call time");
-      await yamlManager.SaveCourseAsync(courseAsOfDebounce);
+      await fileStorageManager.SaveCourseAsync(courseAsOfDebounce);
     }
     else
     {
       Console.WriteLine("Saving latest version of file");
-      await yamlManager.SaveCourseAsync(LocalCourse);
+      await fileStorageManager.SaveCourseAsync(LocalCourse);
     }
   }
 

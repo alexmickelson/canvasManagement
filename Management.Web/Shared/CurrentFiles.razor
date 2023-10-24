@@ -1,6 +1,6 @@
 @using LocalModels
 
-@inject YamlManager yamlManager
+@inject FileStorageManager fileStorageManager
 @inject CoursePlanner planner
 @inject NavigationManager Navigation
 @inject ILogger<CurrentFiles> logger
@@ -12,7 +12,7 @@
   public IEnumerable<LocalCourse>? localCourses { get; set; }
   protected override async Task OnParametersSetAsync()
   {
-    localCourses = await yamlManager.LoadSavedCourses();
+    localCourses = await fileStorageManager.LoadSavedCourses();
   }
 
   void handleClick(MouseEventArgs e, LocalCourse course)

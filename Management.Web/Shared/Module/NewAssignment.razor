@@ -1,4 +1,5 @@
 @using Management.Web.Shared.Components
+@using Management.Web.Shared.Components.Forms
 
 @inject CoursePlanner planner
 
@@ -28,7 +29,8 @@
       LockAt = null,
       DueAt = DateTime.Now,
       PointsPossible = 10,
-      SubmissionTypes = new string[] { SubmissionType.ONLINE_TEXT_ENTRY }
+      SubmissionTypes = new string[] { SubmissionType.ONLINE_TEXT_ENTRY },
+      LocalAssignmentGroupId = selectedAssignmentGroup?.Id,
     };
 
     if(planner.LocalCourse != null)
@@ -49,7 +51,14 @@
     Name = "";
     modal?.Hide();
   }
+
+  private void setAssignmentGroup(LocalAssignmentGroup? group)
+  {
+    selectedAssignmentGroup = group;
+  }
+  private LocalAssignmentGroup? selectedAssignmentGroup { get; set; }
 }
+
 <button 
   class="btn btn-outline-secondary" 
   @onclick="() => modal?.Show()"
@@ -64,6 +73,14 @@
       <label for="Assignment Name">Name</label>
       <input id="moduleName" class="form-control" @bind="Name" />
     </form>
+    <br>
+    <label class="form-label">Assignment Group</label>
+    <ButtonSelect
+      Label="Assignment Group"
+      Options="planner.LocalCourse.Settings.AssignmentGroups"
+      GetName="(g) => g?.Name"
+      OnSelect="(g) => setAssignmentGroup(g)"
+    />
   </Body>
   <Footer>
     <button 

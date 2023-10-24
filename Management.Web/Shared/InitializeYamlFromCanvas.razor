@@ -6,7 +6,7 @@
 @using LocalModels
 
 @inject CanvasService canvas
-@inject YamlManager yamlManager
+@inject FileStorageManager fileStorageManager
 
 
 @code {
@@ -15,18 +15,18 @@
   private bool loadingTerms = false;
   private bool loadingCourses = false;
   public IEnumerable<LocalCourse>? localCourses { get; set; }
-  private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;  
-  private IEnumerable<CourseModel>? courses { get; set;} = null;
+  private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
+  private IEnumerable<CourseModel>? courses { get; set; } = null;
   private ulong? _selectedTermId { get; set; }
-  private ulong? selectedTermId 
-  { 
+  private ulong? selectedTermId
+  {
     get => _selectedTermId;
-    set 
+    set
     {
       _selectedTermId = value;
       this.InvokeAsync(updateCourses);
       @* updateCourses(); *@
-    } 
+    }
   }
   private EnrollmentTermModel? selectedTerm
   {
@@ -34,16 +34,16 @@
   }
 
   private ulong? _selectedCourseId { get; set; }
-  private ulong? selectedCourseId 
+  private ulong? selectedCourseId
   {
     get => _selectedCourseId;
-    set 
+    set
     {
       _selectedCourseId = value;
     }
   }
 
-  private CourseModel? selectedCourse 
+  private CourseModel? selectedCourse
   {
     get => courses?.First(c => c.Id == selectedCourseId);
   }
@@ -56,32 +56,33 @@
   }
   private async Task YamlTrigger()
   {
-    if(selectedCourse != null)
+    if (selectedCourse != null)
     {
       var course = new LocalCourse
-      {
-        Modules = new LocalModule[] {},
-        Settings = new LocalCourseSettings() {
-          Name = selectedCourse.Name,
-          CanvasId = selectedCourse.Id,
-          StartDate = selectedTerm?.StartAt ?? new DateTime(),
-          EndDate = selectedTerm?.EndAt ?? new DateTime(),
-          DaysOfWeek = days,
-        }
-      };
-      await yamlManager.SaveCourseAsync(course);
+        {
+          Modules = new LocalModule[] { },
+          Settings = new LocalCourseSettings()
+          {
+            Name = selectedCourse.Name,
+            CanvasId = selectedCourse.Id,
+            StartDate = selectedTerm?.StartAt ?? new DateTime(),
+            EndDate = selectedTerm?.EndAt ?? new DateTime(),
+            DaysOfWeek = days,
+          }
+        };
+      await fileStorageManager.SaveCourseAsync(course);
       NewFileCreated();
     }
     await updateCourses();
   }
-  
+
   private async Task updateCourses()
   {
-    if(selectedTermId != null)
+    if (selectedTermId != null)
     {
       loadingCourses = true;
-      
-      localCourses = await yamlManager.LoadSavedCourses();
+
+      localCourses = await fileStorageManager.LoadSavedCourses();
       var storedCourseIds = localCourses.Select(c => c.Settings.CanvasId);
       var allCourses = await canvas.GetCourses((ulong)selectedTermId);
       courses = allCourses.Where(c => !storedCourseIds.Contains(c.Id));
@@ -94,7 +95,7 @@
   }
 }
 
-@if(loadingTerms)
+@if (loadingTerms)
 {
   <Spinner />
 }
@@ -102,13 +103,13 @@
 @if (terms != null)
 {
   <div class="row justify-content-center">
-    <div class="col-auto">
-      <label for="termselect">Select Term:</label>
-      <select id="termselect" class="form-select" @bind="selectedTermId">
-        @foreach (var term in terms)
-          {
-            <option value="@term.Id">@term.Name</option>
-          }
+  <div class="col-auto">
+    <label for="termselect">Select Term:</label>
+    <select id="termselect" class="form-select" @bind="selectedTermId">
+      @foreach (var term in terms)
+        {
+          <option value="@term.Id">@term.Name</option>
+        }
       </select>
     </div>
   </div>
@@ -117,18 +118,18 @@
 
 @if (selectedTerm is not null)
 {
-  @if(loadingCourses)
+  @if (loadingCourses)
   {
     <Spinner />
   }
 
-  @if(courses != null)
+  @if (courses != null)
   {
     <div class="row justify-content-center m-3">
-      <div class="col-auto">
-        <label for="courseselect">Select Course:</label>
-        <select id="courseselect" class="form-select" @bind="selectedCourseId">
-          @foreach (var course in courses)
+  <div class="col-auto">
+    <label for="courseselect">Select Course:</label>
+    <select id="courseselect" class="form-select" @bind="selectedCourseId">
+      @foreach (var course in courses)
           {
             <option value="@course.Id">@course.Name</option>
           }
@@ -140,9 +141,9 @@
   <h5 class="text-center mt-3">Select Days Of Week</h5>
   <div class="row m-3">
   @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
-  {
-    <div class="col">
-      <button class="@(
+    {
+      <div class="col">
+        <button class="@(
             days.Contains(day) 
             ? "btn btn-secondary" 
             : "btn btn-outline-secondary"
@@ -152,19 +153,16 @@
             else
               days.Add(day);
           }">
-        @day
-      </button>
-    </div>
-  }
+          @day
+        </button>
+      </div>
+    }
   </div>
 
 
-<div class="text-center">
-  <button 
-    @onclick="YamlTrigger" 
-    class="btn btn-primary"
-  >
-    Save Yaml File
-  </button>
-</div>
+  <div class="text-center">
+    <button @onclick="YamlTrigger" class="btn btn-primary">
+      Save Yaml File
+    </button>
+  </div>
 }

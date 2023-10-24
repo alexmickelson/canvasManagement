@@ -5,7 +5,6 @@ namespace LocalModels;
 
 public record LocalQuizQuestion
 {
-  public string Id { get; set; } = "";
   public string Text { get; init; } = string.Empty;
   public string HtmlText => Markdig.Markdown.ToHtml(Text);
   public string QuestionType { get; init; } = string.Empty;

@@ -11,7 +11,7 @@
 @using Management.Web.Shared.Module.Assignment
 @using Management.Web.Shared.Components
 
-@inject YamlManager yamlManager
+@inject FileStorageManager fileStorageManager
 @inject CanvasService canvas
 @inject CoursePlanner planner
 @inject AssignmentEditorContext assignmentContext
@@ -23,28 +23,28 @@
   [Parameter]
   public string? AssignmentId { get; set; } = default!;
 
-  private bool loading { get; set; }= true;
-  
+  private bool loading { get; set; } = true;
+
   protected override async Task OnInitializedAsync()
   {
-    if(loading)
+    if (loading)
     {
       loading = false;
       logger.LogInformation($"loading assignment {CourseName} {AssignmentId}");
-      if(planner.LocalCourse == null)
+      if (planner.LocalCourse == null)
       {
-        var courses = await yamlManager.LoadSavedCourses();
+        var courses = await fileStorageManager.LoadSavedCourses();
         planner.LocalCourse = courses.First(c => c.Settings.Name == CourseName);
         logger.LogInformation($"set course to '{planner.LocalCourse?.Settings.Name}'");
       }
 
-      if(assignmentContext.Assignment == null)
+      if (assignmentContext.Assignment == null)
       {
         var assignment = planner
-          .LocalCourse?
-          .Modules
-          .SelectMany(m => m.Assignments)
-          .FirstOrDefault(a => a.Id == AssignmentId);
+        .LocalCourse?
+        .Modules
+        .SelectMany(m => m.Assignments)
+        .FirstOrDefault(a => a.Id == AssignmentId);
 
         assignmentContext.Assignment = assignment;
         logger.LogInformation($"set assignment to '{assignmentContext.Assignment?.Name}'");
@@ -56,12 +56,12 @@
 
 }
 
-@if(loading)
+@if (loading)
 {
   <Spinner />
 }
 
-@if(planner.LocalCourse != null && assignmentContext.Assignment != null)
+@if (planner.LocalCourse != null && assignmentContext.Assignment != null)
 {
   <AssignmentForm />
 }

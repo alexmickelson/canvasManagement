@@ -13,7 +13,7 @@
 @using Management.Web.Shared.Components
 @using Management.Web.Shared.Components.Quiz.Markdown
 
-@inject YamlManager yamlManager
+@inject FileStorageManager fileStorageManager
 @inject CanvasService canvas
 @inject CoursePlanner planner
 @inject QuizEditorContext quizContext
@@ -26,9 +26,9 @@
   [Parameter]
   public string? QuizName { get; set; } = default!;
 
-  private bool loading { get; set; }= true;
+  private bool loading { get; set; } = true;
   private bool addingQuizToCanvas = false;
-  
+
   protected override void OnInitialized()
   {
     quizContext.StateHasChanged += reload;
@@ -43,31 +43,31 @@
   }
   protected override async Task OnInitializedAsync()
   {
-    if(loading)
+    if (loading)
     {
       loading = false;
       logger.LogInformation($"loading quiz {CourseName} {QuizName}");
-      if(planner.LocalCourse == null)
+      if (planner.LocalCourse == null)
       {
-        var courses = await yamlManager.LoadSavedCourses();
+        var courses = await fileStorageManager.LoadSavedCourses();
         planner.LocalCourse = courses.First(c => c.Settings.Name == CourseName);
         logger.LogInformation($"set course to '{planner.LocalCourse?.Settings.Name}'");
       }
 
-      if(quizContext.Quiz == null)
+      if (quizContext.Quiz == null)
       {
         var quiz = planner
-          .LocalCourse?
-          .Modules
-          .SelectMany(m => m.Quizzes)
-          .FirstOrDefault(q => q.Name == QuizName);
+        .LocalCourse?
+        .Modules
+        .SelectMany(m => m.Quizzes)
+        .FirstOrDefault(q => q.Name == QuizName);
 
         quizContext.Quiz = quiz;
         logger.LogInformation($"set quiz to '{quizContext.Quiz?.Name}'");
       }
       StateHasChanged();
 
-      if(planner.CanvasQuizzes == null)
+      if (planner.CanvasQuizzes == null)
       {
         await planner.LoadCanvasData();
       }
@@ -98,7 +98,8 @@
 
   private CanvasQuiz? quizInCanvas => planner.CanvasQuizzes?.FirstOrDefault(q => q.Title == quizContext.Quiz?.Name);
 
-  private string canvasQuizUrl => $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/quizzes/{quizInCanvas?.Id}";
+  private string canvasQuizUrl =>
+  $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/quizzes/{quizInCanvas?.Id}";
 
   private int? quizPoints => quizContext.Quiz?.Questions.Sum(q => q.Points);
 }
@@ -108,10 +109,7 @@
   <section>
     <div class="row justify-content-between">
       <div class="col-auto my-auto">
-        <button 
-          class="btn btn-outline-secondary"
-          @onclick="done"
-        >
+        <button class="btn btn-outline-secondary" @onclick="done">
           ← go back
         </button>
       </div>
@@ -121,7 +119,7 @@
         </h2>
       </div>
 
-      @if(quizContext.Quiz == null)
+      @if (quizContext.Quiz == null)
       {
         <div class="col-auto">
           <Spinner />
@@ -131,9 +129,9 @@
         <h3>
           Points: @quizPoints
         </h3>
-        @if(quizInCanvas != null)
+        @if (quizInCanvas != null)
         {
-          @if(quizInCanvas?.Published == true)
+          @if (quizInCanvas?.Published == true)
           {
             <div class="text-success">
               Published!
@@ -150,12 +148,11 @@
     </div>
   </section>
 
-  <section 
-    class="flex-grow-1 w-100 d-flex justify-content-center overflow-y-auto overflow-x-hidden  border rounded-4 bg-dark-subtle py-3 px-1"  
-    style="min-height: 10%;max-width: 100%;"
-  >
+  <section
+    class="flex-grow-1 w-100 d-flex justify-content-center overflow-y-auto overflow-x-hidden  border rounded-4 bg-dark-subtle py-3 px-1"
+    style="min-height: 10%;max-width: 100%;">
     <div class="w-100" style="max-width: 120em; max-height: 100%;">
-      @if(quizContext.Quiz != null)
+      @if (quizContext.Quiz != null)
       {
         <MarkdownQuizForm />
       }
@@ -164,45 +161,29 @@
 
   <hr>
   <section>
-    @if(quizContext.Quiz != null)
+    @if (quizContext.Quiz != null)
     {
       <div class="row justify-content-end">
         <div class="col-auto">
-          <ConfirmationModal 
-            Label="Delete" 
-            Class="btn btn-danger" 
-            OnConfirm="deleteQuiz" 
-            Disabled="@addingQuizToCanvas"
-          />
-          <button 
-            class="btn btn-outline-secondary me-1" 
-            @onclick="addToCanvas"
-            disabled="@addingQuizToCanvas"
-          >
+          <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirm="deleteQuiz"
+            Disabled="@addingQuizToCanvas" />
+          <button class="btn btn-outline-secondary me-1" @onclick="addToCanvas" disabled="@addingQuizToCanvas">
             Add to Canvas
           </button>
-          @if(quizInCanvas != null)
+          @if (quizInCanvas != null)
           {
-            <a 
-              class="btn btn-outline-secondary me-1"
-              href="@canvasQuizUrl"
-              target="_blank"
-            >
+            <a class="btn btn-outline-secondary me-1" href="@canvasQuizUrl" target="_blank">
               View in Canvas
             </a>
           }
-          <button 
-            class="btn btn-primary" 
-            @onclick="done"
-            disabled="@addingQuizToCanvas"
-          >
+          <button class="btn btn-primary" @onclick="done" disabled="@addingQuizToCanvas">
             Done
           </button>
         </div>
       </div>
     }
 
-    @if(addingQuizToCanvas)
+    @if (addingQuizToCanvas)
     {
       <Spinner />
     }
