@@ -47,7 +47,13 @@ public record LocalAssignment
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
   public string? LocalAssignmentGroupId { get; init; }
-  public int PointsPossible { get; init; }
+  public int PointsPossible
+  {
+    get
+    {
+      return Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
+    }
+  }
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
 
   public string GetRubricHtml()

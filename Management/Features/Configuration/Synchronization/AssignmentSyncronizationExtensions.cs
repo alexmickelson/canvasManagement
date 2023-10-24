@@ -79,7 +79,8 @@ public static partial class AssignmentSyncronizationExtensions
 
     var localHtmlDescription = localAssignment
       .GetDescriptionHtml()
-      .Replace("<hr />", "<hr>")
+      .Replace("<hr />", "<hr>") // self closing tags are hard 
+      .Replace("<br />", "<br>")
       .Replace("&gt;", "")
       .Replace("&lt;", "")
       .Replace(">", "")
@@ -94,6 +95,7 @@ public static partial class AssignmentSyncronizationExtensions
     canvasHtmlDescription = CanvasLinkTagRegex().Replace(canvasHtmlDescription, "");
     canvasHtmlDescription = canvasHtmlDescription
       .Replace("<hr />", "<hr>")
+      .Replace("<br />", "<br>")
       .Replace("&gt;", "")
       .Replace("&lt;", "")
       .Replace(">", "")
