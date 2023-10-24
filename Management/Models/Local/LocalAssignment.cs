@@ -7,7 +7,7 @@ public record RubricItem
   public static readonly string extraCredit = "(Extra Credit) ";
   public string Label { get; set; } = "";
   public int Points { get; set; } = 0;
-  public bool IsExtraCredit => Label.Contains(extraCredit);
+  public bool IsExtraCredit => Label.Contains(extraCredit.ToLower(), StringComparison.CurrentCultureIgnoreCase);
 }
 
 public static class SubmissionType
@@ -42,10 +42,6 @@ public record LocalAssignment
   public ulong? CanvasId { get; init; } = null;
   public string Name { get; init; } = "";
   public string Description { get; init; } = "";
-  // public bool UseTemplate { get; init; } = false;
-  public string? TemplateId { get; init; } = string.Empty;
-  public Dictionary<string, string> TemplateVariables { get; init; } =
-    new Dictionary<string, string>();
   public bool LockAtDueDate { get; init; }
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public DateTime? LockAt { get; init; }
@@ -66,27 +62,9 @@ public record LocalAssignment
     return output;
   }
 
-  public string GetDescriptionHtml(IEnumerable<AssignmentTemplate>? templates)
+  public string GetDescriptionHtml()
   {
-    if (TemplateId != null && TemplateId != "" && templates == null)
-      throw new Exception("cannot get description for assignment if templates not provided");
-
     var rubricHtml = GetRubricHtml();
-
-    if (TemplateId != null && TemplateId != "")
-    {
-      var template =
-        (templates?.FirstOrDefault(t => t.Id == TemplateId))
-        ?? throw new Exception($"Could not find template with id {TemplateId}");
-
-      var html = Markdig.Markdown.ToHtml(template.Markdown);
-
-      foreach (KeyValuePair<string, string> entry in TemplateVariables)
-      {
-        html = html.Replace($"%7B%7B{entry.Key}%7D%7D", entry.Value);
-      }
-      return html + "<hr>" + rubricHtml;
-    }
 
     return Markdig.Markdown.ToHtml(Description) + "<hr>" + rubricHtml;
   }

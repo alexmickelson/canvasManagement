@@ -20,13 +20,6 @@
         descriptionForPreview = description;
         this.InvokeAsync(this.StateHasChanged);
       }
-      if(TemplateId == string.Empty || TemplateId == null)
-      {
-        UseTemplate = TemplateId != null && TemplateId != "";
-        TemplateId = assignmentContext.Assignment.TemplateId;
-        VariableValues = assignmentContext.Assignment.TemplateVariables;
-        this.InvokeAsync(this.StateHasChanged);
-      }
     }
   }
   public void Dispose()
@@ -66,118 +59,13 @@
     }
   }
 
-  private void saveTemplateId(ChangeEventArgs e)
-  {
-    if(assignmentContext.Assignment != null)
-    {
-      var newTemplateId = e.Value?.ToString();
-      var newAssignment = assignmentContext.Assignment with
-      {
-        TemplateId = newTemplateId
-      };
-      assignmentContext.SaveAssignment(newAssignment);
-    }
-  }
-
   private MarkupString preview { get => (MarkupString)Markdown.ToHtml(descriptionForPreview); }
 
-  private void handleTemplateChange(ChangeEventArgs e)
-  {
-    if (assignmentContext.Assignment != null)
-    {
-      Console.WriteLine("input");
-      var newValue = bool.Parse(e.Value?.ToString() ?? "false");
-      UseTemplate = newValue;
-      StateHasChanged();
-      if(!newValue)
-      {
-        TemplateId = string.Empty;
-        VariableValues = new Dictionary<string, string>();
-        assignmentContext.SaveAssignment(
-          assignmentContext.Assignment with
-          {
-            TemplateId = TemplateId,
-            TemplateVariables = VariableValues
-          }
-        );
-      }
-    }
-  }
 }
 
 @if(assignmentContext.Assignment != null && planner.LocalCourse != null)
 {
-  <div class="form-check form-switch">
-    <input 
-      class="form-check-input" 
-      type="checkbox" 
-      role="switch" 
-      id="useTemplateForDescription"
-      checked="@UseTemplate"
-      @oninput="handleTemplateChange"
-    />
-    <label class="form-check-label" for="useTemplateForDescription">
-      use template for description
-    </label>
-  </div>
-
-  @if (UseTemplate ?? false)
-  {
-    <div class="row justify-content-around">
-      <div class="col-auto text-center">
-        <form @onsubmit:preventDefault="true">
-          <label for="templateSelect">Templates</label>
-          <select 
-            id="templateSelect" 
-            class="form-select" 
-            @bind="TemplateId"
-            @oninput="saveTemplateId"
-          >
-            <option value=""></option>
-            @foreach (var template in planner.LocalCourse.Settings.AssignmentTemplates)
-            {
-              <option value="@template.Id">@template.Name</option>
-            }
-          </select>
-        </form>
-      </div>
-      <div class="col-auto">
-        VARIABLES:
-        @if (selectedTemplate != null)
-        {
-          var variables = AssignmentTemplate.GetVariables(selectedTemplate.Markdown);
-          @foreach (var variable in variables)
-          {
-            <div class="my-1">
-              <label class="form-label">
-                @variable
-              </label>
-              <input 
-                class="form-control" 
-                value="@VariableValues.GetValueOrDefault(variable, String.Empty)" 
-                @oninput="@((e) => 
-                  {
-                    var newValue = e.Value?.ToString() ?? String.Empty;
-                    var newDictionary = new Dictionary<string, string>(VariableValues);
-                    newDictionary[variable] = newValue;
-
-                    var newAssignment = assignmentContext.Assignment with 
-                    {
-                      TemplateVariables = newDictionary
-                    };
-                    assignmentContext.SaveAssignment(newAssignment);
-                  })"
-                />
-            </div>
-          }
-        }
-      </div>
-    </div>
-  }
-  else
-  {
-
-    <div class="row">
+  <div class="row">
     <div class="col">
       <label for="description" class="form-label">
         Description
@@ -201,5 +89,4 @@
         @(preview)
       </div>
     </div>
-  }
 }

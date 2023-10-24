@@ -24,9 +24,7 @@ public static partial class AssignmentSyncronizationExtensions
     var canvasAssignment = canvasAssignments.FirstOrDefault(
       ca => ca.Id == localAssignment.CanvasId
     );
-    string localHtmlDescription = localAssignment.GetDescriptionHtml(
-      localCourse.Settings.AssignmentTemplates
-    );
+    string localHtmlDescription = localAssignment.GetDescriptionHtml();
 
     var canvasAssignmentGroupId = localAssignment.GetCanvasAssignmentGroupId(localCourse.Settings.AssignmentGroups);
 
@@ -55,7 +53,6 @@ public static partial class AssignmentSyncronizationExtensions
   {
     var assignmentNeedsUpdates = localAssignment.NeedsUpdates(
       canvasAssignments,
-      localCourse.Settings.AssignmentTemplates,
       canvasAssignmentGroupId,
       quiet: false
     );
@@ -74,7 +71,6 @@ public static partial class AssignmentSyncronizationExtensions
   public static bool NeedsUpdates(
     this LocalAssignment localAssignment,
     IEnumerable<CanvasAssignment> canvasAssignments,
-    IEnumerable<AssignmentTemplate> courseAssignmentTemplates,
     ulong? canvasAssignmentGroupId,
     bool quiet = true
   )
@@ -82,7 +78,7 @@ public static partial class AssignmentSyncronizationExtensions
     var canvasAssignment = canvasAssignments.First(ca => ca.Id == localAssignment.CanvasId);
 
     var localHtmlDescription = localAssignment
-      .GetDescriptionHtml(courseAssignmentTemplates)
+      .GetDescriptionHtml()
       .Replace("<hr />", "<hr>")
       .Replace("&gt;", "")
       .Replace("&lt;", "")

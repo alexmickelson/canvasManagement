@@ -77,7 +77,6 @@
                 && planner.CanvasModules != null 
                 && Assignment.NeedsUpdates(
                   planner.CanvasAssignments, 
-                  planner.LocalCourse.Settings.AssignmentTemplates,
                   Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups)
                 )
               )
@@ -109,7 +108,7 @@
           <div class="card-text">
             <div class="px-3 py-1 bg-dark-subtle my-1">
 
-            @((MarkupString) @Assignment.GetDescriptionHtml(planner.LocalCourse?.Settings.AssignmentTemplates))
+            @((MarkupString) @Assignment.GetDescriptionHtml())
             </div>
 
             <section class="px-3">
