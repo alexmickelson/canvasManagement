@@ -96,10 +96,10 @@ public class CanvasAssignmentService
     await CreateRubric(courseId, localAssignment);
   }
 
-  public async Task Delete(ulong courseId, LocalAssignment assignment)
+  public async Task Delete(ulong courseId, ulong assignmentCanvasId, string assignmentName)
   {
-    log.Log($"deleting assignment from canvas {assignment.Name}");
-    var url = $"courses/{courseId}/assignments/{assignment.CanvasId}";
+    log.Log($"deleting assignment from canvas {assignmentName}");
+    var url = $"courses/{courseId}/assignments/{assignmentCanvasId}";
     var request = new RestRequest(url);
     var response = await webRequestor.DeleteAsync(request);
     if (!response.IsSuccessful)

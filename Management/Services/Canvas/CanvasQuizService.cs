@@ -100,7 +100,8 @@ public class CanvasQuizService
       {
         await assignments.Delete(
           canvasCourseId,
-          new LocalAssignment { Name = a.Name, CanvasId = a.Id }
+          a.Id,
+          a.Name
         );
       }
     );

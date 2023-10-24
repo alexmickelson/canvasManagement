@@ -6,7 +6,9 @@ using Management.Services.Canvas;
 
 public class QuizEditorContext
 {
-  public QuizEditorContext(CoursePlanner planner, CanvasService canvas,
+  public QuizEditorContext(
+    CoursePlanner planner,
+    CanvasService canvas,
     MyLogger<CanvasAssignmentService> logger)
   {
     this.planner = planner;
@@ -28,7 +30,7 @@ public class QuizEditorContext
     get => _quiz;
     set
     {
-      if(_quiz == null && value != null)
+      if (_quiz == null && value != null)
       {
         _module = getCurrentModule(value, planner.LocalCourse);
       }
@@ -70,7 +72,8 @@ public class QuizEditorContext
       var updatedModules = planner.LocalCourse.Modules
         .Select(m => m.Name != _module.Name
           ? m
-          : m with {
+          : m with
+          {
             Quizzes = m.Quizzes.Where(q => q.Name + q.Description != Quiz.Name + Quiz.Description).ToArray()
           }
         )
@@ -85,18 +88,18 @@ public class QuizEditorContext
   public async Task AddQuizToCanvas()
   {
     logger.Log("started to add quiz to canvas");
-    if(Quiz == null)
+    if (Quiz == null)
     {
       logger.Log("cannot add null quiz to canvas");
       return;
     }
     await planner.LoadCanvasData();
-    if(planner.CanvasQuizzes == null)
+    if (planner.CanvasQuizzes == null)
     {
       logger.Log("cannot add quiz to canvas, failed to retrieve current quizzes");
       return;
     }
-    if(planner.LocalCourse == null)
+    if (planner.LocalCourse == null)
     {
       logger.Log("cannot add quiz to canvas, no course stored in planner");
       return;
@@ -108,14 +111,14 @@ public class QuizEditorContext
     var courseCanvasId = planner.LocalCourse.Settings.CanvasId;
     if (courseCanvasId == null)
     {
-      logger.Log("was able to add course to canvas, but errored while making module item. CourseCanvasId is null");
+      logger.Log("was able to add quiz to canvas, but errored while making module item. CourseCanvasId is null");
       return;
     }
 
     var currentModule = getCurrentModule(Quiz, planner.LocalCourse);
     if (currentModule.CanvasId == null)
     {
-      logger.Log("was able to add course to canvas, but errored while making module item. module canvasId is null");
+      logger.Log("was able to add quiz to canvas, but errored while making module item. module canvasId is null");
       return;
     }
 

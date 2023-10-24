@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.RegularExpressions;
 using CanvasModel.Assignments;
 using CanvasModel.Modules;
@@ -9,6 +10,8 @@ namespace Management.Planner;
 
 public static partial class AssignmentSyncronizationExtensions
 {
+
+
   internal static async Task<LocalAssignment> SyncAssignmentToCanvas(
     this LocalCourse localCourse,
     ulong canvasCourseId,

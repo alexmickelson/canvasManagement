@@ -29,14 +29,9 @@
   {
     if (assignmentContext.Assignment != null)
     {
-      var totalRubricPoints = rubric
-        .Where(r => !r.Label.Contains(RubricItem.extraCredit))
-        .Select(s => s.Points)
-        .Sum();
       var newAssignment = assignmentContext.Assignment with
         {
           Rubric = rubric,
-          PointsPossible = totalRubricPoints,
         };
       assignmentContext.SaveAssignment(newAssignment);
       StateHasChanged();

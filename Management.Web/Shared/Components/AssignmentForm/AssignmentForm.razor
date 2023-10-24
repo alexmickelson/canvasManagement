@@ -1,6 +1,7 @@
 @using Management.Web.Shared.Components
 @using Management.Web.Shared.Components.AssignmentForm
 @using Management.Web.Shared.Components.Forms
+@using CanvasModel.Assignments
 
 @inject CoursePlanner planner
 @inject CanvasService canvas
@@ -27,7 +28,7 @@
     assignmentContext.StateHasChanged -= reload;
   }
 
-  private void OnHide() 
+  private void OnHide()
   {
     assignmentContext.Assignment = null;
     name = "";
@@ -35,6 +36,9 @@
   }
   private string name { get; set; } = String.Empty;
   private bool lockAtDueDate { get; set; }
+
+  private bool addingAssignmentToCanvas = false;
+  private bool deletingAssignmentFromCanvas = false;
 
   private void submitHandler()
   {
@@ -65,22 +69,24 @@
         ) ?? throw new Exception("handling assignment delete, could not find module");
 
       var newModules = planner.LocalCourse.Modules.Select(m =>
-        m.Name == currentModule.Name
-        ? m with
-          {
-            Assignments = m.Assignments.Where(a => a != assignment).ToArray()
-          }
-        : m
-      ).ToArray();
+          m.Name == currentModule.Name
+            ? m with
+              {
+                Assignments = m.Assignments.Where(a => a != assignment).ToArray()
+              }
+            : m
+        )
+        .ToArray();
 
       planner.LocalCourse = planner.LocalCourse with
       {
         Modules = newModules
       };
-      if (assignment.CanvasId != null && planner.LocalCourse.Settings.CanvasId != null)
+
+      if (assignmentInCanvas != null && planner.LocalCourse.Settings.CanvasId != null)
       {
         ulong courseId = planner.LocalCourse.Settings.CanvasId ?? throw new Exception("cannot delete if no course id");
-        await canvas.Assignments.Delete(courseId, assignment);
+        await canvas.Assignments.Delete(courseId, assignmentInCanvas.Id, assignment.Name);
       }
     }
   }
@@ -100,35 +106,64 @@
     {
       var lockAtDueDate = (bool)(e.Value ?? false);
       var lockAtDate = lockAtDueDate
-        ? assignmentContext.Assignment.DueAt
-        : assignmentContext.Assignment.LockAt;
-      var newAssignment = assignmentContext.Assignment with { 
-        LockAtDueDate = lockAtDueDate,
-        LockAt = lockAtDate,
-      };
+      ? assignmentContext.Assignment.DueAt
+      : assignmentContext.Assignment.LockAt;
+      var newAssignment = assignmentContext.Assignment with
+        {
+          LockAtDueDate = lockAtDueDate,
+          LockAt = lockAtDate,
+        };
       assignmentContext.SaveAssignment(newAssignment);
     }
   }
 
   private void setAssignmentGroup(LocalAssignmentGroup? group)
   {
-    if(assignmentContext.Assignment == null)
+    if (assignmentContext.Assignment == null)
       return;
-    
-    var newAssignment = assignmentContext.Assignment with 
-    {
-      LocalAssignmentGroupId = group?.Id
-    };
+
+    var newAssignment = assignmentContext.Assignment with
+      {
+        LocalAssignmentGroupId = group?.Id
+      };
 
     assignmentContext.SaveAssignment(newAssignment);
   }
 
   private LocalAssignmentGroup? selectedAssignmentGroup =>
     planner
-      .LocalCourse?
-      .Settings
-      .AssignmentGroups
-      .FirstOrDefault(g => g.Id == assignmentContext.Assignment?.LocalAssignmentGroupId);
+    .LocalCourse?
+    .Settings
+    .AssignmentGroups
+    .FirstOrDefault(g => g.Id == assignmentContext.Assignment?.LocalAssignmentGroupId);
+
+  private async Task addToCanvas()
+  {
+    addingAssignmentToCanvas = true;
+    await assignmentContext.AddAssignmentToCanvas();
+    await planner.LoadCanvasData();
+    addingAssignmentToCanvas = false;
+  }
+
+  private CanvasAssignment? assignmentInCanvas =>
+    planner.CanvasAssignments?.FirstOrDefault(a => a.Name == assignmentContext.Assignment?.Name);
+
+  private string canvasAssignmentUrl =>
+  $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/assignments/{assignmentInCanvas?.Id}";
+
+  private async Task deleteFromCanvas()
+  {
+    if (assignmentInCanvas == null || planner.LocalCourse.Settings.CanvasId == null || assignmentContext.Assignment == null)
+      return;
+    deletingAssignmentFromCanvas = true;
+    await canvas.Assignments.Delete(
+      (ulong)planner.LocalCourse.Settings.CanvasId, 
+      assignmentInCanvas.Id,
+      assignmentContext.Assignment.Name);
+    await planner.LoadCanvasData();
+    StateHasChanged();
+    deletingAssignmentFromCanvas = false;
+  }
 }
 
 @assignmentContext.Assignment?.Name
@@ -136,38 +171,26 @@
 @if (assignmentContext.Assignment != null)
 {
   <div class="m-1">
-    <label class="form-label">
-      Name
-    </label>
-    <input 
-      class="form-control" 
-      @bind="name"
-      @oninput="handleNameChange" 
-    />
-  </div>
-  <ButtonSelect
-    Label="Assignment Group"
-    Options="planner.LocalCourse?.Settings.AssignmentGroups"
+  <label class="form-label">
+    Name
+  </label>
+  <input class="form-control" @bind="name" @oninput="handleNameChange" />
+</div>
+  <ButtonSelect 
+    Label="Assignment Group" 
+    Options="planner.LocalCourse?.Settings.AssignmentGroups" 
     GetName="(g) => g?.Name"
-    OnSelect="(g) => setAssignmentGroup(g)"
-    SelectedOption="selectedAssignmentGroup"
+    OnSelect="(g) => setAssignmentGroup(g)" 
+    SelectedOption="selectedAssignmentGroup" 
   />
   <div class="m-1">
     <AssignmentDescriptionEditor />
   </div>
 
   <div class="form-check m-1">
-    <input 
-      class="form-check-input" 
-      id="lockAtDueDate" 
-      type="checkbox" 
-      @bind="lockAtDueDate"
-      @oninput="handleLockAtDueDateChange" 
-    />
-    <label 
-      class="form-check-label" 
-      for="lockAtDueDate"
-    >
+    <input class="form-check-input" id="lockAtDueDate" type="checkbox" @bind="lockAtDueDate"
+    @oninput="handleLockAtDueDateChange" />
+    <label class="form-check-label" for="lockAtDueDate">
       Lock At Due Date
     </label>
   </div>
@@ -185,16 +208,41 @@
   <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
 
   <button 
-    class="btn btn-primary mx-2" 
-    @onclick="@(() => {
+    class="btn btn-outline-secondary mx-3" 
+    disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
+    @onclick="addToCanvas"
+  >
+    Add To Canvas
+  </button>
+  @if (assignmentInCanvas != null)
+  {
+    <a 
+      class="btn btn-outline-secondary me-1" 
+      href="@canvasAssignmentUrl" 
+      target="_blank"
+      disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
+    >
+      View in Canvas
+    </a>
+    <ConfirmationModal 
+      Disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
+      Label="Delete from Canvas" 
+      Class="btn btn-outline-danger mx-3" 
+      OnConfirmAsync="deleteFromCanvas" 
+    />
+  }
+  <button class="btn btn-primary mx-2" @onclick="@(() => {
       assignmentContext.Assignment = null;
       Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
-    })"
-  >
+    })">
     Done
   </button>
 </div>
 
+@if (addingAssignmentToCanvas || deletingAssignmentFromCanvas)
+{
+  <Spinner />
+}
 <br>
 <br>
 <br>

@@ -49,7 +49,7 @@
 }
 
 <button 
-  class="btn btn-danger"
+  class="@(Class != "" ? Class : "btn btn-danger ")"
   @onclick="() => modal?.Show()"
   disabled="@Disabled"
 >
