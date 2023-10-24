@@ -5,8 +5,6 @@ namespace LocalModels;
 
 public record LocalQuiz
 {
-  // public required string Id { get; init; }
-  // public ulong? CanvasId { get; init; } = null;
   public required string Name { get; init; }
   public required string Description { get; init; }
   public DateTime? LockAt { get; init; }

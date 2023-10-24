@@ -1,9 +1,16 @@
 using LocalModels;
+using Management.Services;
 using YamlDotNet.Serialization;
 using YamlDotNet.Serialization.NamingConventions;
 
 public class FileStorageManager
 {
+  private readonly MyLogger<FileStorageManager> logger;
+
+  public FileStorageManager(MyLogger<FileStorageManager> logger)
+  {
+    this.logger = logger;
+  }
   public string CourseToYaml(LocalCourse course)
   {
     var serializer = new SerializerBuilder().DisableAliases().Build();
@@ -34,7 +41,7 @@ public class FileStorageManager
     await File.WriteAllTextAsync($"../storage/{course.Settings.Name}.yml", courseString);
   }
 
-  private static async Task saveModules(LocalCourse course)
+  private async Task saveModules(LocalCourse course)
   {
     var courseDirectory = $"../storage/{course.Settings.Name}";
 
@@ -58,11 +65,12 @@ public class FileStorageManager
     await File.WriteAllTextAsync(settingsFilePath, settingsYaml);
   }
 
-  private static async Task saveQuizzes(LocalCourse course, LocalModule module)
+  private async Task saveQuizzes(LocalCourse course, LocalModule module)
   {
     var quizzesDirectory = $"../storage/{course.Settings.Name}/{module.Name}/quizzes";
     if (!Directory.Exists(quizzesDirectory))
       Directory.CreateDirectory(quizzesDirectory);
+
 
     foreach (var quiz in module.Quizzes)
     {
@@ -70,6 +78,30 @@ public class FileStorageManager
       var quizMarkdown = quiz.ToMarkdown();
       await File.WriteAllTextAsync(markdownPath, quizMarkdown);
     }
+    removeOldQuizzes(quizzesDirectory, module);
+  }
+
+  private void removeOldQuizzes(string path, LocalModule module)
+  {
+    var existingFiles = Directory.EnumerateFiles(path);
+
+    var filesToDelete = existingFiles.Where((f) =>
+    {
+      foreach (var quiz in module.Quizzes)
+      {
+        var markdownPath = path + "/" + quiz.Name + ".md";
+        if (f == markdownPath)
+          return false;
+      }
+      return true;
+    });
+
+    foreach(var file in filesToDelete)
+    {
+      logger.Log($"removing old quiz, it has probably been renamed {file}");
+      File.Delete(file);
+    }
+
   }
 
   private static async Task saveAssignments(LocalCourse course, LocalModule module)
