@@ -15,9 +15,7 @@ public class DroppableAssignment : ComponentBase
       .LocalCourse
       .Modules
       .First(m =>
-        m.Assignments
-          .Select(a => a.Id)
-          .Contains(Assignment.Id)
+        m.Assignments.Contains(Assignment)
       ) ?? throw new Exception("in day callback, could not find module");
 
 
@@ -33,7 +31,7 @@ public class DroppableAssignment : ComponentBase
     var moduleWithUpdatedAssignment = currentModule with
     {
       Assignments = currentModule.Assignments.Select(a =>
-        a.Id != Assignment.Id
+        a.Name != Assignment.Name // we are only changing the due date, so the name should be the same
         ? a
         : a with
         {
@@ -60,11 +58,11 @@ public class DroppableAssignment : ComponentBase
       m.Name != module.Name
         ? m with
         {
-          Assignments = m.Assignments.Where(a => a.Id != Assignment.Id).DistinctBy(a => a.Id)
+          Assignments = m.Assignments.Where(a => a.Name != Assignment.Name).DistinctBy(a => a.Name)
         }
         : m with
         {
-          Assignments = m.Assignments.Append(Assignment).DistinctBy(a => a.Id)
+          Assignments = m.Assignments.Append(Assignment).DistinctBy(a => a.Name)
         }
     );
 
