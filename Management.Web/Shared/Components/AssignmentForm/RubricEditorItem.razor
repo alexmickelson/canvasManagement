@@ -15,16 +15,17 @@
 
   private int points { get;  set; }
   private string label { get; set; }
-  private string lastRubricItemId { get; set; }
+  private bool firstLoad = true;
   protected override void OnParametersSet()
   {
-    if(RubricItem.Id != lastRubricItemId)
+    if(firstLoad)
     {
-      lastRubricItemId = RubricItem.Id;
+      firstLoad = false;
       points = RubricItem.Points;
       label = RubricItem.Label;
     }
   }
+
 
   private void editItem(string label, int points)
   {

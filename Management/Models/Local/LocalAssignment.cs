@@ -5,7 +5,6 @@ namespace LocalModels;
 public record RubricItem
 {
   public static readonly string extraCredit = "(Extra Credit) ";
-  public string Id { get; set; } = "";
   public string Label { get; set; } = "";
   public int Points { get; set; } = 0;
   public bool IsExtraCredit => Label.Contains(extraCredit);
@@ -40,7 +39,6 @@ public static class SubmissionType
 
 public record LocalAssignment
 {
-  public string Id { get; init; } = "";
   public ulong? CanvasId { get; init; } = null;
   public string Name { get; init; } = "";
   public string Description { get; init; } = "";

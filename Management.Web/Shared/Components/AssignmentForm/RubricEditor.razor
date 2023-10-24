@@ -48,7 +48,6 @@
     {
       rubric = rubric.Append(new RubricItem
       {
-        Id = Guid.NewGuid().ToString(),
         Label = "",
         Points = 0
       });
@@ -62,11 +61,11 @@
       save();
     }
   }
-  private void editItem(RubricItem newItem)
+  private void editItem(RubricItem newItem, int index)
   {
     if (assignmentContext.Assignment != null)
     {
-      rubric = rubric.Select(i => i.Id == newItem.Id ? newItem : i);
+      rubric = rubric.Select((r, i) => i == index ? newItem : r);
       save();
     }
   }
@@ -85,6 +84,7 @@
         rubric = rubricList;
         save();
       }
+      StateHasChanged();
     }
   }
   private void MoveDown(RubricItem item)
@@ -102,6 +102,7 @@
         rubric = rubricList;
         save();
       }
+      StateHasChanged();
     }
   }
 
@@ -129,11 +130,12 @@
 </div>
 
 <ul class="list-group">
-@foreach (var rubricItem in rubric)
+@foreach (var (rubricItem, index) in rubric.Select((r, i) => (r, i)))
   {
-    <RubricEditorItem 
+    <RubricEditorItem
+      @key="@(rubricItem with {Label = ""})"
       RubricItem="rubricItem" 
-      OnUpdate="editItem"
+      OnUpdate="(newItem) => editItem(newItem, index)"
       MoveUp="() => MoveUp(rubricItem)"
       MoveDown="() => MoveDown(rubricItem)"
     />
