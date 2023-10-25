@@ -131,7 +131,7 @@
 @foreach (var (rubricItem, index) in rubric.Select((r, i) => (r, i)))
   {
     <RubricEditorItem
-      @key="@($"index-{index}-key-{rubricReloadKey}")"
+      @key="@($"index-{index}-key-{rubricReloadKey}-extra-credit-{rubricItem.IsExtraCredit}")"
       RubricItem="rubricItem" 
       OnUpdate="(newItem) => editItem(newItem, index)"
       MoveUp="() => MoveUp(rubricItem)"
