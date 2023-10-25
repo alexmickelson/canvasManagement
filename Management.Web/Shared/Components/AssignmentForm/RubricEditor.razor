@@ -6,6 +6,7 @@
 @code
 {
   private IEnumerable<RubricItem> rubric { get; set; } = Array.Empty<RubricItem>();
+  private int rubricReloadKey = 0;
 
   protected override void OnInitialized()
   {
@@ -79,6 +80,7 @@
         rubric = rubricList;
         save();
       }
+      rubricReloadKey++;
       StateHasChanged();
     }
   }
@@ -97,6 +99,7 @@
         rubric = rubricList;
         save();
       }
+      rubricReloadKey++;
       StateHasChanged();
     }
   }
@@ -128,7 +131,7 @@
 @foreach (var (rubricItem, index) in rubric.Select((r, i) => (r, i)))
   {
     <RubricEditorItem
-      @key="@(rubricItem with {Label = ""})"
+      @key="@($"index-{index}-key-{rubricReloadKey}")"
       RubricItem="rubricItem" 
       OnUpdate="(newItem) => editItem(newItem, index)"
       MoveUp="() => MoveUp(rubricItem)"
