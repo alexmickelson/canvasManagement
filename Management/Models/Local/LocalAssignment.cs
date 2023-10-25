@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Text.RegularExpressions;
 using YamlDotNet.Serialization;
 
 namespace LocalModels;
@@ -5,8 +7,8 @@ namespace LocalModels;
 public record RubricItem
 {
   public static readonly string extraCredit = "(Extra Credit) ";
-  public string Label { get; set; } = "";
-  public int Points { get; set; } = 0;
+  public required string Label { get; set; }
+  public required int Points { get; set; }
   public bool IsExtraCredit => Label.Contains(extraCredit.ToLower(), StringComparison.CurrentCultureIgnoreCase);
 }
 
@@ -94,4 +96,32 @@ public record LocalAssignment
 
     return assignmentMarkdown;
   }
+
+  public static IEnumerable<RubricItem> ParseRubricMarkdown(string rawMarkdown)
+  {
+    var lines = rawMarkdown.Trim().Split(Environment.NewLine);
+    var items = lines.Select(l =>
+    {
+      var pointsPattern = @"\s*-\s*(\d+)\s*pt(s)?:";
+      var match = Regex.Match(l, pointsPattern);
+      if (!match.Success)
+        throw new RubricMarkdownParseException($"points not found: {l}");
+
+      var points = int.Parse(match.Groups[1].Value);
+
+      var label = string.Join(": ", l.Split(": ").Skip(1));
+
+      return new RubricItem()
+      {
+        Points = points,
+        Label = label
+      };
+    }).ToArray();
+    return items;
+  }
+}
+
+public class RubricMarkdownParseException : Exception
+{
+  public RubricMarkdownParseException(string message) : base(message) { }
 }

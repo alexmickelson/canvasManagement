@@ -1,0 +1,95 @@
+@using Management.Web.Shared.Components
+
+@inject CoursePlanner planner
+@inject AssignmentEditorContext assignmentContext
+
+@code
+{
+  private IEnumerable<RubricItem> rubric { get; set; } = Array.Empty<RubricItem>();
+  private string rubricText = "";
+  private int rubricReloadKey = 0;
+
+  protected override void OnInitialized()
+  {
+    assignmentContext.StateHasChanged += reload;
+    reload();
+  }
+  private void reload()
+  {
+    if (assignmentContext.Assignment != null)
+    {
+      rubric = assignmentContext.Assignment.Rubric;
+    }
+    this.InvokeAsync(this.StateHasChanged);
+  }
+  public void Dispose()
+  {
+    assignmentContext.StateHasChanged -= reload;
+  }
+
+  private void save()
+  {
+    if (assignmentContext.Assignment != null)
+    {
+      var newAssignment = assignmentContext.Assignment with
+        {
+          Rubric = rubric,
+        };
+      assignmentContext.SaveAssignment(newAssignment);
+      StateHasChanged();
+    }
+  }
+
+  private void handleNewRubricText()
+  {
+    
+  }
+
+  private int requiredPoints => rubric.Where(r => !r.IsExtraCredit).Select(r => r.Points).Sum();
+  private int extraCreditPoints => rubric.Where(r => r.IsExtraCredit).Select(r => r.Points).Sum();
+}
+
+<br>
+<div class="row">
+
+  <div class="col offset-3">
+    <h4 class="text-center">Rubric</h4>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col">
+    <label for="description" class="form-label">
+      Rubric
+    </label>
+  </div>
+  <div class="col">
+    HTML Preview
+  </div>
+</div>
+<div class="row">
+  <div class="col-6">
+    <textarea 
+      id="description" 
+      class="form-control h-100" 
+      rows=12
+      @bind="rubricText"
+      @oninput="handleNewRubricText"
+    />
+  </div>
+  <div class="col-6">
+    preview here
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="col">
+    <div>
+      Requred Points: @requiredPoints
+    </div>
+    <div>
+      Extra Credit Points @extraCreditPoints
+    </div>
+  </div>
+</div>
