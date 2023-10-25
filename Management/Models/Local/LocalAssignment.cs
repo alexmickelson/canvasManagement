@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using System.Text.RegularExpressions;
 using YamlDotNet.Serialization;
 
@@ -97,27 +98,40 @@ public record LocalAssignment
     return assignmentMarkdown;
   }
 
+  public string RubricToMarkdown()
+  {
+    var builder = new StringBuilder();
+    foreach (var item in Rubric)
+    {
+      var pointLabel = item.Points > 1 ? "pts" : "pt";
+      builder.Append($"- {item.Points}{pointLabel}: {item.Label}" + Environment.NewLine);
+    }
+    return builder.ToString();
+  }
+
   public static IEnumerable<RubricItem> ParseRubricMarkdown(string rawMarkdown)
   {
     var lines = rawMarkdown.Trim().Split(Environment.NewLine);
-    var items = lines.Select(l =>
-    {
-      var pointsPattern = @"\s*-\s*(\d+)\s*pt(s)?:";
-      var match = Regex.Match(l, pointsPattern);
-      if (!match.Success)
-        throw new RubricMarkdownParseException($"points not found: {l}");
-
-      var points = int.Parse(match.Groups[1].Value);
-
-      var label = string.Join(": ", l.Split(": ").Skip(1));
-
-      return new RubricItem()
-      {
-        Points = points,
-        Label = label
-      };
-    }).ToArray();
+    var items = lines.Select(parseIndividualRubricItemMarkdown).ToArray();
     return items;
+  }
+
+  private static RubricItem parseIndividualRubricItemMarkdown(string rawMarkdown)
+  {
+    var pointsPattern = @"\s*-\s*(\d+)\s*pt(s)?:";
+    var match = Regex.Match(rawMarkdown, pointsPattern);
+    if (!match.Success)
+      throw new RubricMarkdownParseException($"points not found: {rawMarkdown}");
+
+    var points = int.Parse(match.Groups[1].Value);
+
+    var label = string.Join(": ", rawMarkdown.Split(": ").Skip(1));
+
+    return new RubricItem()
+    {
+      Points = points,
+      Label = label
+    };
   }
 }
 
