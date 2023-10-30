@@ -41,14 +41,15 @@
       if (assignmentContext.Assignment == null)
       {
         var assignment = planner
-        .LocalCourse?
-        .Modules
-        .SelectMany(m => m.Assignments)
-        .FirstOrDefault(a => a.Name == AssignmentName);
+          .LocalCourse?
+          .Modules
+          .SelectMany(m => m.Assignments)
+          .FirstOrDefault(a => a.Name == AssignmentName);
 
         assignmentContext.Assignment = assignment;
         logger.LogInformation($"set assignment to '{assignmentContext.Assignment?.Name}'");
       }
+      await planner.LoadCanvasData();
       base.OnInitialized();
       StateHasChanged();
     }

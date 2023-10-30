@@ -64,9 +64,10 @@ public static partial class AssignmentSyncronizationExtensions
     {
       await canvas.Assignments.Update(
         courseId: canvasCourseId,
+        canvasAssignmentId: (ulong) localAssignment.CanvasId,
         localAssignment,
         localHtmlDescription,
-        canvasAssignmentGroupId
+        (ulong)canvasAssignmentGroupId
       );
     }
     return canvasAssignment.Id;

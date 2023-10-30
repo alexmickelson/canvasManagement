@@ -5,10 +5,40 @@
 
 @code
 {
-  private IEnumerable<RubricItem> rubric { get; set; } = Array.Empty<RubricItem>();
-  private string rubricText = "";
+  private IEnumerable<RubricItem> displayRubric { get; set; } = new RubricItem[] {};
+  private string _rubricText = "";
+  private string rubricText
+  {
+    get => _rubricText;
+    set
+    {
+      _rubricText = value;
+
+      try
+      {
+        var parsedRubric = LocalAssignment.ParseRubricMarkdown(value);
+        displayRubric = parsedRubric;
+        error = null;
+        if (assignmentContext.Assignment != null)
+        {
+          var newAssignment = assignmentContext.Assignment with
+          {
+            Rubric = parsedRubric,
+          };
+          assignmentContext.SaveAssignment(newAssignment);
+        }
+      }
+      catch (RubricMarkdownParseException parseError)
+      {
+        error = parseError.Message;
+      }
+
+      StateHasChanged();
+    }
+  }
   private int rubricReloadKey = 0;
 
+  private string? error { get; set; } = null;
 
   protected override void OnInitialized()
   {
@@ -19,55 +49,28 @@
   {
     if (assignmentContext.Assignment != null)
     {
-      rubric = assignmentContext.Assignment.Rubric;
+      if(rubricText == string.Empty)
+      {
+        rubricText = assignmentContext.Assignment.RubricToMarkdown();
+      }
     }
     this.InvokeAsync(this.StateHasChanged);
   }
+
   public void Dispose()
   {
     assignmentContext.StateHasChanged -= reload;
   }
 
-  private void save()
-  {
-    if (assignmentContext.Assignment != null)
-    {
-      var newAssignment = assignmentContext.Assignment with
-        {
-          Rubric = rubric,
-        };
-      assignmentContext.SaveAssignment(newAssignment);
-      StateHasChanged();
-    }
-  }
-
-  private void handleNewRubricText()
-  {
-    
-  }
-
-  private int requiredPoints => rubric.Where(r => !r.IsExtraCredit).Select(r => r.Points).Sum();
-  private int extraCreditPoints => rubric.Where(r => r.IsExtraCredit).Select(r => r.Points).Sum();
+  private int requiredPoints => displayRubric.Where(r => !r.IsExtraCredit).Select(r => r.Points).Sum();
+  private int extraCreditPoints => displayRubric.Where(r => r.IsExtraCredit).Select(r => r.Points).Sum();
 }
 
 <br>
 <div class="row">
-
-  <div class="col offset-3">
     <h4 class="text-center">Rubric</h4>
-  </div>
 </div>
 
-<div class="row">
-  <div class="col">
-    <label for="description" class="form-label">
-      Rubric
-    </label>
-  </div>
-  <div class="col">
-    HTML Preview
-  </div>
-</div>
 <div class="row">
   <div class="col-6">
     <textarea 
@@ -75,22 +78,37 @@
       class="form-control h-100" 
       rows=12
       @bind="rubricText"
-      @oninput="handleNewRubricText"
+      @bind:event="oninput" 
     />
   </div>
   <div class="col-6">
-    preview here
+    @if (error != null)
+    {
+      <p class="text-danger text-truncate">Error: @error</p>
+    }
+    
+    <div class="row border-bottom">
+      <div class="col-6 text-end">Label</div>
+      <div class="col-3 text-center">Points</div>
+      <div class="col-3 text-center">Extra Credit</div>
+    </div>
+    @foreach(var item in displayRubric)
+    {
+      <div class="row border-bottom">
+        <div class="col-6 text-end">@item.Label</div>
+        <div class="col-3 text-center">@item.Points</div>
+        <div class="col-3 text-center">@item.IsExtraCredit</div>
+      </div>
+    }
+    <div class="text-end">
+      <div>
+        Required Points: @requiredPoints
+      </div>
+      <div>
+        Extra Credit Points @extraCreditPoints
+      </div>
+    </div>
   </div>
 </div>
 
 
-<div class="row">
-  <div class="col">
-    <div>
-      Requred Points: @requiredPoints
-    </div>
-    <div>
-      Extra Credit Points @extraCreditPoints
-    </div>
-  </div>
-</div>

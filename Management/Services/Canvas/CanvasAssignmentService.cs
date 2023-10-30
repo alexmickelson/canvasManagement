@@ -69,19 +69,20 @@ public class CanvasAssignmentService
 
   public async Task Update(
     ulong courseId,
+    ulong canvasAssignmentId,
     LocalAssignment localAssignment,
     string htmlDescription,
-    ulong? canvasAssignmentGroupId
+    ulong canvasAssignmentGroupId
   )
   {
     log.Log($"updating assignment: {localAssignment.Name}");
-    var url = $"courses/{courseId}/assignments/{localAssignment.CanvasId}";
+    var url = $"courses/{courseId}/assignments/{canvasAssignmentId}";
     var request = new RestRequest(url);
     var body = new
     {
       name = localAssignment.Name,
       submission_types = localAssignment.SubmissionTypes.Select(t => t.ToString()),
-      description = htmlDescription,
+      description = localAssignment.GetDescriptionHtml(),
       due_at = localAssignment.DueAt,
       lock_at = localAssignment.LockAtDueDate ? localAssignment.DueAt : localAssignment.LockAt,
       points_possible = localAssignment.PointsPossible,
@@ -92,7 +93,7 @@ public class CanvasAssignmentService
     
     await webRequestor.PutAsync(request);
 
-    await CreateRubric(courseId, (ulong)localAssignment.CanvasId, localAssignment);
+    await CreateRubric(courseId, canvasAssignmentId, localAssignment);
   }
 
   public async Task Delete(ulong courseId, ulong assignmentCanvasId, string assignmentName)

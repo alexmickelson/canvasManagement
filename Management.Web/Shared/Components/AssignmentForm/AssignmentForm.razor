@@ -144,6 +144,16 @@
     await planner.LoadCanvasData();
     addingAssignmentToCanvas = false;
   }
+  private async Task updateInCanvas()
+  {
+    if(assignmentInCanvas != null)
+    {
+      addingAssignmentToCanvas = true;
+      await assignmentContext.UpdateInCanvas(assignmentInCanvas.Id);
+      await planner.LoadCanvasData();
+      addingAssignmentToCanvas = false;
+    }
+  }
 
   private CanvasAssignment? assignmentInCanvas =>
     planner.CanvasAssignments?.FirstOrDefault(a => a.Name == assignmentContext.Assignment?.Name);
@@ -153,16 +163,20 @@
 
   private async Task deleteFromCanvas()
   {
-    if (assignmentInCanvas == null || planner.LocalCourse.Settings.CanvasId == null || assignmentContext.Assignment == null)
+    if (assignmentInCanvas == null 
+      || planner.LocalCourse.Settings.CanvasId == null 
+      || assignmentContext.Assignment == null
+    )
       return;
+      
     deletingAssignmentFromCanvas = true;
     await canvas.Assignments.Delete(
       (ulong)planner.LocalCourse.Settings.CanvasId, 
       assignmentInCanvas.Id,
       assignmentContext.Assignment.Name);
     await planner.LoadCanvasData();
-    StateHasChanged();
     deletingAssignmentFromCanvas = false;
+    StateHasChanged();
   }
 }
 
@@ -224,6 +238,13 @@
     >
       View in Canvas
     </a>
+    <button 
+      class="btn btn-outline-secondary mx-3" 
+      disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
+      @onclick="updateInCanvas"
+    >
+      Update In Canvas
+    </button>
     <ConfirmationModal 
       Disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
       Label="Delete from Canvas" 

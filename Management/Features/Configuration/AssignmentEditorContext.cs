@@ -39,10 +39,7 @@ public class AssignmentEditorContext
     if (planner.LocalCourse != null)
     {
       // run discovery on Assignment, it was the last stored version of the assignment
-      var currentModule =
-        planner.LocalCourse.Modules.First(
-          m => m.Assignments.Contains(Assignment)
-        ) ?? throw new Exception("could not find current module in assignment editor context");
+      var currentModule = getCurrentModule(Assignment, planner.LocalCourse);
 
       var updatedModules = planner.LocalCourse.Modules
         .Select(
@@ -61,6 +58,56 @@ public class AssignmentEditorContext
       Assignment = newAssignment;
       planner.LocalCourse = planner.LocalCourse with { Modules = updatedModules };
     }
+  }
+
+  public async Task UpdateInCanvas(ulong canvasAssignmentId)
+  {
+    logger.Log("started to update assignment in canvas");
+    if (Assignment == null)
+    {
+      logger.Log("cannot update null assignment in canvas");
+      return;
+    }
+
+
+    await planner.LoadCanvasData();
+    if (planner.CanvasAssignments == null)
+    {
+      logger.Log("cannot update assignment in canvas, failed to retrieve current assignments");
+      return;
+    }
+    if (planner.LocalCourse == null)
+    {
+      logger.Log("cannot update assignment in canvas, no course stored in planner");
+      return;
+    }
+    if (planner.LocalCourse.Settings.CanvasId == null)
+    {
+      logger.Log("Cannot update assignment with null local course canvas id");
+      return;
+    }
+    var assignmentInCanvas = planner.CanvasAssignments?.FirstOrDefault(a => a.Id == canvasAssignmentId);
+    if (assignmentInCanvas == null)
+    {
+      logger.Log("cannot update assignment in canvas, could not find canvas assignment with id: " + canvasAssignmentId);
+      return;
+    }
+    var canvasAssignmentGroupId = Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups);
+
+    if (canvasAssignmentGroupId == null)
+    {
+
+      logger.Log("cannot update assignment in canvas, could not get assignment group id: " + assignmentInCanvas.AssignmentGroupId);
+      return;
+    }
+
+    await canvas.Assignments.Update(
+      courseId: (ulong)planner.LocalCourse.Settings.CanvasId,
+      canvasAssignmentId: canvasAssignmentId,
+      localAssignment: Assignment,
+      htmlDescription: Assignment.GetDescriptionHtml(),
+      canvasAssignmentGroupId: (ulong)canvasAssignmentGroupId
+    );
   }
 
   public async Task AddAssignmentToCanvas()
@@ -120,13 +167,12 @@ public class AssignmentEditorContext
       canvas
     );
     logger.Log($"finished adding assignment {Assignment.Name} to canvas");
-
   }
 
   private static LocalModule getCurrentModule(LocalAssignment assignment, LocalCourse course)
   {
     return course.Modules.FirstOrDefault(
-      m => m.Assignments.Contains(assignment)
+      m => m.Assignments.Select(a => a.Name).Contains(assignment.Name)
     )
       ?? throw new Exception("could not find current module in assignment editor context");
   }
