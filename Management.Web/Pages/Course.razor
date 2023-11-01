@@ -39,6 +39,9 @@
 
 }
 
+<div style="height: 100vh;">
+  
+
 @if (loading)
 {
   <Spinner />
@@ -46,7 +49,7 @@
 
 @if (planner.LocalCourse != null)
 {
-  <div class="mb-3 d-flex justify-content-between" style="height: 4em;">
+  <div class="pb-3 d-flex justify-content-between" style="height: 4em;">
   <div class="my-auto">
     <button @onclick="selectNewCourse" class="btn btn-primary">
       Select New Course
@@ -73,4 +76,5 @@
   </div>
   <CourseDetails />
 }
-<br>
+
+</div>
