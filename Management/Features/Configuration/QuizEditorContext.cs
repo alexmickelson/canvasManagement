@@ -1,4 +1,5 @@
 using System.Reflection.Metadata.Ecma335;
+using CanvasModel.Modules;
 using LocalModels;
 using Management.Planner;
 using Management.Services;
@@ -32,7 +33,7 @@ public class QuizEditorContext
     {
       if (_quiz == null && value != null)
       {
-        _module = getCurrentModule(value, planner.LocalCourse);
+        _module = getCurrentLocalModule(value, planner.LocalCourse);
       }
       _quiz = value;
       StateHasChanged?.Invoke();
@@ -115,16 +116,11 @@ public class QuizEditorContext
       return;
     }
 
-    var currentModule = getCurrentModule(Quiz, planner.LocalCourse);
-    if (currentModule.CanvasId == null)
-    {
-      logger.Log("was able to add quiz to canvas, but errored while making module item. module canvasId is null");
-      return;
-    }
+    var canvasModule = getCurrentCanvasModule(Quiz, planner.LocalCourse);
 
     await canvas.CreateModuleItem(
       (ulong)courseCanvasId,
-      (ulong)currentModule.CanvasId,
+      canvasModule.Id,
       Quiz.Name,
       "Quiz",
       (ulong)canvasQuizId
@@ -132,17 +128,25 @@ public class QuizEditorContext
 
     await planner.LocalCourse.Modules.First().SortModuleItems(
       (ulong)courseCanvasId,
-      (ulong)currentModule.CanvasId,
+      canvasModule.Id,
       canvas
     );
     logger.Log($"finished adding quiz {Quiz.Name} to canvas");
   }
 
-  private static LocalModule getCurrentModule(LocalQuiz quiz, LocalCourse course)
+  private static LocalModule getCurrentLocalModule(LocalQuiz quiz, LocalCourse course)
   {
     return course.Modules.FirstOrDefault(
       m => m.Quizzes.Select(q => q.Name + q.Description).Contains(quiz.Name + quiz.Description)
     )
       ?? throw new Exception("could not find current module in quiz editor context");
+  }
+
+  private CanvasModule getCurrentCanvasModule(LocalQuiz quiz, LocalCourse course)
+  {
+    var localModule = getCurrentLocalModule(quiz, course);
+    var canvasModule = planner.CanvasModules?.FirstOrDefault(m => m.Name == localModule.Name)
+      ?? throw new Exception($"error in quiz context, canvas module with name {localModule.Name} not found in planner");
+    return canvasModule;
   }
 }

@@ -1,3 +1,4 @@
+using CanvasModel.Modules;
 using LocalModels;
 using Management.Planner;
 using Management.Services;
@@ -39,7 +40,7 @@ public class AssignmentEditorContext
     if (planner.LocalCourse != null)
     {
       // run discovery on Assignment, it was the last stored version of the assignment
-      var currentModule = getCurrentModule(Assignment, planner.LocalCourse);
+      var currentModule = getCurrentLocalModule(Assignment, planner.LocalCourse);
 
       var updatedModules = planner.LocalCourse.Modules
         .Select(
@@ -146,16 +147,11 @@ public class AssignmentEditorContext
       canvas: canvas
     );
 
-    var currentModule = getCurrentModule(Assignment, planner.LocalCourse);
-    if (currentModule.CanvasId == null)
-    {
-      logger.Log("was able to add assignment to canvas, but errored while making module item. module canvasId is null");
-      return;
-    }
+    var canvasModule = getCurrentCanvasModule(Assignment, planner.LocalCourse);
 
     await canvas.CreateModuleItem(
       (ulong)courseCanvasId,
-      (ulong)currentModule.CanvasId,
+      canvasModule.Id,
       Assignment.Name,
       "Assignment",
       createdAssignmentCanvasId
@@ -163,17 +159,25 @@ public class AssignmentEditorContext
 
     await planner.LocalCourse.Modules.First().SortModuleItems(
       (ulong)courseCanvasId,
-      (ulong)currentModule.CanvasId,
+      canvasModule.Id,
       canvas
     );
     logger.Log($"finished adding assignment {Assignment.Name} to canvas");
   }
 
-  private static LocalModule getCurrentModule(LocalAssignment assignment, LocalCourse course)
+  private static LocalModule getCurrentLocalModule(LocalAssignment assignment, LocalCourse course)
   {
     return course.Modules.FirstOrDefault(
       m => m.Assignments.Select(a => a.Name).Contains(assignment.Name)
     )
       ?? throw new Exception("could not find current module in assignment editor context");
+  }
+
+  private CanvasModule getCurrentCanvasModule(LocalAssignment assignment, LocalCourse course)
+  {
+    var localModule = getCurrentLocalModule(assignment, course);
+    var canvasModule = planner.CanvasModules?.FirstOrDefault(m => m.Name == localModule.Name)
+      ?? throw new Exception($"error in assignment context, canvas module with name {localModule.Name} not found in planner");
+    return canvasModule;
   }
 }

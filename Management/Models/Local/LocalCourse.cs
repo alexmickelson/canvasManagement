@@ -27,6 +27,16 @@ public record LocalCourseSettings
     var yaml = serializer.Serialize(this);
     return yaml;
   }
+
+  public static LocalCourseSettings ParseYaml(string rawText)
+  {
+    var deserializer = new DeserializerBuilder()
+      .IgnoreUnmatchedProperties()
+      .Build();
+
+    var settings = deserializer.Deserialize<LocalCourseSettings>(rawText);
+    return settings;
+  }
 }
 
 public record SimpleTimeOnly

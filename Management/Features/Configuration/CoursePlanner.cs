@@ -76,12 +76,12 @@ public class CoursePlanner
   public IEnumerable<CanvasAssignmentGroup>? CanvasAssignmentGroups { get; internal set; }
   public IEnumerable<CanvasQuiz>? CanvasQuizzes { get; internal set; }
   public IEnumerable<CanvasModule>? CanvasModules { get; internal set; }
-  public Dictionary<ulong, IEnumerable<CanvasModuleItem>>? CanvasModulesItems { get; internal set; }
+  public Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>>? CanvasModulesItems { get; internal set; }
 
   public async Task<(
     IEnumerable<CanvasAssignment> CanvasAssignments,
     IEnumerable<CanvasModule> CanvasModules,
-    Dictionary<ulong, IEnumerable<CanvasModuleItem>> CanvasModulesItems,
+    Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> CanvasModulesItems,
     IEnumerable<CanvasQuiz> canvasQuizzes,
     IEnumerable<CanvasAssignmentGroup> canvasAssignmentGroups
   )> LoadCanvasData()
@@ -155,12 +155,11 @@ public class CoursePlanner
     };
 
 
-    var newModules = await LocalCourse.CreateAllModules(
+    await LocalCourse.CreateAllModules(
       canvasId,
       CanvasModules,
       canvas
     );
-    LocalCourse = LocalCourse with { Modules = newModules };
     CanvasModules = await canvas.Modules.GetModules(canvasId);
 
     await LocalCourse.SortCanvasModulesByLocalOrder(canvasId, CanvasModules, canvas);

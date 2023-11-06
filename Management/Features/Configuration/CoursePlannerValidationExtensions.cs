@@ -87,7 +87,7 @@ public static class CoursePlannerExtensions
     IEnumerable<CanvasQuiz> canvasQuizzes
   )
   {
-    var moduleIdInCanvas = canvasModules.FirstOrDefault(m => m.Id == module.CanvasId) != null;
+    var moduleIdInCanvas = canvasModules.FirstOrDefault(m => m.Name == module.Name) != null;
     var moduleWithAssignments = module with
     {
       Assignments = module.Assignments
@@ -100,7 +100,7 @@ public static class CoursePlannerExtensions
       Console.WriteLine(
         $"no id in canvas for module, removing old canvas id: {moduleWithAssignments.Name}"
       );
-      return moduleWithAssignments with { CanvasId = null };
+      return moduleWithAssignments;
     }
     return moduleWithAssignments;
   }

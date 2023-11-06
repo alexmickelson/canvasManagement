@@ -57,9 +57,9 @@
     <CourseSettings />
     <AssignmentTemplateManagement />
 
-    <button class="btn btn-outline-primary" @onclick="planner.SyncWithCanvas">
+    @* <button class="btn btn-outline-primary" @onclick="planner.SyncWithCanvas">
       Sync With Canvas
-    </button>
+    </button> *@
     <a class="btn btn-outline-secondary" target="_blank"
       href="@($"{Environment.GetEnvironmentVariable("CANVAS_URL")}/courses/{planner.LocalCourse.Settings.CanvasId}")">
       View In Canvas

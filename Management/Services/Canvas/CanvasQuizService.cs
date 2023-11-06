@@ -1,27 +1,18 @@
-using System.Runtime.InteropServices;
-using System.Security.Cryptography.X509Certificates;
 using CanvasModel.Quizzes;
 using LocalModels;
 using RestSharp;
 
 namespace Management.Services.Canvas;
 
-public class CanvasQuizService
+public class CanvasQuizService(
+  IWebRequestor webRequestor,
+  CanvasServiceUtils utils,
+  CanvasAssignmentService assignments
+)
 {
-  private readonly IWebRequestor webRequestor;
-  private readonly CanvasServiceUtils utils;
-  private readonly CanvasAssignmentService assignments;
-
-  public CanvasQuizService(
-    IWebRequestor webRequestor,
-    CanvasServiceUtils utils,
-    CanvasAssignmentService assignments
-  )
-  {
-    this.webRequestor = webRequestor;
-    this.utils = utils;
-    this.assignments = assignments;
-  }
+  private readonly IWebRequestor webRequestor = webRequestor;
+  private readonly CanvasServiceUtils utils = utils;
+  private readonly CanvasAssignmentService assignments = assignments;
 
   public async Task<IEnumerable<CanvasQuiz>> GetAll(ulong courseId)
   {

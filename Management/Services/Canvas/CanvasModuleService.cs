@@ -65,7 +65,7 @@ public class CanvasModuleService
     return items;
   }
 
-  public async Task<Dictionary<ulong, IEnumerable<CanvasModuleItem>>> GetAllModulesItems(
+  public async Task<Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>>> GetAllModulesItems(
     ulong courseId,
     IEnumerable<CanvasModule> modules
   )
@@ -78,7 +78,7 @@ public class CanvasModuleService
       }
     );
 
-    var output = new Dictionary<ulong, IEnumerable<CanvasModuleItem>>();
+    var output = new Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>>();
     var itemTasksResult = await Task.WhenAll(itemsTasks);
     foreach (var (module, items) in itemTasksResult)
     {
@@ -86,7 +86,7 @@ public class CanvasModuleService
         throw new Exception(
           "i'm not sure how we got here, but module and items are null after looking up module items"
         );
-      output[module.Id] = items;
+      output[module] = items;
     }
     return output;
   }
