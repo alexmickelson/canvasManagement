@@ -165,8 +165,6 @@ public class CoursePlanner
     await LocalCourse.SortCanvasModulesByLocalOrder(canvasId, CanvasModules, canvas);
     CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
 
-    LocalCourse = await LocalCourse.GetCanvasIdsForLocalModules(canvasId, canvas);
-
     LocalCourse = await LocalCourse.SyncAssignmentsWithCanvas(canvasId, CanvasAssignments, canvas);
     CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
 
@@ -180,6 +178,15 @@ public class CoursePlanner
     Console.WriteLine("done syncing with canvas\n");
   }
 
+  public async Task CreateModule(LocalModule newModule)
+  {
+    if(LocalCourse == null)
+      return;
+    var canvasCourseId =
+      LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to use to create module");
+    await canvas.Modules.CreateModule(canvasCourseId, newModule.Name);
+    CanvasModules = await canvas.Modules.GetModules(canvasCourseId);
+  }
 
   public void Clear()
   {

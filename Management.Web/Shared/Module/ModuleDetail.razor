@@ -1,4 +1,3 @@
-
 @using Management.Web.Shared.Components
 @using Management.Web.Shared.Components.Quiz
 @using Management.Web.Shared.Module.Assignment
@@ -13,28 +12,29 @@
 @code {
   [Parameter, EditorRequired]
   public LocalModule Module { get; set; } = default!;
-  private bool dragging {get; set;} = false;
+  private bool dragging { get; set; } = false;
+  private bool publishing = false;
   private string _notes { get; set; } = "";
   private string notes
   {
     get => _notes;
     set
     {
-      if(value != _notes)
+      if (value != _notes)
       {
         _notes = value;
-        if(planner.LocalCourse  != null)
+        if (planner.LocalCourse != null)
         {
           var newModule = Module with { Notes = _notes };
           var newModules = planner.LocalCourse.Modules.Select(
-            m => m.Name == newModule.Name
-              ? newModule
-              : m
+          m => m.Name == newModule.Name
+          ? newModule
+          : m
           );
-          planner.LocalCourse = planner.LocalCourse with 
-          {
-            Modules = newModules
-          };
+          planner.LocalCourse = planner.LocalCourse with
+            {
+              Modules = newModules
+            };
         }
       }
     }
@@ -43,7 +43,7 @@
 
   protected override void OnInitialized()
   {
-    if(_notes == string.Empty)
+    if (_notes == string.Empty)
     {
       _notes = Module.Notes;
     }
@@ -59,21 +59,25 @@
     planner.StateHasChanged -= reload;
   }
 
-  private string accordionId {
+  private string accordionId
+  {
     get => Module.Name.Replace(" ", "").Replace("#", "") + "-AccordionItem";
   }
 
-  void OnDragEnter() {
+  void OnDragEnter()
+  {
     dragging = true;
-    }
-    void OnDragLeave() {
+  }
+  void OnDragLeave()
+  {
     dragging = false;
   }
 
   void OnDrop()
   {
     dragging = false;
-    if(dragContainer.DropCallback == null){
+    if (dragContainer.DropCallback == null)
+    {
       System.Console.WriteLine("no drop callback set");
       return;
     }
@@ -85,76 +89,84 @@
     .FirstOrDefault(
       cm => cm.Name == Module.Name
     ) != null;
+  private async Task Publish()
+  {
+    publishing = true;
+    await planner.CreateModule(Module);
+    publishing = false;
+  }
 }
 
-<div 
-  class="@("accordion-item " + (dragging ? "" : ""))"
-  @ondrop="@(() => OnDrop())"
-  @ondragenter="OnDragEnter"
-  @ondragleave="OnDragLeave"
-  ondragover="event.preventDefault();"
->
+<div class="@("accordion-item " + (dragging ? "" : ""))" @ondrop="@(() => OnDrop())" @ondragenter="OnDragEnter"
+  @ondragleave="OnDragLeave" ondragover="event.preventDefault();">
   <h2 class="accordion-header">
-    <button 
-      class="accordion-button collapsed" 
-      type="button" 
-      data-bs-toggle="collapse" 
-      data-bs-target="@("#" + accordionId)" 
-      aria-controls="@accordionId"
-    >
-    <div class="w-100 d-flex justify-content-between pe-3">
-      <div>
-        @Module.Name
+    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+      data-bs-target="@("#" + accordionId)" aria-controls="@accordionId">
+      <div class="w-100 d-flex justify-content-between pe-3">
+        <div>
+          @Module.Name
+        </div>
+        @if (isSyncedWithCanvas)
+        {
+          <CheckIcon />
+        }
+        else
+        {
+          <SyncIcon />
+        }
       </div>
-      @if(isSyncedWithCanvas)
-      {
-        <CheckIcon />
-      }
-      else
-      {
-        <SyncIcon />
-      }
-    </div>
     </button>
-    
+
   </h2>
-  <div 
-    id="@accordionId" 
-    class="accordion-collapse collapse" 
-  >
+  <div id="@accordionId" class="accordion-collapse collapse">
     <div class="accordion-body pt-1">
       @* <textarea
-        class="form-control"
-        @bind="notes"
-        @bind:event="oninput"
-        placeholder="notes for the module"
-        rows="6"
+      class="form-control"
+      @bind="notes"
+      @bind:event="oninput"
+      placeholder="notes for the module"
+      rows="6"
       /> *@
       <div class="row m-1">
         <div class="col my-auto">
-          <RenameModule Module="Module"  />
+          <RenameModule Module="Module" />
         </div>
-        <div class="col-auto">
-          <NewQuiz
-            Module="Module" 
-          />
-          <NewAssignment 
-            Module="Module" 
-          />
+        <div class="col my-auto">
+          @if(publishing)
+          {
+            <Spinner />
+          }
+          else 
+          {
+            if(!isSyncedWithCanvas)
+            {
+              <button 
+                class="btn btn-outline-primary"
+                @onclick="Publish" 
+                disabled="@publishing"
+              >
+                Publish
+              </button>
+            }
+          }
+        </div>
+        <div class="col-auto my-auto">
+          <NewQuiz Module="Module" />
+          <NewAssignment Module="Module" />
         </div>
       </div>
-        <h5>Assignments</h5>
-      
+      <h5>Assignments</h5>
+
       <div class="row">
-      @foreach (var a in Module.Assignments)
-      {
-        <AssignmentListItem Assignment="a" Module="Module" />
-      }
-      <br>
-      @foreach(var quiz in Module.Quizzes)
-      {
-        <QuizListItem Quiz="quiz" />
-      }
+        @foreach (var a in Module.Assignments)
+        {
+          <AssignmentListItem Assignment="a" Module="Module" />
+        }
+        <br>
+        @foreach (var quiz in Module.Quizzes)
+        {
+          <QuizListItem Quiz="quiz" />
+        }
       </div>
     </div>
   </div>

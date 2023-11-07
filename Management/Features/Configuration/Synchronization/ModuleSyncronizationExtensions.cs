@@ -51,23 +51,6 @@ public static partial class ModuleSyncronizationExtensions
     }
   }
 
-  internal static async Task<LocalCourse> GetCanvasIdsForLocalModules(
-    this LocalCourse localCourse,
-    ulong canvasId,
-    CanvasService canvas
-  )
-  {
-    // var canvasModules = await canvas.Modules.GetModules(canvasId);
-    return localCourse;
-    // {
-    //   Modules = localCourse.Modules.Select(m =>
-    //   {
-    //     var canvasModule = canvasModules.FirstOrDefault(cm => cm.Name == m.Name);
-    //     return canvasModule == null ? m : m with { CanvasId = canvasModule.Id };
-    //   })
-    // };
-  }
-
   public static async Task SortModuleItems(
     this LocalModule localModule,
     ulong canvasId,
@@ -75,7 +58,7 @@ public static partial class ModuleSyncronizationExtensions
     CanvasService canvas
   )
   {
-    
+
     var canvasModuleItems = await canvas.Modules.GetModuleItems(canvasId, moduleCanvasId);
     var moduleItemsInCorrectOrder = canvasModuleItems
       .OrderBy(i => i.ContentDetails?.DueAt)
@@ -150,24 +133,34 @@ public static partial class ModuleSyncronizationExtensions
       // var moduleCanvasId =
       //   localModule.CanvasId
       // ?? throw new Exception("cannot sync canvas modules items if module not synced with canvas");
-      var canvasModule = canvasModulesItems.Keys.FirstOrDefault(k => k.Name == localModule.Name);
-      if(canvasModule == null)
-      {
-        throw new Exception($"cannot sync module items in canvas, could not find module with name ${localModule.Name}");
-      }
-
-      bool anyUpdated = await localModule.EnsureAllModulesItemsCreated(
-        courseCanvasId,
-        canvasModule,
-        canvasModulesItems,
-        canvas
-      );
-
-      var canvasModuleItems = anyUpdated
-        ? await canvas.Modules.GetModuleItems(courseCanvasId, canvasModule.Id)
-        : canvasModulesItems[canvasModule];
-
-      await localModule.SortModuleItems(courseCanvasId, canvasModule.Id, canvas);
+      await localModule.SyncAndSortCanvasModule(courseCanvasId, canvasModulesItems, canvas);
     }
+  }
+
+  public static async Task SyncAndSortCanvasModule(
+    this LocalModule localModule,
+    ulong courseCanvasId, 
+    Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> canvasModulesItems, 
+    CanvasService canvas
+  )
+  {
+    var canvasModule = canvasModulesItems.Keys.FirstOrDefault(k => k.Name == localModule.Name);
+    if (canvasModule == null)
+    {
+      throw new Exception($"cannot sync module items in canvas, could not find module with name ${localModule.Name}");
+    }
+
+    bool anyUpdated = await localModule.EnsureAllModulesItemsCreated(
+      courseCanvasId,
+      canvasModule,
+      canvasModulesItems,
+      canvas
+    );
+
+    var canvasModuleItems = anyUpdated
+      ? await canvas.Modules.GetModuleItems(courseCanvasId, canvasModule.Id)
+      : canvasModulesItems[canvasModule];
+
+    await localModule.SortModuleItems(courseCanvasId, canvasModule.Id, canvas);
   }
 }
