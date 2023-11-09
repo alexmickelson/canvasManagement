@@ -36,7 +36,7 @@ public record LocalQuiz
   public string ToMarkdown()
   {
     var questionMarkdownArray = Questions.Select(q => q.ToMarkdown()).ToArray();
-    var questionDelimiter = Environment.NewLine + "---" + Environment.NewLine;
+    var questionDelimiter = Environment.NewLine + Environment.NewLine + "---" + Environment.NewLine + Environment.NewLine;
     var questionMarkdown = string.Join(questionDelimiter, questionMarkdownArray);
 
     return $@"Name: {Name}

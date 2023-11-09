@@ -49,7 +49,7 @@ public record LocalAssignment
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
-  public string? LocalAssignmentGroupId { get; init; }
+  public string? LocalAssignmentGroupName { get; init; }
   public int PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
 
@@ -74,7 +74,7 @@ public record LocalAssignment
 
   public ulong? GetCanvasAssignmentGroupId(IEnumerable<LocalAssignmentGroup> assignmentGroups) =>
     assignmentGroups
-      .FirstOrDefault(g => g.Id == LocalAssignmentGroupId)?
+      .FirstOrDefault(g => g.Name == LocalAssignmentGroupName)?
       .CanvasId;
 
 

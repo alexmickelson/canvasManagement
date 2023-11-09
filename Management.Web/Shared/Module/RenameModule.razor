@@ -22,20 +22,21 @@
       return;
 
     var newModule = Module with
-      {
-        Name = Name
-      };
+    {
+      Name = Name
+    };
 
+    // Module is the not renamed version
     var newModules = planner.LocalCourse.Modules.Select(
-    m => m.Id == Module.Id
-    ? newModule
-    : m
+      m => m.Name == Module.Name
+        ? newModule
+        : m
     ).ToArray();
 
     planner.LocalCourse = planner.LocalCourse with
-      {
-        Modules = newModules
-      };
+    {
+      Modules = newModules
+    };
     Name = "";
     modal?.Hide();
   }

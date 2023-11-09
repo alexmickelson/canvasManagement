@@ -1,0 +1,46 @@
+
+@using BlazorMonaco
+@using BlazorMonaco.Editor
+
+@code {
+  [Parameter, EditorRequired]
+  public string Value { get; set; }
+
+  [Parameter, EditorRequired]
+  public Action<string> OnChange { get; set; }
+
+
+  private StandaloneCodeEditor _editor = null!;
+  
+  private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+  {
+    return new StandaloneEditorConstructionOptions
+    {
+      Language = "markdown",
+      Theme = "vs-dark",
+      TabSize = 2,
+      Value = Value,
+      Minimap = new EditorMinimapOptions { Enabled = false },
+      LineNumbers = "off",
+      LineDecorationsWidth = 0,
+      WordWrap = "on",
+      AutomaticLayout = true,
+      FontFamily = "DM Mono, monospace",
+      FontSize = 16,
+
+    };
+  }
+
+  private async Task OnDidChangeModelContent()
+  {
+    var newValue = await _editor.GetValue();
+    OnChange(newValue);
+  }
+}
+
+<StandaloneCodeEditor 
+  @ref="_editor" 
+  Id="sample-code-editor-123" 
+  ConstructionOptions="EditorConstructionOptions" 
+  OnDidChangeModelContent="OnDidChangeModelContent"
+/>

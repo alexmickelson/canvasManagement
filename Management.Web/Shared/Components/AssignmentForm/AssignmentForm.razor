@@ -124,7 +124,7 @@
 
     var newAssignment = assignmentContext.Assignment with
       {
-        LocalAssignmentGroupId = group?.Id
+        LocalAssignmentGroupName = group?.Name
       };
 
     assignmentContext.SaveAssignment(newAssignment);
@@ -135,7 +135,7 @@
     .LocalCourse?
     .Settings
     .AssignmentGroups
-    .FirstOrDefault(g => g.Id == assignmentContext.Assignment?.LocalAssignmentGroupId);
+    .FirstOrDefault(g => g.Name == assignmentContext.Assignment?.LocalAssignmentGroupName);
 
   private async Task addToCanvas()
   {

@@ -15,6 +15,7 @@
     get => _quizMarkdownInput;
     set
     {
+      Console.WriteLine("setting");
       _quizMarkdownInput = value;
 
       try
@@ -102,11 +103,16 @@ short answer";
     }
     <div class="row flex-grow-1">
       <div class="col-6">
-        <textarea 
+        @* <textarea 
           class="form-control h-100" 
           @bind="quizMarkdownInput" 
           @bind:event="oninput" 
+        /> *@
+        <MonacoTextArea
+          Value="@quizMarkdownInput"
+          OnChange="@((v) => quizMarkdownInput = v)"
         />
+
       </div>
       <div class="col-6">
         @if (error != null)
