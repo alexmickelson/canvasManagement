@@ -8,7 +8,6 @@
   private LocalQuiz testQuiz;
 
   private string? error { get; set; } = null;
-  private bool showHelp = false;
   private string _quizMarkdownInput { get; set; } = "";
   private string quizMarkdownInput
   {
@@ -54,53 +53,11 @@
     quizContext.StateHasChanged -= reload;
   }
 
-  private readonly static string exampleMarkdownQuestion = @"QUESTION REFERENCE
----
-Points: 2
-this is a question?
-*a) correct
-b) not correct
----
-points: 1
-question goes here
-[*] correct
-[ ] not correct
-[] not correct
----
-the points default to 1?
-*a) true
-b) false
----
-Markdown is supported
-
-- like
-- this
-- list
-
-[*] true
-[ ] false
----
-This is a one point essay question
-essay
----
-points: 4
-this is a short answer question
-short_answer
----
-points: 4
-the underscore is optional
-short answer";
 
 }
 
 <div class="d-flex flex-column h-100">
-  <div class="d-flex flex-row flex-grow-1">
-    @if(showHelp)
-    {
-      <pre class="bg-dark-subtle me-3 pe-5 ps-3 rounded rounded-3">
-        @exampleMarkdownQuestion
-      </pre>
-    }
+  <div class="d-flex flex-row h-100 p-2">
     <div class="row flex-grow-1">
       <div class="col-6">
         @* <textarea 
@@ -114,7 +71,7 @@ short answer";
         />
 
       </div>
-      <div class="col-6">
+      <div class="col-6 h-100 overflow-y-auto">
         @if (error != null)
         {
           <p class="text-danger text-truncate">Error: @error</p>
@@ -124,12 +81,4 @@ short answer";
     </div>
   </div>
 
-  <div>
-    <button 
-      class="btn btn-outline-secondary mt-3"
-      @onclick="@(() => showHelp = !showHelp)"
-    >
-      toggle help
-    </button>
-  </div>
 </div>

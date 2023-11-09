@@ -26,7 +26,10 @@ public record LocalQuizQuestion
         : $"[{correctIndicator}] ";
 
       // var textWithSpecificNewline = answer.Text.Replace(Environment.NewLine, Environment.NewLine + "   ");
-      return $"{questionTypeIndicator}{answer.Text}";
+      var multilineMarkdownCompatibleText = answer.Text.StartsWith("```")
+        ? Environment.NewLine + answer.Text
+        : answer.Text;
+      return $"{questionTypeIndicator}{multilineMarkdownCompatibleText}";
     });
     var answersText = string.Join(Environment.NewLine, answerArray);
     var questionTypeIndicator = QuestionType == "essay" || QuestionType == "short_answer" ? QuestionType : "";

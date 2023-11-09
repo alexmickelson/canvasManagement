@@ -102,6 +102,44 @@
   $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/quizzes/{quizInCanvas?.Id}";
 
   private int? quizPoints => quizContext.Quiz?.Questions.Sum(q => q.Points);
+  private bool showHelp = false;
+
+  private readonly static string exampleMarkdownQuestion = @"QUESTION REFERENCE
+---
+Points: 2
+this is a question?
+*a) correct
+b) not correct
+---
+points: 1
+question goes here
+[*] correct
+[ ] not correct
+[] not correct
+---
+the points default to 1?
+*a) true
+b) false
+---
+Markdown is supported
+
+- like
+- this
+- list
+
+[*] true
+[ ] false
+---
+This is a one point essay question
+essay
+---
+points: 4
+this is a short answer question
+short_answer
+---
+points: 4
+the underscore is optional
+short answer";
 }
 
 <div class="d-flex flex-column py-3" style="height: 100vh;">
@@ -149,8 +187,15 @@
   </section>
 
   <section
-    class="flex-grow-1 w-100 d-flex justify-content-center overflow-y-auto overflow-x-hidden  border rounded-4 bg-dark-subtle py-3 px-1"
-    style="min-height: 10%;max-width: 100%;">
+    class="flex-grow-1 w-100 d-flex justify-content-center border rounded-4 bg-dark-subtle"
+    style="min-height: 10%; max-width: 100%;">
+
+    @if(showHelp)
+    {
+      <pre class="bg-dark-subtle me-3 pe-5 ps-3 rounded rounded-3">
+        @exampleMarkdownQuestion
+      </pre>
+    }
     <div class="w-100" style="max-width: 120em; max-height: 100%;">
       @if (quizContext.Quiz != null)
       {
@@ -159,8 +204,15 @@
     </div>
   </section>
 
-  <hr>
-  <section>
+  <div>
+    <button 
+      class="btn btn-outline-secondary mt-3"
+      @onclick="@(() => showHelp = !showHelp)"
+    >
+      toggle help
+    </button>
+  </div>
+  <section class="p-2">
     @if (quizContext.Quiz != null)
     {
       <div class="row justify-content-end">
