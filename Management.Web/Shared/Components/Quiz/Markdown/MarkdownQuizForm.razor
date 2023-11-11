@@ -14,7 +14,6 @@
     get => _quizMarkdownInput;
     set
     {
-      Console.WriteLine("setting");
       _quizMarkdownInput = value;
 
       try
@@ -52,8 +51,6 @@
   {
     quizContext.StateHasChanged -= reload;
   }
-
-
 }
 
 <div class="d-flex flex-column h-100">

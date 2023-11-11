@@ -165,7 +165,7 @@ short answer";
       }
       <div class="col-auto me-3">
         <h3>
-          Points: @quizPoints
+          Questions: @quizContext.Quiz?.Questions.Count() -  Points: @quizPoints
         </h3>
         @if (quizInCanvas != null)
         {
@@ -188,7 +188,8 @@ short answer";
 
   <section
     class="flex-grow-1 w-100 d-flex justify-content-center border rounded-4 bg-dark-subtle"
-    style="min-height: 10%; max-width: 100%;">
+    style="min-height: 10%; max-width: 100%;"
+  >
 
     @if(showHelp)
     {

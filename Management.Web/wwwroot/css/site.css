@@ -83,3 +83,11 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgb(31, 31, 31); 
 }
+
+
+
+/* monaco editor */
+
+.monaco-editor-background, .monaco-editor .margin {
+  background-color:  var(--bs-dark-bg-subtle) !important;
+}
