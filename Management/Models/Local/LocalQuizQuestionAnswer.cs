@@ -19,7 +19,7 @@ public record LocalQuizQuestionAnswer
     return new LocalQuizQuestionAnswer()
     {
       Correct = isCorrect,
-      Text=text,
+      Text = text,
     };
   }
 }

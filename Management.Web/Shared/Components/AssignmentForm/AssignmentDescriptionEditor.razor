@@ -42,9 +42,8 @@
     .AssignmentTemplates
     .FirstOrDefault(t => t.Id == TemplateId);
 
-  private void handleNewDescription(ChangeEventArgs e)
+  private void handleNewDescription(string newDescription)
   {
-    var newDescription = e.Value?.ToString();
     if (newDescription != string.Empty)
     {
       descriptionForPreview = newDescription;
@@ -65,25 +64,17 @@
 
 @if(assignmentContext.Assignment != null && planner.LocalCourse != null)
 {
-  <div class="row">
-    <div class="col">
-      <label for="description" class="form-label">
-        Description
-      </label>
-    </div>
-    <div class="col">
-      HTML Preview
-    </div>
-  </div>
-  <div class="row">
+  <div class="row h-100">
     <div class="col-6">
-      <textarea 
+      @* <textarea 
         id="description" 
         class="form-control h-100" 
         rows=12
         @bind="description"
         @oninput="handleNewDescription"
-      />
+      /> *@
+
+      <MonacoTextArea Value="@description" OnChange="@handleNewDescription" />
     </div>
     <div class="col-6" @key="descriptionForPreview">
       @(preview)

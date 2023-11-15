@@ -159,7 +159,7 @@
     planner.CanvasAssignments?.FirstOrDefault(a => a.Name == assignmentContext.Assignment?.Name);
 
   private string canvasAssignmentUrl =>
-  $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/assignments/{assignmentInCanvas?.Id}";
+    $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/assignments/{assignmentInCanvas?.Id}";
 
   private async Task deleteFromCanvas()
   {
@@ -173,103 +173,105 @@
     await canvas.Assignments.Delete(
       (ulong)planner.LocalCourse.Settings.CanvasId, 
       assignmentInCanvas.Id,
-      assignmentContext.Assignment.Name);
+      assignmentContext.Assignment.Name
+    );
     await planner.LoadCanvasData();
     deletingAssignmentFromCanvas = false;
     StateHasChanged();
   }
 }
 
-@assignmentContext.Assignment?.Name
 
-@if (assignmentContext.Assignment != null)
-{
-  <div class="m-1">
-  <label class="form-label">
-    Name
-  </label>
-  <input class="form-control" @bind="name" @oninput="handleNameChange" />
-</div>
-  <ButtonSelect 
-    Label="Assignment Group" 
-    Options="planner.LocalCourse?.Settings.AssignmentGroups" 
-    GetName="(g) => g?.Name"
-    OnSelect="(g) => setAssignmentGroup(g)" 
-    SelectedOption="selectedAssignmentGroup" 
-  />
-  <div class="m-1">
-    <AssignmentDescriptionEditor />
+
+<div class="d-flex flex-column h-100">
+  <div>
+    @assignmentContext.Assignment?.Name
+  </div>
+  <div class="flex-grow-1 d-flex flex-column">
+    @if (assignmentContext.Assignment != null)
+    {
+      <div class="m-1">
+        <label class="form-label">
+          Name
+        </label>
+        <input class="form-control" @bind="name" @oninput="handleNameChange" />
+      </div>
+
+        <ButtonSelect  
+          Label="Assignment Group" 
+          Options="planner.LocalCourse?.Settings.AssignmentGroups" 
+          GetName="(g) => g?.Name"
+          OnSelect="(g) => setAssignmentGroup(g)" 
+          SelectedOption="selectedAssignmentGroup" 
+        />
+      <div class="m-1 flex-grow-1">
+        <AssignmentDescriptionEditor />
+      </div>
+
+      <div class="form-check m-1">
+        <input class="form-check-input" id="lockAtDueDate" type="checkbox" @bind="lockAtDueDate"
+        @oninput="handleLockAtDueDateChange" />
+        <label class="form-check-label" for="lockAtDueDate">
+          Lock At Due Date
+        </label>
+      </div>
+      <div class="container">
+        <RubricMarkdownEditor />
+        <hr>
+        <div class="mx-5 px-5">
+          <SubmissionTypeSelector />
+        </div>
+      </div>
+    }
   </div>
 
-  <div class="form-check m-1">
-    <input class="form-check-input" id="lockAtDueDate" type="checkbox" @bind="lockAtDueDate"
-    @oninput="handleLockAtDueDateChange" />
-    <label class="form-check-label" for="lockAtDueDate">
-      Lock At Due Date
-    </label>
-  </div>
-  <div class="container">
-    <RubricMarkdownEditor />
-    <hr>
-    <div class="mx-5 px-5">
-      <SubmissionTypeSelector />
-    </div>
-  </div>
-}
+  <div class="d-flex justify-content-end  p-3">
 
-<div class="d-flex justify-content-end m-3">
+    <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
 
-  <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
-
-  <button 
-    class="btn btn-outline-secondary mx-3" 
-    disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
-    @onclick="addToCanvas"
-  >
-    Add To Canvas
-  </button>
-  @if (assignmentInCanvas != null)
-  {
-    <a 
-      class="btn btn-outline-secondary me-1" 
-      href="@canvasAssignmentUrl" 
-      target="_blank"
-      disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
-    >
-      View in Canvas
-    </a>
     <button 
       class="btn btn-outline-secondary mx-3" 
       disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
-      @onclick="updateInCanvas"
+      @onclick="addToCanvas"
     >
-      Update In Canvas
+      Add To Canvas
     </button>
-    <ConfirmationModal 
-      Disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
-      Label="Delete from Canvas" 
-      Class="btn btn-outline-danger mx-3" 
-      OnConfirmAsync="deleteFromCanvas" 
-    />
-  }
-  <button class="btn btn-primary mx-2" @onclick="@(() => {
-      assignmentContext.Assignment = null;
-      Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
-    })">
-    Done
-  </button>
-</div>
+    @if (assignmentInCanvas != null)
+    {
+      <a 
+        class="btn btn-outline-secondary me-1" 
+        href="@canvasAssignmentUrl" 
+        target="_blank"
+        disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
+      >
+        View in Canvas
+      </a>
+      <button 
+        class="btn btn-outline-secondary mx-3" 
+        disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
+        @onclick="updateInCanvas"
+      >
+        Update In Canvas
+      </button>
+      <ConfirmationModal 
+        Disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
+        Label="Delete from Canvas" 
+        Class="btn btn-outline-danger mx-3" 
+        OnConfirmAsync="deleteFromCanvas" 
+      />
+    }
+    <button class="btn btn-primary mx-2" @onclick="@(() => {
+        assignmentContext.Assignment = null;
+        Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
+      })">
+      Done
+    </button>
+  </div>
 
-@if (addingAssignmentToCanvas || deletingAssignmentFromCanvas)
-{
-  <Spinner />
-}
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
+  @if (addingAssignmentToCanvas || deletingAssignmentFromCanvas)
+  {
+    <div>
+      <Spinner />
+    </div>
+  }
+</div>

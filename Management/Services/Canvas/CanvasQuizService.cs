@@ -41,7 +41,7 @@ public class CanvasQuizService(
       quiz = new
       {
         title = localQuiz.Name,
-        description = localQuiz.Description,
+        description = localQuiz.GetDescriptionHtml(),
         // assignment_group_id = "quiz", // TODO: support specific assignment groups
         // time_limit = localQuiz.TimeLimit,
         shuffle_answers = localQuiz.ShuffleAnswers,

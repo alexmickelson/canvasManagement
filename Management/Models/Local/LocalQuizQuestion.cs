@@ -26,8 +26,9 @@ public record LocalQuizQuestion
         : $"[{correctIndicator}] ";
 
       // var textWithSpecificNewline = answer.Text.Replace(Environment.NewLine, Environment.NewLine + "   ");
+
       var multilineMarkdownCompatibleText = answer.Text.StartsWith("```")
-        ? Environment.NewLine + answer.Text
+        ? Environment.NewLine + answer.Text 
         : answer.Text;
       return $"{questionTypeIndicator}{multilineMarkdownCompatibleText}";
     });

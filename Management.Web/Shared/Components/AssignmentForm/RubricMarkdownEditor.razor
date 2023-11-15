@@ -5,7 +5,7 @@
 
 @code
 {
-  private IEnumerable<RubricItem> displayRubric { get; set; } = new RubricItem[] {};
+  private IEnumerable<RubricItem> displayRubric { get; set; } = new RubricItem[] { };
   private string _rubricText = "";
   private string rubricText
   {
@@ -22,9 +22,9 @@
         if (assignmentContext.Assignment != null)
         {
           var newAssignment = assignmentContext.Assignment with
-          {
-            Rubric = parsedRubric,
-          };
+            {
+              Rubric = parsedRubric,
+            };
           assignmentContext.SaveAssignment(newAssignment);
         }
       }
@@ -49,7 +49,7 @@
   {
     if (assignmentContext.Assignment != null)
     {
-      if(rubricText == string.Empty)
+      if (rubricText == string.Empty)
       {
         rubricText = assignmentContext.Assignment.RubricToMarkdown();
       }
@@ -68,31 +68,26 @@
 
 <br>
 <div class="row">
-    <h4 class="text-center">Rubric</h4>
+  <h4 class="text-center">Rubric</h4>
 </div>
 
 <div class="row">
   <div class="col-6">
-    <textarea 
-      id="description" 
-      class="form-control h-100" 
-      rows=12
-      @bind="rubricText"
-      @bind:event="oninput" 
-    />
+    @* <textarea id="description" class="form-control h-100" rows=12 @bind="rubricText" @bind:event="oninput" /> *@
+    <MonacoTextArea Value="@rubricText" OnChange="@((t) => rubricText = t)" />
   </div>
   <div class="col-6">
     @if (error != null)
     {
       <p class="text-danger text-truncate">Error: @error</p>
     }
-    
+
     <div class="row border-bottom">
       <div class="col-6 text-end">Label</div>
       <div class="col-3 text-center">Points</div>
       <div class="col-3 text-center">Extra Credit</div>
     </div>
-    @foreach(var item in displayRubric)
+    @foreach (var item in displayRubric)
     {
       <div class="row border-bottom">
         <div class="col-6 text-end">@item.Label</div>

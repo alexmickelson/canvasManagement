@@ -13,7 +13,7 @@
   public Action<T?> OnSelect { get; set; } = default!;
 
   [Parameter]
-  public T? SelectedOption { get; set; }
+  public T? SelectedOption { get; set; }  
 
   private string htmlLabel => Label.Replace("-", "");
 
@@ -30,10 +30,10 @@
   }
 }
 
-<div>
+<div key="@GetName(SelectedOption)">
   @foreach(var option in Options)
   {
-    <button 
+    <button
       class="@getButtonClass(option)" 
       @onclick="() => onSelect(option)"
     >

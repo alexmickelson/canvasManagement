@@ -9,6 +9,8 @@
   [Parameter, EditorRequired]
   public Action<string> OnChange { get; set; }
 
+  private string randomId = "monaco-editor-" + BitConverter.ToString(new byte[16].Select(b => (byte)new Random().Next(256)).ToArray()).Replace("-", "");
+
 
   private StandaloneCodeEditor _editor = null!;
   
@@ -25,8 +27,11 @@
       LineDecorationsWidth = 0,
       WordWrap = "on",
       AutomaticLayout = true,
-      FontFamily = "DM Mono, monospace",
+      FontFamily = "Roboto-mono",
       FontSize = 16,
+      Padding = new EditorPaddingOptions() {
+        Top = 10
+      }
     };
   }
 
@@ -38,8 +43,8 @@
 }
 
 <StandaloneCodeEditor 
-  @ref="_editor" 
-  Id="sample-code-editor-123" 
+  @ref="_editor"
+  Id="@randomId"
   ConstructionOptions="EditorConstructionOptions" 
   OnDidChangeModelContent="OnDidChangeModelContent"
 />

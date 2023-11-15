@@ -26,6 +26,8 @@ public record LocalQuiz
       .FirstOrDefault(g => g.Name == LocalAssignmentGroupName)?
       .CanvasId;
 
+  public string GetDescriptionHtml() => Markdig.Markdown.ToHtml(Description);
+  
   public string ToYaml()
   {
     var serializer = new SerializerBuilder().DisableAliases().Build();
