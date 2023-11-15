@@ -1,3 +1,4 @@
+using CanvasModel.Assignments;
 using CanvasModel.Modules;
 using LocalModels;
 using Management.Services.Canvas;
@@ -95,24 +96,25 @@ public static partial class ModuleSyncronizationExtensions
     ulong canvasId,
     CanvasModule canvasModule,
     Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> canvasModulesItems,
-    CanvasService canvas
+    CanvasService canvas,
+    IEnumerable<CanvasAssignment> canvasAssignments
   )
   {
     var anyUpdated = false;
     foreach (var localAssignment in localModule.Assignments.Where(a => a.DueAt > DateTime.Now))
     {
-      var canvasModuleItemContentIds = canvasModulesItems[canvasModule].Select(i => i.ContentId);
-      if (!canvasModuleItemContentIds.Contains(localAssignment.CanvasId))
+      var canvasModuleItemContentNames = canvasModulesItems[canvasModule].Select(i => i.Title);
+      if (!canvasModuleItemContentNames.Contains(localAssignment.Name))
       {
-        var canvasAssignmentId =
-          localAssignment.CanvasId
-          ?? throw new Exception("cannot create module item if assignment does not have canvas id");
+        var canvasAssignment = canvasAssignments.FirstOrDefault(a => a.Name == localAssignment.Name)
+          ?? throw new Exception($"cannot create module item if cannot find canvas assignment with name {localAssignment.Name}");
+
         await canvas.CreateModuleItem(
           canvasId,
           canvasModule.Id,
           localAssignment.Name,
           "Assignment",
-          canvasAssignmentId
+          canvasAssignment.Id
         );
         anyUpdated = true;
       }
@@ -125,23 +127,22 @@ public static partial class ModuleSyncronizationExtensions
     this LocalCourse localCourse,
     ulong courseCanvasId,
     Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> canvasModulesItems,
-    CanvasService canvas
+    CanvasService canvas,
+    IEnumerable<CanvasAssignment> canvasAssignments
   )
   {
     foreach (var localModule in localCourse.Modules)
     {
-      // var moduleCanvasId =
-      //   localModule.CanvasId
-      // ?? throw new Exception("cannot sync canvas modules items if module not synced with canvas");
-      await localModule.SyncAndSortCanvasModule(courseCanvasId, canvasModulesItems, canvas);
+      await localModule.SyncAndSortCanvasModule(courseCanvasId, canvasModulesItems, canvas, canvasAssignments);
     }
   }
 
   public static async Task SyncAndSortCanvasModule(
     this LocalModule localModule,
-    ulong courseCanvasId, 
-    Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> canvasModulesItems, 
-    CanvasService canvas
+    ulong courseCanvasId,
+    Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> canvasModulesItems,
+    CanvasService canvas,
+    IEnumerable<CanvasAssignment> canvasAssignments
   )
   {
     var canvasModule = canvasModulesItems.Keys.FirstOrDefault(k => k.Name == localModule.Name);
@@ -154,7 +155,8 @@ public static partial class ModuleSyncronizationExtensions
       courseCanvasId,
       canvasModule,
       canvasModulesItems,
-      canvas
+      canvas,
+      canvasAssignments
     );
 
     var canvasModuleItems = anyUpdated

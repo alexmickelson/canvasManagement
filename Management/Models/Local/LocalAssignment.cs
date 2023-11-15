@@ -42,7 +42,7 @@ public static class SubmissionType
 
 public record LocalAssignment
 {
-  public ulong? CanvasId { get; init; } = null;
+  // public ulong? CanvasId { get; init; } = null;
   public string Name { get; init; } = "";
   public string Description { get; init; } = "";
   public bool LockAtDueDate { get; init; }

@@ -22,7 +22,7 @@ public static partial class AssignmentSyncronizationExtensions
   {
 
     var canvasAssignment = canvasAssignments.FirstOrDefault(
-      ca => ca.Id == localAssignment.CanvasId
+      ca => ca.Name == localAssignment.Name
     );
     string localHtmlDescription = localAssignment.GetDescriptionHtml();
 
@@ -61,7 +61,7 @@ public static partial class AssignmentSyncronizationExtensions
     {
       await canvas.Assignments.Update(
         courseId: canvasCourseId,
-        canvasAssignmentId: (ulong) localAssignment.CanvasId,
+        canvasAssignmentId: canvasAssignment.Id,
         localAssignment,
         localHtmlDescription,
         (ulong)canvasAssignmentGroupId
@@ -164,8 +164,8 @@ public static partial class AssignmentSyncronizationExtensions
     var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
       localAssignment.SubmissionTypes.Select(t => t.ToString())
     );
-    var assignmentGroupSame = 
-      canvasAssignmentGroupId != null 
+    var assignmentGroupSame =
+      canvasAssignmentGroupId != null
       && canvasAssignmentGroupId == canvasAssignment.AssignmentGroupId;
 
     if (!quiet)
@@ -223,7 +223,7 @@ public static partial class AssignmentSyncronizationExtensions
         Console.WriteLine(
           $"Submission Types different for {localAssignment.Name}, local: {JsonSerializer.Serialize(localAssignment.SubmissionTypes.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}"
         );
-      if(!assignmentGroupSame)
+      if (!assignmentGroupSame)
         Console.WriteLine(
           $"Canvas assignment group ids different for {localAssignment.Name}, local: {canvasAssignmentGroupId}, in canvas {canvasAssignment.AssignmentGroupId}"
         );

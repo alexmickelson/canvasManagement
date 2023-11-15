@@ -134,12 +134,6 @@ public class CoursePlanner
 
     LoadingCanvasData = true;
     StateHasChanged?.Invoke();
-    LocalCourse = LocalCourse.deleteCanvasIdsThatNoLongerExist(
-      canvasModules,
-      canvasAssignments,
-      canvasAssignmentGroups,
-      canvasQuizzes
-    );
 
     var canvasId =
       LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");
@@ -170,7 +164,7 @@ public class CoursePlanner
 
     CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
 
-    await LocalCourse.SyncModuleItemsWithCanvas(canvasId, CanvasModulesItems, canvas);
+    await LocalCourse.SyncModuleItemsWithCanvas(canvasId, CanvasModulesItems, canvas, CanvasAssignments);
     CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
 
     LoadingCanvasData = false;

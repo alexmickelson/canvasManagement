@@ -44,6 +44,7 @@
 
   private void handleNewDescription(string newDescription)
   {
+    description = newDescription;
     if (newDescription != string.Empty)
     {
       descriptionForPreview = newDescription;
@@ -56,6 +57,7 @@
         assignmentContext.SaveAssignment(newAssignment);
       }
     }
+    StateHasChanged();
   }
 
   private MarkupString preview { get => (MarkupString)Markdown.ToHtml(descriptionForPreview); }
@@ -76,8 +78,8 @@
 
       <MonacoTextArea Value="@description" OnChange="@handleNewDescription" />
     </div>
-    <div class="col-6" @key="descriptionForPreview">
-      @(preview)
+    <div class="col-6" @key="descriptionForPreview" >
+      @((MarkupString)Markdown.ToHtml(descriptionForPreview))
     </div>
   </div>
 }

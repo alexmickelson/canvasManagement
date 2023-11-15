@@ -1,11 +1,13 @@
+using LocalModels;
+
 public class AssignmentMarkdownTests
 {
   [Test]
   public void TestCanParseAssignmentSettings()
   {
-    var assignmentMarkdown = @"
+    var assignment = new LocalAssignment()
+    {
 
-    
-  ";
+    };
   }
 }
