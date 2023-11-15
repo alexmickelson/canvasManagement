@@ -62,7 +62,7 @@ public static class CoursePlannerExtensions
     return assignment with
     {
       DueAt = dueAt,
-      LockAt = assignment.LockAtDueDate ? dueAt : lockAt
+      LockAt = lockAt
     };
   }
 }

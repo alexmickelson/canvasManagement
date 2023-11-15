@@ -45,7 +45,7 @@ public record LocalAssignment
   // public ulong? CanvasId { get; init; } = null;
   public string Name { get; init; } = "";
   public string Description { get; init; } = "";
-  public bool LockAtDueDate { get; init; }
+  // public bool LockAtDueDate { get; init; }
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }

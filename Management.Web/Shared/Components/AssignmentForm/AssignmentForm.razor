@@ -19,7 +19,6 @@
     if (assignmentContext.Assignment != null)
     {
       name = assignmentContext.Assignment.Name;
-      lockAtDueDate = assignmentContext.Assignment.LockAtDueDate;
     }
     this.InvokeAsync(this.StateHasChanged);
   }
@@ -32,11 +31,8 @@
   {
     assignmentContext.Assignment = null;
     name = "";
-    lockAtDueDate = false;
   }
   private string name { get; set; } = String.Empty;
-  private bool lockAtDueDate { get; set; }
-
   private bool addingAssignmentToCanvas = false;
   private bool deletingAssignmentFromCanvas = false;
 
@@ -47,7 +43,6 @@
       var newAssignment = assignmentContext.Assignment with
         {
           Name = name,
-          LockAtDueDate = lockAtDueDate,
         };
 
       assignmentContext.SaveAssignment(newAssignment);
@@ -88,6 +83,7 @@
         ulong courseId = planner.LocalCourse.Settings.CanvasId ?? throw new Exception("cannot delete if no course id");
         await canvas.Assignments.Delete(courseId, assignmentInCanvas.Id, assignment.Name);
       }
+      Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
     }
   }
 
@@ -96,23 +92,6 @@
     if (assignmentContext.Assignment != null)
     {
       var newAssignment = assignmentContext.Assignment with { Name = e.Value?.ToString() ?? "" };
-      assignmentContext.SaveAssignment(newAssignment);
-    }
-  }
-
-  private void handleLockAtDueDateChange(ChangeEventArgs e)
-  {
-    if (assignmentContext.Assignment != null)
-    {
-      var lockAtDueDate = (bool)(e.Value ?? false);
-      var lockAtDate = lockAtDueDate
-      ? assignmentContext.Assignment.DueAt
-      : assignmentContext.Assignment.LockAt;
-      var newAssignment = assignmentContext.Assignment with
-        {
-          LockAtDueDate = lockAtDueDate,
-          LockAt = lockAtDate,
-        };
       assignmentContext.SaveAssignment(newAssignment);
     }
   }
@@ -181,8 +160,6 @@
   }
 }
 
-
-
 <div class="d-flex flex-column h-100">
   <div>
     @assignmentContext.Assignment?.Name
@@ -208,13 +185,6 @@
         <AssignmentDescriptionEditor />
       </div>
 
-      <div class="form-check m-1">
-        <input class="form-check-input" id="lockAtDueDate" type="checkbox" @bind="lockAtDueDate"
-        @oninput="handleLockAtDueDateChange" />
-        <label class="form-check-label" for="lockAtDueDate">
-          Lock At Due Date
-        </label>
-      </div>
       <div class="container">
         <RubricMarkdownEditor />
         <hr>

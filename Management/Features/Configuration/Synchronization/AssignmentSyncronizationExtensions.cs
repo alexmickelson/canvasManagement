@@ -140,18 +140,16 @@ public static partial class AssignmentSyncronizationExtensions
           second: canvasAssignment.LockAt.Value.Second
         )
         : new DateTime();
-    var localComparisonLockDate = localAssignment.LockAtDueDate
-      ? localComparisonDueDate
-      : canvasAssignment.LockAt != null
-        ? new DateTime(
-          year: localAssignment.LockAt?.Year ?? 0,
-          month: localAssignment.LockAt?.Month ?? 0,
-          day: localAssignment.LockAt?.Day ?? 0,
-          hour: localAssignment.LockAt?.Hour ?? 0,
-          minute: localAssignment.LockAt?.Minute ?? 0,
-          second: localAssignment.LockAt?.Second ?? 0
-        )
-        : new DateTime();
+    var localComparisonLockDate = canvasAssignment.LockAt != null
+      ? new DateTime(
+        year: localAssignment.LockAt?.Year ?? 0,
+        month: localAssignment.LockAt?.Month ?? 0,
+        day: localAssignment.LockAt?.Day ?? 0,
+        hour: localAssignment.LockAt?.Hour ?? 0,
+        minute: localAssignment.LockAt?.Minute ?? 0,
+        second: localAssignment.LockAt?.Second ?? 0
+      )
+      : new DateTime();
 
     var dueDatesSame =
       canvasAssignment.DueAt != null && canvasComparisonDueDate == localComparisonDueDate;

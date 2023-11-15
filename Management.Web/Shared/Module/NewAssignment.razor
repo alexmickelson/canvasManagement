@@ -23,9 +23,9 @@
     {
       Name = Name,
       Description = "",
-      LockAtDueDate = true,
+      @* LockAtDueDate = true, *@
       Rubric = new RubricItem[] { },
-      LockAt = null,
+      LockAt = DateTime.Now,
       DueAt = DateTime.Now,
       SubmissionTypes = new string[] { SubmissionType.ONLINE_TEXT_ENTRY },
       LocalAssignmentGroupName = selectedAssignmentGroup?.Name,
