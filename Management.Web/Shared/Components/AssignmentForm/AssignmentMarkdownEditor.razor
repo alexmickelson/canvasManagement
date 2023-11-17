@@ -1,0 +1,123 @@
+@using Markdig
+
+@inject CoursePlanner planner
+@inject AssignmentEditorContext assignmentContext
+
+@code
+{
+  protected override void OnInitialized()
+  {
+    assignmentContext.StateHasChanged += reload;
+    reload();
+  }
+  private void reload()
+  {
+    if (assignmentContext.Assignment != null)
+    {
+      if(rawText == string.Empty)
+      {
+        rawText = assignmentContext.Assignment.ToMarkdown();
+        this.InvokeAsync(this.StateHasChanged);
+      }
+    }
+  }
+  public void Dispose()
+  {
+    assignmentContext.StateHasChanged -= reload;
+  }
+
+  private string rawText { get; set; } = string.Empty;
+  private string? error = null;
+  public bool? UseTemplate { get; set; } = null;
+
+  public string? TemplateId { get; set; }
+
+  public Dictionary<string, string> VariableValues { get; set; } = new Dictionary<string, string>();
+
+  private AssignmentTemplate? selectedTemplate =>
+    planner
+    .LocalCourse?
+    .Settings
+    .AssignmentTemplates
+    .FirstOrDefault(t => t.Id == TemplateId);
+
+  private void handleChange(string newRawAssignment)
+  {
+    rawText = newRawAssignment;
+    if (newRawAssignment != string.Empty)
+    {
+      try 
+      {
+        var parsed = LocalAssignment.ParseMarkdown(newRawAssignment);
+        error = null;
+        assignmentContext.SaveAssignment(parsed);
+      }
+      catch(AssignmentMarkdownParseException e)
+      {
+        error = e.Message;
+      }
+      catch(RubricMarkdownParseException e)
+      {
+        error = e.Message;
+      }
+      finally
+      {
+        StateHasChanged();
+      }
+
+      @* if (assignmentContext.Assignment != null)
+      {
+        var newAssignment = assignmentContext.Assignment with
+        {
+          Description = newRawAssignment
+        };
+        assignmentContext.SaveAssignment(newAssignment);
+      } *@
+    }
+    StateHasChanged();
+  }
+
+  private MarkupString preview { get => (MarkupString)Markdown.ToHtml(assignmentContext.Assignment.Description); }
+
+}
+
+@if(assignmentContext.Assignment != null && planner.LocalCourse != null)
+{
+  <div class="row h-100">
+    <div class="col-6">
+      @* <textarea 
+        id="description" 
+        class="form-control h-100" 
+        rows=12
+        @bind="description"
+        @oninput="handleNewDescription"
+      /> *@
+
+      <MonacoTextArea Value="@rawText" OnChange="@handleChange" />
+    </div>
+    <div class="col-6">
+      @if (error != null)
+      {
+        <p class="text-danger text-truncate">Error: @error</p>
+      }
+
+      
+      <div>Due At: @assignmentContext.Assignment.DueAt</div>
+      <div>Lock At: @assignmentContext.Assignment.LockAt</div>
+      <div>Assignment Group Name @assignmentContext.Assignment.LocalAssignmentGroupName</div>
+      <div>Submission Types</div>
+      <ul>
+        @foreach(var t in assignmentContext.Assignment.SubmissionTypes)
+        {
+          <li>@t</li>
+        }
+      </ul>
+      <hr>
+      <div>
+        @(preview)
+      </div>
+      <hr>
+        <RubricDisplay />
+    </div>
+  </div>
+}

@@ -21,7 +21,7 @@ public class AssignmentMarkdownTests
 
     var assignmentMarkdown = assignment.ToMarkdown();
 
-    var parsedAssignment = LocalAssignment.FromMarkdown(assignmentMarkdown);
+    var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
   [Test]
@@ -40,7 +40,7 @@ public class AssignmentMarkdownTests
 
     var assignmentMarkdown = assignment.ToMarkdown();
 
-    var parsedAssignment = LocalAssignment.FromMarkdown(assignmentMarkdown);
+    var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
   [Test]
@@ -62,9 +62,10 @@ public class AssignmentMarkdownTests
 
     var assignmentMarkdown = assignment.ToMarkdown();
 
-    var parsedAssignment = LocalAssignment.FromMarkdown(assignmentMarkdown);
+    var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
+
   [Test]
   public void AssignmentWithoutLockAtDate_CanBeParsed()
   {
@@ -84,9 +85,10 @@ public class AssignmentMarkdownTests
 
     var assignmentMarkdown = assignment.ToMarkdown();
 
-    var parsedAssignment = LocalAssignment.FromMarkdown(assignmentMarkdown);
+    var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
+
   [Test]
   public void AssignmentWithoutDescription_CanBeParsed()
   {
@@ -106,7 +108,7 @@ public class AssignmentMarkdownTests
 
     var assignmentMarkdown = assignment.ToMarkdown();
 
-    var parsedAssignment = LocalAssignment.FromMarkdown(assignmentMarkdown);
+    var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
 }

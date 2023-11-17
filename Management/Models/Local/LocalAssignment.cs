@@ -86,7 +86,7 @@ public record LocalAssignment
     return yaml;
   }
 
-  public static LocalAssignment FromMarkdown(string input)
+  public static LocalAssignment ParseMarkdown(string input)
   {
     var settingsString = input.Split("---")[0];
     var (name, localAssignmentGroupName, submissionTypes, dueAt, lockAt) = parseSettings(settingsString);
@@ -238,4 +238,8 @@ public record LocalAssignment
 public class RubricMarkdownParseException : Exception
 {
   public RubricMarkdownParseException(string message) : base(message) { }
+}
+public class AssignmentMarkdownParseException : Exception
+{
+  public AssignmentMarkdownParseException(string message) : base(message) { }
 }

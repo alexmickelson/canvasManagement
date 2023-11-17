@@ -1,0 +1,62 @@
+@using Management.Web.Shared.Components
+
+@inject CoursePlanner planner
+@inject AssignmentEditorContext assignmentContext
+
+@code
+{
+  private int rubricReloadKey = 0;
+
+  private string? error { get; set; } = null;
+
+  protected override void OnInitialized()
+  {
+    assignmentContext.StateHasChanged += reload;
+    reload();
+  }
+  private void reload()
+  {
+    this.InvokeAsync(this.StateHasChanged);
+  }
+
+  public void Dispose()
+  {
+    assignmentContext.StateHasChanged -= reload;
+  }
+
+  private int requiredPoints => assignmentContext.Assignment.Rubric.Where(r => !r.IsExtraCredit).Select(r => r.Points).Sum();
+  private int extraCreditPoints => assignmentContext.Assignment.Rubric.Where(r => r.IsExtraCredit).Select(r => r.Points).Sum();
+}
+
+<div class="row">
+  <h4 class="text-center">Rubric</h4>
+</div>
+
+@if (error != null)
+{
+  <p class="text-danger text-truncate">Error: @error</p>
+}
+
+<div class="row border-bottom">
+  <div class="col-6 text-end">Label</div>
+  <div class="col-3 text-center">Points</div>
+  <div class="col-3 text-center">Extra Credit</div>
+</div>
+@foreach (var item in assignmentContext.Assignment.Rubric)
+{
+  <div class="row border-bottom">
+    <div class="col-6 text-end">@item.Label</div>
+    <div class="col-3 text-center">@item.Points</div>
+    <div class="col-3 text-center">@item.IsExtraCredit</div>
+  </div>
+}
+<div class="text-end">
+  <div>
+    Required Points: @requiredPoints
+  </div>
+  <div>
+    Extra Credit Points @extraCreditPoints
+  </div>
+</div>
+
+
