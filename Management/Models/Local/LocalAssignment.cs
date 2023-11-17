@@ -173,7 +173,7 @@ public record LocalAssignment
     var rubricMarkdown = RubricToMarkdown();
     var assignmentMarkdown =
       settingsMarkdown + Environment.NewLine
-      + "---" + Environment.NewLine
+      + "---" + Environment.NewLine + Environment.NewLine
       + Description + Environment.NewLine
       + Environment.NewLine + "## Rubric" + Environment.NewLine + Environment.NewLine
       + rubricMarkdown;
