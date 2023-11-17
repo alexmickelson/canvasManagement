@@ -175,7 +175,7 @@ public record LocalAssignment
       settingsMarkdown + Environment.NewLine
       + "---" + Environment.NewLine
       + Description + Environment.NewLine
-      + "## Rubric" + Environment.NewLine
+      + Environment.NewLine + "## Rubric" + Environment.NewLine + Environment.NewLine
       + rubricMarkdown;
 
     return assignmentMarkdown;
