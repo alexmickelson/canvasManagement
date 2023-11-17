@@ -48,10 +48,10 @@ public static class CoursePlannerExtensions
   public static LocalAssignment validateSubmissionTypes(this LocalAssignment assignment)
   {
     var containsDiscussion =
-      assignment.SubmissionTypes.FirstOrDefault(t => t == SubmissionType.DISCUSSION_TOPIC) != null;
+      assignment.SubmissionTypes.FirstOrDefault(t => t == AssignmentSubmissionType.DISCUSSION_TOPIC) != null;
 
     if (containsDiscussion)
-      return assignment with { SubmissionTypes = new string[] { SubmissionType.DISCUSSION_TOPIC } };
+      return assignment with { SubmissionTypes = new string[] { AssignmentSubmissionType.DISCUSSION_TOPIC } };
     return assignment;
   }
 

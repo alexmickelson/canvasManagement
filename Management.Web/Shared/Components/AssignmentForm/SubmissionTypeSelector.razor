@@ -31,7 +31,7 @@
   private bool discussionIsSelected
   {
     get => types.FirstOrDefault(
-      t => t == SubmissionType.DISCUSSION_TOPIC
+      t => t == AssignmentSubmissionType.DISCUSSION_TOPIC
     ) != null;
   }
   private void saveTypes(IEnumerable<string> newTypes)
@@ -51,9 +51,9 @@
 <h5>Submission Types</h5>
 <div class="row" @key="types">
 
-  @foreach (var submissionType in SubmissionType.AllTypes)
+  @foreach (var submissionType in AssignmentSubmissionType.AllTypes)
   {
-    var isDiscussion = submissionType == SubmissionType.DISCUSSION_TOPIC;
+    var isDiscussion = submissionType == AssignmentSubmissionType.DISCUSSION_TOPIC;
     var allowedToBeChecked = !discussionIsSelected || isDiscussion;
 
     <div class="col-3">

@@ -83,7 +83,7 @@ public class CanvasQuizService(
       .Where(
         assignment =>
           !assignment.IsQuizAssignment
-          && assignment.SubmissionTypes.Contains(SubmissionType.ONLINE_QUIZ)
+          && assignment.SubmissionTypes.Contains(AssignmentSubmissionType.ONLINE_QUIZ)
       )
       .ToArray();
     var tasks = assignmentsToDelete.Select(

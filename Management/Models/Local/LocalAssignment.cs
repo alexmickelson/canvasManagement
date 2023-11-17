@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Text.RegularExpressions;
 using YamlDotNet.Serialization;
@@ -13,7 +14,7 @@ public record RubricItem
   public bool IsExtraCredit => Label.Contains(extraCredit.ToLower(), StringComparison.CurrentCultureIgnoreCase);
 }
 
-public static class SubmissionType
+public static class AssignmentSubmissionType
 {
   public static readonly string ONLINE_TEXT_ENTRY = "online_text_entry";
   public static readonly string ONLINE_UPLOAD = "online_upload";
@@ -46,12 +47,12 @@ public record LocalAssignment
   public string Name { get; init; } = "";
   public string Description { get; init; } = "";
   // public bool LockAtDueDate { get; init; }
-  public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
   public string? LocalAssignmentGroupName { get; init; }
-  public int PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
+  public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
+  public int PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
 
   public string GetRubricHtml()
   {
@@ -85,15 +86,97 @@ public record LocalAssignment
     return yaml;
   }
 
+  public static LocalAssignment FromMarkdown(string input)
+  {
+    var settingsString = input.Split("---")[0];
+    var (name, localAssignmentGroupName, submissionTypes, dueAt, lockAt) = parseSettings(settingsString);
+
+    var description = input.Split("---" + Environment.NewLine)[1].Split("## Rubric")[0];
+
+    var rubricString = input.Split("## Rubric" + Environment.NewLine)[1];
+    var rubric = ParseRubricMarkdown(rubricString);
+    return new LocalAssignment()
+    {
+      Name=name.Trim(),
+      LocalAssignmentGroupName=localAssignmentGroupName.Trim(),
+      SubmissionTypes=submissionTypes,
+      DueAt=dueAt,
+      LockAt=lockAt,
+      Rubric=rubric,
+      Description=description.Trim()
+    };
+  }
+
+  private static (string name, string assignmentGroupName, List<string> submissionTypes, DateTime dueAt, DateTime? lockAt) parseSettings(string input)
+  {
+    var name = extractLabelValue(input, "Name");
+    var rawLockAt = extractLabelValue(input, "LockAt");
+    var rawDueAt = extractLabelValue(input, "DueAt");
+    var localAssignmentGroupName = extractLabelValue(input, "AssignmentGroupName");
+    var submissionTypes = parseSubmissionTypes(input);
+
+    DateTime? lockAt = DateTime.TryParse(rawLockAt, out DateTime parsedLockAt)
+      ? parsedLockAt
+      : null;
+    var dueAt = DateTime.TryParse(rawDueAt, out DateTime parsedDueAt)
+      ? parsedDueAt
+      : throw new QuizMarkdownParseException($"Error with DueAt: {rawDueAt}");
+
+    return (name, localAssignmentGroupName, submissionTypes, dueAt, lockAt);
+
+
+  }
+
+  private static List<string> parseSubmissionTypes(string input)
+  {
+    List<string> submissionTypes = new List<string>();
+
+    // Define a regular expression pattern to match the bulleted list items
+    string startOfTypePattern = @"- (.+)";
+    Regex regex = new Regex(startOfTypePattern);
+
+    var inputAfterSubmissionTypes = input.Split("SubmissionTypes:" + Environment.NewLine)[1];
+
+    string[] lines = inputAfterSubmissionTypes.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+
+    foreach (string line in lines)
+    {
+      string trimmedLine = line.Trim();
+      Match match = regex.Match(trimmedLine);
+
+      if (!match.Success)
+        break;
+
+      string type = match.Groups[1].Value.Trim();
+      submissionTypes.Add(type);
+    }
+
+    return submissionTypes;
+  }
+
+  static string extractLabelValue(string input, string label)
+  {
+    string pattern = $@"{label}: (.*?)\n";
+    Match match = Regex.Match(input, pattern);
+
+    if (match.Success)
+    {
+      return match.Groups[1].Value;
+    }
+
+    return string.Empty;
+  }
+
   public string ToMarkdown()
   {
-    var assignmentYaml = ToYaml();
+    var settingsMarkdown = settingsToMarkdown();
+    var rubricMarkdown = RubricToMarkdown();
     var assignmentMarkdown =
-      "```yaml" + Environment.NewLine
-      + assignmentYaml
-      + "```" + Environment.NewLine
-      + "<!-- assignment markdown below -->" + Environment.NewLine
-      + Description;
+      settingsMarkdown + Environment.NewLine
+      + "---" + Environment.NewLine
+      + Description + Environment.NewLine
+      + "## Rubric" + Environment.NewLine
+      + rubricMarkdown;
 
     return assignmentMarkdown;
   }
@@ -109,8 +192,25 @@ public record LocalAssignment
     return builder.ToString();
   }
 
+  private string settingsToMarkdown()
+  {
+    var builder = new StringBuilder();
+    builder.Append($"Name: {Name}" + Environment.NewLine);
+    builder.Append($"LockAt: {LockAt}" + Environment.NewLine);
+    builder.Append($"DueAt: {DueAt}" + Environment.NewLine);
+    builder.Append($"AssignmentGroupName: {LocalAssignmentGroupName}" + Environment.NewLine);
+    builder.Append($"SubmissionTypes:" + Environment.NewLine);
+    foreach (var submissionType in SubmissionTypes)
+    {
+      builder.Append($"- {submissionType}" + Environment.NewLine);
+    }
+    return builder.ToString();
+  }
+
   public static IEnumerable<RubricItem> ParseRubricMarkdown(string rawMarkdown)
   {
+    if(rawMarkdown.Trim() == string.Empty)
+      return [];
     var lines = rawMarkdown.Trim().Split(Environment.NewLine);
     var items = lines.Select(parseIndividualRubricItemMarkdown).ToArray();
     return items;
