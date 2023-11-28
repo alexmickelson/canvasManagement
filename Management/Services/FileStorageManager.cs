@@ -1,7 +1,6 @@
 using LocalModels;
 using Management.Services;
 using YamlDotNet.Serialization;
-using YamlDotNet.Serialization.NamingConventions;
 
 public class FileStorageManager
 {
@@ -57,6 +56,18 @@ public class FileStorageManager
 
       await saveQuizzes(course, module);
       await saveAssignments(course, module);
+    }
+
+    var moduleNames = course.Modules.Select(m => m.Name);
+    foreach (var moduleDirectoryPath in Directory.EnumerateDirectories(courseDirectory))
+    {
+      var directoryName = Path.GetFileName(moduleDirectoryPath);
+      if (!moduleNames.Contains(directoryName))
+      {
+        Console.WriteLine($"deleting extra module directory, it was probably renamed {moduleDirectoryPath}");
+        Directory.Delete(moduleDirectoryPath, true);
+
+      }
     }
 
   }

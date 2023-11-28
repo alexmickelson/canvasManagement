@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Components;
 
 namespace Management.Web.Shared.Components.Quiz;
@@ -41,7 +42,14 @@ public class DroppableQuiz : ComponentBase
     );
 
     var NewQuizList = currentModule.Quizzes
-      .Select(q => q.Name + q.Description != Quiz.Name + Quiz.Description ? q : q with { DueAt = defaultDueTimeDate })
+      .Select(q => 
+        q.Name + q.Description != Quiz.Name + Quiz.Description 
+          ? q : 
+          q with { 
+            DueAt = defaultDueTimeDate,
+            LockAt = q.LockAt > defaultDueTimeDate ? q.LockAt : defaultDueTimeDate
+          }
+      )
       .ToArray();
 
     var updatedModule = currentModule with { Quizzes = NewQuizList };

@@ -153,6 +153,7 @@ public class AssignmentEditorContext
       (ulong)courseCanvasId,
       canvasModule.Id,
       Assignment.Name,
+      
       "Assignment",
       createdAssignmentCanvasId
     );

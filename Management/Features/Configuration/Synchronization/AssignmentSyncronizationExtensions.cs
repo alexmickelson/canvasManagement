@@ -236,25 +236,6 @@ public static partial class AssignmentSyncronizationExtensions
       || !assignmentGroupSame;
   }
 
-  internal static async Task<LocalCourse> SyncAssignmentsWithCanvas(
-    this LocalCourse localCourse,
-    ulong canvasCourseId,
-    IEnumerable<CanvasAssignment> canvasAssignments,
-    CanvasService canvas
-  )
-  {
-    var moduleTasks = localCourse.Modules.Select(async m =>
-    {
-      var assignmentTasks = m.Assignments.Select(
-        async (a) => await localCourse.SyncAssignmentToCanvas(canvasCourseId, a, canvasAssignments, canvas)
-      );
-      await Task.WhenAll(assignmentTasks);
-      return m;
-    });
-
-    var modules = await Task.WhenAll(moduleTasks);
-    return localCourse with { Modules = modules };
-  }
 
   [GeneratedRegex("<script.*script>")]
   private static partial Regex CanvasScriptTagRegex();

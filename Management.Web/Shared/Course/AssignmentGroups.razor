@@ -17,6 +17,7 @@
     planner.StateHasChanged -= reload;
   }
 
+  private bool syncingAssignmentGroups { get; set; } = false;
   private void AddAssignmentGroup()
   {
     if(planner.LocalCourse != null)
@@ -83,6 +84,13 @@
       }
     };  
   }
+
+  private async Task SyncAssignmentGroupsWithCanvas()
+  {
+    syncingAssignmentGroups = true;
+    await planner.SyncAssignmentGroups();
+    syncingAssignmentGroups = false;
+  }
 }
 
 @if(planner.LocalCourse != null)
@@ -119,4 +127,16 @@
       + Assignment Group
     </button>
   </div>
+
+  <button 
+    class="btn btn-outline-secondary"
+    @onclick="SyncAssignmentGroupsWithCanvas"
+    disabled="@syncingAssignmentGroups"
+  >
+    Sync Assignment Groups With Canvas
+  </button>
+  @if(syncingAssignmentGroups)
+  {
+    <Spinner />
+  }
 }

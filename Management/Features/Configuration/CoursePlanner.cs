@@ -109,69 +109,6 @@ public class CoursePlanner
     return (CanvasAssignments, CanvasModules, CanvasModulesItems, CanvasQuizzes, CanvasAssignmentGroups);
   }
 
-  public async Task SyncWithCanvas()
-  {
-    if (
-      LocalCourse == null
-      || LocalCourse.Settings.CanvasId == null
-      || CanvasAssignments == null
-      || CanvasModules == null
-      || CanvasQuizzes == null
-    )
-      return;
-
-    Console.WriteLine("syncing with canvas");
-    LoadingCanvasData = true;
-    StateHasChanged?.Invoke();
-
-    var (
-      canvasAssignments,
-      canvasModules,
-      canvasModuleItems,
-      canvasQuizzes,
-      canvasAssignmentGroups
-    ) = await LoadCanvasData();
-
-    LoadingCanvasData = true;
-    StateHasChanged?.Invoke();
-
-    var canvasId =
-      LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to sync with canvas");
-
-    var newAssignmentGroups = await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(
-      canvasId, canvasAssignmentGroups, canvas);
-    LocalCourse = LocalCourse with
-    {
-      Settings = LocalCourse.Settings with
-      {
-        AssignmentGroups = newAssignmentGroups
-      }
-    };
-
-
-    await LocalCourse.CreateAllModules(
-      canvasId,
-      CanvasModules,
-      canvas
-    );
-    CanvasModules = await canvas.Modules.GetModules(canvasId);
-
-    await LocalCourse.SortCanvasModulesByLocalOrder(canvasId, CanvasModules, canvas);
-    CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
-
-    LocalCourse = await LocalCourse.SyncAssignmentsWithCanvas(canvasId, CanvasAssignments, canvas);
-    CanvasAssignments = await canvas.Assignments.GetAll(canvasId);
-
-    CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
-
-    await LocalCourse.SyncModuleItemsWithCanvas(canvasId, CanvasModulesItems, canvas, CanvasAssignments);
-    CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
-
-    LoadingCanvasData = false;
-    StateHasChanged?.Invoke();
-    Console.WriteLine("done syncing with canvas\n");
-  }
-
   public async Task CreateModule(LocalModule newModule)
   {
     if(LocalCourse == null)
@@ -187,5 +124,19 @@ public class CoursePlanner
     LocalCourse = null;
     CanvasAssignments = null;
     CanvasModules = null;
+  }
+
+  public async Task SyncAssignmentGroups()
+  {
+    if(LocalCourse == null)
+      return;
+
+    var canvasCourseId =
+      LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to use to create module");
+    
+    
+    CanvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
+
+    await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(canvasCourseId, CanvasAssignmentGroups, canvas);
   }
 }
