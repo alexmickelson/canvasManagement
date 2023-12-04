@@ -34,8 +34,7 @@ public class CourseMarkdownLoader
     LocalCourseSettings settings = await loadCourseSettings(courseDirectory);
     var modules = await loadCourseModules(courseDirectory);
 
-    return new()
-    {
+    return new() {
       Settings = settings,
       Modules = modules
     };
