@@ -5,9 +5,11 @@ public class MonthDetailTests
   [Test]
   public void TestCanGetMonthName()
   {
-    var detail = new MonthDetail();
     var calendarMonth = new CalendarMonth(2022, 2);
-    detail.Month = calendarMonth;
+    var detail = new MonthDetail()
+    {
+      Month = calendarMonth
+    };
 
     detail.MonthName.Should().Be("February");
   }

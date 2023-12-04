@@ -32,15 +32,6 @@
 
   public string? TemplateId { get; set; }
 
-  public Dictionary<string, string> VariableValues { get; set; } = new Dictionary<string, string>();
-
-  private AssignmentTemplate? selectedTemplate =>
-    planner
-    .LocalCourse?
-    .Settings
-    .AssignmentTemplates
-    .FirstOrDefault(t => t.Id == TemplateId);
-
   private void handleChange(string newRawAssignment)
   {
     rawText = newRawAssignment;

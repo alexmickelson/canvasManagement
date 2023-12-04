@@ -5,14 +5,22 @@ using YamlDotNet.Serialization;
 public class FileStorageManager
 {
   private readonly MyLogger<FileStorageManager> logger;
-  private static readonly string _basePath = "../storage";
+  private readonly CourseMarkdownLoader _courseMarkdownLoader;
+  private readonly string _basePath;
 
-  public FileStorageManager(MyLogger<FileStorageManager> logger)
+  public FileStorageManager(
+    MyLogger<FileStorageManager> logger,
+    CourseMarkdownLoader courseMarkdownLoader
+  )
   {
-    if (!Directory.Exists(_basePath))
-      throw new Exception("storage folder not found");
     this.logger = logger;
+    _courseMarkdownLoader = courseMarkdownLoader;
+    _basePath = FileConfiguration.GetBasePath();
+
+    logger.Log("Using storage directory: " + _basePath);
+    
   }
+
   public string CourseToYaml(LocalCourse course)
   {
     var serializer = new SerializerBuilder().DisableAliases().Build();
@@ -131,6 +139,7 @@ public class FileStorageManager
     }
     removeOldAssignments(assignmentsDirectory, module);
   }
+
   private void removeOldAssignments(string path, LocalModule module)
   {
     var existingFiles = Directory.EnumerateFiles(path);
@@ -166,68 +175,9 @@ public class FileStorageManager
     return courses;
   }
 
-  // public async Task<LocalCourse> LoadCourseByName(string courseName)
-  // {
-  //   var courseDirectory = $"{_basePath}/{courseName}";
-  //   if (!Directory.Exists(courseDirectory))
-  //   {
-  //     var errorMessage = $"error loading course by name, could not find folder {courseDirectory}";
-  //     logger.Log(errorMessage);
-  //     throw new LoadCourseFromFileException(errorMessage);
-  //   }
-  //   var settingsPath = $"{courseDirectory}/settings.yml";
-  //   if (!Directory.Exists(settingsPath))
-  //   {
-  //     var errorMessage = $"error loading course by name, settings file {settingsPath}";
-  //     logger.Log(errorMessage);
-  //     throw new LoadCourseFromFileException(errorMessage);
-  //   }
+  public async Task<IEnumerable<LocalCourse>> LoadSavedMarkdownCourses()
+  {
+    return await _courseMarkdownLoader.LoadSavedMarkdownCourses();
+  }
 
-  //   var settingsString = await File.ReadAllTextAsync(settingsPath);
-  //   var settings = LocalCourseSettings.ParseYaml(settingsString);
-
-  //   var modulePaths = Directory.GetDirectories(courseDirectory);
-  //   var modules = modulePaths
-  //     .Select(LoadModuleFromPath)
-  //     .ToArray();
-
-  // }
-
-  // public async Task<LocalModule> LoadModuleFromPath(string modulePath)
-  // {
-  //   var assignmentsPath = $"{modulePath}/assignments";
-  //   if (!Directory.Exists(assignmentsPath))
-  //   {
-  //     var errorMessage = $"error loading course by name, assignments folder does not exist in {modulePath}";
-  //     logger.Log(errorMessage);
-  //     throw new LoadCourseFromFileException(errorMessage);
-  //   }
-
-  //   var quizzesPath = $"{modulePath}/quizzes";
-  //   if (!Directory.Exists(quizzesPath))
-  //   {
-  //     var errorMessage = $"error loading course by name, quizzes folder does not exist in {modulePath}";
-  //     logger.Log(errorMessage);
-  //     throw new LoadCourseFromFileException(errorMessage);
-  //   }
-
-
-  //   var assignments = LoadAssignmentsFromPath(assignmentsPath);
-  //   var quizzes = LoadQuizzesFromPath(quizzesPath);
-
-
-  // }
-  // public async Task<IEnumerable<LocalAssignment>> LoadAssignmentsFromPath(string assignmentsFolder)
-  // {
-
-  // }
-  // public async Task<IEnumerable<LocalAssignment>> LoadQuizzesFromPath(string quizzesFolder)
-  // {
-
-  // }
-}
-
-
-public class LoadCourseFromFileException(string message) : Exception(message)
-{
 }
