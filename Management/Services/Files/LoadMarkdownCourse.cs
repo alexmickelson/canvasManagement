@@ -17,7 +17,13 @@ public class CourseMarkdownLoader
     var courseDirectories = Directory.GetDirectories(_basePath);
 
     var courses = await Task.WhenAll(
-      courseDirectories.Select(async n => await LoadCourseByPath(n))
+      courseDirectories
+        .Where(d =>
+        {
+          var settingsPath = $"{d}/settings.yml";
+          return File.Exists(settingsPath);
+        })
+        .Select(async d => await LoadCourseByPath(d))
     );
     return courses;
   }
@@ -31,10 +37,13 @@ public class CourseMarkdownLoader
       throw new LoadCourseFromFileException(errorMessage);
     }
 
+
+
     LocalCourseSettings settings = await loadCourseSettings(courseDirectory);
     var modules = await loadCourseModules(courseDirectory);
 
-    return new() {
+    return new()
+    {
       Settings = settings,
       Modules = modules
     };

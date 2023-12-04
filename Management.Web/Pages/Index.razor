@@ -72,49 +72,10 @@
     </div>
 
     <div class="border rounded bg-dark-subtle p-3 my-3">
-      <InitializeYamlFromCanvas NewFileCreated="NewFileCreated" />
+      <InitializeNewCourse NewFileCreated="NewFileCreated" />
     </div>
   }
 }
-
-@* @if(planner.LocalCourse != null)
-{
-  <div class="mb-3 d-flex justify-content-between" style="height: 4em;">
-    <div class="my-auto">
-      <button
-        @onclick="planner.Clear"
-        class="btn btn-primary"
-      >
-        Select New Course
-      </button>
-      <CourseSettings />
-      <AssignmentTemplateManagement />
-
-      <button 
-        class="btn btn-outline-primary"
-        @onclick="planner.SyncWithCanvas"
-      >
-        Sync With Canvas
-      </button>
-      <a 
-        class="btn btn-outline-secondary"
-        target="_blank"
-        href="@($"{Environment.GetEnvironmentVariable("CANVAS_URL")}/courses/{planner.LocalCourse.CanvasId}")"
-      >
-        View In Canvas
-      </a>
-      <div class="my-auto ms-2 d-inline">
-        @planner.LocalCourse.Settings.Name
-      </div>
-    </div>
-
-    @if(planner.LoadingCanvasData)
-    {
-      <Spinner />
-    }
-  </div>
-  <CourseDetails />
-} *@
 <br>
 
 

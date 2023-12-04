@@ -25,7 +25,6 @@
     {
       _selectedTermId = value;
       this.InvokeAsync(updateCourses);
-      @* updateCourses(); *@
     }
   }
   private EnrollmentTermModel? selectedTerm
@@ -47,23 +46,29 @@
   {
     get => courses?.First(c => c.Id == selectedCourseId);
   }
+
   private List<DayOfWeek> days { get; set; } = new();
+
+  private IEnumerable<string> directoriesNotUsed { get; set; } = [];
+  private string? selectedStorageDirectory { get; set; } = null;
   protected override async Task OnInitializedAsync()
   {
     loadingTerms = true;
     terms = await canvas.GetCurrentTermsFor();
     loadingTerms = false;
+    directoriesNotUsed = await fileStorageManager.GetEmptyDirectories();
   }
-  private async Task YamlTrigger()
+
+  private async Task SaveNewCourse()
   {
-    if (selectedCourse != null)
+    if (selectedCourse != null && selectedStorageDirectory != null && selectedStorageDirectory != string.Empty)
     {
       var course = new LocalCourse
         {
           Modules = new LocalModule[] { },
           Settings = new LocalCourseSettings()
           {
-            Name = selectedCourse.Name,
+            Name = Path.GetFileName(selectedStorageDirectory),
             CanvasId = selectedCourse.Id,
             StartDate = selectedTerm?.StartAt ?? new DateTime(),
             EndDate = selectedTerm?.EndAt ?? new DateTime(),
@@ -105,7 +110,11 @@
   <div class="row justify-content-center">
   <div class="col-auto">
     <label for="termselect">Select Term:</label>
-    <select id="termselect" class="form-select" @bind="selectedTermId">
+    <select 
+      id="termselect" 
+      class="form-select" 
+      @bind="selectedTermId"
+    >
       @foreach (var term in terms)
         {
           <option value="@term.Id">@term.Name</option>
@@ -126,12 +135,28 @@
   @if (courses != null)
   {
     <div class="row justify-content-center m-3">
-  <div class="col-auto">
-    <label for="courseselect">Select Course:</label>
-    <select id="courseselect" class="form-select" @bind="selectedCourseId">
-      @foreach (var course in courses)
+      <div class="col-auto">
+        <label for="courseselect">Select Course:</label>
+        <select id="courseselect" class="form-select" @bind="selectedCourseId">
+        @foreach (var course in courses)
+        {
+          <option value="@course.Id">@course.Name</option>
+        }
+        </select>
+      </div>
+    </div>
+    <div class="row justify-content-center m-3">
+      <div class="col-auto">
+        <label for="directorySelect">Select Storage Directory:</label>
+        <select 
+          id="directorySelect" 
+          class="form-select" 
+          @bind="selectedStorageDirectory"
+        >
+          <option></option>
+          @foreach (var folder in directoriesNotUsed)
           {
-            <option value="@course.Id">@course.Name</option>
+            <option value="@folder">@folder</option>
           }
         </select>
       </div>
@@ -143,16 +168,19 @@
   @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
     {
       <div class="col">
-        <button class="@(
+        <button 
+          class="@(
             days.Contains(day) 
             ? "btn btn-secondary" 
             : "btn btn-outline-secondary"
-          )" @onclick="() => {
+          )" 
+          @onclick="() => {
             if(days.Contains(day))
               days.Remove(day);
             else
               days.Add(day);
-          }">
+          }"
+        >
           @day
         </button>
       </div>
@@ -161,8 +189,8 @@
 
 
   <div class="text-center">
-    <button @onclick="YamlTrigger" class="btn btn-primary">
-      Save Yaml File
+    <button @onclick="SaveNewCourse" class="btn btn-primary">
+      Create Course Files
     </button>
   </div>
 }
