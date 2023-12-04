@@ -66,10 +66,8 @@ public class FileStorageManager
       {
         Console.WriteLine($"deleting extra module directory, it was probably renamed {moduleDirectoryPath}");
         Directory.Delete(moduleDirectoryPath, true);
-
       }
     }
-
   }
 
   private static async Task saveSettings(LocalCourse course, string courseDirectory)

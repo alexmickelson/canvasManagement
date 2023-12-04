@@ -142,9 +142,9 @@ public static partial class AssignmentSyncronizationExtensions
         : new DateTime();
     var localComparisonLockDate = canvasAssignment.LockAt != null
       ? new DateTime(
-        year: localAssignment.LockAt?.Year ?? 0,
-        month: localAssignment.LockAt?.Month ?? 0,
-        day: localAssignment.LockAt?.Day ?? 0,
+        year: localAssignment.LockAt?.Year ?? 1,
+        month: localAssignment.LockAt?.Month ?? 1,
+        day: localAssignment.LockAt?.Day ?? 1,
         hour: localAssignment.LockAt?.Hour ?? 0,
         minute: localAssignment.LockAt?.Minute ?? 0,
         second: localAssignment.LockAt?.Second ?? 0
