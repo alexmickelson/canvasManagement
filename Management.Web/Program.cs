@@ -35,6 +35,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 
 builder.Services.AddLogging();
+
 builder.Services.AddScoped(typeof(MyLogger<>));
 
 builder.Services.AddScoped<IWebRequestor, WebRequestor>();
@@ -45,7 +46,10 @@ builder.Services.AddScoped<CanvasQuizService>();
 builder.Services.AddScoped<CanvasModuleService>();
 builder.Services.AddScoped<CanvasService, CanvasService>();
 
+builder.Services.AddScoped<MarkdownCourseSaver>();
+builder.Services.AddScoped<CourseMarkdownLoader>();
 builder.Services.AddScoped<FileStorageManager>();
+
 builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentEditorContext>();
 builder.Services.AddScoped<QuizEditorContext>();

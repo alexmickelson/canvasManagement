@@ -1,7 +1,5 @@
-using System.Reflection.Metadata.Ecma335;
 using LocalModels;
 using Management.Services;
-using YamlDotNet.Serialization;
 
 public class CourseMarkdownLoader
 {
@@ -41,8 +39,6 @@ public class CourseMarkdownLoader
       Settings = settings,
       Modules = modules
     };
-
-
   }
 
   private async Task<LocalCourseSettings> loadCourseSettings(string courseDirectory)

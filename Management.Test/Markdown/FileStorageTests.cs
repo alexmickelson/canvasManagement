@@ -9,7 +9,7 @@ public class FileStorageTests
   private FileStorageManager fileManager { get; set; }
 
 
-  private string setupTempDirectory()
+  private static string setupTempDirectory()
   {
     var tempDirectory = Path.GetTempPath();
     var storageDirectory = tempDirectory + "fileStorageTests";
@@ -18,16 +18,12 @@ public class FileStorageTests
       Directory.CreateDirectory(storageDirectory);
     else
     {
-      var di = new DirectoryInfo(storageDirectory);
+      var dirInfo = new DirectoryInfo(storageDirectory);
 
-      foreach (FileInfo file in di.GetFiles())
-      {
+      foreach (var file in dirInfo.GetFiles())
         file.Delete();
-      }
-      foreach (DirectoryInfo dir in di.GetDirectories())
-      {
+      foreach (var dir in dirInfo.GetDirectories())
         dir.Delete(true);
-      }
     }
 
     return storageDirectory;
@@ -40,10 +36,12 @@ public class FileStorageTests
 
     var fileManagerLogger = new MyLogger<FileStorageManager>(NullLogger<FileStorageManager>.Instance);
     var markdownLoaderLogger = new MyLogger<CourseMarkdownLoader>(NullLogger<CourseMarkdownLoader>.Instance);
+    var markdownSaverLogger = new MyLogger<MarkdownCourseSaver>(NullLogger<MarkdownCourseSaver>.Instance);
 
     Environment.SetEnvironmentVariable("storageDirectory", storageDirectory);
     var markdownLoader = new CourseMarkdownLoader(markdownLoaderLogger);
-    fileManager = new FileStorageManager(fileManagerLogger, markdownLoader);
+    var markdownSaver = new MarkdownCourseSaver(markdownSaverLogger);
+    fileManager = new FileStorageManager(fileManagerLogger, markdownLoader, markdownSaver);
   }
 
   [Test]
@@ -51,10 +49,7 @@ public class FileStorageTests
   {
     LocalCourse testCourse = new LocalCourse
     {
-      Settings = new()
-      {
-        Name = "test empty course",
-      },
+      Settings = new() { Name = "test empty course" },
       Modules = []
     };
 
@@ -69,10 +64,8 @@ public class FileStorageTests
   [Test]
   public async Task CourseSettings_CanBeSavedAndLoaded()
   {
-    LocalCourse testCourse = new()
-    {
-      Settings = new()
-      {
+    LocalCourse testCourse = new() {
+      Settings = new() {
         AssignmentGroups = [],
         Name = "Test Course with settings",
         DaysOfWeek = [DayOfWeek.Monday, DayOfWeek.Wednesday],
@@ -95,12 +88,8 @@ public class FileStorageTests
   [Test]
   public async Task EmptyCourseModules_CanBeSavedAndLoaded()
   {
-    LocalCourse testCourse = new()
-    {
-      Settings = new()
-      {
-        Name = "Test Course with modules",
-      },
+    LocalCourse testCourse = new() {
+      Settings = new() { Name = "Test Course with modules" },
       Modules = [
         new() {
           Name="test module 1",
@@ -121,12 +110,8 @@ public class FileStorageTests
   [Test]
   public async Task CourseModules_WithAssignments_CanBeSavedAndLoaded()
   {
-    LocalCourse testCourse = new()
-    {
-      Settings = new()
-      {
-        Name = "Test Course with modules and assignments",
-      },
+    LocalCourse testCourse = new() {
+      Settings = new() { Name = "Test Course with modules and assignments" },
       Modules = [
         new() {
           Name="test module 1 with assignments",
@@ -161,8 +146,7 @@ public class FileStorageTests
   [Test]
   public async Task CourseModules_WithQuizzes_CanBeSavedAndLoaded()
   {
-    LocalCourse testCourse = new()
-    {
+    LocalCourse testCourse = new() {
       Settings = new() { Name = "Test Course with modules and quiz" },
       Modules = [
         new() {
@@ -202,7 +186,7 @@ public class FileStorageTests
   [Test]
   public async Task MarkdownStorage_FullyPopulated_DoesNotLoseData()
   {
-    LocalCourse testCourse = new (){
+    LocalCourse testCourse = new() {
       Settings = new () {
         AssignmentGroups = [],
         Name = "Test Course with lots of data",
