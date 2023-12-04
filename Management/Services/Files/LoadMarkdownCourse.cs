@@ -52,7 +52,9 @@ public class CourseMarkdownLoader
 
     var settingsString = await File.ReadAllTextAsync(settingsPath);
     var settings = LocalCourseSettings.ParseYaml(settingsString);
-    return settings;
+
+    var folderName = Path.GetFileName(courseDirectory);
+    return settings with { Name = folderName };
   }
 
   private async Task<IEnumerable<LocalModule>> loadCourseModules(string courseDirectory)
