@@ -49,15 +49,15 @@ public class AssignmentEditorContext
               ? currentModule with
               {
                 Assignments = currentModule.Assignments
-                  .Select(a => a == Assignment ? newAssignment : a)
+                  .Select(a => a.Name == Assignment.Name ? newAssignment : a)
                   .ToArray()
               }
               : m
         )
         .ToArray();
+      planner.LocalCourse = planner.LocalCourse with { Modules = updatedModules };
 
       Assignment = newAssignment;
-      planner.LocalCourse = planner.LocalCourse with { Modules = updatedModules };
     }
   }
 

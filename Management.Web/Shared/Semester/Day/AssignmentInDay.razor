@@ -5,7 +5,7 @@
 @inject NavigationManager Navigation
 @inject AssignmentEditorContext assignmentContext
 
-@inject ILogger<AssignmentInDay> logger
+@inject MyLogger<AssignmentInDay> logger
 @inherits DroppableAssignment
 
 @code {
@@ -38,7 +38,7 @@
     {
       assignmentContext.Assignment = Assignment;
       Navigation.NavigateTo("/course/" + planner.LocalCourse.Settings.Name + "/assignment/" + Assignment.Name);
-      logger.LogInformation("navigating to assignment page");
+      logger.Log("navigating to assignment page");
     }
   }
 }

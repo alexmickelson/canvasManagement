@@ -3,7 +3,7 @@
 @inject FileStorageManager fileStorageManager
 @inject CoursePlanner planner
 @inject NavigationManager Navigation
-@inject ILogger<CurrentFiles> logger
+@inject MyLogger<CurrentFiles> logger
 
 @code
 {
@@ -17,10 +17,8 @@
 
   void handleClick(MouseEventArgs e, LocalCourse course)
   {
-    @* logger.LogInformation("here"); *@
     planner.LocalCourse = course;
     Navigation.NavigateTo("/course/" + course.Settings.Name);
-    Console.WriteLine("navigated to course detail");
   }
 }
 

@@ -16,7 +16,7 @@
 @inject CanvasService canvas
 @inject CoursePlanner planner
 @inject QuizEditorContext quizContext
-@inject ILogger<QuizFormPage> logger
+@inject MyLogger<QuizFormPage> logger
 @inject NavigationManager Navigation
 
 @code {
@@ -45,12 +45,12 @@
     if (loading)
     {
       loading = false;
-      logger.LogInformation($"loading quiz {CourseName} {QuizName}");
+      logger.Log($"loading quiz {CourseName} {QuizName}");
       if (planner.LocalCourse == null)
       {
         var courses = await fileStorageManager.LoadSavedCourses();
         planner.LocalCourse = courses.First(c => c.Settings.Name == CourseName);
-        logger.LogInformation($"set course to '{planner.LocalCourse?.Settings.Name}'");
+        logger.Log($"set course to '{planner.LocalCourse?.Settings.Name}'");
       }
 
       if (quizContext.Quiz == null)
@@ -62,7 +62,7 @@
           .FirstOrDefault(q => q.Name == QuizName);
 
         quizContext.Quiz = quiz;
-        logger.LogInformation($"set quiz to '{quizContext.Quiz?.Name}'");
+        logger.Log($"set quiz to '{quizContext.Quiz?.Name}'");
       }
       StateHasChanged();
 

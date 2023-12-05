@@ -15,6 +15,8 @@ global using Management.Web.Shared.Components.Forms;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using dotenv.net;
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 DotEnv.Load();
 
@@ -60,6 +62,8 @@ builder.Services.AddSignalR(e =>
     e.MaximumReceiveMessageSize = 102400000;
 });
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -79,4 +83,14 @@ app.UseRouting();
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
-app.Run();
+
+app.Start();
+
+var addresses = app.Services.GetService<IServer>().Features.Get<IServerAddressesFeature>().Addresses;
+
+foreach (var address in addresses)
+{
+    Console.WriteLine("Running at: " + address);
+}
+
+app.WaitForShutdown();

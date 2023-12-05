@@ -55,15 +55,6 @@
       {
         StateHasChanged();
       }
-
-      @* if (assignmentContext.Assignment != null)
-      {
-        var newAssignment = assignmentContext.Assignment with
-        {
-          Description = newRawAssignment
-        };
-        assignmentContext.SaveAssignment(newAssignment);
-      } *@
     }
     StateHasChanged();
   }

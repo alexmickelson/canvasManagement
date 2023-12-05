@@ -167,31 +167,16 @@
   <div class="flex-grow-1 d-flex flex-column">
     @if (assignmentContext.Assignment != null)
     {
-      <div class="m-1">
-        <label class="form-label">
-          Name
-        </label>
-        <input class="form-control" @bind="name" @oninput="handleNameChange" />
-      </div>
-
-        <ButtonSelect  
+        @* <ButtonSelect  
           Label="Assignment Group" 
           Options="planner.LocalCourse?.Settings.AssignmentGroups" 
           GetName="(g) => g?.Name"
           OnSelect="(g) => setAssignmentGroup(g)" 
           SelectedOption="selectedAssignmentGroup" 
-        />
+        /> *@
       <div class="m-1 flex-grow-1">
         <AssignmentMarkdownEditor />
       </div>
-
-      @* <div class="container">
-        <RubricMarkdownEditor />
-        <hr>
-        <div class="mx-5 px-5">
-          <SubmissionTypeSelector />
-        </div>
-      </div> *@
     }
   </div>
 

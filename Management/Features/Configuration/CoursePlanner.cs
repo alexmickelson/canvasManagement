@@ -7,17 +7,20 @@ using CanvasModel.Modules;
 using Management.Services.Canvas;
 using System.Text.RegularExpressions;
 using CanvasModel.Quizzes;
+using Management.Services;
 
 namespace Management.Planner;
 
 public class CoursePlanner
 {
+  private readonly MyLogger<CoursePlanner> logger;
   private readonly FileStorageManager fileStorageManager;
   private readonly CanvasService canvas;
   public bool LoadingCanvasData { get; internal set; } = false;
 
-  public CoursePlanner(FileStorageManager fileStorageManager, CanvasService canvas)
+  public CoursePlanner(MyLogger<CoursePlanner> logger, FileStorageManager fileStorageManager, CanvasService canvas)
   {
+    this.logger = logger;
     this.fileStorageManager = fileStorageManager;
     this.canvas = canvas;
   }
@@ -41,6 +44,14 @@ public class CoursePlanner
 
       var verifiedCourse = value.GeneralCourseCleanup();
 
+      if (_localCourse == null)
+      {
+        _localCourse = verifiedCourse;
+        _lastSavedCourse = verifiedCourse;
+        StateHasChanged?.Invoke();
+        return;
+      }
+
       _debounceTimer?.Dispose();
       _debounceTimer = new Timer(
         async (_) => await saveCourseToFile(verifiedCourse),
@@ -61,16 +72,25 @@ public class CoursePlanner
     // ignore initial load of course
     if (LocalCourse == null)
     {
-      Console.WriteLine("saving course as of debounce call time");
+      logger.Trace("saving course as of debounce call time");
       await fileStorageManager.SaveCourseAsync(courseAsOfDebounce, null);
       _lastSavedCourse = courseAsOfDebounce;
     }
     else
     {
-      Console.WriteLine("Saving latest version of file");
+      if (_lastSavedCourse == null)
+      {
+        logger.Trace("not saving course, no prevous saved course");
+        _lastSavedCourse = LocalCourse ?? courseAsOfDebounce;
+        return;
+      }
+
+
+      logger.Trace("Saving latest version of file");
       var courseToSave = LocalCourse;
       await fileStorageManager.SaveCourseAsync(courseToSave, _lastSavedCourse);
       _lastSavedCourse = courseToSave;
+
     }
   }
 
@@ -115,7 +135,7 @@ public class CoursePlanner
 
   public async Task CreateModule(LocalModule newModule)
   {
-    if(LocalCourse == null)
+    if (LocalCourse == null)
       return;
     var canvasCourseId =
       LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to use to create module");
@@ -132,13 +152,13 @@ public class CoursePlanner
 
   public async Task SyncAssignmentGroups()
   {
-    if(LocalCourse == null)
+    if (LocalCourse == null)
       return;
 
     var canvasCourseId =
       LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to use to create module");
-    
-    
+
+
     CanvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
 
     await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(canvasCourseId, CanvasAssignmentGroups, canvas);

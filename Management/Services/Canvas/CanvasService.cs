@@ -12,7 +12,7 @@ public class CanvasService
 {
   private readonly IWebRequestor webRequestor;
   private readonly CanvasServiceUtils utils;
-  private readonly ILogger<CanvasService> logger;
+  private readonly MyLogger<CanvasService> logger;
 
   public CanvasAssignmentService Assignments { get; }
   public CanvasAssignmentGroupService AssignmentGroups { get; }
@@ -26,7 +26,7 @@ public class CanvasService
     CanvasAssignmentGroupService AssignmentGroups,
     CanvasModuleService Modules,
     CanvasQuizService Quizzes,
-    ILogger<CanvasService> logger
+    MyLogger<CanvasService> logger
   )
   {
     this.webRequestor = webRequestor;
@@ -64,8 +64,8 @@ public class CanvasService
 
     if (data == null)
     {
-      logger.LogError(response.Content);
-      logger.LogError(response.ResponseUri?.ToString());
+      logger.Error(response.Content);
+      logger.Error(response.ResponseUri?.ToString());
       throw new Exception("error getting course from canvas");
     }
     return data;
@@ -95,7 +95,7 @@ public class CanvasService
     CanvasModuleItem item
   )
   {
-    logger.LogInformation($"updating module item {item.Title}");
+    logger.Log($"updating module item {item.Title}");
     var url = $"courses/{canvasCourseId}/modules/{canvasModuleId}/items/{item.Id}";
     var body = new { module_item = new { title = item.Title, position = item.Position } };
     var request = new RestRequest(url);
@@ -114,7 +114,7 @@ public class CanvasService
     ulong contentId
   )
   {
-    logger.LogInformation($"creating new module item {title}");
+    logger.Log($"creating new module item {title}");
     var url = $"courses/{canvasCourseId}/modules/{canvasModuleId}/items";
     var body = new
     {
