@@ -22,7 +22,7 @@ public class MarkdownCourseSaver
     await saveModules(course, courseDirectory, previouslyStoredCourse);
   }
 
-  private async Task saveModules(LocalCourse course, string courseDirectory, LocalCourse previouslyStoredCourse)
+  private async Task saveModules(LocalCourse course, string courseDirectory, LocalCourse? previouslyStoredCourse)
   {
     foreach (var module in course.Modules)
     {
@@ -30,7 +30,7 @@ public class MarkdownCourseSaver
       if (!Directory.Exists(moduleDirectory))
         Directory.CreateDirectory(moduleDirectory);
 
-      await saveQuizzes(course, module);
+      await saveQuizzes(course, module, previouslyStoredCourse);
       await saveAssignments(course, module, previouslyStoredCourse);
     }
 
@@ -53,7 +53,7 @@ public class MarkdownCourseSaver
     await File.WriteAllTextAsync(settingsFilePath, settingsYaml);
   }
 
-  private async Task saveQuizzes(LocalCourse course, LocalModule module)
+  private async Task saveQuizzes(LocalCourse course, LocalModule module, LocalCourse? previouslyStoredCourse)
   {
     var quizzesDirectory = $"{_basePath}/{course.Settings.Name}/{module.Name}/quizzes";
     if (!Directory.Exists(quizzesDirectory))
@@ -62,9 +62,17 @@ public class MarkdownCourseSaver
 
     foreach (var quiz in module.Quizzes)
     {
-      var markdownPath = quizzesDirectory + "/" + quiz.Name + ".md"; ;
-      var quizMarkdown = quiz.ToMarkdown();
-      await File.WriteAllTextAsync(markdownPath, quizMarkdown);
+
+      var previousModule = previouslyStoredCourse?.Modules.FirstOrDefault(m => m.Name == module.Name);
+      var previousQuiz = previousModule?.Quizzes.FirstOrDefault(q => q == quiz);
+
+      if (previousQuiz == null)
+      {
+        var markdownPath = quizzesDirectory + "/" + quiz.Name + ".md"; ;
+        var quizMarkdown = quiz.ToMarkdown();
+        logger.Log("saving quiz " + markdownPath);
+        await File.WriteAllTextAsync(markdownPath, quizMarkdown);
+      }
     }
     removeOldQuizzes(quizzesDirectory, module);
   }
@@ -109,8 +117,8 @@ public class MarkdownCourseSaver
         var assignmentMarkdown = assignment.ToMarkdown();
 
         var filePath = assignmentsDirectory + "/" + assignment.Name + ".md";
+        logger.Log("saving assignment " + filePath);
         await File.WriteAllTextAsync(filePath, assignmentMarkdown);
-        logger.Trace("saving assignment " + filePath);
       }
     }
     removeOldAssignments(assignmentsDirectory, module);
