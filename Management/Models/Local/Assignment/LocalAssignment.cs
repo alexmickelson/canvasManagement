@@ -8,8 +8,17 @@ namespace LocalModels;
 
 public record LocalAssignment
 {
-  // public ulong? CanvasId { get; init; } = null;
-  public string Name { get; init; } = "";
+  private string _name = "";
+  public string Name
+  {
+    get => _name;
+    init
+    {
+      if (value.Contains(':'))
+        throw new AssignmentMarkdownParseException("Name cannot contain a ':' character, it breaks windows filesystems " + value);
+      _name = value;
+    }
+  }
   public string Description { get; init; } = "";
   // public bool LockAtDueDate { get; init; }
   public DateTime? LockAt { get; init; }
@@ -18,7 +27,6 @@ public record LocalAssignment
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public int PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
-
   public string GetRubricHtml()
   {
     var output = "<h1>Rubric</h1><pre><code class=\"language-json\">[\n";
@@ -62,13 +70,13 @@ public record LocalAssignment
     var rubric = ParseRubricMarkdown(rubricString);
     return new LocalAssignment()
     {
-      Name=name.Trim(),
-      LocalAssignmentGroupName=localAssignmentGroupName.Trim(),
-      SubmissionTypes=submissionTypes,
-      DueAt=dueAt,
-      LockAt=lockAt,
-      Rubric=rubric,
-      Description=description.Trim()
+      Name = name.Trim(),
+      LocalAssignmentGroupName = localAssignmentGroupName.Trim(),
+      SubmissionTypes = submissionTypes,
+      DueAt = dueAt,
+      LockAt = lockAt,
+      Rubric = rubric,
+      Description = description.Trim()
     };
   }
 
@@ -174,7 +182,7 @@ public record LocalAssignment
 
   public static IEnumerable<RubricItem> ParseRubricMarkdown(string rawMarkdown)
   {
-    if(rawMarkdown.Trim() == string.Empty)
+    if (rawMarkdown.Trim() == string.Empty)
       return [];
     var lines = rawMarkdown.Trim().Split(Environment.NewLine);
     var items = lines.Select(parseIndividualRubricItemMarkdown).ToArray();

@@ -37,8 +37,6 @@ public class CourseMarkdownLoader
       throw new LoadCourseFromFileException(errorMessage);
     }
 
-
-
     LocalCourseSettings settings = await loadCourseSettings(courseDirectory);
     var modules = await loadCourseModules(courseDirectory);
 
@@ -73,7 +71,7 @@ public class CourseMarkdownLoader
       modulePaths
         .Select(loadModuleFromPath)
     );
-    return modules;
+    return modules.OrderBy(m => m.Name);
   }
 
   private async Task<LocalModule> loadModuleFromPath(string modulePath)
