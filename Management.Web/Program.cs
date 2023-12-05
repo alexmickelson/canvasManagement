@@ -55,6 +55,11 @@ builder.Services.AddScoped<AssignmentEditorContext>();
 builder.Services.AddScoped<QuizEditorContext>();
 builder.Services.AddScoped<DragContainer>();
 
+builder.Services.AddSignalR(e =>
+{
+    e.MaximumReceiveMessageSize = 102400000;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -9,6 +9,6 @@ services:
     environment:
       - storageDirectory=/app/storage
     volumes:
-      # - ./storage:/app/storage
-      - ~/projects/faculty/1410/2023-fall-alex/modules:/app/storage/1410
-      - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/web_intro
+      - ./storage:/app/storage
+      # - ~/projects/faculty/1410/2023-fall-alex/modules:/app/storage/1410
+      # - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/web_intro
