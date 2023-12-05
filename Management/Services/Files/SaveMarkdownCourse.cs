@@ -13,7 +13,7 @@ public class MarkdownCourseSaver
     _basePath = FileConfiguration.GetBasePath();
   }
 
-  public async Task Save(LocalCourse course, LocalCourse previouslyStoredCourse)
+  public async Task Save(LocalCourse course, LocalCourse? previouslyStoredCourse)
   {
     var courseDirectory = $"{_basePath}/{course.Settings.Name}";
     if (!Directory.Exists(courseDirectory))

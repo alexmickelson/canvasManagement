@@ -5,7 +5,7 @@
 @code {
   private Modal? modal { get; set; }
 
-  private LocalQuiz testQuiz;
+  private LocalQuiz? testQuiz;
 
   private string? error { get; set; } = null;
   private string _quizMarkdownInput { get; set; } = "";
@@ -68,7 +68,10 @@
         {
           <p class="text-danger text-truncate">Error: @error</p>
         }
-        <QuizPreview Quiz="testQuiz" />
+        @if(testQuiz != null)
+        {
+          <QuizPreview Quiz="testQuiz" />
+        }
       </div>
     </div>
   </div>

@@ -71,12 +71,15 @@
     </form>
     <br>
     <label class="form-label">Assignment Group</label>
-    <ButtonSelect
-      Label="Assignment Group"
-      Options="planner.LocalCourse.Settings.AssignmentGroups"
-      GetName="(g) => g?.Name"
-      OnSelect="(g) => setAssignmentGroup(g)"
-    />
+    @if(planner != null && planner.LocalCourse != null)
+    {
+      <ButtonSelect
+        Label="Assignment Group"
+        Options="planner.LocalCourse.Settings.AssignmentGroups"
+        GetName="(g) => g?.Name"
+        OnSelect="(g) => setAssignmentGroup(g)"
+      />
+    }
   </Body>
   <Footer>
     <button

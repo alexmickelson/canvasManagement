@@ -23,7 +23,7 @@ public class FileStorageManager
     this.logger.Log("Using storage directory: " + _basePath);
 
   }
-  public async Task SaveCourseAsync(LocalCourse course, LocalCourse previouslyStoredCourse)
+  public async Task SaveCourseAsync(LocalCourse course, LocalCourse? previouslyStoredCourse)
   {
     await _saveMarkdownCourse.Save(course, previouslyStoredCourse);
   }
@@ -39,7 +39,7 @@ public class FileStorageManager
     return await _courseMarkdownLoader.LoadSavedMarkdownCourses();
   }
 
-  public async Task<IEnumerable<string>> GetEmptyDirectories()
+  public IEnumerable<string> GetEmptyDirectories()
   {
     if(!Directory.Exists(_basePath))
       throw new DirectoryNotFoundException($"Cannot get empty directories,  {_basePath} does not exist");

@@ -4,10 +4,10 @@
 
 @code {
   [Parameter, EditorRequired]
-  public string Value { get; set; }
+  public string Value { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public Action<string> OnChange { get; set; }
+  public Action<string> OnChange { get; set; } = default!;
 
   private string randomId = "monaco-editor-" + BitConverter.ToString(new byte[16].Select(b => (byte)new Random().Next(256)).ToArray()).Replace("-", "");
 

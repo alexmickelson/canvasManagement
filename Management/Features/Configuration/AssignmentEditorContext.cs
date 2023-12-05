@@ -37,7 +37,7 @@ public class AssignmentEditorContext
 
   public void SaveAssignment(LocalAssignment newAssignment)
   {
-    if (planner.LocalCourse != null)
+    if (planner.LocalCourse != null && Assignment != null)
     {
       // run discovery on Assignment, it was the last stored version of the assignment
       var currentModule = getCurrentLocalModule(Assignment, planner.LocalCourse);
@@ -106,7 +106,6 @@ public class AssignmentEditorContext
       courseId: (ulong)planner.LocalCourse.Settings.CanvasId,
       canvasAssignmentId: canvasAssignmentId,
       localAssignment: Assignment,
-      htmlDescription: Assignment.GetDescriptionHtml(),
       canvasAssignmentGroupId: (ulong)canvasAssignmentGroupId
     );
   }

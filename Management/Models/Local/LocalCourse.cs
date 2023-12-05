@@ -3,7 +3,7 @@ namespace LocalModels;
 public record LocalCourse
 {
   public IEnumerable<LocalModule> Modules { get; init; } = Enumerable.Empty<LocalModule>();
-  public LocalCourseSettings Settings { get; set; }
+  public required LocalCourseSettings Settings { get; set; }
 }
 
 public record SimpleTimeOnly

@@ -38,7 +38,6 @@ public class CanvasAssignmentService
   public async Task<ulong> Create(
     ulong canvasCourseId,
     LocalAssignment localAssignment,
-    string htmlDescription,
     ulong? canvasAssignmentGroupId
   )
   {
@@ -49,7 +48,7 @@ public class CanvasAssignmentService
     {
       name = localAssignment.Name,
       submission_types = localAssignment.SubmissionTypes.Select(t => t.ToString()),
-      description = htmlDescription,
+      description = localAssignment.GetDescriptionHtml(),
       due_at = localAssignment.DueAt,
       lock_at = localAssignment.LockAt,
       points_possible = localAssignment.PointsPossible,
@@ -71,8 +70,7 @@ public class CanvasAssignmentService
     ulong courseId,
     ulong canvasAssignmentId,
     LocalAssignment localAssignment,
-    string htmlDescription,
-    ulong canvasAssignmentGroupId
+    ulong? canvasAssignmentGroupId
   )
   {
     log.Log($"updating assignment: {localAssignment.Name}");

@@ -64,8 +64,8 @@ public class CanvasService
 
     if (data == null)
     {
-      logger.Error(response.Content);
-      logger.Error(response.ResponseUri?.ToString());
+      logger.Error(response?.Content ?? "");
+      logger.Error(response?.ResponseUri?.ToString() ?? "");
       throw new Exception("error getting course from canvas");
     }
     return data;

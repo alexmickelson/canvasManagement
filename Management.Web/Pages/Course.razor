@@ -15,7 +15,7 @@
 
 @code {
   [Parameter]
-  public string CourseName { get; set; }
+  public string? CourseName { get; set; }
 
   private bool loading = true;
 
@@ -54,11 +54,6 @@
       Select New Course
     </button>
     <CourseSettings />
-    <AssignmentTemplateManagement />
-
-    @* <button class="btn btn-outline-primary" @onclick="planner.SyncWithCanvas">
-      Sync With Canvas
-    </button> *@
     <a class="btn btn-outline-secondary" target="_blank"
       href="@($"{Environment.GetEnvironmentVariable("CANVAS_URL")}/courses/{planner.LocalCourse.Settings.CanvasId}")">
       View In Canvas

@@ -3,7 +3,6 @@
 @using CanvasModel.Assignments;
 
 @inject DragContainer dragContainer
-@inject CoursePlanner planner
 @inject NavigationManager Navigation
 @inject AssignmentEditorContext assignmentContext
 
@@ -13,8 +12,6 @@
   [Parameter]
   [EditorRequired]
   public LocalModule Module { get; set; } = new();
-  private bool showUpdateForm = false;
-  
   protected override void OnInitialized()
   {
     planner.StateHasChanged += reload;
@@ -78,8 +75,9 @@
                 && planner.LocalCourse.Settings.CanvasId != null
                 && planner.CanvasAssignments != null
                 && planner.CanvasModules != null 
+                && assignmentInCanvas != null
                 && Assignment.NeedsUpdates(
-                  assignmentInCanvas, 
+                  (CanvasAssignment)assignmentInCanvas, 
                   Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups)
                 )
               )

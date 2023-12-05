@@ -143,7 +143,7 @@
   private async Task deleteFromCanvas()
   {
     if (assignmentInCanvas == null 
-      || planner?.LocalCourse.Settings.CanvasId == null 
+      || planner?.LocalCourse?.Settings.CanvasId == null 
       || assignmentContext.Assignment == null
     )
       return;

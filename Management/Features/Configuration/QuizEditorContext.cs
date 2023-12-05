@@ -31,7 +31,7 @@ public class QuizEditorContext
     get => _quiz;
     set
     {
-      if (_quiz == null && value != null)
+      if (_quiz == null && value != null && planner != null && planner.LocalCourse != null)
       {
         _module = getCurrentLocalModule(value, planner.LocalCourse);
       }

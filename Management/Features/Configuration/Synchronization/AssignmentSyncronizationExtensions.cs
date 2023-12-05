@@ -24,7 +24,6 @@ public static partial class AssignmentSyncronizationExtensions
     var canvasAssignment = canvasAssignments.FirstOrDefault(
       ca => ca.Name == localAssignment.Name
     );
-    string localHtmlDescription = localAssignment.GetDescriptionHtml();
 
     var canvasAssignmentGroupId = localAssignment.GetCanvasAssignmentGroupId(localCourse.Settings.AssignmentGroups);
 
@@ -35,10 +34,9 @@ public static partial class AssignmentSyncronizationExtensions
         localAssignment,
         canvasAssignment,
         canvas,
-        localHtmlDescription,
         canvasAssignmentGroupId
       )
-      : await canvas.Assignments.Create(canvasCourseId, localAssignment, localHtmlDescription, canvasAssignmentGroupId);
+      : await canvas.Assignments.Create(canvasCourseId, localAssignment, canvasAssignmentGroupId);
   }
 
   private static async Task<ulong> updateAssignmentIfNeeded(
@@ -47,7 +45,6 @@ public static partial class AssignmentSyncronizationExtensions
     LocalAssignment localAssignment,
     CanvasAssignment canvasAssignment,
     CanvasService canvas,
-    string localHtmlDescription,
     ulong? canvasAssignmentGroupId
   )
   {
@@ -63,8 +60,7 @@ public static partial class AssignmentSyncronizationExtensions
         courseId: canvasCourseId,
         canvasAssignmentId: canvasAssignment.Id,
         localAssignment,
-        localHtmlDescription,
-        (ulong)canvasAssignmentGroupId
+        canvasAssignmentGroupId
       );
     }
     return canvasAssignment.Id;

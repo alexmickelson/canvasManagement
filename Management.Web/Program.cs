@@ -86,7 +86,7 @@ app.MapFallbackToPage("/_Host");
 
 app.Start();
 
-var addresses = app.Services.GetService<IServer>().Features.Get<IServerAddressesFeature>().Addresses;
+var addresses = app.Services.GetService<IServer>()?.Features.Get<IServerAddressesFeature>()?.Addresses ?? [];
 
 foreach (var address in addresses)
 {
