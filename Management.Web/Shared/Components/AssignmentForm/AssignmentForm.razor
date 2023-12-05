@@ -143,7 +143,7 @@
   private async Task deleteFromCanvas()
   {
     if (assignmentInCanvas == null 
-      || planner.LocalCourse.Settings.CanvasId == null 
+      || planner?.LocalCourse.Settings.CanvasId == null 
       || assignmentContext.Assignment == null
     )
       return;
@@ -160,30 +160,27 @@
   }
 }
 
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column p-2 h-100" style="height: 100%;" >
   <div>
     @assignmentContext.Assignment?.Name
   </div>
-  <div class="flex-grow-1 d-flex flex-column">
+
+  <section class="flex-1 p-1 border rounded-4 bg-dark-subtle" style="min-height: 0;">
     @if (assignmentContext.Assignment != null)
     {
-        @* <ButtonSelect  
-          Label="Assignment Group" 
-          Options="planner.LocalCourse?.Settings.AssignmentGroups" 
-          GetName="(g) => g?.Name"
-          OnSelect="(g) => setAssignmentGroup(g)" 
-          SelectedOption="selectedAssignmentGroup" 
-        /> *@
-      <div class="m-1 flex-grow-1">
-        <AssignmentMarkdownEditor />
-      </div>
+      <AssignmentMarkdownEditor />
     }
-  </div>
+  </section>
 
   <div class="d-flex justify-content-end  p-3">
+    @if (addingAssignmentToCanvas || deletingAssignmentFromCanvas)
+    {
+      <div>
+        <Spinner />
+      </div>
+    }
 
     <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
-
     <button 
       class="btn btn-outline-secondary mx-3" 
       disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
@@ -223,10 +220,5 @@
     </button>
   </div>
 
-  @if (addingAssignmentToCanvas || deletingAssignmentFromCanvas)
-  {
-    <div>
-      <Spinner />
-    </div>
-  }
+  
 </div>

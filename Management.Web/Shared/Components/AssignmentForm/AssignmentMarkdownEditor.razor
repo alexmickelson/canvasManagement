@@ -67,17 +67,10 @@
 {
   <div class="row h-100">
     <div class="col-6">
-      @* <textarea 
-        id="description" 
-        class="form-control h-100" 
-        rows=12
-        @bind="description"
-        @oninput="handleNewDescription"
-      /> *@
 
-      <MonacoTextArea Value="@rawText" OnChange="@handleChange" />
+      <MonacoTextArea Value=@rawText OnChange=@handleChange />
     </div>
-    <div class="col-6">
+    <div class="col-6 overflow-y-auto h-100" >
       @if (error != null)
       {
         <p class="text-danger text-truncate">Error: @error</p>
@@ -99,7 +92,7 @@
         @(preview)
       </div>
       <hr>
-        <RubricDisplay />
+      <RubricDisplay />
     </div>
   </div>
 }
