@@ -25,6 +25,7 @@ public class CoursePlanner
   private Timer? _debounceTimer;
   private int _debounceInterval = 1000;
   private LocalCourse? _localCourse { get; set; }
+  private LocalCourse? _lastSavedCourse { get; set; }
   public LocalCourse? LocalCourse
   {
     get => _localCourse;
@@ -61,12 +62,15 @@ public class CoursePlanner
     if (LocalCourse == null)
     {
       Console.WriteLine("saving course as of debounce call time");
-      await fileStorageManager.SaveCourseAsync(courseAsOfDebounce);
+      await fileStorageManager.SaveCourseAsync(courseAsOfDebounce, null);
+      _lastSavedCourse = courseAsOfDebounce;
     }
     else
     {
       Console.WriteLine("Saving latest version of file");
-      await fileStorageManager.SaveCourseAsync(LocalCourse);
+      var courseToSave = LocalCourse;
+      await fileStorageManager.SaveCourseAsync(courseToSave, _lastSavedCourse);
+      _lastSavedCourse = courseToSave;
     }
   }
 

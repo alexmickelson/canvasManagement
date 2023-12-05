@@ -53,7 +53,7 @@ public class FileStorageTests
       Modules = []
     };
 
-    await fileManager.SaveCourseAsync(testCourse);
+    await fileManager.SaveCourseAsync(testCourse, null);
 
     var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
@@ -76,7 +76,7 @@ public class FileStorageTests
       Modules = []
     };
 
-    await fileManager.SaveCourseAsync(testCourse);
+    await fileManager.SaveCourseAsync(testCourse, null);
 
     var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
@@ -99,7 +99,7 @@ public class FileStorageTests
       ]
     };
 
-    await fileManager.SaveCourseAsync(testCourse);
+    await fileManager.SaveCourseAsync(testCourse, null);
 
     var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
@@ -134,7 +134,7 @@ public class FileStorageTests
       ]
     };
 
-    await fileManager.SaveCourseAsync(testCourse);
+    await fileManager.SaveCourseAsync(testCourse, null);
 
     var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
@@ -174,7 +174,7 @@ public class FileStorageTests
       ]
     };
 
-    await fileManager.SaveCourseAsync(testCourse);
+    await fileManager.SaveCourseAsync(testCourse, null);
 
     var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
@@ -235,7 +235,7 @@ public class FileStorageTests
       ]
     };
 
-    await fileManager.SaveCourseAsync(testCourse);
+    await fileManager.SaveCourseAsync(testCourse, null);
 
     var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);

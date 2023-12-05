@@ -12,7 +12,7 @@ public class MarkdownCourseSaver
     _basePath = FileConfiguration.GetBasePath();
   }
 
-  public async Task Save(LocalCourse course)
+  public async Task Save(LocalCourse course, LocalCourse? previouslyStoredCourse)
   {
     var courseDirectory = $"{_basePath}/{course.Settings.Name}";
     if (!Directory.Exists(courseDirectory))
@@ -103,6 +103,7 @@ public class MarkdownCourseSaver
 
       var filePath = assignmentsDirectory + "/" + assignment.Name + ".md";
       await File.WriteAllTextAsync(filePath, assignmentMarkdown);
+      Console.WriteLine("saving file");
     }
     removeOldAssignments(assignmentsDirectory, module);
   }

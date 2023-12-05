@@ -23,9 +23,9 @@ public class FileStorageManager
     this.logger.Log("Using storage directory: " + _basePath);
 
   }
-  public async Task SaveCourseAsync(LocalCourse course)
+  public async Task SaveCourseAsync(LocalCourse course, LocalCourse? previouslyStoredCourse)
   {
-    await _saveMarkdownCourse.Save(course);
+    await _saveMarkdownCourse.Save(course, previouslyStoredCourse);
   }
 
 

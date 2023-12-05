@@ -75,7 +75,7 @@
             DaysOfWeek = days,
           }
         };
-      await fileStorageManager.SaveCourseAsync(course);
+      await fileStorageManager.SaveCourseAsync(course, null);
       NewFileCreated();
     }
     await updateCourses();
