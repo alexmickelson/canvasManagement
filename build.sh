@@ -12,3 +12,9 @@ dotnet publish Management.Web/ \
     -p ContainerRepository="canvas_management"
 
 docker image tag canvas_management:$VERSION alexmickelson/canvas_management:$VERSION
+docker image tag canvas_management:latest alexmickelson/canvas_management:latest
+
+
+echo "to push run: "
+echo "docker push alexmickelson/canvas_management:$VERSION"
+echo "docker push alexmickelson/canvas_management:latest"
