@@ -93,11 +93,13 @@ public class AssignmentEditorContext
       logger.Log("cannot update assignment in canvas, could not find canvas assignment with id: " + canvasAssignmentId);
       return;
     }
+    // Console.WriteLine(JsonSerializer.Serialize(Assignment.LocalAssignmentGroupName));
+    // Console.WriteLine(JsonSerializer.Serialize(planner.LocalCourse.Settings.AssignmentGroups));
+    
     var canvasAssignmentGroupId = Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups);
 
     if (canvasAssignmentGroupId == null)
     {
-
       logger.Log("cannot update assignment in canvas, could not get assignment group id: " + assignmentInCanvas.AssignmentGroupId);
       return;
     }

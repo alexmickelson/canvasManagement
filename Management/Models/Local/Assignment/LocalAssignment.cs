@@ -30,7 +30,6 @@ public record LocalAssignment
   public string GetRubricHtml()
   {
     var output = "<h2>Rubric</h2>";
-
     var lineStrings = Rubric.Select(
       item => $"- {item.Points}pts: {item.Label} <br/>"
     );

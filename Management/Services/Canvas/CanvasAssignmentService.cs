@@ -86,6 +86,7 @@ public class CanvasAssignmentService
       points_possible = localAssignment.PointsPossible,
       assignment_group_id = canvasAssignmentGroupId,
     };
+    
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
     

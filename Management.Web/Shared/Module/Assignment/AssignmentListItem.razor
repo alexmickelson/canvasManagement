@@ -50,6 +50,16 @@
     assignmentContext.Assignment = Assignment;
     Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name + "/assignment/" + Assignment.Name);
   }
+
+  private bool NeedsToBeUpdatedInCanvas => planner.LocalCourse != null
+                && planner.LocalCourse.Settings.CanvasId != null
+                && planner.CanvasAssignments != null
+                && planner.CanvasModules != null 
+                && assignmentInCanvas != null
+                && Assignment.NeedsUpdates(
+                  (CanvasAssignment)assignmentInCanvas, 
+                  Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups)
+                );
 }
 
 <div 
@@ -71,16 +81,7 @@
           <div class="col-2 col-lg-1 text-end">
             @if(isSyncedWithCanvas)
             {
-              @if(planner.LocalCourse != null
-                && planner.LocalCourse.Settings.CanvasId != null
-                && planner.CanvasAssignments != null
-                && planner.CanvasModules != null 
-                && assignmentInCanvas != null
-                && Assignment.NeedsUpdates(
-                  (CanvasAssignment)assignmentInCanvas, 
-                  Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups)
-                )
-              )
+              @if(NeedsToBeUpdatedInCanvas)
               {
                 <SyncIcon />
               }
@@ -96,6 +97,15 @@
           </div>
         </div>
       </div>
+
+      @if(isSyncedWithCanvas && NeedsToBeUpdatedInCanvas)
+      {
+        <div class="mx-3 text-body-tertiary">
+          @Assignment.GetUpdateReason(
+                  (CanvasAssignment)assignmentInCanvas, 
+                  Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups))
+        </div>
+      }
 
       @if(!showAll)
       {

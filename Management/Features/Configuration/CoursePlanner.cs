@@ -162,5 +162,17 @@ public class CoursePlanner
     CanvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
 
     await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(canvasCourseId, CanvasAssignmentGroups, canvas);
+
+    CanvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
+
+    LocalCourse = LocalCourse with {Settings = LocalCourse.Settings with {
+        AssignmentGroups =  LocalCourse.Settings.AssignmentGroups.Select(g => {
+            var canvasGroup = CanvasAssignmentGroups.FirstOrDefault(c => c.Name == g.Name);
+            return canvasGroup == null
+              ? g
+              : g with {CanvasId = canvasGroup.Id};
+          })
+      } 
+    };
   }
 }

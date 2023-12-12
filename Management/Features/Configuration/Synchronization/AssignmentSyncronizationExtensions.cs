@@ -1,3 +1,4 @@
+using System.Net.Quic;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using CanvasModel.Assignments;
@@ -5,13 +6,12 @@ using CanvasModel.Modules;
 using CanvasModel.Quizzes;
 using LocalModels;
 using Management.Services.Canvas;
+using Markdig.Renderers.Normalize;
 
 namespace Management.Planner;
 
 public static partial class AssignmentSyncronizationExtensions
 {
-
-
   internal static async Task<ulong> SyncAssignmentToCanvas(
     this LocalCourse localCourse,
     ulong canvasCourseId,
@@ -20,7 +20,6 @@ public static partial class AssignmentSyncronizationExtensions
     CanvasService canvas
   )
   {
-
     var canvasAssignment = canvasAssignments.FirstOrDefault(
       ca => ca.Name == localAssignment.Name
     );
@@ -48,7 +47,6 @@ public static partial class AssignmentSyncronizationExtensions
     ulong? canvasAssignmentGroupId
   )
   {
-
     var assignmentNeedsUpdates = localAssignment.NeedsUpdates(
       canvasAssignment,
       canvasAssignmentGroupId,
@@ -73,34 +71,23 @@ public static partial class AssignmentSyncronizationExtensions
     bool quiet = true
   )
   {
+    var reason = localAssignment.GetUpdateReason(canvasAssignment, canvasAssignmentGroupId, quiet);
+    return reason != string.Empty;
+  }
+  public static string GetUpdateReason(
+    this LocalAssignment localAssignment,
+    CanvasAssignment canvasAssignment,
+    ulong? canvasAssignmentGroupId,
+    bool quiet = false
+  )
+  {
 
-    var localHtmlDescription = localAssignment
-      .GetDescriptionHtml()
-      .Replace("<hr />", "<hr>") // self closing tags are hard 
-      .Replace("<br />", "<br>")
-      .Replace("&gt;", "")
-      .Replace("&lt;", "")
-      .Replace(">", "")
-      .Replace("<", "")
-      .Replace("&quot;", "")
-      .Replace("\"", "")
-      .Replace("&amp;", "")
-      .Replace("&", "");
+    var localHtmlDescription = removeHtmlDetails(localAssignment.GetDescriptionHtml());
 
     var canvasHtmlDescription = canvasAssignment.Description;
     canvasHtmlDescription = CanvasScriptTagRegex().Replace(canvasHtmlDescription, "");
     canvasHtmlDescription = CanvasLinkTagRegex().Replace(canvasHtmlDescription, "");
-    canvasHtmlDescription = canvasHtmlDescription
-      .Replace("<hr />", "<hr>")
-      .Replace("<br />", "<br>")
-      .Replace("&gt;", "")
-      .Replace("&lt;", "")
-      .Replace(">", "")
-      .Replace("<", "")
-      .Replace("&quot;", "")
-      .Replace("\"", "")
-      .Replace("&amp;", "")
-      .Replace("&", "");
+    canvasHtmlDescription = removeHtmlDetails(canvasHtmlDescription);
 
     var canvasComparisonDueDate =
       canvasAssignment.DueAt != null
@@ -162,36 +149,44 @@ public static partial class AssignmentSyncronizationExtensions
       canvasAssignmentGroupId != null
       && canvasAssignmentGroupId == canvasAssignment.AssignmentGroupId;
 
-    if (!quiet)
+    var reason = "";
+    if (!dueDatesSame)
     {
-      if (!dueDatesSame)
+      reason = $"Due dates different for assignment {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}";
+      if (!quiet)
       {
         Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
         Console.WriteLine(canvasComparisonDueDate);
         Console.WriteLine(localComparisonDueDate);
-        Console.WriteLine(
-          $"Due dates different for assignment {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}"
-        );
+        Console.WriteLine(reason);
         Console.WriteLine(JsonSerializer.Serialize(localAssignment.DueAt));
         Console.WriteLine(JsonSerializer.Serialize(canvasAssignment.DueAt));
       }
+      return reason;
+    }
 
-      if (!lockDatesSame)
+    if (!lockDatesSame)
+    {
+      reason = $"Lock dates different for assignment {localAssignment.Name}, local: {localAssignment.LockAt}, in canvas {canvasAssignment.LockAt}";
+      if (!quiet)
       {
         Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
         Console.WriteLine(canvasComparisonLockDate);
         Console.WriteLine(localComparisonLockDate);
-        Console.WriteLine(
-          $"Lock dates different for assignment {localAssignment.Name}, local: {localAssignment.LockAt}, in canvas {canvasAssignment.LockAt}"
-        );
+        Console.WriteLine(reason);
         Console.WriteLine(JsonSerializer.Serialize(localAssignment.LockAt));
         Console.WriteLine(JsonSerializer.Serialize(canvasAssignment.LockAt));
       }
+      return reason;
+    }
 
-      if (!descriptionSame)
+    if (!descriptionSame)
+    {
+      reason = $"descriptions different for {localAssignment.Name}";
+      if (!quiet)
       {
         Console.WriteLine();
-        Console.WriteLine($"descriptions different for {localAssignment.Name}");
+        Console.WriteLine(reason);
         Console.WriteLine();
 
         Console.WriteLine("Local Description:");
@@ -204,34 +199,54 @@ public static partial class AssignmentSyncronizationExtensions
         Console.WriteLine(canvasAssignment.Description);
         Console.WriteLine();
       }
-
-      if (!nameSame)
-        Console.WriteLine(
-          $"names different for {localAssignment.Name}, local: {localAssignment.Name}, in canvas {canvasAssignment.Name}"
-        );
-      if (!pointsSame)
-        Console.WriteLine(
-          $"Points different for {localAssignment.Name}, local: {localAssignment.PointsPossible}, in canvas {canvasAssignment.PointsPossible}"
-        );
-      if (!submissionTypesSame)
-        Console.WriteLine(
-          $"Submission Types different for {localAssignment.Name}, local: {JsonSerializer.Serialize(localAssignment.SubmissionTypes.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}"
-        );
-      if (!assignmentGroupSame)
-        Console.WriteLine(
-          $"Canvas assignment group ids different for {localAssignment.Name}, local: {canvasAssignmentGroupId}, in canvas {canvasAssignment.AssignmentGroupId}"
-        );
+      return reason;
     }
 
-    return !nameSame
-      || !dueDatesSame
-      || !lockDatesSame
-      || !descriptionSame
-      || !pointsSame
-      || !submissionTypesSame
-      || !assignmentGroupSame;
+    if (!nameSame)
+    {
+      reason = $"names different for {localAssignment.Name}, local: {localAssignment.Name}, in canvas {canvasAssignment.Name}";
+      if (!quiet)
+        Console.WriteLine(reason);
+      return reason;
+    }
+    if (!pointsSame)
+    {
+      reason = $"Points different for {localAssignment.Name}, local: {localAssignment.PointsPossible}, in canvas {canvasAssignment.PointsPossible}";
+      if (!quiet)
+        Console.WriteLine(reason);
+      return reason;
+    }
+    if (!submissionTypesSame)
+    {
+      reason = $"Submission Types different for {localAssignment.Name}, local: {JsonSerializer.Serialize(localAssignment.SubmissionTypes.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}";
+      if (!quiet)
+        Console.WriteLine(reason);
+      return reason;
+    }
+    if (!assignmentGroupSame)
+    {
+      reason = $"Canvas assignment group ids different for {localAssignment.Name}, local: {canvasAssignmentGroupId}, in canvas {canvasAssignment.AssignmentGroupId}";
+      if (!quiet)
+        Console.WriteLine(reason);
+      return reason;
+    }
+
+    return reason;
   }
 
+  private static string removeHtmlDetails(string canvasHtmlDescription) => canvasHtmlDescription
+    .Replace("<hr />", "<hr>")
+    .Replace("<br />", "<br>")
+    .Replace("<br/>", "<br>")
+    .Replace("<hr/>", "<hr>")
+    .Replace("&gt;", "")
+    .Replace("&lt;", "")
+    .Replace(">", "")
+    .Replace("<", "")
+    .Replace("&quot;", "")
+    .Replace("\"", "")
+    .Replace("&amp;", "")
+    .Replace("&", "");
 
   [GeneratedRegex("<script.*script>")]
   private static partial Regex CanvasScriptTagRegex();
