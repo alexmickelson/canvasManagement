@@ -49,7 +49,7 @@ public record LocalQuizQuestion
     }
   }
 
-  private static readonly string[] _validFirstAnswerDelimiters = ["*a)", "a)", "[ ]", "[*]", "^"];
+  private static readonly string[] _validFirstAnswerDelimiters = ["*a)", "a)", "*)", ")", "[ ]", "[*]", "^"];
 
   public static LocalQuizQuestion ParseMarkdown(string input, int questionIndex)
   {
@@ -115,15 +115,18 @@ public record LocalQuizQuestion
       return "short_answer";
 
     var answerLines = getAnswersGroupedByLines(linesWithoutPoints, questionIndex);
+    var firstAnswerLine = answerLines.First();
     var isMultipleChoice =
-      answerLines.First().StartsWith("a)")
-      || answerLines.First().StartsWith("*a)");
+      firstAnswerLine.StartsWith("a)")
+      || firstAnswerLine.StartsWith("*a)")
+      || firstAnswerLine.StartsWith("*)")
+      || firstAnswerLine.StartsWith(")");
     if (isMultipleChoice)
       return "multiple_choice";
 
     var isMultipleAnswer =
-      answerLines.First().StartsWith("[ ]")
-      || answerLines.First().StartsWith("[*]");
+      firstAnswerLine.StartsWith("[ ]")
+      || firstAnswerLine.StartsWith("[*]");
 
     if (isMultipleAnswer)
       return "multiple_answers";
@@ -150,7 +153,7 @@ public record LocalQuizQuestion
 
     var answerLinesRaw = linesWithoutPoints[indexOfAnswerStart..];
 
-    var answerStartPattern = @"^(\*?[a-z]\))|\[\s*\]|\[\*\]|\^";
+    var answerStartPattern = @"^(\*?[a-z]?\))|\[\s*\]|\[\*\]|\^";
     var answerLines = answerLinesRaw.Aggregate(new List<string>(), (acc, line) =>
     {
       var isNewAnswer = Regex.IsMatch(line, answerStartPattern);
