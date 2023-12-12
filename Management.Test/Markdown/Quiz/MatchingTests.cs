@@ -59,4 +59,25 @@ Match the following terms & definitions
 ^ keyword - reserved word that has special meaning in a program (e.g. class, void, static, etc.)";
     questionMarkdown.Should().Contain(expectedMarkdown);
   }
+  [Test]
+  public void WhitespaceIsOptional()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: 
+---
+Match the following terms & definitions
+
+^statement - a single command to be executed
+";
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    quiz.Questions.First().Answers.First().Text.Should().Be("statement");
+  }
 }
