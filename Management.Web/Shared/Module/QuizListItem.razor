@@ -17,7 +17,7 @@
   {
     dragContainer.DropCallback = null;
   }
-  private bool isSyncedWithCanvas => 
+  private bool existsInCanvas => 
     planner.CanvasQuizzes != null 
       ? Quiz.QuizIsCreated(planner.CanvasQuizzes) 
       : false;
@@ -43,7 +43,7 @@
     <div class="card-body p-0">
       <div class="card-title pt-2 px-2 m-0 d-flex justify-content-between">
         <h4>@Quiz.Name</h4>
-          @if(isSyncedWithCanvas)
+          @if(existsInCanvas)
           {
             <CheckIcon />
           }
@@ -52,6 +52,12 @@
             <SyncIcon />
           }
       </div>
+      @if(!existsInCanvas)
+      {
+        <div class="mx-3 text-body-tertiary">
+          no quiz with same name in canvas
+        </div>
+      }
 
       <div class="card-text overflow-hidden p-2">
         <div>Due At: @Quiz.DueAt</div>

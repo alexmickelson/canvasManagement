@@ -43,7 +43,7 @@
       a => a.Name == Assignment.Name
     );
 
-  private bool isSyncedWithCanvas => 
+  private bool existsInCanvas => 
     assignmentInCanvas != null;
   private void OnClick() 
   {
@@ -52,14 +52,14 @@
   }
 
   private bool NeedsToBeUpdatedInCanvas => planner.LocalCourse != null
-                && planner.LocalCourse.Settings.CanvasId != null
-                && planner.CanvasAssignments != null
-                && planner.CanvasModules != null 
-                && assignmentInCanvas != null
-                && Assignment.NeedsUpdates(
-                  (CanvasAssignment)assignmentInCanvas, 
-                  Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups)
-                );
+    && planner.LocalCourse.Settings.CanvasId != null
+    && planner.CanvasAssignments != null
+    && planner.CanvasModules != null 
+    && assignmentInCanvas != null
+    && Assignment.NeedsUpdates(
+      (CanvasAssignment)assignmentInCanvas, 
+      Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups)
+    );
 }
 
 <div 
@@ -79,7 +79,7 @@
             </h4>
           </div>
           <div class="col-2 col-lg-1 text-end">
-            @if(isSyncedWithCanvas)
+            @if(existsInCanvas)
             {
               @if(NeedsToBeUpdatedInCanvas)
               {
@@ -98,12 +98,18 @@
         </div>
       </div>
 
-      @if(isSyncedWithCanvas && NeedsToBeUpdatedInCanvas)
+      @if(existsInCanvas && NeedsToBeUpdatedInCanvas)
       {
         <div class="mx-3 text-body-tertiary">
           @Assignment.GetUpdateReason(
                   (CanvasAssignment)assignmentInCanvas, 
                   Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups))
+        </div>
+      }
+      @if(!existsInCanvas)
+      {
+        <div class="mx-3 text-body-tertiary">
+          no assignment with same name in canvas
         </div>
       }
 

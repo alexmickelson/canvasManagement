@@ -78,17 +78,9 @@ public static partial class AssignmentSyncronizationExtensions
     this LocalAssignment localAssignment,
     CanvasAssignment canvasAssignment,
     ulong? canvasAssignmentGroupId,
-    bool quiet = false
+    bool quiet = true
   )
   {
-
-    var localHtmlDescription = removeHtmlDetails(localAssignment.GetDescriptionHtml());
-
-    var canvasHtmlDescription = canvasAssignment.Description;
-    canvasHtmlDescription = CanvasScriptTagRegex().Replace(canvasHtmlDescription, "");
-    canvasHtmlDescription = CanvasLinkTagRegex().Replace(canvasHtmlDescription, "");
-    canvasHtmlDescription = removeHtmlDetails(canvasHtmlDescription);
-
     var canvasComparisonDueDate =
       canvasAssignment.DueAt != null
         ? new DateTime(
@@ -111,48 +103,10 @@ public static partial class AssignmentSyncronizationExtensions
           second: localAssignment.DueAt.Second
         )
         : new DateTime();
-
-    var canvasComparisonLockDate =
-      canvasAssignment.LockAt != null
-        ? new DateTime(
-          year: canvasAssignment.LockAt.Value.Year,
-          month: canvasAssignment.LockAt.Value.Month,
-          day: canvasAssignment.LockAt.Value.Day,
-          hour: canvasAssignment.LockAt.Value.Hour,
-          minute: canvasAssignment.LockAt.Value.Minute,
-          second: canvasAssignment.LockAt.Value.Second
-        )
-        : new DateTime();
-    var localComparisonLockDate = canvasAssignment.LockAt != null
-      ? new DateTime(
-        year: localAssignment.LockAt?.Year ?? 1,
-        month: localAssignment.LockAt?.Month ?? 1,
-        day: localAssignment.LockAt?.Day ?? 1,
-        hour: localAssignment.LockAt?.Hour ?? 0,
-        minute: localAssignment.LockAt?.Minute ?? 0,
-        second: localAssignment.LockAt?.Second ?? 0
-      )
-      : new DateTime();
-
-    var dueDatesSame =
-      canvasAssignment.DueAt != null && canvasComparisonDueDate == localComparisonDueDate;
-    var lockDatesSame = canvasAssignment.LockAt != null && canvasComparisonLockDate == localComparisonLockDate;
-
-
-    var descriptionSame = canvasHtmlDescription == localHtmlDescription;
-    var nameSame = canvasAssignment.Name == localAssignment.Name;
-    var pointsSame = canvasAssignment.PointsPossible == localAssignment.PointsPossible;
-    var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
-      localAssignment.SubmissionTypes.Select(t => t.ToString())
-    );
-    var assignmentGroupSame =
-      canvasAssignmentGroupId != null
-      && canvasAssignmentGroupId == canvasAssignment.AssignmentGroupId;
-
-    var reason = "";
+    var dueDatesSame = canvasAssignment.DueAt != null && canvasComparisonDueDate == localComparisonDueDate;
     if (!dueDatesSame)
     {
-      reason = $"Due dates different for assignment {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}";
+      var reason = $"Due dates different for assignment {localAssignment.Name}, local: {localAssignment.DueAt}, in canvas {canvasAssignment.DueAt}";
       if (!quiet)
       {
         Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
@@ -165,12 +119,37 @@ public static partial class AssignmentSyncronizationExtensions
       return reason;
     }
 
-    if (!lockDatesSame)
+
+    DateTime? canvasComparisonLockDate = canvasAssignment.LockAt != null
+        ? new DateTime(
+          year: canvasAssignment.LockAt.Value.Year,
+          month: canvasAssignment.LockAt.Value.Month,
+          day: canvasAssignment.LockAt.Value.Day,
+          hour: canvasAssignment.LockAt.Value.Hour,
+          minute: canvasAssignment.LockAt.Value.Minute,
+          second: canvasAssignment.LockAt.Value.Second
+        )
+        : null;
+    DateTime? localComparisonLockDate = localAssignment.LockAt != null
+      ? new DateTime(
+        year: localAssignment.LockAt.Value.Year,
+        month: localAssignment.LockAt.Value.Month,
+        day: localAssignment.LockAt.Value.Day,
+        hour: localAssignment.LockAt.Value.Hour,
+        minute: localAssignment.LockAt.Value.Minute,
+        second: localAssignment.LockAt.Value.Second
+      )
+      : null;
+    
+    if (canvasComparisonLockDate != localComparisonLockDate)
     {
-      reason = $"Lock dates different for assignment {localAssignment.Name}, local: {localAssignment.LockAt}, in canvas {canvasAssignment.LockAt}";
+      var printableLocal = localComparisonLockDate?.ToString() ?? "null";
+      var printableCanvas = canvasComparisonLockDate?.ToString() ?? "null";
+      var reason = $"Lock dates different for assignment {localAssignment.Name}, local: {printableLocal}, in canvas {printableCanvas}";
+      
       if (!quiet)
       {
-        Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
+        // Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));
         Console.WriteLine(canvasComparisonLockDate);
         Console.WriteLine(localComparisonLockDate);
         Console.WriteLine(reason);
@@ -180,9 +159,19 @@ public static partial class AssignmentSyncronizationExtensions
       return reason;
     }
 
+
+
+    var localHtmlDescription = removeHtmlDetails(localAssignment.GetDescriptionHtml());
+
+    var canvasHtmlDescription = canvasAssignment.Description;
+    canvasHtmlDescription = CanvasScriptTagRegex().Replace(canvasHtmlDescription, "");
+    canvasHtmlDescription = CanvasLinkTagRegex().Replace(canvasHtmlDescription, "");
+    canvasHtmlDescription = removeHtmlDetails(canvasHtmlDescription);
+
+    var descriptionSame = canvasHtmlDescription == localHtmlDescription;
     if (!descriptionSame)
     {
-      reason = $"descriptions different for {localAssignment.Name}";
+      var reason = $"descriptions different for {localAssignment.Name}";
       if (!quiet)
       {
         Console.WriteLine();
@@ -202,36 +191,50 @@ public static partial class AssignmentSyncronizationExtensions
       return reason;
     }
 
-    if (!nameSame)
+
+    if (canvasAssignment.Name != localAssignment.Name)
     {
-      reason = $"names different for {localAssignment.Name}, local: {localAssignment.Name}, in canvas {canvasAssignment.Name}";
-      if (!quiet)
-        Console.WriteLine(reason);
-      return reason;
-    }
-    if (!pointsSame)
-    {
-      reason = $"Points different for {localAssignment.Name}, local: {localAssignment.PointsPossible}, in canvas {canvasAssignment.PointsPossible}";
-      if (!quiet)
-        Console.WriteLine(reason);
-      return reason;
-    }
-    if (!submissionTypesSame)
-    {
-      reason = $"Submission Types different for {localAssignment.Name}, local: {JsonSerializer.Serialize(localAssignment.SubmissionTypes.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}";
-      if (!quiet)
-        Console.WriteLine(reason);
-      return reason;
-    }
-    if (!assignmentGroupSame)
-    {
-      reason = $"Canvas assignment group ids different for {localAssignment.Name}, local: {canvasAssignmentGroupId}, in canvas {canvasAssignment.AssignmentGroupId}";
+      var reason = $"names different for {localAssignment.Name}, local: {localAssignment.Name}, in canvas {canvasAssignment.Name}";
       if (!quiet)
         Console.WriteLine(reason);
       return reason;
     }
 
-    return reason;
+
+    var pointsSame = canvasAssignment.PointsPossible == localAssignment.PointsPossible;
+    if (!pointsSame)
+    {
+      var reason = $"Points different for {localAssignment.Name}, local: {localAssignment.PointsPossible}, in canvas {canvasAssignment.PointsPossible}";
+      if (!quiet)
+        Console.WriteLine(reason);
+      return reason;
+    }
+
+
+    var submissionTypesSame = canvasAssignment.SubmissionTypes.SequenceEqual(
+      localAssignment.SubmissionTypes.Select(t => t.ToString())
+    );
+    if (!submissionTypesSame)
+    {
+      var reason = $"Submission Types different for {localAssignment.Name}, local: {JsonSerializer.Serialize(localAssignment.SubmissionTypes.Select(t => t.ToString()))}, in canvas {JsonSerializer.Serialize(canvasAssignment.SubmissionTypes)}";
+      if (!quiet)
+        Console.WriteLine(reason);
+      return reason;
+    }
+
+
+    var assignmentGroupSame =
+      canvasAssignmentGroupId != null
+      && canvasAssignmentGroupId == canvasAssignment.AssignmentGroupId;
+    if (!assignmentGroupSame)
+    {
+      var reason = $"Canvas assignment group ids different for {localAssignment.Name}, local: {canvasAssignmentGroupId}, in canvas {canvasAssignment.AssignmentGroupId}";
+      if (!quiet)
+        Console.WriteLine(reason);
+      return reason;
+    }
+
+    return string.Empty;
   }
 
   private static string removeHtmlDetails(string canvasHtmlDescription) => canvasHtmlDescription
