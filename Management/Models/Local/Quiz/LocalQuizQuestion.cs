@@ -13,25 +13,7 @@ public record LocalQuizQuestion
     Enumerable.Empty<LocalQuizQuestionAnswer>();
   public string ToMarkdown()
   {
-    var answerArray = Answers.Select((answer, i) =>
-    {
-      var questionLetter = (char)(i + 97);
-      var isMultipleChoice = QuestionType == "multiple_choice";
-
-      var correctIndicator = answer.Correct ? "*" : isMultipleChoice ? "" : " ";
-
-
-      var questionTypeIndicator = isMultipleChoice
-        ? $"{correctIndicator}{questionLetter}) "
-        : $"[{correctIndicator}] ";
-
-      // var textWithSpecificNewline = answer.Text.Replace(Environment.NewLine, Environment.NewLine + "   ");
-
-      var multilineMarkdownCompatibleText = answer.Text.StartsWith("```")
-        ? Environment.NewLine + answer.Text 
-        : answer.Text;
-      return $"{questionTypeIndicator}{multilineMarkdownCompatibleText}";
-    });
+    var answerArray = Answers.Select(getAnswerMarkdown);
     var answersText = string.Join(Environment.NewLine, answerArray);
     var questionTypeIndicator = QuestionType == "essay" || QuestionType == "short_answer" ? QuestionType : "";
 
@@ -40,7 +22,34 @@ public record LocalQuizQuestion
 {answersText}{questionTypeIndicator}";
   }
 
-  private static readonly string[] validFirstAnswerDelimiters = new string[] { "*a)", "a)", "[ ]", "[*]" };
+  private string getAnswerMarkdown(LocalQuizQuestionAnswer answer, int index)
+  {
+    var multilineMarkdownCompatibleText = answer.Text.StartsWith("```")
+      ? Environment.NewLine + answer.Text
+      : answer.Text;
+
+    if (QuestionType == "multiple_answers")
+    {
+      var correctIndicator = answer.Correct ? "*" : " ";
+      var questionTypeIndicator = $"[{correctIndicator}] ";
+
+      return $"{questionTypeIndicator}{multilineMarkdownCompatibleText}";
+    }
+    else if(QuestionType == "matching")
+    {
+      return $"^ {answer.Text} - {answer.MatchedText}";
+    }
+    else
+    {
+      var questionLetter = (char)(index + 97);
+      var correctIndicator = answer.Correct ? "*" : "";
+      var questionTypeIndicator = $"{correctIndicator}{questionLetter}) ";
+
+      return $"{questionTypeIndicator}{multilineMarkdownCompatibleText}";
+    }
+  }
+
+  private static readonly string[] _validFirstAnswerDelimiters = ["*a)", "a)", "[ ]", "[*]", "^"];
 
   public static LocalQuizQuestion ParseMarkdown(string input, int questionIndex)
   {
@@ -59,7 +68,7 @@ public record LocalQuizQuestion
     var linesWithoutAnswers = linesWithoutPoints
       .TakeWhile(
         (line, index) =>
-          !validFirstAnswerDelimiters.Any(prefix => line.TrimStart().StartsWith(prefix))
+          !_validFirstAnswerDelimiters.Any(prefix => line.TrimStart().StartsWith(prefix))
       )
       .ToArray();
 
@@ -67,6 +76,7 @@ public record LocalQuizQuestion
     var questionType = getQuestionType(linesWithoutPoints, questionIndex);
 
     var questionTypesWithoutAnswers = new string[] { "essay", "short answer", "short_answer" };
+
     var descriptionLines = questionTypesWithoutAnswers.Contains(questionType.ToLower())
       ? linesWithoutAnswers
         .TakeWhile(
@@ -78,9 +88,9 @@ public record LocalQuizQuestion
 
 
 
-    var typesWithAnswers = new string[] { "multiple_choice", "multiple_answers" };
+    var typesWithAnswers = new string[] { "multiple_choice", "multiple_answers", "matching" };
     var answers = typesWithAnswers.Contains(questionType)
-      ? getAnswers(linesWithoutPoints, questionIndex)
+      ? getAnswers(linesWithoutPoints, questionIndex, questionType)
       : [];
 
     return new LocalQuizQuestion()
@@ -118,6 +128,10 @@ public record LocalQuizQuestion
     if (isMultipleAnswer)
       return "multiple_answers";
 
+    var isMatching = answerLines.First().StartsWith("^");
+    if (isMatching)
+      return "matching";
+
     return "";
   }
 
@@ -126,7 +140,7 @@ public record LocalQuizQuestion
     var indexOfAnswerStart = linesWithoutPoints
       .ToList()
       .FindIndex(
-        l => validFirstAnswerDelimiters.Any(prefix => l.TrimStart().StartsWith(prefix))
+        l => _validFirstAnswerDelimiters.Any(prefix => l.TrimStart().StartsWith(prefix))
       );
     if (indexOfAnswerStart == -1)
     {
@@ -136,7 +150,7 @@ public record LocalQuizQuestion
 
     var answerLinesRaw = linesWithoutPoints[indexOfAnswerStart..];
 
-    var answerStartPattern = @"^(\*?[a-z]\))|\[\s*\]|\[\*\]";
+    var answerStartPattern = @"^(\*?[a-z]\))|\[\s*\]|\[\*\]|\^";
     var answerLines = answerLinesRaw.Aggregate(new List<string>(), (acc, line) =>
     {
       var isNewAnswer = Regex.IsMatch(line, answerStartPattern);
@@ -156,12 +170,12 @@ public record LocalQuizQuestion
     return answerLines;
   }
 
-  private static LocalQuizQuestionAnswer[] getAnswers(string[] linesWithoutPoints, int questionIndex)
+  private static LocalQuizQuestionAnswer[] getAnswers(string[] linesWithoutPoints, int questionIndex, string questionType)
   {
     var answerLines = getAnswersGroupedByLines(linesWithoutPoints, questionIndex);
 
     var answers = answerLines
-      .Select((a, i) => LocalQuizQuestionAnswer.ParseMarkdown(a))
+      .Select((a, i) => LocalQuizQuestionAnswer.ParseMarkdown(a, questionType))
       .ToArray();
 
     return answers;
@@ -174,6 +188,7 @@ public static class QuestionType
   public static readonly string MULTIPLE_CHOICE = "multiple_choice";
   public static readonly string ESSAY = "essay";
   public static readonly string SHORT_ANSWER = "short_answer";
+  public static readonly string MATCHING = "matching";
 
   // possible support for: calculated, file_upload, fill_in_multiple_blanks, matching, multiple_dropdowns, numerical,  text_only, true_false,
   public static readonly IEnumerable<string> AllTypes = new string[]
@@ -182,5 +197,7 @@ public static class QuestionType
     MULTIPLE_CHOICE,
     ESSAY,
     SHORT_ANSWER,
+    MATCHING
+
   };
 }

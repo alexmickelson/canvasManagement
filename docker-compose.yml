@@ -1,6 +1,6 @@
 services:
   canvas_manager:
-    image: alexmickelson/canvas_management:1.0
+    image: alexmickelson/canvas_management:1
     user: "1000:1000"
     ports:
       - 8080:8080
@@ -9,6 +9,8 @@ services:
     environment:
       - storageDirectory=/app/storage
     volumes:
-      - ./storage:/app/storage
+      # - ./storage:/app/storage
       # - ~/projects/faculty/1410/2023-fall-alex/modules:/app/storage/1410
-      # - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/web_intro
+      - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/web_intro
+      - ~/projects/faculty/1400/2024_spring_alex/modules:/app/storage/1400
+      - ~/projects/faculty/1405/2024_spring_alex/modules:/app/storage/1405
