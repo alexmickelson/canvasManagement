@@ -111,4 +111,5 @@ public class AssignmentMarkdownTests
     var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
+
 }

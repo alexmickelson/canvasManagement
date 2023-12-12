@@ -2,7 +2,7 @@
 
 
 MAJOR_VERSION="1"
-MINOR_VERSION="2"
+MINOR_VERSION="3"
 VERSION="$MAJOR_VERSION.$MINOR_VERSION"
 
 dotnet publish Management.Web/ \

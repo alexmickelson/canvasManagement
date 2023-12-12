@@ -33,3 +33,12 @@ here is the description
 - 4pts: do task 1
 - 2pts: do task 2
 "
+
+
+"Name: test assignment
+LockAt: 1/1/0001 12:00:00 AM
+DueAt: 1/1/0001 12:00:00 AM
+AssignmentGroupName: Final Project
+SubmissionTypes:
+
+---

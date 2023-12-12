@@ -29,13 +29,12 @@ public record LocalAssignment
   public int PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
   public string GetRubricHtml()
   {
-    var output = "<h1>Rubric</h1><pre><code class=\"language-json\">[\n";
+    var output = "<h2>Rubric</h2>";
 
     var lineStrings = Rubric.Select(
-      item => $"  {{\"label\": \"{item.Label}\", \"points\": {item.Points}}}"
+      item => $"- {item.Points}pts: {item.Label} <br/>"
     );
-    output += string.Join(",\n", lineStrings);
-    output += "\n]</code></pre>";
+    output += string.Join("\n", lineStrings);
     return output;
   }
 
