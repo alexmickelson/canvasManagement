@@ -16,13 +16,22 @@ public class CoursePlanner
   private readonly MyLogger<CoursePlanner> logger;
   private readonly FileStorageManager fileStorageManager;
   private readonly CanvasService canvas;
+  private readonly ILogger<CoursePlanner> _otherLogger;
+
   public bool LoadingCanvasData { get; internal set; } = false;
 
-  public CoursePlanner(MyLogger<CoursePlanner> logger, FileStorageManager fileStorageManager, CanvasService canvas)
+  public CoursePlanner(
+    MyLogger<CoursePlanner> logger,
+    FileStorageManager fileStorageManager,
+    CanvasService canvas,
+    ILogger<CoursePlanner> otherLogger
+  )
   {
     this.logger = logger;
     this.fileStorageManager = fileStorageManager;
     this.canvas = canvas;
+    _otherLogger = otherLogger;
+    _otherLogger.LogInformation("testing other logging");
   }
 
   private Timer? _debounceTimer;
@@ -34,7 +43,7 @@ public class CoursePlanner
     get => _localCourse;
     set
     {
-
+      using var activity = DiagnosticsConfig.Source?.StartActivity("Loading Course");
       if (value == null)
       {
         _localCourse = null;
@@ -110,6 +119,8 @@ public class CoursePlanner
     IEnumerable<CanvasAssignmentGroup> canvasAssignmentGroups
   )> LoadCanvasData()
   {
+
+    using var activity = DiagnosticsConfig.Source.StartActivity("Loading Canvas Data to Course Planner");
     LoadingCanvasData = true;
     StateHasChanged?.Invoke();
 
@@ -172,7 +183,7 @@ public class CoursePlanner
               ? g
               : g with {CanvasId = canvasGroup.Id};
           })
-      } 
+      }
     };
   }
 }

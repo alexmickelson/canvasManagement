@@ -10,13 +10,14 @@ global using LocalModels;
 global using Management.Planner;
 global using Management.Web.Shared.Components;
 global using Management.Web.Shared;
-global using Management.Web.Shared.Components.Forms;
 
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
 using dotenv.net;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 
 DotEnv.Load();
 
@@ -31,6 +32,42 @@ if (canvas_url == null)
   Console.WriteLine("CANVAS_URL is null, defaulting to https://snow.instructure.com");
   Environment.SetEnvironmentVariable("CANVAS_URL", "https://snow.instructure.com");
 }
+
+const string serviceName = "canvas-management";
+
+// builder.Logging.AddOpenTelemetry(options =>
+// {
+//   options
+//     .SetResourceBuilder(
+//       ResourceBuilder
+//         .CreateDefault()
+//         .AddService(serviceName)
+//     )
+//     .AddOtlpExporter(o =>
+//     {
+//       o.Endpoint = new Uri("http://localhost:4317/");
+//     })
+//     .AddConsoleExporter();
+// });
+
+builder.Services.AddOpenTelemetry()
+  .ConfigureResource(resource => resource.AddService(serviceName))
+  .WithTracing(tracing => tracing
+    .AddSource(DiagnosticsConfig.SourceName)
+    .AddOtlpExporter(o =>
+    {
+      o.Endpoint = new Uri("http://localhost:4317/");
+    })
+    .AddAspNetCoreInstrumentation()
+    .AddConsoleExporter()
+  );
+// .WithMetrics(metrics => metrics
+//   .AddOtlpExporter(o => {
+//     o.Endpoint = new Uri("http://localhost:4317/");
+//   })
+//   .AddAspNetCoreInstrumentation()
+//   .AddConsoleExporter()
+// );
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -59,7 +96,7 @@ builder.Services.AddScoped<DragContainer>();
 
 builder.Services.AddSignalR(e =>
 {
-    e.MaximumReceiveMessageSize = 102400000;
+  e.MaximumReceiveMessageSize = 102400000;
 });
 
 
@@ -90,7 +127,7 @@ var addresses = app.Services.GetService<IServer>()?.Features.Get<IServerAddresse
 
 foreach (var address in addresses)
 {
-    Console.WriteLine("Running at: " + address);
+  Console.WriteLine("Running at: " + address);
 }
 
 app.WaitForShutdown();
