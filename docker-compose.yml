@@ -8,9 +8,11 @@ services:
       - .env
     environment:
       - storageDirectory=/app/storage
+      - TZ=America/Denver
     volumes:
       # - ./storage:/app/storage
       # - ~/projects/faculty/1410/2023-fall-alex/modules:/app/storage/1410
       - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/web_intro
       - ~/projects/faculty/1400/2024_spring_alex/modules:/app/storage/1400
       - ~/projects/faculty/1405/2024_spring_alex/modules:/app/storage/1405
+      - ~/projects/faculty/4620_Distributed/2024Spring/modules:/app/storage/distributed

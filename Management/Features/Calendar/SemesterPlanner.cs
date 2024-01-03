@@ -15,6 +15,7 @@ public class SemesterPlanner
       {
         var month = ((startDate.Month + monthDiff - 1) % 12) + 1;
         var year = startDate.Year + ((startDate.Month + monthDiff - 1) / 12);
+
         return new CalendarMonth(year, month);
       });
   }

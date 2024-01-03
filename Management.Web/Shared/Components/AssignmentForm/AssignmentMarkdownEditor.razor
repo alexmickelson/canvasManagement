@@ -5,6 +5,8 @@
 
 @code
 {
+  [Parameter, EditorRequired]
+  public bool ShowHelp { get; set; } = false;
   protected override void OnInitialized()
   {
     assignmentContext.StateHasChanged += reload;
@@ -60,7 +62,18 @@
   }
 
   private MarkupString preview { get => (MarkupString)Markdown.ToHtml(assignmentContext?.Assignment?.Description ?? ""); }
+  private string HelpText()
+  {
+    var groupNames = string.Join(", " , planner.LocalCourse?.Settings.AssignmentGroups.Select(g => g.Name));
+    return $@"
+SubmissionTypes:
+- {AssignmentSubmissionType.ONLINE_TEXT_ENTRY}
+- {AssignmentSubmissionType.ONLINE_UPLOAD}
 
+Assignment Group Names:
+{groupNames}
+";
+  } 
 }
 
 @if(assignmentContext.Assignment != null && planner.LocalCourse != null)
