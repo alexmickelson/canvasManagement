@@ -1,17 +1,11 @@
 using System.Threading.Tasks.Sources;
 using LocalModels;
-using Management.Services;
+namespace Management.Services;
 
-public class MarkdownCourseSaver
+public class MarkdownCourseSaver(MyLogger<MarkdownCourseSaver> logger)
 {
-  private readonly MyLogger<MarkdownCourseSaver> logger;
-  private readonly string _basePath;
-
-  public MarkdownCourseSaver(MyLogger<MarkdownCourseSaver> logger)
-  {
-    this.logger = logger;
-    _basePath = FileConfiguration.GetBasePath();
-  }
+  private readonly MyLogger<MarkdownCourseSaver> _logger = logger;
+  private readonly string _basePath = FileConfiguration.GetBasePath();
 
   public async Task Save(LocalCourse course, LocalCourse? previouslyStoredCourse)
   {
@@ -70,7 +64,7 @@ public class MarkdownCourseSaver
       {
         var markdownPath = quizzesDirectory + "/" + quiz.Name + ".md"; ;
         var quizMarkdown = quiz.ToMarkdown();
-        logger.Log("saving quiz " + markdownPath);
+        _logger.Log("saving quiz " + markdownPath);
         await File.WriteAllTextAsync(markdownPath, quizMarkdown);
       }
     }
@@ -94,7 +88,7 @@ public class MarkdownCourseSaver
 
     foreach (var file in filesToDelete)
     {
-      logger.Log($"removing old quiz, it has probably been renamed {file}");
+      _logger.Log($"removing old quiz, it has probably been renamed {file}");
       File.Delete(file);
     }
 
@@ -117,7 +111,7 @@ public class MarkdownCourseSaver
         var assignmentMarkdown = assignment.ToMarkdown();
 
         var filePath = assignmentsDirectory + "/" + assignment.Name + ".md";
-        logger.Log("saving assignment " + filePath);
+        _logger.Log("saving assignment " + filePath);
         await File.WriteAllTextAsync(filePath, assignmentMarkdown);
       }
     }
@@ -141,7 +135,7 @@ public class MarkdownCourseSaver
 
     foreach (var file in filesToDelete)
     {
-      logger.Log($"removing old assignment, it has probably been renamed {file}");
+      _logger.Log($"removing old assignment, it has probably been renamed {file}");
       File.Delete(file);
     }
   }

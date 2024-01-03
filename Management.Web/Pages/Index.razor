@@ -1,7 +1,5 @@
 ﻿@page "/"
 @using CanvasModel.EnrollmentTerms
-@using Management.Web.Shared.Course
-@using Management.Web.Shared.Semester
 @using CanvasModel.Courses
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using LocalModels
@@ -47,7 +45,7 @@
       <CurrentFiles RefreshKey="refreshKey" />
     </div>
   </div>
-  
+
   @if(!showNewFile)
   {
     <div class="text-center">
