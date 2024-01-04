@@ -14,7 +14,7 @@ public record LocalQuizQuestion
   public string ToMarkdown()
   {
     var answerArray = Answers.Select(getAnswerMarkdown);
-    var answersText = string.Join(Environment.NewLine, answerArray);
+    var answersText = string.Join("\n", answerArray);
     var questionTypeIndicator = QuestionType == "essay" || QuestionType == "short_answer" ? QuestionType : "";
 
     return $@"Points: {Points}
@@ -25,7 +25,7 @@ public record LocalQuizQuestion
   private string getAnswerMarkdown(LocalQuizQuestionAnswer answer, int index)
   {
     var multilineMarkdownCompatibleText = answer.Text.StartsWith("```")
-      ? Environment.NewLine + answer.Text
+      ? "\n" + answer.Text
       : answer.Text;
 
     if (QuestionType == "multiple_answers")
@@ -53,7 +53,7 @@ public record LocalQuizQuestion
 
   public static LocalQuizQuestion ParseMarkdown(string input, int questionIndex)
   {
-    var lines = input.Trim().Split(Environment.NewLine);
+    var lines = input.Trim().Split("\n");
     var firstLineIsPoints = lines.First().Contains("points: ", StringComparison.CurrentCultureIgnoreCase);
 
     var textHasPoints = lines.Length > 0
@@ -84,7 +84,7 @@ public record LocalQuizQuestion
         )
         .ToArray()
       : linesWithoutAnswers;
-    var description = string.Join(Environment.NewLine, descriptionLines);
+    var description = string.Join("\n", descriptionLines);
 
 
 
@@ -164,7 +164,7 @@ public record LocalQuizQuestion
       }
 
       if (acc.Count != 0) // Append to the previous line if there is one
-        acc[^1] += Environment.NewLine + line;
+        acc[^1] += "\n" + line;
       else
         acc.Add(line);
 

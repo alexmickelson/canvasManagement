@@ -32,7 +32,7 @@ lines
           Answers = new LocalQuizQuestionAnswer[]
           {
             new LocalQuizQuestionAnswer() { Correct = true, Text = "true" },
-            new LocalQuizQuestionAnswer() { Correct = false, Text = "false" + Environment.NewLine +Environment.NewLine + "endline" },
+            new LocalQuizQuestionAnswer() { Correct = false, Text = "false\n\nendline" },
           }
         }
       }

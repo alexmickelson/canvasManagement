@@ -15,7 +15,8 @@ public class FileStorageManager
     MyLogger<FileStorageManager> logger,
     CourseMarkdownLoader courseMarkdownLoader,
     MarkdownCourseSaver saveMarkdownCourse,
-    ILogger<FileStorageManager> otherLogger
+    ILogger<FileStorageManager> otherLogger,
+    FileConfiguration fileConfig
   )
   {
     using var activity = DiagnosticsConfig.Source.StartActivity("loading storage directory");
@@ -23,7 +24,7 @@ public class FileStorageManager
     _courseMarkdownLoader = courseMarkdownLoader;
     _saveMarkdownCourse = saveMarkdownCourse;
     _otherLogger = otherLogger;
-    _basePath = FileConfiguration.GetBasePath();
+    _basePath = fileConfig.GetBasePath();
 
     this.logger.Log("Using storage directory: " + _basePath);
   }

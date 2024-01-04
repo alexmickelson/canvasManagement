@@ -38,7 +38,7 @@ public record LocalQuiz
   public string ToMarkdown()
   {
     var questionMarkdownArray = Questions.Select(q => q.ToMarkdown()).ToArray();
-    var questionDelimiter = Environment.NewLine + Environment.NewLine + "---" + Environment.NewLine + Environment.NewLine;
+    var questionDelimiter = "\n\n---\n\n";
     var questionMarkdown = string.Join(questionDelimiter, questionMarkdownArray);
 
     return $@"Name: {Name}
@@ -57,7 +57,7 @@ Description: {Description}
   public static LocalQuiz ParseMarkdown(string input)
   {
 
-    var splitInput = input.Split("---" + Environment.NewLine);
+    var splitInput = input.Split("---\n");
     var settings = splitInput[0];
     var quizWithoutQuestions = getQuizWithOnlySettings(settings);
 

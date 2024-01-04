@@ -62,9 +62,9 @@ public record LocalAssignment
     var settingsString = input.Split("---")[0];
     var (name, localAssignmentGroupName, submissionTypes, dueAt, lockAt) = parseSettings(settingsString);
 
-    var description = input.Split("---" + Environment.NewLine)[1].Split("## Rubric")[0];
+    var description = input.Split("---\n")[1].Split("## Rubric")[0];
 
-    var rubricString = input.Split("## Rubric" + Environment.NewLine)[1];
+    var rubricString = input.Split("## Rubric\n")[1];
     var rubric = ParseRubricMarkdown(rubricString);
     return new LocalAssignment()
     {
@@ -100,15 +100,17 @@ public record LocalAssignment
 
   private static List<string> parseSubmissionTypes(string input)
   {
+    input = input.Replace("\r\n", "\n");
     List<string> submissionTypes = new List<string>();
 
     // Define a regular expression pattern to match the bulleted list items
     string startOfTypePattern = @"- (.+)";
     Regex regex = new Regex(startOfTypePattern);
 
-    var inputAfterSubmissionTypes = input.Split("SubmissionTypes:" + Environment.NewLine)[1];
+    var words = input.Split("SubmissionTypes:");
+    var inputAfterSubmissionTypes = words[1];
 
-    string[] lines = inputAfterSubmissionTypes.Split(Environment.NewLine, StringSplitOptions.RemoveEmptyEntries);
+    string[] lines = inputAfterSubmissionTypes.Split("\n", StringSplitOptions.RemoveEmptyEntries);
 
     foreach (string line in lines)
     {
@@ -143,10 +145,10 @@ public record LocalAssignment
     var settingsMarkdown = settingsToMarkdown();
     var rubricMarkdown = RubricToMarkdown();
     var assignmentMarkdown =
-      settingsMarkdown + Environment.NewLine
-      + "---" + Environment.NewLine + Environment.NewLine
-      + Description + Environment.NewLine
-      + Environment.NewLine + "## Rubric" + Environment.NewLine + Environment.NewLine
+      settingsMarkdown + "\n"
+      + "---\n\n"
+      + Description + "\n\n"
+      + "## Rubric\n\n"
       + rubricMarkdown;
 
     return assignmentMarkdown;
@@ -158,7 +160,7 @@ public record LocalAssignment
     foreach (var item in Rubric)
     {
       var pointLabel = item.Points > 1 ? "pts" : "pt";
-      builder.Append($"- {item.Points}{pointLabel}: {item.Label}" + Environment.NewLine);
+      builder.Append($"- {item.Points}{pointLabel}: {item.Label}" + "\n");
     }
     return builder.ToString();
   }
@@ -166,14 +168,14 @@ public record LocalAssignment
   private string settingsToMarkdown()
   {
     var builder = new StringBuilder();
-    builder.Append($"Name: {Name}" + Environment.NewLine);
-    builder.Append($"LockAt: {LockAt}" + Environment.NewLine);
-    builder.Append($"DueAt: {DueAt}" + Environment.NewLine);
-    builder.Append($"AssignmentGroupName: {LocalAssignmentGroupName}" + Environment.NewLine);
-    builder.Append($"SubmissionTypes:" + Environment.NewLine);
+    builder.Append($"Name: {Name}" + "\n");
+    builder.Append($"LockAt: {LockAt}" + "\n");
+    builder.Append($"DueAt: {DueAt}" + "\n");
+    builder.Append($"AssignmentGroupName: {LocalAssignmentGroupName}" + "\n");
+    builder.Append($"SubmissionTypes:" + "\n");
     foreach (var submissionType in SubmissionTypes)
     {
-      builder.Append($"- {submissionType}" + Environment.NewLine);
+      builder.Append($"- {submissionType}" + "\n");
     }
     return builder.ToString();
   }
@@ -182,7 +184,7 @@ public record LocalAssignment
   {
     if (rawMarkdown.Trim() == string.Empty)
       return [];
-    var lines = rawMarkdown.Trim().Split(Environment.NewLine);
+    var lines = rawMarkdown.Trim().Split("\n");
     var items = lines.Select(parseIndividualRubricItemMarkdown).ToArray();
     return items;
   }

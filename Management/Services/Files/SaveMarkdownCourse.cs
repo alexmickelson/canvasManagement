@@ -2,10 +2,10 @@ using System.Threading.Tasks.Sources;
 using LocalModels;
 namespace Management.Services;
 
-public class MarkdownCourseSaver(MyLogger<MarkdownCourseSaver> logger)
+public class MarkdownCourseSaver(MyLogger<MarkdownCourseSaver> logger, FileConfiguration fileConfig)
 {
   private readonly MyLogger<MarkdownCourseSaver> _logger = logger;
-  private readonly string _basePath = FileConfiguration.GetBasePath();
+  private readonly string _basePath = fileConfig.GetBasePath();
 
   public async Task Save(LocalCourse course, LocalCourse? previouslyStoredCourse)
   {

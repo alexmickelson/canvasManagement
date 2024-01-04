@@ -1,5 +1,8 @@
+using System.Configuration;
 using LocalModels;
 using Management.Services;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
 using NUnit.Framework.Internal;
@@ -37,11 +40,16 @@ public class FileStorageTests
     var fileManagerLogger = new MyLogger<FileStorageManager>(NullLogger<FileStorageManager>.Instance);
     var markdownLoaderLogger = new MyLogger<CourseMarkdownLoader>(NullLogger<CourseMarkdownLoader>.Instance);
     var markdownSaverLogger = new MyLogger<MarkdownCourseSaver>(NullLogger<MarkdownCourseSaver>.Instance);
-
+    var otherLogger = NullLoggerFactory.Instance.CreateLogger<FileStorageManager>();
     Environment.SetEnvironmentVariable("storageDirectory", storageDirectory);
-    var markdownLoader = new CourseMarkdownLoader(markdownLoaderLogger);
-    var markdownSaver = new MarkdownCourseSaver(markdownSaverLogger);
-    fileManager = new FileStorageManager(fileManagerLogger, markdownLoader, markdownSaver);
+    var config = new ConfigurationBuilder()
+      .AddEnvironmentVariables()      
+      .Build();    
+    var fileConfiguration = new FileConfiguration(config);
+
+    var markdownLoader = new CourseMarkdownLoader(markdownLoaderLogger, fileConfiguration);
+    var markdownSaver = new MarkdownCourseSaver(markdownSaverLogger, fileConfiguration);
+    fileManager = new FileStorageManager(fileManagerLogger, markdownLoader, markdownSaver, otherLogger, fileConfiguration);
   }
 
   [Test]
@@ -139,7 +147,9 @@ public class FileStorageTests
     var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
 
-    loadedCourse.Modules.First().Assignments.Should().BeEquivalentTo(testCourse.Modules.First().Assignments);
+    var actualAssignments = loadedCourse.Modules.First().Assignments;
+    var expectedAssignments = testCourse.Modules.First().Assignments;
+    actualAssignments.Should().BeEquivalentTo(expectedAssignments);
   }
 
 

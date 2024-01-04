@@ -6,10 +6,10 @@ public class CourseMarkdownLoader
   private readonly MyLogger<CourseMarkdownLoader> logger;
   private readonly string _basePath;
 
-  public CourseMarkdownLoader(MyLogger<CourseMarkdownLoader> logger)
+  public CourseMarkdownLoader(MyLogger<CourseMarkdownLoader> logger, FileConfiguration fileConfig)
   {
     this.logger = logger;
-    _basePath = FileConfiguration.GetBasePath();
+    _basePath = fileConfig.GetBasePath();
   }
 
   public async Task<IEnumerable<LocalCourse>> LoadSavedMarkdownCourses()
@@ -101,7 +101,7 @@ public class CourseMarkdownLoader
     var assignmentPromises = assignmentFiles
       .Select(async filePath =>
       {
-        var rawFile = await File.ReadAllTextAsync(filePath);
+        var rawFile = (await File.ReadAllTextAsync(filePath)).Replace("\r\n", "\n");
         return LocalAssignment.ParseMarkdown(rawFile);
       })
       .ToArray();
@@ -122,7 +122,7 @@ public class CourseMarkdownLoader
     var quizPromises = quizFiles
       .Select(async path =>
       {
-        var rawQuiz = await File.ReadAllTextAsync(path);
+        var rawQuiz = (await File.ReadAllTextAsync(path)).Replace("\r\n", "\n");
         return LocalQuiz.ParseMarkdown(rawQuiz);
       });
 
