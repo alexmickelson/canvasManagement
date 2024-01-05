@@ -18,37 +18,30 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using OpenTelemetry;
 
 DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-var canvas_token = builder.Configuration["CANVAS_TOKEN"];
-if (canvas_token == null)
-  throw new Exception("CANVAS_TOKEN is null");
-var canvas_url = builder.Configuration["CANVAS_URL"];
-if (canvas_url == null)
-{
-  Console.WriteLine("CANVAS_URL is null, defaulting to https://snow.instructure.com");
-  builder.Configuration["CANVAS_URL"] = "https://snow.instructure.com";
-}
+ConfigurationSetup.Canvas(builder);
 
 const string serviceName = "canvas-management";
 
-// builder.Logging.AddOpenTelemetry(options =>
-// {
-//   options
-//     .SetResourceBuilder(
-//       ResourceBuilder
-//         .CreateDefault()
-//         .AddService(serviceName)
-//     )
-//     .AddOtlpExporter(o =>
-//     {
-//       o.Endpoint = new Uri("http://localhost:4317/");
-//     })
-//     .AddConsoleExporter();
-// });
+builder.Logging.AddOpenTelemetry(options =>
+{
+  options
+    .SetResourceBuilder(
+      ResourceBuilder
+        .CreateDefault()
+        .AddService(serviceName)
+    )
+    .AddOtlpExporter(o =>
+    {
+      o.Endpoint = new Uri("http://localhost:4317/");
+    });
+  // .AddConsoleExporter();
+});
 
 builder.Services.AddOpenTelemetry()
   .ConfigureResource(resource => resource.AddService(serviceName))
@@ -59,15 +52,16 @@ builder.Services.AddOpenTelemetry()
       o.Endpoint = new Uri("http://localhost:4317/");
     })
     .AddAspNetCoreInstrumentation()
-    .AddConsoleExporter()
-  );
-// .WithMetrics(metrics => metrics
-//   .AddOtlpExporter(o => {
-//     o.Endpoint = new Uri("http://localhost:4317/");
-//   })
-//   .AddAspNetCoreInstrumentation()
-//   .AddConsoleExporter()
-// );
+    .AddProcessor(new BatchActivityExportProcessor(new CustomConsoleExporter()))
+  )
+  .WithMetrics(metrics => metrics
+    .AddOtlpExporter(o =>
+    {
+      o.Endpoint = new Uri("http://localhost:4317/");
+    }
+  )
+  .AddAspNetCoreInstrumentation()
+);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -133,3 +127,4 @@ foreach (var address in addresses)
 }
 
 app.WaitForShutdown();
+

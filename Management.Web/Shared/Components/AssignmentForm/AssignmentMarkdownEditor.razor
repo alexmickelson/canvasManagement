@@ -1,4 +1,5 @@
 @using Markdig
+@using Shared.Components.AssignmentForm
 
 @inject CoursePlanner planner
 @inject AssignmentEditorContext assignmentContext
@@ -64,48 +65,59 @@
   private MarkupString preview { get => (MarkupString)Markdown.ToHtml(assignmentContext?.Assignment?.Description ?? ""); }
   private string HelpText()
   {
-    var groupNames = string.Join(", " , planner.LocalCourse?.Settings.AssignmentGroups.Select(g => g.Name));
+    var groupNames = string.Join("\n- " , planner.LocalCourse?.Settings.AssignmentGroups.Select(g => g.Name) ?? []);
     return $@"
 SubmissionTypes:
 - {AssignmentSubmissionType.ONLINE_TEXT_ENTRY}
 - {AssignmentSubmissionType.ONLINE_UPLOAD}
 
 Assignment Group Names:
-{groupNames}
+- {groupNames}
 ";
   } 
 }
 
-@if(assignmentContext.Assignment != null && planner.LocalCourse != null)
-{
-  <div class="row h-100  w-100">
-    <div class="col-6">
-
-      <MonacoTextArea Value=@rawText OnChange=@handleChange />
+<div class="d-flex w-100 h-100 flex-row">
+  @if(ShowHelp)
+  {
+    <div class=" rounded rounded-3 bg-black" >
+      <pre class=" me-3 pe-5 ps-3 rounded rounded-3">
+        @HelpText()
+      </pre>
     </div>
-    <div class="col-6 overflow-y-auto h-100" >
-      @if (error != null)
-      {
-        <p class="text-danger text-truncate">Error: @error</p>
-      }
+  }
 
-      
-      <div>Due At: @assignmentContext.Assignment.DueAt</div>
-      <div>Lock At: @assignmentContext.Assignment.LockAt</div>
-      <div>Assignment Group Name @assignmentContext.Assignment.LocalAssignmentGroupName</div>
-      <div>Submission Types</div>
-      <ul>
-        @foreach(var t in assignmentContext.Assignment.SubmissionTypes)
-        {
-          <li>@t</li>
-        }
-      </ul>
-      <hr>
-      <div>
-        @(preview)
+  @if(assignmentContext.Assignment != null && planner.LocalCourse != null)
+  {
+    <div class="row h-100  w-100">
+      <div class="col-6">
+          
+        <MonacoTextArea Value=@rawText OnChange=@handleChange />
       </div>
-      <hr>
-      <RubricDisplay />
+      <div class="col-6 overflow-y-auto h-100" >
+        @if (error != null)
+        {
+          <p class="text-danger text-truncate">Error: @error</p>
+        }
+
+        
+        <div>Due At: @assignmentContext.Assignment.DueAt</div>
+        <div>Lock At: @assignmentContext.Assignment.LockAt</div>
+        <div>Assignment Group Name @assignmentContext.Assignment.LocalAssignmentGroupName</div>
+        <div>Submission Types</div>
+        <ul>
+          @foreach(var t in assignmentContext.Assignment.SubmissionTypes)
+          {
+            <li>@t</li>
+          }
+        </ul>
+        <hr>
+        <div>
+          @(preview)
+        </div>
+        <hr>
+        <RubricDisplay />
+      </div>
     </div>
-  </div>
-}
+  }
+</div>
