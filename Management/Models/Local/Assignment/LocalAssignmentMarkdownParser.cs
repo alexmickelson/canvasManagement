@@ -50,11 +50,11 @@ public static class LocalAssignmentMarkdownParser
   private static List<string> parseSubmissionTypes(string input)
   {
     input = input.Replace("\r\n", "\n");
-    List<string> submissionTypes = new List<string>();
+    List<string> submissionTypes = [];
 
     // Define a regular expression pattern to match the bulleted list items
     string startOfTypePattern = @"- (.+)";
-    Regex regex = new Regex(startOfTypePattern);
+    Regex regex = new(startOfTypePattern);
 
     var words = input.Split("SubmissionTypes:");
     var inputAfterSubmissionTypes = words[1];

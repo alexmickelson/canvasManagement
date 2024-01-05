@@ -40,7 +40,6 @@ public record LocalAssignment
   public string GetDescriptionHtml()
   {
     var rubricHtml = GetRubricHtml();
-
     return Markdig.Markdown.ToHtml(Description) + "<hr>" + rubricHtml;
   }
 
@@ -49,53 +48,8 @@ public record LocalAssignment
       .FirstOrDefault(g => g.Name == LocalAssignmentGroupName)?
       .CanvasId;
 
-
-  public string ToYaml()
-  {
-    var serializer = new SerializerBuilder().DisableAliases().Build();
-    var yaml = serializer.Serialize(this);
-    return yaml;
-  }
-
-  public string ToMarkdown()
-  {
-    var settingsMarkdown = settingsToMarkdown();
-    var rubricMarkdown = RubricToMarkdown();
-    var assignmentMarkdown =
-      settingsMarkdown + "\n"
-      + "---\n\n"
-      + Description + "\n\n"
-      + "## Rubric\n\n"
-      + rubricMarkdown;
-
-    return assignmentMarkdown;
-  }
-
-  public string RubricToMarkdown()
-  {
-    var builder = new StringBuilder();
-    foreach (var item in Rubric)
-    {
-      var pointLabel = item.Points > 1 ? "pts" : "pt";
-      builder.Append($"- {item.Points}{pointLabel}: {item.Label}" + "\n");
-    }
-    return builder.ToString();
-  }
-
-  private string settingsToMarkdown()
-  {
-    var builder = new StringBuilder();
-    builder.Append($"Name: {Name}" + "\n");
-    builder.Append($"LockAt: {LockAt}" + "\n");
-    builder.Append($"DueAt: {DueAt}" + "\n");
-    builder.Append($"AssignmentGroupName: {LocalAssignmentGroupName}" + "\n");
-    builder.Append($"SubmissionTypes:" + "\n");
-    foreach (var submissionType in SubmissionTypes)
-    {
-      builder.Append($"- {submissionType}" + "\n");
-    }
-    return builder.ToString();
-  }
-
+  public string ToMarkdown() => this.AssignmentToMarkdown();
+  public string RubricToMarkdown() => this.AssignmentRubricToMarkdown();
   public static LocalAssignment ParseMarkdown(string input) => LocalAssignmentMarkdownParser.ParseMarkdown(input);
+  public static IEnumerable<RubricItem> ParseRubricMarkdown(string rawMarkdown) => LocalAssignmentMarkdownParser.ParseRubricMarkdown(rawMarkdown);
 }
