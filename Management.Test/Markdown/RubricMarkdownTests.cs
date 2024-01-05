@@ -2,6 +2,7 @@ using LocalModels;
 
 public class RubricMarkdownTests
 {
+
   [Test]
   public void TestCanParseOneItem()
   {
@@ -15,6 +16,7 @@ public class RubricMarkdownTests
     rubric.First().Label.Should().Be("this is the task");
     rubric.First().Points.Should().Be(2);
   }
+
   [Test]
   public void TestCanParseMultipleItems()
   {
@@ -29,6 +31,7 @@ public class RubricMarkdownTests
     rubric.ElementAt(1).Label.Should().Be("this is the other task");
     rubric.ElementAt(1).Points.Should().Be(3);
   }
+  
   [Test]
   public void TestCanParseSinglePoint()
   {
@@ -41,6 +44,7 @@ public class RubricMarkdownTests
     rubric.First().Label.Should().Be("this is the task");
     rubric.First().Points.Should().Be(1);
   }
+
   [Test]
   public void TestCanParseSingleExtraCredit_LowerCase()
   {

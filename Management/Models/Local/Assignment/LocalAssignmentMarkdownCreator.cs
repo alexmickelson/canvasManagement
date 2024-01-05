@@ -33,10 +33,12 @@ public static class LocalAssignmentMarkdownCreator
 
   private static string settingsToMarkdown(this LocalAssignment assignment)
   {
+    var printableDueDate = assignment.DueAt.ToString().Replace('\u202F', ' ');
+    var printableLockAt = assignment.LockAt?.ToString().Replace('\u202F', ' ') ?? "";
     var builder = new StringBuilder();
     builder.Append($"Name: {assignment.Name}" + "\n");
-    builder.Append($"LockAt: {assignment.LockAt}" + "\n");
-    builder.Append($"DueAt: {assignment.DueAt}" + "\n");
+    builder.Append($"LockAt: {printableLockAt}" + "\n");
+    builder.Append($"DueAt: {printableDueDate}" + "\n");
     builder.Append($"AssignmentGroupName: {assignment.LocalAssignmentGroupName}" + "\n");
     builder.Append($"SubmissionTypes:" + "\n");
     foreach (var submissionType in assignment.SubmissionTypes)
