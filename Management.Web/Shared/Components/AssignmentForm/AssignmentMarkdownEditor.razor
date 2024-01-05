@@ -64,7 +64,7 @@
   private MarkupString preview { get => (MarkupString)Markdown.ToHtml(assignmentContext?.Assignment?.Description ?? ""); }
   private string HelpText()
   {
-    var groupNames = string.Join(", " , planner.LocalCourse?.Settings.AssignmentGroups.Select(g => g.Name));
+    var groupNames = string.Join(", " , planner.LocalCourse?.Settings.AssignmentGroups.Select(g => g.Name) ?? []);
     return $@"
 SubmissionTypes:
 - {AssignmentSubmissionType.ONLINE_TEXT_ENTRY}

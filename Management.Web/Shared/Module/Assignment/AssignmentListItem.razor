@@ -98,12 +98,17 @@
         </div>
       </div>
 
-      @if(existsInCanvas && NeedsToBeUpdatedInCanvas)
+      @if(
+        planner.LocalCourse != null 
+        && existsInCanvas 
+        && NeedsToBeUpdatedInCanvas 
+        && assignmentInCanvas != null
+      )
       {
         <div class="mx-3 text-body-tertiary">
           @Assignment.GetUpdateReason(
-                  (CanvasAssignment)assignmentInCanvas, 
-                  Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups))
+            (CanvasAssignment)assignmentInCanvas, 
+            Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups))
         </div>
       }
       @if(!existsInCanvas)

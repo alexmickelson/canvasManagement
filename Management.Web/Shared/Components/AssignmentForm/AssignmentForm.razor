@@ -34,6 +34,9 @@
   private string name { get; set; } = String.Empty;
   private bool addingAssignmentToCanvas = false;
   private bool deletingAssignmentFromCanvas = false;
+  private bool showHelp = false;
+
+  private void toggleHelp() => showHelp = !showHelp;
 
   private void submitHandler()
   {
@@ -157,9 +160,6 @@
     deletingAssignmentFromCanvas = false;
     StateHasChanged();
   }
-
-
-  private bool showHelp { get; set; } = false;
 }
 
 <div class="d-flex flex-column p-2 h-100  w-100" style="height: 100%;" >
@@ -170,7 +170,7 @@
   <section class="flex-grow-1 p-1 border rounded-4 bg-dark-subtle" style="min-height: 0;">
     @if (assignmentContext.Assignment != null)
     {
-      @* <AssignmentMarkdownEditor ShowHelp="@showhelp" /> *@
+      <AssignmentMarkdownEditor ShowHelp=@showHelp />
     }
   </section>
 
@@ -182,7 +182,7 @@
       </div>
     }
 
-    <button class="btn btn-outline-secondary mx-3" @onclick="() => showHelp = !showHelp">
+    <button class="btn btn-outline-secondary mx-3" @onclick=toggleHelp>
       Toggle Help
     </button>
     <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
