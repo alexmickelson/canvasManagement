@@ -5,3 +5,4 @@ bin/
 storage/
 tmp.json
 tmp*.json
+.vs/

@@ -1,19 +1,22 @@
+using Microsoft.Extensions.Configuration;
 using RestSharp;
 
 public class WebRequestor : IWebRequestor
 {
-  private string BaseUrl = Environment.GetEnvironmentVariable("CANVAS_URL") + "/api/v1/";
+  private string BaseUrl = "";
   private string token;
   private RestClient client;
+  private readonly IConfiguration _config;
 
-  public WebRequestor()
+  public WebRequestor(IConfiguration config)
   {
+    _config = config;
     token =
-      Environment.GetEnvironmentVariable("CANVAS_TOKEN")
+      _config["CANVAS_TOKEN"]
       ?? throw new Exception("CANVAS_TOKEN not in environment");
+    BaseUrl = _config["CANVAS_URL"] + "/api/v1/";
     client = new RestClient(BaseUrl);
     client.AddDefaultHeader("Authorization", $"Bearer {token}");
-
   }
 
   public async Task<(T[]?, RestResponse)> GetManyAsync<T>(RestRequest request)

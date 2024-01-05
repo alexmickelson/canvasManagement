@@ -23,14 +23,14 @@ DotEnv.Load();
 
 var builder = WebApplication.CreateBuilder(args);
 
-var canvas_token = Environment.GetEnvironmentVariable("CANVAS_TOKEN");
+var canvas_token = builder.Configuration["CANVAS_TOKEN"];
 if (canvas_token == null)
   throw new Exception("CANVAS_TOKEN is null");
-var canvas_url = Environment.GetEnvironmentVariable("CANVAS_URL");
+var canvas_url = builder.Configuration["CANVAS_URL"];
 if (canvas_url == null)
 {
   Console.WriteLine("CANVAS_URL is null, defaulting to https://snow.instructure.com");
-  Environment.SetEnvironmentVariable("CANVAS_URL", "https://snow.instructure.com");
+  builder.Configuration["CANVAS_URL"] = "https://snow.instructure.com";
 }
 
 const string serviceName = "canvas-management";
@@ -93,6 +93,8 @@ builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentEditorContext>();
 builder.Services.AddScoped<QuizEditorContext>();
 builder.Services.AddScoped<DragContainer>();
+
+builder.Services.AddSingleton<FileConfiguration>();
 
 builder.Services.AddSignalR(e =>
 {

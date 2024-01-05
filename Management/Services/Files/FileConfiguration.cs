@@ -1,10 +1,11 @@
 using Management.Services;
+using Microsoft.Extensions.Configuration;
 
-public class FileConfiguration
+public class FileConfiguration(IConfiguration config)
 {
-  public static string GetBasePath()
+  public string GetBasePath()
   {
-    string? storageDirectory = Environment.GetEnvironmentVariable("storageDirectory");
+    string? storageDirectory = config["storageDirectory"];
     var basePath = storageDirectory ?? Path.GetFullPath("../storage");
 
     if (!Directory.Exists(basePath))

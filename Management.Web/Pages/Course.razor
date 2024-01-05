@@ -12,6 +12,7 @@
 @inject CanvasService canvas
 @inject CoursePlanner planner
 @inject NavigationManager navigtion
+@inject IConfiguration config
 
 @code {
   [Parameter]
@@ -55,7 +56,7 @@
     </button>
     <CourseSettings />
     <a class="btn btn-outline-secondary" target="_blank"
-      href="@($"{Environment.GetEnvironmentVariable("CANVAS_URL")}/courses/{planner.LocalCourse.Settings.CanvasId}")">
+      href="@($"{config["CANVAS_URL"]}/courses/{planner.LocalCourse.Settings.CanvasId}")">
       View In Canvas
     </a>
     <div class="my-auto ms-2 d-inline">
