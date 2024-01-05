@@ -12,7 +12,8 @@ services:
     volumes:
       # - ./storage:/app/storage
       # - ~/projects/faculty/1410/2023-fall-alex/modules:/app/storage/1410
-      - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/web_intro
+      - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/web
+      - ~/projects/faculty/1810/2024-spring-alex/modules_online:/app/storage/web_online
       - ~/projects/faculty/1400/2024_spring_alex/modules:/app/storage/1400
       - ~/projects/faculty/1405/2024_spring_alex/modules:/app/storage/1405
       - ~/projects/faculty/4620_Distributed/2024Spring/modules:/app/storage/distributed
@@ -33,7 +34,6 @@ services:
 
   zipkin:
     image: ghcr.io/openzipkin/zipkin-slim
-    container_name: zipkin
     # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
     environment:
       - STORAGE_TYPE=mem

@@ -93,10 +93,10 @@ public class CourseMarkdownLoader
     var assignmentsPath = $"{modulePath}/assignments";
     if (!Directory.Exists(assignmentsPath))
     {
-      var errorMessage = $"error loading course by name, assignments folder does not exist in {modulePath}";
-      logger.Log(errorMessage);
-      throw new LoadCourseFromFileException(errorMessage);
+      logger.Log($"error loading course by name, assignments folder does not exist in {modulePath}");
+      Directory.CreateDirectory(assignmentsPath);
     }
+
     var assignmentFiles = Directory.GetFiles(assignmentsPath);
     var assignmentPromises = assignmentFiles
       .Select(async filePath =>
@@ -113,9 +113,8 @@ public class CourseMarkdownLoader
     var quizzesPath = $"{modulePath}/quizzes";
     if (!Directory.Exists(quizzesPath))
     {
-      var errorMessage = $"error loading course by name, quizzes folder does not exist in {modulePath}";
-      logger.Log(errorMessage);
-      throw new LoadCourseFromFileException(errorMessage);
+      logger.Log($"quizzes folder does not exist in {modulePath}, creating now");
+      Directory.CreateDirectory(quizzesPath);
     }
 
     var quizFiles = Directory.GetFiles(quizzesPath);
