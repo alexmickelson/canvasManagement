@@ -31,22 +31,12 @@ services:
       - 4318:4318 # OTLP http receiver
       - 55679:55679 # zpages extension
 
-  # The zipkin process services the UI, and also exposes a POST endpoint that
-  # instrumentation can send trace data to.
   zipkin:
     image: ghcr.io/openzipkin/zipkin-slim
     container_name: zipkin
     # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
     environment:
       - STORAGE_TYPE=mem
-      # Point the zipkin at the storage backend
-      # - MYSQL_HOST=mysql
-      # Uncomment to enable self-tracing
-      # - SELF_TRACING_ENABLED=true
-      # Uncomment to increase heap size
-      # - JAVA_OPTS=-Xms128m -Xmx128m -XX:+ExitOnOutOfMemoryError
     ports:
-      # Port used for the Zipkin UI and HTTP Api
       - 9411:9411
-    # Uncomment to enable debug logging
     # command: --logging.level.zipkin2=DEBUG
