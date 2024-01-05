@@ -27,20 +27,10 @@ public record LocalAssignment
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public int PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
-  public string GetRubricHtml()
-  {
-    var output = "<h2>Rubric</h2>";
-    var lineStrings = Rubric.Select(
-      item => $"- {item.Points}pts: {item.Label} <br/>"
-    );
-    output += string.Join("\n", lineStrings);
-    return output;
-  }
 
   public string GetDescriptionHtml()
   {
-    var rubricHtml = GetRubricHtml();
-    return Markdig.Markdown.ToHtml(Description) + "<hr>" + rubricHtml;
+    return Markdig.Markdown.ToHtml(Description);
   }
 
   public ulong? GetCanvasAssignmentGroupId(IEnumerable<LocalAssignmentGroup> assignmentGroups) =>
