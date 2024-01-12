@@ -1,10 +1,11 @@
-@using Management.Web.Shared.Module.Assignment
+@using Management.Web.Course.Module.Assignment
 
 @inject DragContainer dragContainer
 @inject NavigationManager Navigation
 @inject AssignmentEditorContext assignmentContext
 
 @inject MyLogger<AssignmentInDay> logger
+
 @inherits DroppableAssignment
 
 @code {
@@ -31,7 +32,7 @@
     dragContainer.DropCallback = null;
   }
 
-  private void OnClick() 
+  private void OnClick()
   {
     if(planner.LocalCourse != null)
     {

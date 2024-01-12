@@ -1,11 +1,11 @@
-﻿@using Management.Web.Shared.Module
+﻿@using Management.Web.Pages.Course.Module
 @using System.Linq
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 
 @inject CoursePlanner planner
 
 @code {
-  private bool showNewModule { get; set; } = false;  
+  private bool showNewModule { get; set; } = false;
   protected override void OnInitialized()
   {
     planner.StateHasChanged += reload;

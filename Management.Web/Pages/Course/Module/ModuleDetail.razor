@@ -1,6 +1,6 @@
 @using Management.Web.Shared.Components
 @using Management.Web.Shared.Components.Quiz
-@using Management.Web.Shared.Module.Assignment
+@using Management.Web.Pages.Course.Module
 @using LocalModels
 @using BlazorMonaco
 @using BlazorMonaco.Editor
@@ -136,13 +136,13 @@
           {
             <Spinner />
           }
-          else 
+          else
           {
             if(!isSyncedWithCanvas)
             {
-              <button 
+              <button
                 class="btn btn-outline-primary"
-                @onclick="Publish" 
+                @onclick="Publish"
                 disabled="@publishing"
               >
                 Add to Canvas
