@@ -29,10 +29,10 @@ public static class LocalAssignmentMarkdownParser
 
   private static (string name, string assignmentGroupName, List<string> submissionTypes, DateTime dueAt, DateTime? lockAt) parseSettings(string input)
   {
-    var name = extractLabelValue(input, "Name");
-    var rawLockAt = extractLabelValue(input, "LockAt");
-    var rawDueAt = extractLabelValue(input, "DueAt");
-    var localAssignmentGroupName = extractLabelValue(input, "AssignmentGroupName");
+    var name = MarkdownUtils.ExtractLabelValue(input, "Name");
+    var rawLockAt = MarkdownUtils.ExtractLabelValue(input, "LockAt");
+    var rawDueAt = MarkdownUtils.ExtractLabelValue(input, "DueAt");
+    var localAssignmentGroupName = MarkdownUtils.ExtractLabelValue(input, "AssignmentGroupName");
     var submissionTypes = parseSubmissionTypes(input);
 
     DateTime? lockAt = DateTime.TryParse(rawLockAt, out DateTime parsedLockAt)
@@ -76,18 +76,6 @@ public static class LocalAssignmentMarkdownParser
     return submissionTypes;
   }
 
-  private static string extractLabelValue(string input, string label)
-  {
-    string pattern = $@"{label}: (.*?)\n";
-    Match match = Regex.Match(input, pattern);
-
-    if (match.Success)
-    {
-      return match.Groups[1].Value;
-    }
-
-    return string.Empty;
-  }
 
 
   public static IEnumerable<RubricItem> ParseRubricMarkdown(string rawMarkdown)

@@ -1,0 +1,76 @@
+@using Management.Web.Shared.Components
+@using Management.Web.Shared.Components.Forms
+
+@inject CoursePlanner planner
+
+@code {
+
+  [Parameter]
+  [EditorRequired]
+  public LocalModule Module { get; set; } = default!;
+
+  [Required]
+  [StringLength(50, ErrorMessage = "Name too long (50 character limit).")]
+  private string Name { get; set; } = "";
+
+  private Modal? modal { get; set; } = null;
+
+  private void submitHandler()
+  {
+    DiagnosticsConfig.Source?.StartActivity("Creating Page");
+
+
+    if(planner.LocalCourse != null)
+    {
+      var newPage = new LocalCoursePage
+      {
+        Name = Name,
+        Text = "",
+        DueDateForOrdering = DateTime.Now
+      };
+
+      var newModules =planner.LocalCourse.Modules.Select(m =>
+        m.Name != Module.Name
+          ? m
+          : Module with
+          {
+            Pages=Module.Pages.Append(newPage)
+          }
+        );
+      planner.LocalCourse = planner.LocalCourse with
+      {
+        Modules=newModules
+      };
+    }
+    Name = "";
+    modal?.Hide();
+  }
+}
+
+<button
+  class="btn btn-outline-secondary"
+  @onclick="() => modal?.Show()"
+>
+  + Page
+</button>
+
+<Modal @ref="modal">
+  <Title>New Page</Title>
+  <Body>
+    <form @onsubmit:preventDefault="true" @onsubmit="submitHandler">
+      <label for="Page Name">Name</label>
+      <input id="moduleName" class="form-control" @bind="Name" />
+    </form>
+    <br>
+
+  </Body>
+  <Footer>
+    <button
+      type="button"
+      class="btn btn-primary"
+      @onclick="submitHandler"
+    >
+      Create Page
+    </button>
+  </Footer>
+</Modal>

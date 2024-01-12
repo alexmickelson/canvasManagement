@@ -26,6 +26,7 @@ public class MarkdownCourseSaver(MyLogger<MarkdownCourseSaver> logger, FileConfi
 
       await saveQuizzes(course, module, previouslyStoredCourse);
       await saveAssignments(course, module, previouslyStoredCourse);
+      await savePages(course, module, previouslyStoredCourse);
     }
 
     var moduleNames = course.Modules.Select(m => m.Name);
@@ -42,7 +43,7 @@ public class MarkdownCourseSaver(MyLogger<MarkdownCourseSaver> logger, FileConfi
 
   private static async Task saveSettings(LocalCourse course, string courseDirectory)
   {
-    var settingsFilePath = courseDirectory + "/settings.yml"; ;
+    var settingsFilePath = courseDirectory + "/settings.yml";
     var settingsYaml = course.Settings.ToYaml();
     await File.WriteAllTextAsync(settingsFilePath, settingsYaml);
   }
@@ -136,6 +137,56 @@ public class MarkdownCourseSaver(MyLogger<MarkdownCourseSaver> logger, FileConfi
     foreach (var file in filesToDelete)
     {
       _logger.Log($"removing old assignment, it has probably been renamed {file}");
+      File.Delete(file);
+    }
+  }
+
+  private async Task savePages(LocalCourse course, LocalModule module, LocalCourse? previouslyStoredCourse)
+  {
+    var pagesDirectory = $"{_basePath}/{course.Settings.Name}/{module.Name}/pages";
+    if (!Directory.Exists(pagesDirectory))
+      Directory.CreateDirectory(pagesDirectory);
+
+
+    foreach (var page in module.Pages)
+    {
+      var previousModule = previouslyStoredCourse?.Modules.FirstOrDefault(m => m.Name == module.Name);
+      var previousPage = previousModule?.Pages.FirstOrDefault(a => a == page);
+
+      if (previousPage == null)
+      {
+        var assignmentMarkdown = page.ToMarkdown();
+
+        var filePath = pagesDirectory + "/" + page.Name + ".md";
+        using var activity = DiagnosticsConfig.Source.StartActivity("saving page in module");
+        activity?.AddTag("PageName", page.Name);
+        _logger.Log("saving page " + filePath);
+        await File.WriteAllTextAsync(filePath, assignmentMarkdown);
+      }
+    }
+    removeOldPages(pagesDirectory, module);
+  }
+
+  private void removeOldPages(string path, LocalModule module)
+  {
+    var existingFiles = Directory.EnumerateFiles(path);
+
+    var filesToDelete = existingFiles.Where((f) =>
+    {
+      foreach (var page in module.Pages)
+      {
+        var markdownPath = path + "/" + page.Name + ".md";
+        if (f == markdownPath)
+          return false;
+      }
+      return true;
+    });
+
+    foreach (var file in filesToDelete)
+    {
+      _logger.Log($"removing old assignment, it has probably been renamed {file}");
+      using var activity = DiagnosticsConfig.Source.StartActivity("removing untracked page from module");
+      activity?.AddTag("FileName", file);
       File.Delete(file);
     }
   }

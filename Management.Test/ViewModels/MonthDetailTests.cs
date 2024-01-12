@@ -1,4 +1,4 @@
-using Management.Web.Shared.Semester;
+using Management.Web.Pages.Course.CourseCalendar;
 
 public class MonthDetailTests
 {

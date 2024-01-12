@@ -43,8 +43,8 @@ public class FileStorageTests
     var otherLogger = NullLoggerFactory.Instance.CreateLogger<FileStorageManager>();
     Environment.SetEnvironmentVariable("storageDirectory", storageDirectory);
     var config = new ConfigurationBuilder()
-      .AddEnvironmentVariables()      
-      .Build();    
+      .AddEnvironmentVariables()
+      .Build();
     var fileConfiguration = new FileConfiguration(config);
 
     var markdownLoader = new CourseMarkdownLoader(markdownLoaderLogger, fileConfiguration);
@@ -239,6 +239,41 @@ public class FileStorageTests
                   Points = 1
                 }
               ]
+            }
+          ]
+        }
+      ]
+    };
+
+    await fileManager.SaveCourseAsync(testCourse, null);
+
+    var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
+    var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
+
+    loadedCourse.Should().BeEquivalentTo(testCourse);
+  }
+
+
+  [Test]
+  public async Task MarkdownStorage_CanPersistPages()
+  {
+    LocalCourse testCourse = new() {
+      Settings = new () {
+        AssignmentGroups = [],
+        Name = "Test Course with page",
+        DaysOfWeek = [DayOfWeek.Monday, DayOfWeek.Wednesday],
+        StartDate = new DateTime(),
+        EndDate = new DateTime(),
+        DefaultDueTime = new() { Hour = 1, Minute = 59 },
+      },
+      Modules = [
+        new(){
+          Name = "page test module",
+          Pages = [
+            new () {
+              Name = "test page persistence",
+              DueDateForOrdering = new DateTime(),
+              Text = "this is some\n## markdown\n"
             }
           ]
         }

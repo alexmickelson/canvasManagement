@@ -4,8 +4,6 @@ using LocalModels;
 namespace LocalModels;
 public static class LocalAssignmentMarkdownCreator
 {
-
-
   public static string AssignmentToMarkdown(this LocalAssignment assignment)
   {
     var settingsMarkdown = assignment.settingsToMarkdown();

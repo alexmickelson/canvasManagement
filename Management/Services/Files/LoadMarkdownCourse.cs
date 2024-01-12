@@ -79,12 +79,14 @@ public class CourseMarkdownLoader
     var moduleName = Path.GetFileName(modulePath);
     var assignments = await loadAssignmentsFromPath(modulePath);
     var quizzes = await loadQuizzesFromPath(modulePath);
+    var pages = await loadPagesFromPath(modulePath);
 
     return new LocalModule()
     {
       Name = moduleName,
       Assignments = assignments,
       Quizzes = quizzes,
+      Pages = pages,
     };
   }
 
@@ -126,5 +128,24 @@ public class CourseMarkdownLoader
       });
 
     return await Task.WhenAll(quizPromises);
+  }
+  private async Task<IEnumerable<LocalCoursePage>> loadPagesFromPath(string modulePath)
+  {
+    var pagesPath = $"{modulePath}/pages";
+    if (!Directory.Exists(pagesPath))
+    {
+      logger.Log($"pages folder does not exist in {modulePath}, creating now");
+      Directory.CreateDirectory(pagesPath);
+    }
+
+    var pageFiles = Directory.GetFiles(pagesPath);
+    var pagePromises = pageFiles
+      .Select(async path =>
+      {
+        var rawPage = (await File.ReadAllTextAsync(path)).Replace("\r\n", "\n");
+        return LocalCoursePage.ParseMarkdown(rawPage);
+      });
+
+    return await Task.WhenAll(pagePromises);
   }
 }

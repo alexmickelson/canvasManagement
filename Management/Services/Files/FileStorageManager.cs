@@ -30,6 +30,8 @@ public class FileStorageManager
   }
   public async Task SaveCourseAsync(LocalCourse course, LocalCourse? previouslyStoredCourse)
   {
+    using var activity = DiagnosticsConfig.Source.StartActivity("Saving Course");
+    activity?.AddTag("CourseName", course.Settings.Name);
     await _saveMarkdownCourse.Save(course, previouslyStoredCourse);
   }
 

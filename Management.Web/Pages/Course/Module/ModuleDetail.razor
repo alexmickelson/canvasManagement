@@ -120,13 +120,6 @@
   </h2>
   <div id="@accordionId" class="accordion-collapse collapse">
     <div class="accordion-body pt-1">
-      @* <textarea
-      class="form-control"
-      @bind="notes"
-      @bind:event="oninput"
-      placeholder="notes for the module"
-      rows="6"
-      /> *@
       <div class="row m-1">
         <div class="col my-auto">
           <RenameModule Module="Module" />
@@ -151,8 +144,10 @@
           }
         </div>
         <div class="col-auto my-auto">
+          <NewPage Module=Module />
           <NewQuiz Module="Module" />
           <NewAssignment Module="Module" />
+
         </div>
       </div>
       <h5>Assignments</h5>
