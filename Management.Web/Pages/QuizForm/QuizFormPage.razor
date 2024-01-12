@@ -2,15 +2,12 @@
 
 @using CanvasModel.EnrollmentTerms
 @using CanvasModel.Quizzes
-@using Management.Web.Shared.Components.AssignmentForm
-@using Management.Web.Shared.Course
-@using Management.Web.Shared.Semester
+@using Management.Web.Shared.Components
 @using CanvasModel.Courses
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using LocalModels
 @using Management.Web.Shared.Module.Assignment
 @using Management.Web.Shared.Components
-@using Management.Web.Shared.Components.Quiz.Markdown
 
 @inject FileStorageManager fileStorageManager
 @inject CanvasService canvas
@@ -210,7 +207,7 @@ this is a matching question
   </section>
 
   <div>
-    <button 
+    <button
       class="btn btn-outline-secondary mt-3"
       @onclick="@(() => showHelp = !showHelp)"
     >
@@ -222,11 +219,11 @@ this is a matching question
     {
       <div class="row justify-content-end">
         <div class="col-auto">
-          <ConfirmationModal 
-            Label="Delete" 
-            Class="btn btn-danger" 
+          <ConfirmationModal
+            Label="Delete"
+            Class="btn btn-danger"
             OnConfirm="deleteQuiz"
-            Disabled="@addingQuizToCanvas" 
+            Disabled="@addingQuizToCanvas"
           />
           <button class="btn btn-outline-secondary me-1" @onclick="addToCanvas" disabled="@addingQuizToCanvas">
             Add to Canvas

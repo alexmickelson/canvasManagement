@@ -1,5 +1,5 @@
 @using System.Linq
-@using Management.Web.Shared.Semester.Day
+@using Management.Web.Pages.Course.CourseCalendar.Day
 
 @inject CoursePlanner planner
 
@@ -18,11 +18,11 @@
 }
 
 <h3 class="text-center">
-  <a 
+  <a
     role="button"
-    data-bs-toggle="collapse" 
+    data-bs-toggle="collapse"
     data-bs-target="@("#" + htmlLabel)"
-    aria-expanded="@( isInPast ? "false" : "true")" 
+    aria-expanded="@( isInPast ? "false" : "true")"
     aria-controls="@htmlLabel"
   >
     @MonthName
@@ -34,8 +34,8 @@
     @foreach (DayOfWeek day in WeekDaysList)
     {
       <div class="@(
-          planner.LocalCourse?.Settings.DaysOfWeek.Contains(day) ?? false 
-            ? "col" 
+          planner.LocalCourse?.Settings.DaysOfWeek.Contains(day) ?? false
+            ? "col"
             : "col text-secondary"
         )">
         @day

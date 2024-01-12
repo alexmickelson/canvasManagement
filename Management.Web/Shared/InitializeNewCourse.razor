@@ -1,6 +1,5 @@
 @using CanvasModel.EnrollmentTerms
 @using Management.Web.Shared.Components
-@using Management.Web.Shared.Semester
 @using CanvasModel.Courses
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using LocalModels
@@ -110,9 +109,9 @@
   <div class="row justify-content-center">
   <div class="col-auto">
     <label for="termselect">Select Term:</label>
-    <select 
-      id="termselect" 
-      class="form-select" 
+    <select
+      id="termselect"
+      class="form-select"
       @bind="selectedTermId"
     >
       @foreach (var term in terms)
@@ -148,9 +147,9 @@
     <div class="row justify-content-center m-3">
       <div class="col-auto">
         <label for="directorySelect">Select Storage Directory:</label>
-        <select 
-          id="directorySelect" 
-          class="form-select" 
+        <select
+          id="directorySelect"
+          class="form-select"
           @bind="selectedStorageDirectory"
         >
           <option></option>
@@ -168,12 +167,12 @@
   @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
     {
       <div class="col">
-        <button 
+        <button
           class="@(
-            days.Contains(day) 
-            ? "btn btn-secondary" 
+            days.Contains(day)
+            ? "btn btn-secondary"
             : "btn btn-outline-secondary"
-          )" 
+          )"
           @onclick="() => {
             if(days.Contains(day))
               days.Remove(day);

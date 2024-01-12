@@ -1,10 +1,7 @@
 
 @using CanvasModel.EnrollmentTerms
 @using Management.Web.Shared.Module
-@using Management.Web.Shared.Semester
-@using Management.Web.Shared.Components.AssignmentForm
-@using Management.Web.Shared.Components.Quiz
-@using Management.Web.Shared.Components.Quiz.Markdown
+@using Management.Web.Pages.Course.CourseCalendar
 
 @inject CanvasService canvas
 @inject CoursePlanner planner
@@ -20,8 +17,8 @@
     if(firstRender)
     {
       if(
-        planner.CanvasAssignments == null 
-        && planner.LocalCourse != null 
+        planner.CanvasAssignments == null
+        && planner.LocalCourse != null
         && planner.LocalCourse.Settings.CanvasId != null
       )
       {

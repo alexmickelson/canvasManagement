@@ -1,5 +1,5 @@
 @using Markdig
-@using Shared.Components.AssignmentForm
+@using Management.Web.Shared.Components
 
 @inject CoursePlanner planner
 @inject AssignmentEditorContext assignmentContext
@@ -40,7 +40,7 @@
     rawText = newRawAssignment;
     if (newRawAssignment != string.Empty)
     {
-      try 
+      try
       {
         var parsed = LocalAssignment.ParseMarkdown(newRawAssignment);
         error = null;
@@ -75,7 +75,7 @@ SubmissionTypes:
 Assignment Group Names:
 - {groupNames}
 ";
-  } 
+  }
 }
 
 <div class="d-flex w-100 h-100 flex-row">
@@ -92,7 +92,7 @@ Assignment Group Names:
   {
     <div class="row h-100  w-100">
       <div class="col-6">
-          
+
         <MonacoTextArea Value=@rawText OnChange=@handleChange />
       </div>
       <div class="col-6 overflow-y-auto h-100" >
@@ -101,7 +101,7 @@ Assignment Group Names:
           <p class="text-danger text-truncate">Error: @error</p>
         }
 
-        
+
         <div>Due At: @assignmentContext.Assignment.DueAt</div>
         <div>Lock At: @assignmentContext.Assignment.LockAt</div>
         <div>Assignment Group Name @assignmentContext.Assignment.LocalAssignmentGroupName</div>

@@ -1,5 +1,4 @@
 @using Management.Web.Shared.Components
-@using Management.Web.Shared.Components.AssignmentForm
 @using CanvasModel.Assignments;
 
 @inject DragContainer dragContainer
@@ -26,7 +25,7 @@
   }
   private bool showAll { get; set; } = false;
 
-  
+
   private void HandleDragStart()
   {
     dragContainer.DropCallback = DropCallback;
@@ -43,9 +42,9 @@
       a => a.Name == Assignment.Name
     );
 
-  private bool existsInCanvas => 
+  private bool existsInCanvas =>
     assignmentInCanvas != null;
-  private void OnClick() 
+  private void OnClick()
   {
     assignmentContext.Assignment = Assignment;
     Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name + "/assignment/" + Assignment.Name);
@@ -54,15 +53,15 @@
   private bool NeedsToBeUpdatedInCanvas => planner.LocalCourse != null
     && planner.LocalCourse.Settings.CanvasId != null
     && planner.CanvasAssignments != null
-    && planner.CanvasModules != null 
+    && planner.CanvasModules != null
     && assignmentInCanvas != null
     && Assignment.NeedsUpdates(
-      (CanvasAssignment)assignmentInCanvas, 
+      (CanvasAssignment)assignmentInCanvas,
       Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups)
     );
 }
 
-<div 
+<div
   draggable="true"
   @ondragstart="HandleDragStart"
   @ondragend="HandleDragEnd"
@@ -99,15 +98,15 @@
       </div>
 
       @if(
-        planner.LocalCourse != null 
-        && existsInCanvas 
-        && NeedsToBeUpdatedInCanvas 
+        planner.LocalCourse != null
+        && existsInCanvas
+        && NeedsToBeUpdatedInCanvas
         && assignmentInCanvas != null
       )
       {
         <div class="mx-3 text-body-tertiary">
           @Assignment.GetUpdateReason(
-            (CanvasAssignment)assignmentInCanvas, 
+            (CanvasAssignment)assignmentInCanvas,
             Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups))
         </div>
       }
@@ -149,25 +148,25 @@
             </section>
           </div>
        }
-      
+
 
       @if(!showAll)
       {
-        <div 
-          class="text-center fs-3 fw-bold lh-1 text-primary" 
-          role="button" 
-          @onclick:preventDefault="true" 
+        <div
+          class="text-center fs-3 fw-bold lh-1 text-primary"
+          role="button"
+          @onclick:preventDefault="true"
           @onclick:stopPropagation="true"
           @onclick="() => showAll = true"
         >
-          <svg 
-            width="30" 
-            height="30" 
-            viewBox="0 0 20 20" 
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path 
-              d="M6 10a2 2 0 11-4.001-.001A2 2 0 016 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0112 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0118 10z" 
+            <path
+              d="M6 10a2 2 0 11-4.001-.001A2 2 0 016 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0112 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0118 10z"
               fill="var(--bs-primary)"
             />
           </svg>
@@ -175,21 +174,21 @@
       }
       else
       {
-        <div 
-          class="text-center fs-3 fw-bold lh-1 text-primary" 
-          role="button" 
-          @onclick:preventDefault="true" 
+        <div
+          class="text-center fs-3 fw-bold lh-1 text-primary"
+          role="button"
+          @onclick:preventDefault="true"
           @onclick:stopPropagation="true"
           @onclick="() => showAll = false"
         >
-          <svg 
-            width="30" 
-            height="30" 
-            viewBox="0 0 20 20" 
+          <svg
+            width="30"
+            height="30"
+            viewBox="0 0 20 20"
             xmlns="http://www.w3.org/2000/svg"
           >
-            <path 
-              d="M6 10a2 2 0 11-4.001-.001A2 2 0 016 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0112 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0118 10z" 
+            <path
+              d="M6 10a2 2 0 11-4.001-.001A2 2 0 016 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0112 10zm6 0a2 2 0 11-4.001-.001A2 2 0 0118 10z"
               fill="var(--bs-primary)"
             />
           </svg>

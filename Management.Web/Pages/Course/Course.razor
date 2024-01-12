@@ -1,7 +1,5 @@
 @page "/course/{CourseName}"
 @using CanvasModel.EnrollmentTerms
-@using Management.Web.Shared.Course
-@using Management.Web.Shared.Semester
 @using CanvasModel.Courses
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @using LocalModels
@@ -41,7 +39,7 @@
 
 <PageTitle>@CourseName</PageTitle>
 <div style="height: 100vh;">
-  
+
 
 @if (loading)
 {
