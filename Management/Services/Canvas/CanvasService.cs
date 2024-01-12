@@ -5,6 +5,7 @@ using CanvasModel.Courses;
 using CanvasModel.EnrollmentTerms;
 using CanvasModel.Modules;
 using RestSharp;
+using CanvasModel.Pages;
 
 namespace Management.Services.Canvas;
 
@@ -140,6 +141,31 @@ public class CanvasService(
         title,
         type = type.ToString(),
         content_id = contentId,
+      }
+    };
+    var request = new RestRequest(url);
+    request.AddBody(body);
+
+    var (newItem, _response) = await webRequestor.PostAsync<CanvasModuleItem>(request);
+    if (newItem == null)
+      throw new Exception("something went wrong updating module item with string content id");
+  }
+  public async Task CreatePageModuleItem(
+    ulong canvasCourseId,
+    ulong canvasModuleId,
+    string title,
+    CanvasPage canvasPage
+  )
+  {
+    logger.Log($"creating new module item {title}");
+    var url = $"courses/{canvasCourseId}/modules/{canvasModuleId}/items";
+    var body = new
+    {
+      module_item = new
+      {
+        title,
+        type = "Page",
+        page_url = canvasPage.Url,
       }
     };
     var request = new RestRequest(url);

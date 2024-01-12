@@ -1,9 +1,10 @@
+using CanvasModel.Pages;
 using LocalModels;
 using Management.Services.Canvas;
 
 public static class PageSynchronizationExtension
 {
-  public static async Task<ulong?> AddPageToCanvas(
+  public static async Task<CanvasPage?> AddPageToCanvas(
     this LocalCourse localCourse,
     LocalCoursePage localPage,
     CanvasService canvas
@@ -16,7 +17,7 @@ public static class PageSynchronizationExtension
     }
     ulong courseCanvasId = (ulong)localCourse.Settings.CanvasId;
 
-    var canvasPageId = await canvas.Pages.Create(courseCanvasId, localPage);
-    return canvasPageId;
+    var canvasPage = await canvas.Pages.Create(courseCanvasId, localPage);
+    return canvasPage;
   }
 }

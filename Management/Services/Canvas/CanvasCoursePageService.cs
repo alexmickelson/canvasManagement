@@ -30,7 +30,7 @@ public class CanvasCoursePageService(
   }
 
 
-  public async Task<ulong> Create(
+  public async Task<CanvasPage> Create(
     ulong canvasCourseId,
     LocalCoursePage localCourse
   )
@@ -49,22 +49,22 @@ public class CanvasCoursePageService(
     if (canvasPage == null)
       throw new Exception("created canvas course page was null");
 
-    return canvasPage.PageId;
+    return canvasPage;
   }
 
   public async Task Update(
     ulong courseId,
-    string canvasPageId,
-    LocalCoursePage localCourse
+    ulong canvasPageId,
+    LocalCoursePage localCoursePage
   )
   {
-    log.Log($"updating course page: {localCourse.Name}");
+    log.Log($"updating course page: {localCoursePage.Name}");
     var url = $"courses/{courseId}/pages/{canvasPageId}";
     var request = new RestRequest(url);
     var body = new
     {
-      title = localCourse.Name,
-      body = localCourse.GetBodyHtml()
+      title = localCoursePage.Name,
+      body = localCoursePage.GetBodyHtml()
     };
     var bodyObj = new { wiki_page = body };
     request.AddBody(bodyObj);
@@ -72,7 +72,7 @@ public class CanvasCoursePageService(
     await webRequestor.PutAsync(request);
   }
 
-  public async Task Delete(ulong courseId, string canvasPageId)
+  public async Task Delete(ulong courseId, ulong canvasPageId)
   {
     log.Log($"deleting page from canvas {canvasPageId}");
     var url = $"courses/{courseId}/pages/{canvasPageId}";

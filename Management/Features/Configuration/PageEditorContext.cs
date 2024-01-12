@@ -99,7 +99,7 @@ public class PageEditorContext(
       logger.Log("cannot add page to canvas, no course stored in planner");
       return;
     }
-    var canvasPageId = await planner.LocalCourse.AddPageToCanvas(Page, canvas);
+    var canvasPage = await planner.LocalCourse.AddPageToCanvas(Page, canvas);
 
 
 
@@ -112,14 +112,13 @@ public class PageEditorContext(
 
     var canvasModule = getCurrentCanvasModule(Page, planner.LocalCourse);
 
-    if(canvasPageId != null)
+    if(canvasPage != null)
     {
-      await canvas.CreateModuleItem(
+      await canvas.CreatePageModuleItem(
         (ulong)courseCanvasId,
         canvasModule.Id,
         Page.Name,
-        "Page",
-        (ulong)canvasPageId
+        canvasPage
       );
 
       await planner.LocalCourse.Modules.First().SortModuleItems(
@@ -131,12 +130,47 @@ public class PageEditorContext(
     logger.Log($"finished adding page {Page.Name} to canvas");
   }
 
-  public async Task UpdateInCanvas(ulong pageId)
+  public async Task UpdateInCanvas(ulong canvasPageId)
   {
 
+    logger.Log("started to update page in canvas");
+    if (Page == null)
+    {
+      logger.Log("cannot update null page in canvas");
+      return;
+    }
+
+
+    await planner.LoadCanvasData();
+    if (planner.CanvasPages == null)
+    {
+      logger.Log("cannot update page in canvas, failed to retrieve current pages");
+      return;
+    }
+    if (planner.LocalCourse == null)
+    {
+      logger.Log("cannot update page in canvas, no course stored in planner");
+      return;
+    }
+    if (planner.LocalCourse.Settings.CanvasId == null)
+    {
+      logger.Log("Cannot update page with null local course canvas id");
+      return;
+    }
+    var assignmentInCanvas = planner.CanvasPages?.FirstOrDefault(p => p.PageId == canvasPageId);
+    if (assignmentInCanvas == null)
+    {
+      logger.Log("cannot update page in canvas, could not find canvas page with id: " + canvasPageId);
+      return;
+    }
+
+
+    await canvas.Pages.Update(
+      courseId: (ulong)planner.LocalCourse.Settings.CanvasId,
+      canvasPageId: canvasPageId,
+      localCoursePage: Page
+    );
   }
-
-
 
   private static LocalModule getCurrentLocalModule(LocalCoursePage page, LocalCourse course)
   {
