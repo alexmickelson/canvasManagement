@@ -30,7 +30,7 @@ public class CanvasCoursePageService(
   }
 
 
-  public async Task<string> Create(
+  public async Task<ulong> Create(
     ulong canvasCourseId,
     LocalCoursePage localCourse
   )

@@ -89,46 +89,49 @@ public class PageEditorContext(
       return;
     }
     await planner.LoadCanvasData();
-    // if (planner.CanvasQuizzes == null)
-    // {
-    //   logger.Log("cannot add quiz to canvas, failed to retrieve current quizzes");
-    //   return;
-    // }
-    // if (planner.LocalCourse == null)
-    // {
-    //   logger.Log("cannot add quiz to canvas, no course stored in planner");
-    //   return;
-    // }
-    // var canvasQuizId = await planner.LocalCourse.AddQuizToCanvas(Quiz, canvas);
+    if (planner.CanvasPages == null)
+    {
+      logger.Log("cannot add page to canvas, failed to retrieve current pages");
+      return;
+    }
+    if (planner.LocalCourse == null)
+    {
+      logger.Log("cannot add page to canvas, no course stored in planner");
+      return;
+    }
+    var canvasPageId = await planner.LocalCourse.AddPageToCanvas(Page, canvas);
 
 
 
-    // var courseCanvasId = planner.LocalCourse.Settings.CanvasId;
-    // if (courseCanvasId == null)
-    // {
-    //   logger.Log("was able to add quiz to canvas, but errored while making module item. CourseCanvasId is null");
-    //   return;
-    // }
+    var courseCanvasId = planner.LocalCourse.Settings.CanvasId;
+    if (courseCanvasId == null)
+    {
+      logger.Log("was able to add page to canvas, but errored while making module item. CourseCanvasId is null");
+      return;
+    }
 
-    // var canvasModule = getCurrentCanvasModule(Quiz, planner.LocalCourse);
+    var canvasModule = getCurrentCanvasModule(Page, planner.LocalCourse);
 
-    // await canvas.CreateModuleItem(
-    //   (ulong)courseCanvasId,
-    //   canvasModule.Id,
-    //   Quiz.Name,
-    //   "Quiz",
-    //   (ulong)canvasQuizId
-    // );
+    if(canvasPageId != null)
+    {
+      await canvas.CreateModuleItem(
+        (ulong)courseCanvasId,
+        canvasModule.Id,
+        Page.Name,
+        "Page",
+        (ulong)canvasPageId
+      );
 
-    // await planner.LocalCourse.Modules.First().SortModuleItems(
-    //   (ulong)courseCanvasId,
-    //   canvasModule.Id,
-    //   canvas
-    // );
-    // logger.Log($"finished adding quiz {Quiz.Name} to canvas");
+      await planner.LocalCourse.Modules.First().SortModuleItems(
+        (ulong)courseCanvasId,
+        canvasModule.Id,
+        canvas
+      );
+    }
+    logger.Log($"finished adding page {Page.Name} to canvas");
   }
 
-  public async Task UpdateInCanvas(string pageId)
+  public async Task UpdateInCanvas(ulong pageId)
   {
 
   }

@@ -118,7 +118,8 @@ public class CoursePlanner
     IEnumerable<CanvasModule> CanvasModules,
     Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> CanvasModulesItems,
     IEnumerable<CanvasQuiz> canvasQuizzes,
-    IEnumerable<CanvasAssignmentGroup> canvasAssignmentGroups
+    IEnumerable<CanvasAssignmentGroup> canvasAssignmentGroups,
+    IEnumerable<CanvasPage> canvasPages
   )> LoadCanvasData()
   {
 
@@ -139,12 +140,13 @@ public class CoursePlanner
     CanvasQuizzes = await quizzesTask;
     CanvasModules = await modulesTask;
     CanvasAssignmentGroups = await assignmentGroupsTask;
+    CanvasPages = await coursePagesTask;
 
     CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
-    return (CanvasAssignments, CanvasModules, CanvasModulesItems, CanvasQuizzes, CanvasAssignmentGroups);
+    return (CanvasAssignments, CanvasModules, CanvasModulesItems, CanvasQuizzes, CanvasAssignmentGroups, CanvasPages);
   }
 
   public async Task CreateModule(LocalModule newModule)

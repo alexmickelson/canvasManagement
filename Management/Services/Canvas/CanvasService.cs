@@ -123,4 +123,30 @@ public class CanvasService(
     if (newItem == null)
       throw new Exception("something went wrong updating module item");
   }
+  public async Task CreateModuleItem(
+    ulong canvasCourseId,
+    ulong canvasModuleId,
+    string title,
+    string type,
+    string contentId
+  )
+  {
+    logger.Log($"creating new module item {title}");
+    var url = $"courses/{canvasCourseId}/modules/{canvasModuleId}/items";
+    var body = new
+    {
+      module_item = new
+      {
+        title,
+        type = type.ToString(),
+        content_id = contentId,
+      }
+    };
+    var request = new RestRequest(url);
+    request.AddBody(body);
+
+    var (newItem, _response) = await webRequestor.PostAsync<CanvasModuleItem>(request);
+    if (newItem == null)
+      throw new Exception("something went wrong updating module item with string content id");
+  }
 }
