@@ -155,7 +155,7 @@
       <h5>Assignments</h5>
 
       <div class="row">
-        @foreach(var p in Module.Pages)
+        @* @foreach(var p in Module.Pages)
         {
           <PageListItem Page=p />
         }
@@ -167,6 +167,15 @@
         @foreach (var quiz in Module.Quizzes)
         {
           <QuizListItem Quiz="quiz" />
+        } *@
+        @foreach(var item in Module.SortedModuleItems)
+        {
+          @(item switch
+          {
+            LocalAssignment assignment => (@<AssignmentListItem Assignment="assignment" Module="Module" />),
+            LocalQuiz quiz => (@<QuizListItem Quiz="quiz" />),
+            LocalCoursePage page => (@<PageListItem Page=page />),
+          })
         }
       </div>
     </div>

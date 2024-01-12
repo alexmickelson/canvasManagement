@@ -4,22 +4,15 @@ using RestSharp;
 
 namespace Management.Services.Canvas;
 
-public class CanvasAssignmentService
-{
-  private readonly IWebRequestor webRequestor;
-  private readonly CanvasServiceUtils utils;
-  private readonly MyLogger<CanvasAssignmentService> log;
-
-  public CanvasAssignmentService(
-    IWebRequestor webRequestor,
-    CanvasServiceUtils utils,
-    MyLogger<CanvasAssignmentService> logger
+public class CanvasAssignmentService(
+  IWebRequestor webRequestor,
+  CanvasServiceUtils utils,
+  MyLogger<CanvasAssignmentService> logger
   )
-  {
-    this.webRequestor = webRequestor;
-    this.utils = utils;
-    this.log = logger;
-  }
+{
+  private readonly IWebRequestor webRequestor = webRequestor;
+  private readonly CanvasServiceUtils utils = utils;
+  private readonly MyLogger<CanvasAssignmentService> log = logger;
 
   public async Task<IEnumerable<CanvasAssignment>> GetAll(ulong courseId)
   {
@@ -86,10 +79,10 @@ public class CanvasAssignmentService
       points_possible = localAssignment.PointsPossible,
       assignment_group_id = canvasAssignmentGroupId,
     };
-    
+
     var bodyObj = new { assignment = body };
     request.AddBody(bodyObj);
-    
+
     await webRequestor.PutAsync(request);
 
     await CreateRubric(courseId, canvasAssignmentId, localAssignment);

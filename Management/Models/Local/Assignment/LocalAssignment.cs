@@ -20,7 +20,6 @@ public record LocalAssignment: IModuleItem
     }
   }
   public string Description { get; init; } = "";
-  // public bool LockAtDueDate { get; init; }
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
   public string? LocalAssignmentGroupName { get; init; }

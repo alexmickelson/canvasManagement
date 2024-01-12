@@ -8,35 +8,26 @@ using RestSharp;
 
 namespace Management.Services.Canvas;
 
-public class CanvasService
-{
-  private readonly IWebRequestor webRequestor;
-  private readonly CanvasServiceUtils utils;
-  private readonly MyLogger<CanvasService> logger;
-
-  public CanvasAssignmentService Assignments { get; }
-  public CanvasAssignmentGroupService AssignmentGroups { get; }
-  public CanvasModuleService Modules { get; }
-  public CanvasQuizService Quizzes { get; }
-
-  public CanvasService(
-    IWebRequestor webRequestor,
-    CanvasServiceUtils utils,
-    CanvasAssignmentService Assignments,
-    CanvasAssignmentGroupService AssignmentGroups,
-    CanvasModuleService Modules,
-    CanvasQuizService Quizzes,
-    MyLogger<CanvasService> logger
+public class CanvasService(
+  IWebRequestor webRequestor,
+  CanvasServiceUtils utils,
+  CanvasAssignmentService Assignments,
+  CanvasAssignmentGroupService AssignmentGroups,
+  CanvasModuleService Modules,
+  CanvasQuizService Quizzes,
+  CanvasCoursePageService Pages,
+  MyLogger<CanvasService> logger
   )
-  {
-    this.webRequestor = webRequestor;
-    this.utils = utils;
-    this.Assignments = Assignments;
-    this.AssignmentGroups = AssignmentGroups;
-    this.Modules = Modules;
-    this.Quizzes = Quizzes;
-    this.logger = logger;
-  }
+{
+  private readonly IWebRequestor webRequestor = webRequestor;
+  private readonly CanvasServiceUtils utils = utils;
+  private readonly MyLogger<CanvasService> logger = logger;
+
+  public CanvasAssignmentService Assignments { get; } = Assignments;
+  public CanvasAssignmentGroupService AssignmentGroups { get; } = AssignmentGroups;
+  public CanvasModuleService Modules { get; } = Modules;
+  public CanvasQuizService Quizzes { get; } = Quizzes;
+  public CanvasCoursePageService Pages { get; } = Pages;
 
   public async Task<IEnumerable<EnrollmentTermModel>> GetTerms()
   {

@@ -1,0 +1,79 @@
+@using Markdig
+@using Management.Web.Shared.Components
+
+@inject CoursePlanner planner
+@inject PageEditorContext pageContext
+
+@code {
+  protected override void OnInitialized()
+  {
+    pageContext.StateHasChanged += reload;
+    reload();
+  }
+  private void reload()
+  {
+    if (pageContext.Page != null)
+    {
+      if(rawText == string.Empty)
+      {
+        rawText = pageContext.Page.ToMarkdown();
+        this.InvokeAsync(this.StateHasChanged);
+      }
+    }
+  }
+  public void Dispose()
+  {
+    pageContext.StateHasChanged -= reload;
+  }
+
+  private string rawText { get; set; } = string.Empty;
+  private string? error = null;
+
+  private MarkupString preview { get => (MarkupString)Markdown.ToHtml(pageContext?.Page?.Text ?? ""); }
+
+  private void handleChange(string newRawPage)
+  {
+    rawText = newRawPage;
+    if (newRawPage != string.Empty)
+    {
+      try
+      {
+        var parsed = LocalCoursePage.ParseMarkdown(newRawPage);
+        error = null;
+        pageContext.SavePage(parsed);
+      }
+      catch(LocalPageMarkdownParseException e)
+      {
+        error = e.Message;
+      }
+      finally
+      {
+        StateHasChanged();
+      }
+    }
+    StateHasChanged();
+  }
+}
+
+<div class="d-flex w-100 h-100 flex-row">
+  @if(pageContext.Page != null && planner.LocalCourse != null)
+  {
+    <div class="row h-100  w-100">
+      <div class="col-6">
+
+        <MonacoTextArea Value=@rawText OnChange=@handleChange />
+      </div>
+      <div class="col-6 overflow-y-auto h-100" >
+        @if (error != null)
+        {
+          <p class="text-danger text-truncate">Error: @error</p>
+        }
+        <div>Due At: @pageContext.Page.DueAt</div>
+        <hr>
+        <div>
+          @(preview)
+        </div>
+      </div>
+    </div>
+  }
+</div>

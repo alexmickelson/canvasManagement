@@ -131,7 +131,7 @@ public class CourseMarkdownLoader
   }
   private async Task<IEnumerable<LocalCoursePage>> loadPagesFromPath(string modulePath)
   {
-    using var activity = DiagnosticsConfig.Source?.StartActivity("loading Pages from file");
+    using var activity = DiagnosticsConfig.Source?.StartActivity("loading Pages from path");
     var pagesPath = $"{modulePath}/pages";
     if (!Directory.Exists(pagesPath))
     {

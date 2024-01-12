@@ -8,6 +8,7 @@ using Management.Services.Canvas;
 using System.Text.RegularExpressions;
 using CanvasModel.Quizzes;
 using Management.Services;
+using CanvasModel.Pages;
 
 namespace Management.Planner;
 
@@ -109,6 +110,7 @@ public class CoursePlanner
   public IEnumerable<CanvasAssignmentGroup>? CanvasAssignmentGroups { get; internal set; }
   public IEnumerable<CanvasQuiz>? CanvasQuizzes { get; internal set; }
   public IEnumerable<CanvasModule>? CanvasModules { get; internal set; }
+  public IEnumerable<CanvasPage>? CanvasPages { get; internal set; }
   public Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>>? CanvasModulesItems { get; internal set; }
 
   public async Task<(
@@ -131,6 +133,7 @@ public class CoursePlanner
     var quizzesTask = canvas.Quizzes.GetAll(canvasId);
     var modulesTask = canvas.Modules.GetModules(canvasId);
     var assignmentGroupsTask = canvas.AssignmentGroups.GetAll(canvasId);
+    var coursePagesTask = canvas.Pages.GetAll(canvasId);
 
     CanvasAssignments = await assignmentsTask;
     CanvasQuizzes = await quizzesTask;

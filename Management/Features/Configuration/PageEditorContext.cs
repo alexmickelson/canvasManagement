@@ -82,13 +82,13 @@ public class PageEditorContext(
 
   public async Task AddPageToCanvas()
   {
-    // logger.Log("started to add quiz to canvas");
-    // if (Quiz == null)
-    // {
-    //   logger.Log("cannot add null quiz to canvas");
-    //   return;
-    // }
-    // await planner.LoadCanvasData();
+    logger.Log("started to add page to canvas");
+    if (Page == null)
+    {
+      logger.Log("cannot add null page to canvas");
+      return;
+    }
+    await planner.LoadCanvasData();
     // if (planner.CanvasQuizzes == null)
     // {
     //   logger.Log("cannot add quiz to canvas, failed to retrieve current quizzes");
@@ -126,6 +126,11 @@ public class PageEditorContext(
     //   canvas
     // );
     // logger.Log($"finished adding quiz {Quiz.Name} to canvas");
+  }
+
+  public async Task UpdateInCanvas(string pageId)
+  {
+
   }
 
 

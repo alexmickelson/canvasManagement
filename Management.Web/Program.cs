@@ -74,6 +74,7 @@ builder.Services.AddScoped(typeof(MyLogger<>));
 builder.Services.AddScoped<IWebRequestor, WebRequestor>();
 builder.Services.AddScoped<CanvasServiceUtils>();
 builder.Services.AddScoped<CanvasAssignmentService>();
+builder.Services.AddScoped<CanvasCoursePageService>();
 builder.Services.AddScoped<CanvasAssignmentGroupService>();
 builder.Services.AddScoped<CanvasQuizService>();
 builder.Services.AddScoped<CanvasModuleService>();
