@@ -5,26 +5,20 @@ using Management.Planner;
 using Management.Services;
 using Management.Services.Canvas;
 
-public class QuizEditorContext
+public class QuizEditorContext(
+  CoursePlanner planner,
+  CanvasService canvas,
+  MyLogger<QuizEditorContext> logger)
 {
-  public QuizEditorContext(
-    CoursePlanner planner,
-    CanvasService canvas,
-    MyLogger<CanvasAssignmentService> logger)
-  {
-    this.planner = planner;
-    this.canvas = canvas;
-    this.logger = logger;
-  }
   public event Action? StateHasChanged;
-  private CoursePlanner planner { get; }
-  private CanvasService canvas { get; }
+  private CoursePlanner planner { get; } = planner;
+  private CanvasService canvas { get; } = canvas;
+  private readonly MyLogger<QuizEditorContext> logger = logger;
 
 
   private LocalQuiz? _quiz;
 
   private LocalModule? _module;
-  private readonly MyLogger<CanvasAssignmentService> logger;
 
   public LocalQuiz? Quiz
   {

@@ -2,11 +2,11 @@
 
 @inject DragContainer dragContainer
 @inject NavigationManager Navigation
-@inject AssignmentEditorContext assignmentContext
+@inject PageEditorContext pageContext
 
-@inject MyLogger<AssignmentInDay> logger
+@inject MyLogger<PageInDay> logger
 
-@inherits DroppableAssignment
+@inherits DroppablePage
 
 @code {
   protected override void OnInitialized()
@@ -24,7 +24,7 @@
 
   private void HandleDragStart()
   {
-    dragContainer.DropCallback = DropCallback;
+    dragContainer.DropCallback = dropCallback;
   }
 
   private void HandleDragEnd()
@@ -36,12 +36,13 @@
   {
     if(planner.LocalCourse != null)
     {
-      assignmentContext.Assignment = Assignment;
-      Navigation.NavigateTo("/course/" + planner.LocalCourse.Settings.Name + "/assignment/" + Assignment.Name);
-      logger.Log("navigating to assignment page");
+      pageContext.Page = Page;
+      Navigation.NavigateTo("/course/" + planner.LocalCourse.Settings.Name + "/page/" + Page.Name);
+      logger.Log("navigating to coursePage page");
     }
   }
 }
+
 
 <li
   draggable="true"
@@ -50,5 +51,5 @@
   @onclick="OnClick"
   role="button"
 >
-  @Assignment.Name
+  @Page.Name
 </li>

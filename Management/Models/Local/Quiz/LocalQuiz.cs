@@ -3,7 +3,7 @@ using YamlDotNet.Serialization;
 
 namespace LocalModels;
 
-public record LocalQuiz
+public record LocalQuiz: IModuleItem
 {
   public required string Name { get; init; }
   public required string Description { get; init; }
@@ -27,7 +27,7 @@ public record LocalQuiz
       .CanvasId;
 
   public string GetDescriptionHtml() => Markdig.Markdown.ToHtml(Description);
-  
+
   public string ToYaml()
   {
     var serializer = new SerializerBuilder().DisableAliases().Build();
@@ -100,7 +100,7 @@ Description: {Description}
 
 
     var rawLockAt = extractLabelValue(settings, "LockAt");
-    DateTime? lockAt = DateTime.TryParse(rawLockAt, out DateTime parsedLockAt) 
+    DateTime? lockAt = DateTime.TryParse(rawLockAt, out DateTime parsedLockAt)
       ? parsedLockAt
       : null;
 
@@ -153,6 +153,6 @@ public class QuizMarkdownParseException : Exception
 {
   public QuizMarkdownParseException(string message): base(message)
   {
-    
+
   }
 }

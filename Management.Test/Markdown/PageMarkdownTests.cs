@@ -9,7 +9,7 @@ public class PageMarkdownTests
     {
       Name = "test title",
       Text = "test text content",
-      DueDateForOrdering = new DateTime()
+      DueAt = new DateTime()
     };
 
     var pageMarkdown = page.ToMarkdown();

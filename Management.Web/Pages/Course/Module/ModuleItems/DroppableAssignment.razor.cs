@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Components;
 
-namespace Management.Web.Course.Module.Assignment;
+namespace Management.Web.Course.Module.ModuleItems;
 public class DroppableAssignment : ComponentBase
 {
   [Inject]

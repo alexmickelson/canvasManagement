@@ -1,6 +1,8 @@
 @using Management.Web.Shared.Components
 @using Management.Web.Shared.Components.Quiz
 @using Management.Web.Pages.Course.Module
+@using Management.Web.Pages.Course.Module.ModuleItems
+@using Management.Web.Pages.Course.Module.NewItemsButtons
 @using LocalModels
 @using BlazorMonaco
 @using BlazorMonaco.Editor
@@ -153,6 +155,10 @@
       <h5>Assignments</h5>
 
       <div class="row">
+        @foreach(var p in Module.Pages)
+        {
+          <PageListItem Page=p />
+        }
         @foreach (var a in Module.Assignments)
         {
           <AssignmentListItem Assignment="a" Module="Module" />

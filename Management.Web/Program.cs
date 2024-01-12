@@ -85,6 +85,7 @@ builder.Services.AddScoped<FileStorageManager>();
 
 builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentEditorContext>();
+builder.Services.AddScoped<PageEditorContext>();
 builder.Services.AddScoped<QuizEditorContext>();
 builder.Services.AddScoped<DragContainer>();
 

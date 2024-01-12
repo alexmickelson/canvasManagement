@@ -1,14 +1,14 @@
 namespace LocalModels;
 
-public record LocalCoursePage
+public record LocalCoursePage: IModuleItem
 {
   public required string Name { get; init; }
   public required string Text { get; set; }
-  public DateTime? DueDateForOrdering { get; init; }
+  public DateTime DueAt { get; init; }
 
   public string ToMarkdown()
   {
-    var printableDueDate = DueDateForOrdering.ToString()?.Replace('\u202F', ' ');
+    var printableDueDate = DueAt.ToString()?.Replace('\u202F', ' ');
     var settingsMarkdown = $"Name: {Name}\n"
       + $"DueDateForOrdering: {printableDueDate}\n"
       + "---\n";
@@ -20,9 +20,9 @@ public record LocalCoursePage
     var name = MarkdownUtils.ExtractLabelValue(rawSettings, "Name");
     var rawDate = MarkdownUtils.ExtractLabelValue(rawSettings, "DueDateForOrdering");
 
-    DateTime? parsedDate = DateTime.TryParse(rawDate, out DateTime parsedDueAt)
+    DateTime parsedDate = DateTime.TryParse(rawDate, out DateTime parsedDueAt)
       ? parsedDueAt
-      : null;
+      : throw new LocalPageMarkdownParseException($"could not parse due date: {rawDate}");
 
 
     var text = pageMarkdown.Split("---\n")[1];
@@ -30,7 +30,7 @@ public record LocalCoursePage
     return new LocalCoursePage
     {
       Name = name,
-      DueDateForOrdering = parsedDate,
+      DueAt = parsedDate,
       Text = text
     };
   }

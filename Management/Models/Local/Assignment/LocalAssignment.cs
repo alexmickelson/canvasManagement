@@ -6,7 +6,7 @@ using YamlDotNet.Serialization;
 
 namespace LocalModels;
 
-public record LocalAssignment
+public record LocalAssignment: IModuleItem
 {
   private string _name = "";
   public string Name
@@ -27,6 +27,7 @@ public record LocalAssignment
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public int PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
+
 
   public string GetDescriptionHtml()
   {

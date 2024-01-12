@@ -272,7 +272,7 @@ public class FileStorageTests
           Pages = [
             new () {
               Name = "test page persistence",
-              DueDateForOrdering = new DateTime(),
+              DueAt = new DateTime(),
               Text = "this is some\n## markdown\n"
             }
           ]
