@@ -62,7 +62,16 @@ public class CanvasModuleService
     var (items, response) = await webRequestor.GetAsync<IEnumerable<CanvasModuleItem>>(request);
     if (items == null)
       throw new Exception($"Error getting canvas module items for {url}");
-    return items;
+    return items.Select(i =>
+      i with {
+        ContentDetails = i.ContentDetails == null
+          ? null
+          : i.ContentDetails with {
+            DueAt = i.ContentDetails.DueAt?.ToLocalTime(),
+            LockAt = i.ContentDetails.LockAt?.ToLocalTime(),
+          }
+      }
+    );
   }
 
   public async Task<Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>>> GetAllModulesItems(

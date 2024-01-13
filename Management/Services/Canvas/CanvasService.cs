@@ -18,7 +18,7 @@ public class CanvasService(
   CanvasQuizService Quizzes,
   CanvasCoursePageService Pages,
   MyLogger<CanvasService> logger
-  )
+)
 {
   private readonly IWebRequestor webRequestor = webRequestor;
   private readonly CanvasServiceUtils utils = utils;

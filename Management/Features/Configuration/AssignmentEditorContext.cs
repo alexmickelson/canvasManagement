@@ -95,7 +95,7 @@ public class AssignmentEditorContext
     }
     // Console.WriteLine(JsonSerializer.Serialize(Assignment.LocalAssignmentGroupName));
     // Console.WriteLine(JsonSerializer.Serialize(planner.LocalCourse.Settings.AssignmentGroups));
-    
+
     var canvasAssignmentGroupId = Assignment.GetCanvasAssignmentGroupId(planner.LocalCourse.Settings.AssignmentGroups);
 
     if (canvasAssignmentGroupId == null)
@@ -154,12 +154,13 @@ public class AssignmentEditorContext
       (ulong)courseCanvasId,
       canvasModule.Id,
       Assignment.Name,
-      
+
       "Assignment",
       createdAssignmentCanvasId
     );
 
-    await planner.LocalCourse.Modules.First().SortModuleItems(
+    var module = getCurrentLocalModule(Assignment, planner.LocalCourse);
+    await module.SortModuleItems(
       (ulong)courseCanvasId,
       canvasModule.Id,
       canvas

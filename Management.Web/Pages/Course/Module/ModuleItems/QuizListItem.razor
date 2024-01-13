@@ -39,7 +39,7 @@
   @onclick="OnClick"
   role="button"
 >
-  <ModuleItemLayout Name=Quiz.Name IsSyncedWithCanvas=existsInCanvas>
+  <ModuleItemLayout Name=@Quiz.Name IsSyncedWithCanvas=@existsInCanvas>
     @if(!existsInCanvas)
     {
       <div class="mx-3 text-body-tertiary">

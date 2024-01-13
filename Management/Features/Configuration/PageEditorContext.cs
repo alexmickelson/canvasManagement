@@ -121,7 +121,8 @@ public class PageEditorContext(
         canvasPage
       );
 
-      await planner.LocalCourse.Modules.First().SortModuleItems(
+      var currentModule = getCurrentLocalModule(Page, planner.LocalCourse);
+      await currentModule.SortModuleItems(
         (ulong)courseCanvasId,
         canvasModule.Id,
         canvas

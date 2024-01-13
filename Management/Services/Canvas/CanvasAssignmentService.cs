@@ -24,8 +24,8 @@ public class CanvasAssignmentService(
       assignments =>
         assignments.Select(
           a => a with { DueAt = a.DueAt?.ToLocalTime(), LockAt = a.LockAt?.ToLocalTime() }
-        )
-    );
+        ).ToArray()
+    ).ToArray();
   }
 
   public async Task<ulong> Create(
