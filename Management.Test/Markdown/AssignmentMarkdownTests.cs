@@ -111,5 +111,25 @@ public class AssignmentMarkdownTests
     var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
+  [Test]
+  public void Assignments_CanHaveThreeDashes()
+  {
+    var assignment = new LocalAssignment()
+    {
+      Name="test assignment",
+      Description = "test assignment\n---\nsomestuff",
+      DueAt = new DateTime(),
+      LockAt = new DateTime(),
+      SubmissionTypes = [],
+      LocalAssignmentGroupName = "Final Project",
+      Rubric = new List<RubricItem>() {
+      }
+    };
+
+    var assignmentMarkdown = assignment.ToMarkdown();
+
+    var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
+    parsedAssignment.Should().BeEquivalentTo(assignment);
+  }
 
 }

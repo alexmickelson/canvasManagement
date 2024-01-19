@@ -120,7 +120,8 @@ public class QuizEditorContext(
       (ulong)canvasQuizId
     );
 
-    await planner.LocalCourse.Modules.First().SortModuleItems(
+    var module = getCurrentLocalModule(Quiz, planner.LocalCourse);
+    await module.SortModuleItems(
       (ulong)courseCanvasId,
       canvasModule.Id,
       canvas

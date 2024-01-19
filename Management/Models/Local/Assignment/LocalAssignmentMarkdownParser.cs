@@ -11,7 +11,7 @@ public static class LocalAssignmentMarkdownParser
     var settingsString = input.Split("---")[0];
     var (name, localAssignmentGroupName, submissionTypes, dueAt, lockAt) = parseSettings(settingsString);
 
-    var description = input.Split("---\n")[1].Split("## Rubric")[0];
+    var description = String.Join("---\n", input.Split("---\n")[1..]).Split("## Rubric")[0];
 
     var rubricString = input.Split("## Rubric\n")[1];
     var rubric = ParseRubricMarkdown(rubricString);
