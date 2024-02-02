@@ -17,3 +17,9 @@ Apparently the VSCode razor extension was compiled with a preview of dotnet 6...
 
 The issue can be tracked [here](https://github.com/dotnet/razor/issues/6241)
 
+# ideas
+
+matching questions
+
+- different delimiter (-n in answer messes things up)
+- add distractors
