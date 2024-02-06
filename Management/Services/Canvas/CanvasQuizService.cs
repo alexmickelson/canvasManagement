@@ -7,12 +7,14 @@ namespace Management.Services.Canvas;
 public class CanvasQuizService(
   IWebRequestor webRequestor,
   CanvasServiceUtils utils,
-  CanvasAssignmentService assignments
+  CanvasAssignmentService assignments,
+  ILogger<CanvasQuizService> logger
 )
 {
   private readonly IWebRequestor webRequestor = webRequestor;
   private readonly CanvasServiceUtils utils = utils;
   private readonly CanvasAssignmentService assignments = assignments;
+  private readonly ILogger<CanvasQuizService> logger = logger;
 
   public async Task<IEnumerable<CanvasQuiz>> GetAll(ulong courseId)
   {
@@ -33,6 +35,9 @@ public class CanvasQuizService(
     ulong? canvasAssignmentGroupId
   )
   {
+    using var activity = DiagnosticsConfig.Source.StartActivity("Creating all canvas quiz");
+    activity?.SetCustomProperty("localQuiz", localQuiz);
+    activity?.SetTag("canvas syncronization", true);
     Console.WriteLine($"Creating Quiz {localQuiz.Name}");
 
     var url = $"courses/{canvasCourseId}/quizzes";
@@ -59,6 +64,7 @@ public class CanvasQuizService(
     var (canvasQuiz, response) = await webRequestor.PostAsync<CanvasQuiz>(request);
     if (canvasQuiz == null)
       throw new Exception("Created canvas quiz was null");
+    activity?.SetCustomProperty("canvasQuizId", canvasQuiz.Id);
 
     await CreateQuizQuestions(canvasCourseId, canvasQuiz.Id, localQuiz);
     return canvasQuiz.Id;
@@ -70,15 +76,27 @@ public class CanvasQuizService(
     LocalQuiz localQuiz
   )
   {
-    var tasks = localQuiz.Questions.Select(createQuestion(canvasCourseId, canvasQuizId)).ToArray();
-    await Task.WhenAll(tasks);
+    using var activity = DiagnosticsConfig.Source.StartActivity("Creating all quiz questions");
+    activity?.SetCustomProperty("canvasQuizId", canvasQuizId);
+    activity?.SetTag("canvas syncronization", true);
+
+
+    var tasks = localQuiz.Questions.Select(
+      async (q, i) => await createQuestionOnly(canvasCourseId, canvasQuizId, q, i)
+    ).ToArray();
+    var questionAndPositions = await Task.WhenAll(tasks);
+    await hackFixQuestionOrdering(canvasCourseId, canvasQuizId, questionAndPositions);
     await hackFixRedundantAssignments(canvasCourseId);
   }
 
   private async Task hackFixRedundantAssignments(ulong canvasCourseId)
   {
-    var canvasAssignments = await assignments.GetAll(canvasCourseId);
 
+    using var activity = DiagnosticsConfig.Source.StartActivity("hack fixing redundant quiz assignments that are auto-created");
+    activity?.SetTag("canvas syncronization", true);
+
+
+    var canvasAssignments = await assignments.GetAll(canvasCourseId);
     var assignmentsToDelete = canvasAssignments
       .Where(
         assignment =>
@@ -99,24 +117,44 @@ public class CanvasQuizService(
     await Task.WhenAll(tasks);
   }
 
-  private Func<LocalQuizQuestion, Task> createQuestion(
-    ulong canvasCourseId,
-    ulong canvasQuizId
-  )
+  private async Task hackFixQuestionOrdering(ulong canvasCourseId, ulong canvasQuizId, IEnumerable<(CanvasQuizQuestion question, int position)> questionAndPositions )
   {
-    return async (question) => await createQuestionOnly(canvasCourseId, canvasQuizId, question);
+    using var activity = DiagnosticsConfig.Source.StartActivity("hack fixing question ordering with reorder");
+    activity?.SetCustomProperty("canvasQuizId", canvasQuizId);
+    activity?.SetTag("canvas syncronization", true);
+
+    var order = questionAndPositions.OrderBy(t => t.position).Select(tuple => {
+      return new {
+        type = "question",
+        id = tuple.question.Id.ToString(),
+      };
+    }).ToArray();
+
+    var url = $"courses/{canvasCourseId}/quizzes/{canvasQuizId}/reorder";
+
+    var request = new RestRequest(url);
+    request.AddBody(new { order });
+    var response = await webRequestor.PostAsync(request);
+
+    if (!response.IsSuccessStatusCode)
+      throw new NullReferenceException("error re-ordering questions, reorder response is not successfull");
   }
 
-  private async Task<CanvasQuizQuestion> createQuestionOnly(
+  private async Task<(CanvasQuizQuestion question, int position)> createQuestionOnly(
     ulong canvasCourseId,
     ulong canvasQuizId,
-    LocalQuizQuestion q
+    LocalQuizQuestion q,
+    int position
   )
   {
+    using var activity = DiagnosticsConfig.Source.StartActivity("creating quiz question");
+    activity?.SetTag("canvas syncronization", true);
+    activity?.SetTag("localQuestion", q);
+    activity?.SetCustomProperty("localQuestion", q);
+    activity?.SetTag("success", false);
+
     var url = $"courses/{canvasCourseId}/quizzes/{canvasQuizId}/questions";
-    var answers = q.Answers
-      .Select(a => new { answer_html = a.HtmlText, answer_weight = a.Correct ? 100 : 0 })
-      .ToArray();
+    var answers = getAnswers(q);
     var body = new
     {
       question = new
@@ -124,16 +162,36 @@ public class CanvasQuizService(
         question_text = q.HtmlText,
         question_type = q.QuestionType + "_question",
         points_possible = q.Points,
-        // position
+        position,
         answers
       }
     };
     var request = new RestRequest(url);
     request.AddBody(body);
+
     var (newQuestion, response) = await webRequestor.PostAsync<CanvasQuizQuestion>(request);
     if (newQuestion == null)
       throw new NullReferenceException("error creating new question, created question is null");
 
-    return newQuestion;
+
+    activity?.SetCustomProperty("canvasQuizId", newQuestion.Id);
+    activity?.SetTag("success", true);
+
+    return (newQuestion, position);
+  }
+
+  private static object[] getAnswers(LocalQuizQuestion q)
+  {
+    if(q.QuestionType == QuestionType.MATCHING)
+      return q.Answers
+        .Select(a => new {
+          answer_match_left = a.Text,
+          answer_match_right = a.MatchedText
+        })
+        .ToArray();
+
+    return q.Answers
+        .Select(a => new { answer_html = a.HtmlText, answer_weight = a.Correct ? 100 : 0 })
+        .ToArray();
   }
 }

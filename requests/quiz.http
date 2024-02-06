@@ -3,6 +3,30 @@ GET https://snow.instructure.com/api/v1/courses/958185/quizzes
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 ###
+GET https://snow.instructure.com/api/v1/courses/926068/quizzes/3489332/questions
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+###
+
+
+POST https://snow.instructure.com/api/v1/courses/926068/quizzes/3489331/reorder
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+Content-Type: application/json
+
+{
+  "order":[
+    {"type":"question","id":"60973974"},
+    {"type":"question","id":"60973977"},
+    {"type":"question","id":"60973976"},
+    {"type":"question","id":"60973975"},
+    {"type":"question","id":"60973978"},
+    {"type":"question","id":"60973979"},
+    {"type":"question","id":"60973980"}
+  ]
+}
+
+
+###
 GET https://snow.instructure.com/api/v1/courses/958185/assignments
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 

@@ -36,6 +36,8 @@ public class QuizEditorContext(
 
   public void SaveQuiz(LocalQuiz newQuiz)
   {
+    using var activity = DiagnosticsConfig.Source.CreateActivity("quiz creation requested", System.Diagnostics.ActivityKind.Server);
+
     if (planner.LocalCourse != null && _module != null && Quiz != null)
     {
       // use Quiz not newQuiz because it is the version that was last stored

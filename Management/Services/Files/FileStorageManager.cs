@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using LocalModels;
 using Management.Services;
 
@@ -57,11 +56,4 @@ public class FileStorageManager
       .ToArray();
 
   }
-}
-
-
-public static class DiagnosticsConfig
-{
-  public const string SourceName = "canvas-management-source";
-  public static ActivitySource Source = new ActivitySource(SourceName);
 }
