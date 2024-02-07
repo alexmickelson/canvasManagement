@@ -11,7 +11,7 @@ public class CanvasAssignmentGroupService
   private readonly MyLogger<CanvasAssignmentGroupService> logger;
 
   public CanvasAssignmentGroupService(
-    IWebRequestor webRequestor, 
+    IWebRequestor webRequestor,
     CanvasServiceUtils utils,
     MyLogger<CanvasAssignmentGroupService> logger
   )

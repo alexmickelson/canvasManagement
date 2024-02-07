@@ -5,11 +5,14 @@ namespace LocalModels;
 
 public record LocalQuiz: IModuleItem
 {
+
   public required string Name { get; init; }
   public required string Description { get; init; }
+  public string? Password { get; init; } = null;
   public DateTime? LockAt { get; init; }
   public DateTime DueAt { get; init; }
   public bool ShuffleAnswers { get; init; } = true;
+  public bool showCorrectAnswers { get; init; } = true;
   public bool OneQuestionAtATime { get; init; } = false;
   public string? LocalAssignmentGroupName { get; init; }
   public int AllowedAttempts { get; init; } = -1; // -1 is infinite
@@ -21,6 +24,7 @@ public record LocalQuiz: IModuleItem
   // If “until_after_last_attempt”, students can only see results after their last attempt. (Only valid if allowed_attempts > 1). Defaults to null.
   public IEnumerable<LocalQuizQuestion> Questions { get; init; } =
     Enumerable.Empty<LocalQuizQuestion>();
+
   public ulong? GetCanvasAssignmentGroupId(IEnumerable<LocalAssignmentGroup> assignmentGroups) =>
     assignmentGroups
       .FirstOrDefault(g => g.Name == LocalAssignmentGroupName)?
@@ -44,7 +48,9 @@ public record LocalQuiz: IModuleItem
     return $@"Name: {Name}
 LockAt: {LockAt}
 DueAt: {DueAt}
+Password: {Password}
 ShuffleAnswers: {ShuffleAnswers.ToString().ToLower()}
+ShowCorrectAnswers: {showCorrectAnswers.ToString().ToLower()}
 OneQuestionAtATime: {OneQuestionAtATime.ToString().ToLower()}
 AssignmentGroup: {LocalAssignmentGroupName}
 AllowedAttempts: {AllowedAttempts}
@@ -82,6 +88,18 @@ Description: {Description}
       : throw new QuizMarkdownParseException($"Error with ShuffleAnswers: {rawShuffleAnswers}");
 
 
+    var rawPassword = extractLabelValue(settings, "Password");
+    var password = rawPassword == null || rawPassword.Trim() == string.Empty
+      ? null
+      : rawPassword;
+
+
+    var rawShowCorrectAnswers = extractLabelValue(settings, "ShowCorrectAnswers");
+    var showCorrectAnswers = bool.TryParse(rawShowCorrectAnswers, out bool parsedShowCorrectAnswers)
+      ? parsedShowCorrectAnswers
+      : true; //default to true
+
+
     var rawOneQuestionAtATime = extractLabelValue(settings, "OneQuestionAtATime");
     var oneQuestionAtATime = bool.TryParse(rawOneQuestionAtATime, out bool parsedOneQuestion)
       ? parsedOneQuestion
@@ -112,9 +130,11 @@ Description: {Description}
     {
       Name = name,
       Description = description,
+      Password = password,
       LockAt = lockAt,
       DueAt = dueAt,
       ShuffleAnswers = shuffleAnswers,
+      showCorrectAnswers = showCorrectAnswers,
       OneQuestionAtATime = oneQuestionAtATime,
       LocalAssignmentGroupName = assignmentGroup,
       AllowedAttempts = allowedAttempts,

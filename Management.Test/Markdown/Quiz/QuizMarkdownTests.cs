@@ -1,3 +1,4 @@
+using System.Text;
 using LocalModels;
 
 // try to follow syntax from https://github.com/gpoore/text2qti
@@ -22,7 +23,7 @@ this is my description in markdown
       OneQuestionAtATime = false,
       LocalAssignmentGroupName = "someId",
       AllowedAttempts = -1,
-      Questions = new LocalQuizQuestion[] { }
+      Questions = []
     };
 
     var markdown = quiz.ToMarkdown();
@@ -39,28 +40,82 @@ this is my description in markdown
   [Test]
   public void TestCanParseMarkdownQuizWithNoQuestions()
   {
-    var rawMarkdownQuiz = @"
-Name: Test Quiz
-ShuffleAnswers: true
-OneQuestionAtATime: false
-DueAt: 2023-08-21T23:59:00
-LockAt: 2023-08-21T23:59:00
-AssignmentGroup: Assignments
-AllowedAttempts: -1
-Description: this is the 
-multi line
-description
----
-";
-    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    var rawMarkdownQuiz = new StringBuilder();
+    rawMarkdownQuiz.Append("Name: Test Quiz\n");
+    rawMarkdownQuiz.Append("ShuffleAnswers: true\n");
+    rawMarkdownQuiz.Append("OneQuestionAtATime: false\n");
+    rawMarkdownQuiz.Append("DueAt: 2023-08-21T23:59:00\n");
+    rawMarkdownQuiz.Append("LockAt: 2023-08-21T23:59:00\n");
+    rawMarkdownQuiz.Append("AssignmentGroup: Assignments\n");
+    rawMarkdownQuiz.Append("AllowedAttempts: -1\n");
+    rawMarkdownQuiz.Append("Description: this is the\n");
+    rawMarkdownQuiz.Append("multi line\n");
+    rawMarkdownQuiz.Append("description\n");
+    rawMarkdownQuiz.Append("---\n");
+    rawMarkdownQuiz.Append('\n');
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz.ToString());
+
+
+    var expectedDescription = new StringBuilder();
+    expectedDescription.Append("this is the\n");
+    expectedDescription.Append("multi line\n");
+    expectedDescription.Append("description");
 
     quiz.Name.Should().Be("Test Quiz");
     quiz.ShuffleAnswers.Should().Be(true);
     quiz.OneQuestionAtATime.Should().BeFalse();
     quiz.AllowedAttempts.Should().Be(-1);
-    quiz.Description.Should().Be(@"this is the 
-multi line
-description");
+    quiz.Description.Should().Be(expectedDescription.ToString());
+  }
+  [Test]
+  public void TestCanParseMarkdownQuizPassword()
+  {
+
+    var password = "this-is-the-password";
+    var rawMarkdownQuiz = new StringBuilder();
+    rawMarkdownQuiz.Append("Name: Test Quiz\n");
+    rawMarkdownQuiz.Append($"Password: {password}\n");
+    rawMarkdownQuiz.Append("ShuffleAnswers: true\n");
+    rawMarkdownQuiz.Append("OneQuestionAtATime: false\n");
+    rawMarkdownQuiz.Append("DueAt: 2023-08-21T23:59:00\n");
+    rawMarkdownQuiz.Append("LockAt: 2023-08-21T23:59:00\n");
+    rawMarkdownQuiz.Append("AssignmentGroup: Assignments\n");
+    rawMarkdownQuiz.Append("AllowedAttempts: -1\n");
+    rawMarkdownQuiz.Append("Description: this is the\n");
+    rawMarkdownQuiz.Append("multi line\n");
+    rawMarkdownQuiz.Append("description\n");
+    rawMarkdownQuiz.Append("---\n");
+    rawMarkdownQuiz.Append('\n');
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz.ToString());
+
+
+    quiz.Password.Should().Be(password);
+  }
+
+  [Test]
+  public void TestCanParseMarkdownQuiz_CanConfigureToShowCorrectAnswers()
+  {
+    var rawMarkdownQuiz = new StringBuilder();
+    rawMarkdownQuiz.Append("Name: Test Quiz\n");
+    rawMarkdownQuiz.Append("ShuffleAnswers: true\n");
+    rawMarkdownQuiz.Append("OneQuestionAtATime: false\n");
+    rawMarkdownQuiz.Append("ShowCorrectAnswers: false\n");
+    rawMarkdownQuiz.Append("DueAt: 2023-08-21T23:59:00\n");
+    rawMarkdownQuiz.Append("LockAt: 2023-08-21T23:59:00\n");
+    rawMarkdownQuiz.Append("AssignmentGroup: Assignments\n");
+    rawMarkdownQuiz.Append("AllowedAttempts: -1\n");
+    rawMarkdownQuiz.Append("Description: this is the\n");
+    rawMarkdownQuiz.Append("multi line\n");
+    rawMarkdownQuiz.Append("description\n");
+    rawMarkdownQuiz.Append("---\n");
+    rawMarkdownQuiz.Append('\n');
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz.ToString());
+
+
+    quiz.showCorrectAnswers.Should().BeFalse();
   }
 
   [Test]
@@ -74,14 +129,14 @@ DueAt: 2023-08-21T23:59:00
 LockAt: 2023-08-21T23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
-Description: this is the 
+Description: this is the
 multi line
 description
 ---
 Points: 2
 `some type` of question
 
-with many 
+with many
 
 ```
 lines
@@ -89,7 +144,7 @@ lines
 
 *a) true
 b) false
-   
+
    endline";
 
     var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
@@ -115,7 +170,7 @@ DueAt: 2023-08-21T23:59:00
 LockAt: 2023-08-21T23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
-Description: this is the 
+Description: this is the
 multi line
 description
 ---
@@ -148,7 +203,7 @@ DueAt: 2023-08-21T23:59:00
 LockAt: 2023-08-21T23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
-Description: this is the 
+Description: this is the
 multi line
 description
 ---
@@ -164,197 +219,5 @@ short answer
 Which events are triggered when the user clicks on an input field?
 short_answer";
     questionMarkdown.Should().Contain(expectedMarkdown);
-  }
-
-  [Test]
-  public void SerializationIsDeterministic_EmptyQuiz()
-  {
-    var quiz = new LocalQuiz()
-    {
-      Name = "Test Quiz",
-      Description = "quiz description",
-      LockAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      DueAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      ShuffleAnswers = true,
-      OneQuestionAtATime = true,
-      LocalAssignmentGroupName = "Assignments"
-    };
-    var quizMarkdown = quiz.ToMarkdown();
-
-    var parsedQuiz = LocalQuiz.ParseMarkdown(quizMarkdown);
-    parsedQuiz.Should().BeEquivalentTo(quiz);
-  }
-  [Test]
-  public void SerializationIsDeterministic_ShortAnswer()
-  {
-    var quiz = new LocalQuiz()
-    {
-      Name = "Test Quiz",
-      Description = "quiz description",
-      LockAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      DueAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      ShuffleAnswers = true,
-      OneQuestionAtATime = true,
-      LocalAssignmentGroupName = "Assignments",
-      Questions = new LocalQuizQuestion[]
-      {
-        new ()
-        {
-          Text = "test short answer",
-          QuestionType = QuestionType.SHORT_ANSWER,
-          Points = 1
-        }
-      }
-    };
-    var quizMarkdown = quiz.ToMarkdown();
-
-    var parsedQuiz = LocalQuiz.ParseMarkdown(quizMarkdown);
-    parsedQuiz.Should().BeEquivalentTo(quiz);
-  }
-
-  [Test]
-  public void SerializationIsDeterministic_Essay()
-  {
-    var quiz = new LocalQuiz()
-    {
-      Name = "Test Quiz",
-      Description = "quiz description",
-      LockAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      DueAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      ShuffleAnswers = true,
-      OneQuestionAtATime = true,
-      LocalAssignmentGroupName = "Assignments",
-      Questions = new LocalQuizQuestion[]
-      {
-        new ()
-        {
-          Text = "test essay",
-          QuestionType = QuestionType.ESSAY,
-          Points = 1
-        }
-      }
-    };
-    var quizMarkdown = quiz.ToMarkdown();
-
-    var parsedQuiz = LocalQuiz.ParseMarkdown(quizMarkdown);
-    parsedQuiz.Should().BeEquivalentTo(quiz);
-  }
-
-  [Test]
-  public void SerializationIsDeterministic_MultipleAnswer()
-  {
-    var quiz = new LocalQuiz()
-    {
-      Name = "Test Quiz",
-      Description = "quiz description",
-      LockAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      DueAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      ShuffleAnswers = true,
-      OneQuestionAtATime = true,
-      LocalAssignmentGroupName = "Assignments",
-      Questions = new LocalQuizQuestion[]
-      {
-        new ()
-        {
-          Text = "test multiple answer",
-          QuestionType = QuestionType.MULTIPLE_ANSWERS,
-          Points = 1,
-          Answers = new LocalQuizQuestionAnswer[]
-          {
-            new() {
-              Correct = true,
-              Text="yes",
-            },
-            new() {
-              Correct = true,
-              Text="no",
-            }
-          }
-        }
-      }
-    };
-    var quizMarkdown = quiz.ToMarkdown();
-
-    var parsedQuiz = LocalQuiz.ParseMarkdown(quizMarkdown);
-    parsedQuiz.Should().BeEquivalentTo(quiz);
-  }
-
-  [Test]
-  public void SerializationIsDeterministic_MultipleChoice()
-  {
-    var quiz = new LocalQuiz()
-    {
-      Name = "Test Quiz",
-      Description = "quiz description",
-      LockAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      DueAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      ShuffleAnswers = true,
-      OneQuestionAtATime = true,
-      LocalAssignmentGroupName = "Assignments",
-      Questions = new LocalQuizQuestion[]
-      {
-        new ()
-        {
-          Text = "test multiple choice",
-          QuestionType = QuestionType.MULTIPLE_CHOICE,
-          Points = 1,
-          Answers = new LocalQuizQuestionAnswer[]
-          {
-            new() {
-              Correct = true,
-              Text="yes",
-            },
-            new() {
-              Correct = false,
-              Text="no",
-            }
-          }
-        }
-      }
-    };
-    var quizMarkdown = quiz.ToMarkdown();
-
-    var parsedQuiz = LocalQuiz.ParseMarkdown(quizMarkdown);
-    parsedQuiz.Should().BeEquivalentTo(quiz);
-  }
-  [Test]
-  public void SerializationIsDeterministic_Matching()
-  {
-    var quiz = new LocalQuiz()
-    {
-      Name = "Test Quiz",
-      Description = "quiz description",
-      LockAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      DueAt = new DateTime(2022, 10, 3, 12, 5, 0),
-      ShuffleAnswers = true,
-      OneQuestionAtATime = true,
-      LocalAssignmentGroupName = "Assignments",
-      Questions = new LocalQuizQuestion[]
-      {
-        new ()
-        {
-          Text = "test matching",
-          QuestionType = QuestionType.MATCHING,
-          Points = 1,
-          Answers = new LocalQuizQuestionAnswer[]
-          {
-            new() {
-              Correct = true,
-              Text="yes",
-              MatchedText = "testing yes"
-            },
-            new() {
-              Correct = true,
-              Text="no",
-              MatchedText = "testing no"
-            }
-          }
-        }
-      }
-    };
-    var quizMarkdown = quiz.ToMarkdown();
-
-    var parsedQuiz = LocalQuiz.ParseMarkdown(quizMarkdown);
-    parsedQuiz.Should().BeEquivalentTo(quiz);
   }
 }

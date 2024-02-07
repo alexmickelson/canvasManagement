@@ -9,6 +9,8 @@ public class WebRequestor : IWebRequestor
   private RestClient client;
   private readonly IConfiguration _config;
   private readonly ILogger<WebRequestor> logger;
+  private static int rateLimitRetryCount = 6;
+  private static int rateLimitSleepInterval = 1000;
 
   public WebRequestor(IConfiguration config, ILogger<WebRequestor> logger)
   {
@@ -34,39 +36,38 @@ public class WebRequestor : IWebRequestor
     return (deserialize<T>(response), response);
   }
 
-  public async Task<RestResponse> PostAsync(RestRequest request)
-  {
-    using var activity = DiagnosticsConfig.Source.StartActivity("sending post");
-    activity?.AddTag("success", false);
+  public async Task<RestResponse> PostAsync(RestRequest request) => await rateLimitAwarePostAsync(request, 0);
 
+
+  private async Task<RestResponse> rateLimitAwarePostAsync(RestRequest request, int retryCount = 0)
+  {
     request.AddHeader("Content-Type", "application/json");
 
-    try
-    {
-      var response = await client.ExecutePostAsync(request);
-      activity?.AddTag("url", response.ResponseUri);
+    var response = await client.ExecutePostAsync(request);
 
-      if (isRateLimited(response))
-        logger.LogInformation("hit rate limit");
-
-      if (!response.IsSuccessful)
-      {
-        logger.LogError($"Error with response, response content: {response.Content}", response);
-        throw new Exception("error with response");
-      }
-      activity?.AddTag("success", true);
-      return response;
+    if (isRateLimited(response)) {
+      if(retryCount < rateLimitRetryCount){
+        logger.LogInformation($"hit rate limit on post, retry count is {retryCount} / {rateLimitRetryCount}, retrying");
+        Console.WriteLine($"hit rate limit on post, retry count is {retryCount} / {rateLimitRetryCount}, retrying");
+        Thread.Sleep(rateLimitSleepInterval);
+        return await rateLimitAwarePostAsync(request, retryCount + 1);}
     }
-    catch (Exception e)
-    {
-      Console.WriteLine("inside post catch block");
-      throw e;
 
+    if (!response.IsSuccessful)
+    {
+      logger.LogError($"Error with response, response content: {response.Content}");
+      throw new Exception($"error post response, retrycount: {retryCount}, ratelimited: {isRateLimited(response)}, code: {response.StatusCode}, response content: {response.Content}");
     }
+    return response;
   }
 
-  private static bool isRateLimited(RestResponse response) =>
-    response.StatusCode == HttpStatusCode.Forbidden && response.Content?.Contains("403 Forbidden (Rate Limit Exceeded)") != null;
+  private static bool isRateLimited(RestResponse response)
+  {
+    if(response.Content == null)
+      return false;
+    return response.StatusCode == HttpStatusCode.Forbidden
+      && response.Content.Contains("403 Forbidden (Rate Limit Exceeded)");
+  }
 
   public async Task<(T?, RestResponse)> PostAsync<T>(RestRequest request)
   {
@@ -95,32 +96,33 @@ public class WebRequestor : IWebRequestor
     return (deserialize<T>(response), response);
   }
 
-  public async Task<RestResponse> DeleteAsync(RestRequest request)
+  public Task<RestResponse> DeleteAsync(RestRequest request) => recursiveDeleteAsync(request, 0);
+  private async Task<RestResponse> recursiveDeleteAsync(RestRequest request, int retryCount)
   {
-    // using var activity = DiagnosticsConfig.Source.StartActivity($"sending delete web request");
-    // activity?.AddTag("success", false);
-
     try
     {
-
       var response = await client.DeleteAsync(request);
       if (isRateLimited(response))
         Console.WriteLine("after delete response in rate limited");
-      // Console.WriteLine(response.Content);
-      // activity?.AddTag("url", response.ResponseUri);
-      // activity?.AddTag("success", true);
       return response;
-
     }
     catch (HttpRequestException e)
     {
       if (e.StatusCode == HttpStatusCode.Forbidden) // && response.Content == "403 Forbidden (Rate Limit Exceeded)"
-        logger.LogInformation("hit rate limit in delete");
-
-      Console.WriteLine(e.StatusCode);
-      // Console.WriteLine();
-      throw e;
-
+      {
+        if(retryCount < rateLimitRetryCount)
+        {
+          logger.LogInformation($"hit rate limit in delete, retry count is {retryCount} / {rateLimitRetryCount}, retrying");
+          Console.WriteLine($"hit rate limit in delete, retry count is {retryCount} / {rateLimitRetryCount}, retrying");
+          Thread.Sleep(rateLimitSleepInterval);
+          return await recursiveDeleteAsync(request, retryCount + 1);
+        }
+        else
+        {
+          logger.LogInformation($"hit rate limit in delete, {rateLimitRetryCount} retries did not fix it");
+        }
+      }
+      throw;
     }
   }
 
@@ -164,4 +166,5 @@ public class WebRequestor : IWebRequestor
       throw;
     }
   }
+
 }

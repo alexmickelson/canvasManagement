@@ -50,6 +50,8 @@ public class CanvasQuizService(
         // assignment_group_id = "quiz", // TODO: support specific assignment groups
         // time_limit = localQuiz.TimeLimit,
         shuffle_answers = localQuiz.ShuffleAnswers,
+        access_code = localQuiz.Password,
+        show_correct_answers = localQuiz.showCorrectAnswers,
         // hide_results = localQuiz.HideResults,
         allowed_attempts = localQuiz.AllowedAttempts,
         one_question_at_a_time = false,
@@ -91,10 +93,8 @@ public class CanvasQuizService(
 
   private async Task hackFixRedundantAssignments(ulong canvasCourseId)
   {
-
     using var activity = DiagnosticsConfig.Source.StartActivity("hack fixing redundant quiz assignments that are auto-created");
     activity?.SetTag("canvas syncronization", true);
-
 
     var canvasAssignments = await assignments.GetAll(canvasCourseId);
     var assignmentsToDelete = canvasAssignments
@@ -113,7 +113,7 @@ public class CanvasQuizService(
           a.Name
         );
       }
-    );
+    ).ToArray();
     await Task.WhenAll(tasks);
   }
 

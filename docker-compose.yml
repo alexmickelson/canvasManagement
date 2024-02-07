@@ -22,7 +22,7 @@ services:
   collector:
     image: otel/opentelemetry-collector-contrib
     volumes:
-      - ./ops/otel-collector-config.yml:/etc/otelcol-contrib/config.yaml
+      - ./canvas-development/otel-collector-config.yml:/etc/otelcol-contrib/config.yaml
     ports:
       - 1888:1888 # pprof extension
       - 8888:8888 # Prometheus metrics exposed by the Collector

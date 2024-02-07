@@ -1,13 +1,16 @@
 # Top-most EditorConfig file
 root = true
 
+# use unix newline characters
+end_of_line = lf
+
 [*.cs]
 dotnet_naming_rule.methods_must_be_camel_case.severity = warning
 dotnet_naming_rule.methods_must_be_camel_case.symbols  = private_methods
 dotnet_naming_rule.methods_must_be_camel_case.style    = camel_case_style
 
 dotnet_naming_symbols.private_methods.applicable_kinds = method
-dotnet_naming_symbols.private_methods.applicable_accessibilities = private 
+dotnet_naming_symbols.private_methods.applicable_accessibilities = private
 
 dotnet_naming_style.camel_case_style.capitalization = camel_case
 dotnet_diagnostic.CA2254.severity = none
@@ -199,5 +202,3 @@ indent_size = 2
 # Shell scripts
 [*.sh]
 end_of_line = lf
-[*.{cmd,bat}]
-end_of_line = crlf
