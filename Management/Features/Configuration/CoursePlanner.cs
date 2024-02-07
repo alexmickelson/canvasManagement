@@ -1,14 +1,14 @@
-using CanvasModel.EnrollmentTerms;
-using CanvasModel.Courses;
-using CanvasModel;
-using LocalModels;
-using CanvasModel.Assignments;
-using CanvasModel.Modules;
-using Management.Services.Canvas;
 using System.Text.RegularExpressions;
-using CanvasModel.Quizzes;
-using Management.Services;
+using CanvasModel;
+using CanvasModel.Assignments;
+using CanvasModel.Courses;
+using CanvasModel.EnrollmentTerms;
+using CanvasModel.Modules;
 using CanvasModel.Pages;
+using CanvasModel.Quizzes;
+using LocalModels;
+using Management.Services;
+using Management.Services.Canvas;
 
 namespace Management.Planner;
 
@@ -181,13 +181,17 @@ public class CoursePlanner
 
     CanvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
 
-    LocalCourse = LocalCourse with {Settings = LocalCourse.Settings with {
-        AssignmentGroups =  LocalCourse.Settings.AssignmentGroups.Select(g => {
-            var canvasGroup = CanvasAssignmentGroups.FirstOrDefault(c => c.Name == g.Name);
-            return canvasGroup == null
-              ? g
-              : g with {CanvasId = canvasGroup.Id};
-          })
+    LocalCourse = LocalCourse with
+    {
+      Settings = LocalCourse.Settings with
+      {
+        AssignmentGroups = LocalCourse.Settings.AssignmentGroups.Select(g =>
+        {
+          var canvasGroup = CanvasAssignmentGroups.FirstOrDefault(c => c.Name == g.Name);
+          return canvasGroup == null
+            ? g
+            : g with { CanvasId = canvasGroup.Id };
+        })
       }
     };
   }

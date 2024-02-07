@@ -42,7 +42,7 @@ oneline question
 ";
     markdown.Should().Contain(expectedQuestionString);
   }
-  
+
   [Test]
   public void CanParseQuestionWithMultipleAnswers()
   {

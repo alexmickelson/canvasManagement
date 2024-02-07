@@ -7,8 +7,8 @@ public class AssignmentMarkdownTests
   {
     var assignment = new LocalAssignment()
     {
-      Name="test assignment",
-      Description ="here is the description",
+      Name = "test assignment",
+      Description = "here is the description",
       DueAt = new DateTime(),
       LockAt = new DateTime(),
       SubmissionTypes = [AssignmentSubmissionType.ONLINE_UPLOAD],
@@ -29,13 +29,13 @@ public class AssignmentMarkdownTests
   {
     var assignment = new LocalAssignment()
     {
-      Name="test assignment",
-      Description ="here is the description",
+      Name = "test assignment",
+      Description = "here is the description",
       DueAt = new DateTime(),
       LockAt = new DateTime(),
       SubmissionTypes = [AssignmentSubmissionType.ONLINE_UPLOAD],
       LocalAssignmentGroupName = "Final Project",
-      Rubric = new List<RubricItem>() {}
+      Rubric = new List<RubricItem>() { }
     };
 
     var assignmentMarkdown = assignment.ToMarkdown();
@@ -48,8 +48,8 @@ public class AssignmentMarkdownTests
   {
     var assignment = new LocalAssignment()
     {
-      Name="test assignment",
-      Description ="here is the description",
+      Name = "test assignment",
+      Description = "here is the description",
       DueAt = new DateTime(),
       LockAt = new DateTime(),
       SubmissionTypes = [],
@@ -71,8 +71,8 @@ public class AssignmentMarkdownTests
   {
     var assignment = new LocalAssignment()
     {
-      Name="test assignment",
-      Description ="here is the description",
+      Name = "test assignment",
+      Description = "here is the description",
       DueAt = new DateTime(),
       LockAt = null,
       SubmissionTypes = [],
@@ -94,7 +94,7 @@ public class AssignmentMarkdownTests
   {
     var assignment = new LocalAssignment()
     {
-      Name="test assignment",
+      Name = "test assignment",
       Description = "",
       DueAt = new DateTime(),
       LockAt = new DateTime(),
@@ -116,13 +116,14 @@ public class AssignmentMarkdownTests
   {
     var assignment = new LocalAssignment()
     {
-      Name="test assignment",
+      Name = "test assignment",
       Description = "test assignment\n---\nsomestuff",
       DueAt = new DateTime(),
       LockAt = new DateTime(),
       SubmissionTypes = [],
       LocalAssignmentGroupName = "Final Project",
-      Rubric = new List<RubricItem>() {
+      Rubric = new List<RubricItem>()
+      {
       }
     };
 

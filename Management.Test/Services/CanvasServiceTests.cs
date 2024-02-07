@@ -59,7 +59,7 @@
 //     };
 //     Mock<IWebRequestor> mockRequestor = getTermsMock(expectedTerms);
 //     var service = new CanvasService(mockRequestor.Object);
-    
+
 //     var queryDate = new DateTime(2022, 6, 1);
 //     var canvasTerms = await service.GetCurrentTermsFor(queryDate);
 

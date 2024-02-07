@@ -26,5 +26,5 @@ public record AssignmentTemplate
   //   }
   //   return html;
   // } 
-  
+
 }

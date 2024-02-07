@@ -15,7 +15,7 @@ public record CanvasModule(
   [property: JsonPropertyName("items")]
     IEnumerable<CanvasModuleItem>? Items,
   [property: JsonPropertyName("state")] string? State, // todo make sure this,
-  // [OptIn]
+                                                       // [OptIn]
   [property: JsonPropertyName("completed_at")]
     DateTime? CompletedAt,
   [property: JsonPropertyName("publish_final_grade")] bool? PublishFinalGrade,

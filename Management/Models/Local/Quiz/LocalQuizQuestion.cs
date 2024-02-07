@@ -35,7 +35,7 @@ public record LocalQuizQuestion
 
       return $"{questionTypeIndicator}{multilineMarkdownCompatibleText}";
     }
-    else if(QuestionType == "matching")
+    else if (QuestionType == "matching")
     {
       return $"^ {answer.Text} - {answer.MatchedText}";
     }

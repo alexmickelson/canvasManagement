@@ -140,13 +140,13 @@ public static partial class AssignmentSyncronizationExtensions
         second: localAssignment.LockAt.Value.Second
       )
       : null;
-    
+
     if (canvasComparisonLockDate != localComparisonLockDate)
     {
       var printableLocal = localComparisonLockDate?.ToString() ?? "null";
       var printableCanvas = canvasComparisonLockDate?.ToString() ?? "null";
       var reason = $"Lock dates different for assignment {localAssignment.Name}, local: {printableLocal}, in canvas {printableCanvas}";
-      
+
       if (!quiet)
       {
         // Console.WriteLine(JsonSerializer.Serialize(canvasAssignment));

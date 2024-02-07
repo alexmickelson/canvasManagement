@@ -6,7 +6,7 @@ using YamlDotNet.Serialization;
 
 namespace LocalModels;
 
-public record LocalAssignment: IModuleItem
+public record LocalAssignment : IModuleItem
 {
   private string _name = "";
   public string Name

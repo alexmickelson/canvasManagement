@@ -82,7 +82,7 @@ Which events are triggered when the user clicks on an input field?
 short_answer";
     questionMarkdown.Should().Contain(expectedMarkdown);
   }
-  
+
   [Test]
   public void EssayQuestionToMarkdown_IsCorrect()
   {

@@ -31,7 +31,7 @@ public class RubricMarkdownTests
     rubric.ElementAt(1).Label.Should().Be("this is the other task");
     rubric.ElementAt(1).Points.Should().Be(3);
   }
-  
+
   [Test]
   public void TestCanParseSinglePoint()
   {

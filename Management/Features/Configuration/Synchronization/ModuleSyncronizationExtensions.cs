@@ -39,14 +39,15 @@ public static partial class ModuleSyncronizationExtensions
   {
     var canvasModuleItems = await canvas.Modules.GetModuleItems(canvasId, moduleCanvasId);
     var moduleItemsInCorrectOrder = canvasModuleItems
-      .OrderBy(canvasItem => {
+      .OrderBy(canvasItem =>
+      {
 
-        if(canvasItem.Type == "Page")
+        if (canvasItem.Type == "Page")
         {
           var localPage = localModule.Pages.FirstOrDefault(p => p.Name == canvasItem.Title);
           Console.WriteLine(JsonSerializer.Serialize(localModule.Pages));
 
-          if(localPage != null)
+          if (localPage != null)
             return localPage.DueAt.Date;
         }
         return canvasItem.ContentDetails?.DueAt?.Date;

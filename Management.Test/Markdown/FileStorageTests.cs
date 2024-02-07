@@ -72,8 +72,10 @@ public class FileStorageTests
   [Test]
   public async Task CourseSettings_CanBeSavedAndLoaded()
   {
-    LocalCourse testCourse = new() {
-      Settings = new() {
+    LocalCourse testCourse = new()
+    {
+      Settings = new()
+      {
         AssignmentGroups = [],
         Name = "Test Course with settings",
         DaysOfWeek = [DayOfWeek.Monday, DayOfWeek.Wednesday],
@@ -96,13 +98,15 @@ public class FileStorageTests
   [Test]
   public async Task EmptyCourseModules_CanBeSavedAndLoaded()
   {
-    LocalCourse testCourse = new() {
+    LocalCourse testCourse = new()
+    {
       Settings = new() { Name = "Test Course with modules" },
       Modules = [
-        new() {
-          Name="test module 1",
-          Assignments= [],
-          Quizzes=[]
+        new()
+        {
+          Name = "test module 1",
+          Assignments = [],
+          Quizzes = []
         }
       ]
     };
@@ -118,26 +122,29 @@ public class FileStorageTests
   [Test]
   public async Task CourseModules_WithAssignments_CanBeSavedAndLoaded()
   {
-    LocalCourse testCourse = new() {
+    LocalCourse testCourse = new()
+    {
       Settings = new() { Name = "Test Course with modules and assignments" },
       Modules = [
-        new() {
-          Name="test module 1 with assignments",
-          Assignments=[
-            new () {
-              Name="test assignment",
-              Description ="here is the description",
+        new()
+        {
+          Name = "test module 1 with assignments",
+          Assignments = [
+            new()
+            {
+              Name = "test assignment",
+              Description = "here is the description",
               DueAt = new DateTime(),
               LockAt = new DateTime(),
               SubmissionTypes = [AssignmentSubmissionType.ONLINE_UPLOAD],
               LocalAssignmentGroupName = "Final Project",
               Rubric = [
-                new() {Points = 4, Label="do task 1"},
-                new() {Points = 2, Label="do task 2"},
+                new() { Points = 4, Label = "do task 1" },
+                new() { Points = 2, Label = "do task 2" },
               ]
             }
           ],
-          Quizzes=[]
+          Quizzes = []
         }
       ]
     };
@@ -156,14 +163,17 @@ public class FileStorageTests
   [Test]
   public async Task CourseModules_WithQuizzes_CanBeSavedAndLoaded()
   {
-    LocalCourse testCourse = new() {
+    LocalCourse testCourse = new()
+    {
       Settings = new() { Name = "Test Course with modules and quiz" },
       Modules = [
-        new() {
-          Name="test module 1 with quiz",
-          Assignments=[],
-          Quizzes=[
-            new() {
+        new()
+        {
+          Name = "test module 1 with quiz",
+          Assignments = [],
+          Quizzes = [
+            new()
+            {
               Name = "Test Quiz",
               Description = "quiz description",
               LockAt = new DateTime(2022, 10, 3, 12, 5, 0),
@@ -171,8 +181,9 @@ public class FileStorageTests
               ShuffleAnswers = true,
               OneQuestionAtATime = true,
               LocalAssignmentGroupName = "Assignments",
-              Questions=[
-                new () {
+              Questions = [
+                new()
+                {
                   Text = "test essay",
                   QuestionType = QuestionType.ESSAY,
                   Points = 1
@@ -196,8 +207,10 @@ public class FileStorageTests
   [Test]
   public async Task MarkdownStorage_FullyPopulated_DoesNotLoseData()
   {
-    LocalCourse testCourse = new() {
-      Settings = new () {
+    LocalCourse testCourse = new()
+    {
+      Settings = new()
+      {
         AssignmentGroups = [],
         Name = "Test Course with lots of data",
         DaysOfWeek = [DayOfWeek.Monday, DayOfWeek.Wednesday],
@@ -206,24 +219,27 @@ public class FileStorageTests
         DefaultDueTime = new() { Hour = 1, Minute = 59 },
       },
       Modules = [
-        new() {
-          Name= "new test module",
+        new()
+        {
+          Name = "new test module",
           Assignments = [
-            new() {
-              Name="test assignment",
-              Description ="here is the description",
+            new()
+            {
+              Name = "test assignment",
+              Description = "here is the description",
               DueAt = new DateTime(),
               LockAt = new DateTime(),
               SubmissionTypes = [AssignmentSubmissionType.ONLINE_UPLOAD],
               LocalAssignmentGroupName = "Final Project",
               Rubric = [
-                new() { Points = 4, Label="do task 1" },
-                new() { Points = 2, Label="do task 2" },
+                new() { Points = 4, Label = "do task 1" },
+                new() { Points = 2, Label = "do task 2" },
               ]
             }
           ],
           Quizzes = [
-            new() {
+            new()
+            {
               Name = "Test Quiz",
               Description = "quiz description",
               LockAt = new DateTime(),
@@ -233,7 +249,8 @@ public class FileStorageTests
               LocalAssignmentGroupName = "someId",
               AllowedAttempts = -1,
               Questions = [
-                new() {
+                new()
+                {
                   Text = "test short answer",
                   QuestionType = QuestionType.SHORT_ANSWER,
                   Points = 1
@@ -257,8 +274,10 @@ public class FileStorageTests
   [Test]
   public async Task MarkdownStorage_CanPersistPages()
   {
-    LocalCourse testCourse = new() {
-      Settings = new () {
+    LocalCourse testCourse = new()
+    {
+      Settings = new()
+      {
         AssignmentGroups = [],
         Name = "Test Course with page",
         DaysOfWeek = [DayOfWeek.Monday, DayOfWeek.Wednesday],
@@ -267,10 +286,12 @@ public class FileStorageTests
         DefaultDueTime = new() { Hour = 1, Minute = 59 },
       },
       Modules = [
-        new(){
+        new()
+        {
           Name = "page test module",
           Pages = [
-            new () {
+            new()
+            {
               Name = "test page persistence",
               DueAt = new DateTime(),
               Text = "this is some\n## markdown\n"

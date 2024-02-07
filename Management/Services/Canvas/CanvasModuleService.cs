@@ -63,10 +63,12 @@ public class CanvasModuleService
     if (items == null)
       throw new Exception($"Error getting canvas module items for {url}");
     return items.Select(i =>
-      i with {
+      i with
+      {
         ContentDetails = i.ContentDetails == null
           ? null
-          : i.ContentDetails with {
+          : i.ContentDetails with
+          {
             DueAt = i.ContentDetails.DueAt?.ToLocalTime(),
             LockAt = i.ContentDetails.LockAt?.ToLocalTime(),
           }

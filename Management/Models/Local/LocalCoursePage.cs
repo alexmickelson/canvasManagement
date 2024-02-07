@@ -1,6 +1,6 @@
 namespace LocalModels;
 
-public record LocalCoursePage: IModuleItem
+public record LocalCoursePage : IModuleItem
 {
   public required string Name { get; init; }
   public required string Text { get; set; }

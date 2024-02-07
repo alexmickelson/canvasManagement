@@ -25,7 +25,7 @@ public class CourseMarkdownLoader
         })
         .Select(async d => await LoadCourseByPath(d))
     );
-    return courses.OrderBy(c=>c.Settings.Name);
+    return courses.OrderBy(c => c.Settings.Name);
   }
 
   public async Task<LocalCourse> LoadCourseByPath(string courseDirectory)

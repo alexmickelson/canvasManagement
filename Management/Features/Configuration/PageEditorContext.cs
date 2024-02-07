@@ -112,7 +112,7 @@ public class PageEditorContext(
 
     var canvasModule = getCurrentCanvasModule(Page, planner.LocalCourse);
 
-    if(canvasPage != null)
+    if (canvasPage != null)
     {
       await canvas.CreatePageModuleItem(
         (ulong)courseCanvasId,

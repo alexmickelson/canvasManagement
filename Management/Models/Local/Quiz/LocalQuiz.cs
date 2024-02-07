@@ -3,7 +3,7 @@ using YamlDotNet.Serialization;
 
 namespace LocalModels;
 
-public record LocalQuiz: IModuleItem
+public record LocalQuiz : IModuleItem
 {
 
   public required string Name { get; init; }
@@ -171,7 +171,7 @@ Description: {Description}
 
 public class QuizMarkdownParseException : Exception
 {
-  public QuizMarkdownParseException(string message): base(message)
+  public QuizMarkdownParseException(string message) : base(message)
   {
 
   }

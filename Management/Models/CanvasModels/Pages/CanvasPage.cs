@@ -1,6 +1,6 @@
 
 namespace CanvasModel.Pages;
-public record CanvasPage (
+public record CanvasPage(
   [property: JsonPropertyName("page_id")] ulong PageId,
   [property: JsonPropertyName("url")] string Url,
   [property: JsonPropertyName("title")] string Title,

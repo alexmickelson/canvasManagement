@@ -47,7 +47,7 @@ public class FileStorageManager
 
   public IEnumerable<string> GetEmptyDirectories()
   {
-    if(!Directory.Exists(_basePath))
+    if (!Directory.Exists(_basePath))
       throw new DirectoryNotFoundException($"Cannot get empty directories,  {_basePath} does not exist");
 
     return Directory

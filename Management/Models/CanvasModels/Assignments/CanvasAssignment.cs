@@ -70,7 +70,7 @@ public record CanvasAssignment
 
   [property: JsonPropertyName("allowed_attempts")]
   int AllowedAttempts,
-  
+
   [property: JsonPropertyName("is_quiz_assignment")]
   bool IsQuizAssignment,
 

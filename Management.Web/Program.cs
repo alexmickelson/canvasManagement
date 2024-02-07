@@ -1,24 +1,23 @@
-global using System.Text.Json.Serialization;
-global using System.Text.Json;
 global using System.ComponentModel.DataAnnotations;
-global using Management.Services.Canvas;
-global using Management.Services;
-global using CanvasModel.EnrollmentTerms;
-global using CanvasModel.Courses;
+global using System.Text.Json;
+global using System.Text.Json.Serialization;
 global using CanvasModel;
+global using CanvasModel.Courses;
+global using CanvasModel.EnrollmentTerms;
 global using LocalModels;
 global using Management.Planner;
-global using Management.Web.Shared.Components;
+global using Management.Services;
+global using Management.Services.Canvas;
 global using Management.Web.Shared;
-
+global using Management.Web.Shared.Components;
 using dotenv.net;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
-using OpenTelemetry;
 
 DotEnv.Load();
 

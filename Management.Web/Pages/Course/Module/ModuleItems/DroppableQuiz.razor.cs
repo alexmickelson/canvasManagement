@@ -42,10 +42,11 @@ public class DroppableQuiz : ComponentBase
     );
 
     var NewQuizList = currentModule.Quizzes
-      .Select(q => 
-        q.Name + q.Description != Quiz.Name + Quiz.Description 
-          ? q : 
-          q with { 
+      .Select(q =>
+        q.Name + q.Description != Quiz.Name + Quiz.Description
+          ? q :
+          q with
+          {
             DueAt = defaultDueTimeDate,
             LockAt = q.LockAt > defaultDueTimeDate ? q.LockAt : defaultDueTimeDate
           }

@@ -1,11 +1,11 @@
-using Microsoft.Extensions.Logging;
 using CanvasModel;
 using CanvasModel.Assignments;
 using CanvasModel.Courses;
 using CanvasModel.EnrollmentTerms;
 using CanvasModel.Modules;
-using RestSharp;
 using CanvasModel.Pages;
+using Microsoft.Extensions.Logging;
+using RestSharp;
 
 namespace Management.Services.Canvas;
 

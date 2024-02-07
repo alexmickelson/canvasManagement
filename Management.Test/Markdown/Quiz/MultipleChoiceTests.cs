@@ -67,7 +67,7 @@ endline
 *) true
 ) false
    ";
-   var question = LocalQuizQuestion.ParseMarkdown(questionMarkdown, 0);
+    var question = LocalQuizQuestion.ParseMarkdown(questionMarkdown, 0);
     question.Answers.Count().Should().Be(2);
   }
 }

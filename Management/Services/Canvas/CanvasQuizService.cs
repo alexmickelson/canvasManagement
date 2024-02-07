@@ -117,14 +117,16 @@ public class CanvasQuizService(
     await Task.WhenAll(tasks);
   }
 
-  private async Task hackFixQuestionOrdering(ulong canvasCourseId, ulong canvasQuizId, IEnumerable<(CanvasQuizQuestion question, int position)> questionAndPositions )
+  private async Task hackFixQuestionOrdering(ulong canvasCourseId, ulong canvasQuizId, IEnumerable<(CanvasQuizQuestion question, int position)> questionAndPositions)
   {
     using var activity = DiagnosticsConfig.Source.StartActivity("hack fixing question ordering with reorder");
     activity?.SetCustomProperty("canvasQuizId", canvasQuizId);
     activity?.SetTag("canvas syncronization", true);
 
-    var order = questionAndPositions.OrderBy(t => t.position).Select(tuple => {
-      return new {
+    var order = questionAndPositions.OrderBy(t => t.position).Select(tuple =>
+    {
+      return new
+      {
         type = "question",
         id = tuple.question.Id.ToString(),
       };
@@ -182,9 +184,10 @@ public class CanvasQuizService(
 
   private static object[] getAnswers(LocalQuizQuestion q)
   {
-    if(q.QuestionType == QuestionType.MATCHING)
+    if (q.QuestionType == QuestionType.MATCHING)
       return q.Answers
-        .Select(a => new {
+        .Select(a => new
+        {
           answer_match_left = a.Text,
           answer_match_right = a.MatchedText
         })

@@ -45,12 +45,15 @@ public class WebRequestor : IWebRequestor
 
     var response = await client.ExecutePostAsync(request);
 
-    if (isRateLimited(response)) {
-      if(retryCount < rateLimitRetryCount){
+    if (isRateLimited(response))
+    {
+      if (retryCount < rateLimitRetryCount)
+      {
         logger.LogInformation($"hit rate limit on post, retry count is {retryCount} / {rateLimitRetryCount}, retrying");
         Console.WriteLine($"hit rate limit on post, retry count is {retryCount} / {rateLimitRetryCount}, retrying");
         Thread.Sleep(rateLimitSleepInterval);
-        return await rateLimitAwarePostAsync(request, retryCount + 1);}
+        return await rateLimitAwarePostAsync(request, retryCount + 1);
+      }
     }
 
     if (!response.IsSuccessful)
@@ -63,7 +66,7 @@ public class WebRequestor : IWebRequestor
 
   private static bool isRateLimited(RestResponse response)
   {
-    if(response.Content == null)
+    if (response.Content == null)
       return false;
     return response.StatusCode == HttpStatusCode.Forbidden
       && response.Content.Contains("403 Forbidden (Rate Limit Exceeded)");
@@ -110,7 +113,7 @@ public class WebRequestor : IWebRequestor
     {
       if (e.StatusCode == HttpStatusCode.Forbidden) // && response.Content == "403 Forbidden (Rate Limit Exceeded)"
       {
-        if(retryCount < rateLimitRetryCount)
+        if (retryCount < rateLimitRetryCount)
         {
           logger.LogInformation($"hit rate limit in delete, retry count is {retryCount} / {rateLimitRetryCount}, retrying");
           Console.WriteLine($"hit rate limit in delete, retry count is {retryCount} / {rateLimitRetryCount}, retrying");
