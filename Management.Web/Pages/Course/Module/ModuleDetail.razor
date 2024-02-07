@@ -175,6 +175,7 @@
             LocalAssignment assignment => (@<AssignmentListItem Assignment="assignment" Module="Module" />),
             LocalQuiz quiz => (@<QuizListItem Quiz="quiz" />),
             LocalCoursePage page => (@<PageListItem Page=page />),
+            _ => (@<div></div>)
           })
         }
       </div>
