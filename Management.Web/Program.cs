@@ -11,8 +11,10 @@ global using Management.Services.Canvas;
 global using Management.Web.Shared;
 global using Management.Web.Shared.Components;
 using dotenv.net;
+using Management.Actors;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
+using Microsoft.AspNetCore.ResponseCompression;
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -91,6 +93,18 @@ builder.Services.AddScoped<DragContainer>();
 
 builder.Services.AddSingleton<FileConfiguration>();
 
+
+// exposing actor service to controllers
+builder.Services.AddSingleton<IActorBridge, AkkaService>();
+
+// starting actor service while enabling it to use dependency injection
+builder.Services.AddHostedService<AkkaService>(sp => (AkkaService)sp.GetRequiredService<IActorBridge>());
+
+builder.Services.AddResponseCompression(opts =>
+{
+  opts.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[] { "application/octet-stream" });
+});
+
 builder.Services.AddSignalR(e =>
 {
   e.MaximumReceiveMessageSize = 102400000;
@@ -113,8 +127,10 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseResponseCompression();
 
 app.MapBlazorHub();
+app.MapHub<SignalRHub>("/SignalRHub");
 app.MapFallbackToPage("/_Host");
 
 

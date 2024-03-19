@@ -44,7 +44,6 @@ public class CoursePlanner
     get => _localCourse;
     set
     {
-      using var activity = DiagnosticsConfig.Source?.StartActivity("Loading Course");
       if (value == null)
       {
         _localCourse = null;

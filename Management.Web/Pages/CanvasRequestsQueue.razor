@@ -1,0 +1,64 @@
+@page "/test"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.SignalR.Client
+
+@inject CanvasService canvas
+@inject CoursePlanner planner
+@inject FileStorageManager fileStorageManager
+@inject IActorBridge bridge
+@inject NavigationManager Navigation
+
+@code {
+  private HubConnection? hubConnection;
+  public string? CourseName = "1400";
+  @* private bool loading = true; *@
+
+  protected override async Task OnInitializedAsync()
+  {
+    if (planner.LocalCourse == null)
+    {
+      System.Diagnostics.Activity.Current = null;
+      using var activity = DiagnosticsConfig.Source?.StartActivity("Loading Course");
+      activity?.AddTag("CourseName", CourseName);
+      var courses = await fileStorageManager.LoadSavedCourses();
+      planner.LocalCourse = courses.First(c => c.Settings.Name == CourseName);
+    }
+
+
+    Console.WriteLine(Navigation.BaseUri + "SignalRHub");
+    hubConnection = new HubConnectionBuilder()
+    .WithUrl(Navigation.BaseUri + "SignalRHub")
+    .WithAutomaticReconnect()
+    .Build();
+
+
+    hubConnection.On("SentFromActor", () =>
+    {
+      Console.WriteLine("recieved from actor");
+    });
+
+    await hubConnection.StartAsync();
+
+    base.OnInitialized();
+    @* loading = false; *@
+  }
+
+  private async Task SendAkkaMessage()
+  {
+    System.Diagnostics.Activity.Current = null;
+    using var activity = DiagnosticsConfig.Source?.StartActivity("sending akka message from blazor");
+
+    if (planner.LocalCourse != null && planner.LocalCourse.Settings.CanvasId != null && hubConnection?.ConnectionId != null)
+    {
+      ulong id = (ulong)planner.LocalCourse.Settings.CanvasId;
+
+      var message = new GetModulesMessage(0, id, (string)hubConnection.ConnectionId, activity?.TraceId, ParentSpan:
+      activity?.SpanId);
+      var response = await bridge.Ask<CanvasModulesMessage>(message);
+      Console.WriteLine(response);
+    }
+  }
+}
+
+<button @onclick=SendAkkaMessage>test akka</button>

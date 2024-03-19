@@ -6,11 +6,13 @@
 @using Management.Web.Pages.Course.Module.ModuleItems
 @using Management.Web.Shared.Components
 
+
 @inject FileStorageManager fileStorageManager
 @inject CanvasService canvas
 @inject CoursePlanner planner
 @inject NavigationManager navigtion
 @inject IConfiguration config
+
 
 @code {
   [Parameter]
@@ -22,6 +24,9 @@
   {
     if (planner.LocalCourse == null)
     {
+      System.Diagnostics.Activity.Current = null;
+      using var activity = DiagnosticsConfig.Source?.StartActivity("Loading Course");
+      activity?.AddTag("CourseName", CourseName);
       var courses = await fileStorageManager.LoadSavedCourses();
       planner.LocalCourse = courses.First(c => c.Settings.Name == CourseName);
     }
@@ -38,37 +43,39 @@
 }
 
 <PageTitle>@CourseName</PageTitle>
+
+
 <div style="height: 100vh;">
 
 
-@if (loading)
-{
-  <Spinner />
-}
+  @if (loading)
+  {
+    <Spinner />
+  }
 
-@if (planner.LocalCourse != null)
-{
-  <div class="pb-3 d-flex justify-content-between" style="height: 4em;">
-  <div class="my-auto">
-    <button @onclick="selectNewCourse" class="btn btn-primary">
-      Select New Course
-    </button>
-    <CourseSettings />
-    <a class="btn btn-outline-secondary" target="_blank"
-      href="@($"{config["CANVAS_URL"]}/courses/{planner.LocalCourse.Settings.CanvasId}")">
-      View In Canvas
-    </a>
-    <div class="my-auto ms-2 d-inline">
-      @planner.LocalCourse.Settings.Name
+  @if (planner.LocalCourse != null)
+  {
+    <div class="pb-3 d-flex justify-content-between" style="height: 4em;">
+      <div class="my-auto">
+        <button @onclick="selectNewCourse" class="btn btn-primary">
+          Select New Course
+        </button>
+        <CourseSettings />
+        <a class="btn btn-outline-secondary" target="_blank"
+          href="@($"{config["CANVAS_URL"]}/courses/{planner.LocalCourse.Settings.CanvasId}")">
+          View In Canvas
+        </a>
+        <div class="my-auto ms-2 d-inline">
+          @planner.LocalCourse.Settings.Name
+        </div>
+      </div>
+
+      @if (planner.LoadingCanvasData)
+      {
+        <Spinner />
+      }
     </div>
-  </div>
-
-  @if (planner.LoadingCanvasData)
-    {
-      <Spinner />
-    }
-  </div>
-  <CourseDetails />
-}
+    <CourseDetails />
+  }
 
 </div>
