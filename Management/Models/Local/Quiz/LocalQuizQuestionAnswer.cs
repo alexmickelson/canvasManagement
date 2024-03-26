@@ -10,7 +10,7 @@ public record LocalQuizQuestionAnswer
 
   public string? MatchedText { get; init; }
 
-  public string HtmlText => Markdig.Markdown.ToHtml(Text);
+  public string HtmlText => MarkdownService.Render(Text);
 
   public static LocalQuizQuestionAnswer ParseMarkdown(string input, string questionType)
   {

@@ -6,7 +6,6 @@ using CanvasModel.Modules;
 using CanvasModel.Quizzes;
 using LocalModels;
 using Management.Services.Canvas;
-using Markdig.Renderers.Normalize;
 
 namespace Management.Planner;
 

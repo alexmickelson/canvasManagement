@@ -30,7 +30,7 @@ public record LocalQuiz : IModuleItem
       .FirstOrDefault(g => g.Name == LocalAssignmentGroupName)?
       .CanvasId;
 
-  public string GetDescriptionHtml() => Markdig.Markdown.ToHtml(Description);
+  public string GetDescriptionHtml() => MarkdownService.Render(Description);
 
   public string ToYaml()
   {

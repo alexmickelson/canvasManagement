@@ -26,7 +26,7 @@
     }
 
 
-    Console.WriteLine(Navigation.BaseUri + "SignalRHub");
+    @* Console.WriteLine(Navigation.BaseUri + "SignalRHub"); *@
     hubConnection = new HubConnectionBuilder()
     .WithUrl(Navigation.BaseUri + "SignalRHub")
     .WithAutomaticReconnect()

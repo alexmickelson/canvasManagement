@@ -5,7 +5,7 @@ public record LocalCoursePage : IModuleItem
   public required string Name { get; init; }
   public required string Text { get; set; }
   public DateTime DueAt { get; init; }
-  public string GetBodyHtml() => Markdig.Markdown.ToHtml(Text);
+  public string GetBodyHtml() => MarkdownService.Render(Text);
 
   public string ToMarkdown()
   {

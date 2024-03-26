@@ -1,8 +1,3 @@
-using System.Collections;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
-using System.Text.RegularExpressions;
-using YamlDotNet.Serialization;
 
 namespace LocalModels;
 
@@ -30,7 +25,7 @@ public record LocalAssignment : IModuleItem
 
   public string GetDescriptionHtml()
   {
-    return Markdig.Markdown.ToHtml(Description);
+    return MarkdownService.Render(Description);
   }
 
   public ulong? GetCanvasAssignmentGroupId(IEnumerable<LocalAssignmentGroup> assignmentGroups) =>

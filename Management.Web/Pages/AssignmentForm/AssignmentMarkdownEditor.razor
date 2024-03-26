@@ -1,4 +1,4 @@
-@using Markdig
+
 @using Management.Web.Shared.Components
 
 @inject CoursePlanner planner
@@ -59,7 +59,13 @@
     StateHasChanged();
   }
 
-  private MarkupString preview { get => (MarkupString)Markdown.ToHtml(assignmentContext?.Assignment?.Description ?? ""); }
+  private MarkupString preview { get
+    {
+      var pipeline = new MarkdownPipelineBuilder()
+            .UsePipeTables().Build();
+      return (MarkupString)Markdown.ToHtml(assignmentContext?.Assignment?.Description ?? "", pipeline);
+    }
+  }
   private string HelpText()
   {
     var groupNames = string.Join("\n- " , planner.LocalCourse?.Settings.AssignmentGroups.Select(g => g.Name) ?? []);
