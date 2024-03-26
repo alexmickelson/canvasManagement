@@ -89,12 +89,12 @@ public static class LocalAssignmentMarkdownParser
 
   private static RubricItem parseIndividualRubricItemMarkdown(string rawMarkdown)
   {
-    var pointsPattern = @"\s*-\s*(\d+)\s*pt(s)?:";
+    var pointsPattern = @"\s*-\s*(-?\d+(?:\.\d+)?)\s*pt(s)?:";
     var match = Regex.Match(rawMarkdown, pointsPattern);
     if (!match.Success)
       throw new RubricMarkdownParseException($"points not found: {rawMarkdown}");
 
-    var points = int.Parse(match.Groups[1].Value);
+    var points = double.Parse(match.Groups[1].Value);
 
     var label = string.Join(": ", rawMarkdown.Split(": ").Skip(1));
 

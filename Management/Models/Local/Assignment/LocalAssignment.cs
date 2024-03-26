@@ -20,7 +20,7 @@ public record LocalAssignment : IModuleItem
   public string? LocalAssignmentGroupName { get; init; }
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
-  public int PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
+  public double PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
 
 
   public string GetDescriptionHtml()

@@ -22,8 +22,8 @@
     assignmentContext.StateHasChanged -= reload;
   }
 
-  private int requiredPoints => assignmentContext?.Assignment?.Rubric.Where(r => !r.IsExtraCredit).Select(r => r.Points).Sum() ?? 0;
-  private int extraCreditPoints => assignmentContext?.Assignment?.Rubric.Where(r => r.IsExtraCredit).Select(r => r.Points).Sum() ?? 0;
+  private double requiredPoints => assignmentContext?.Assignment?.Rubric.Where(r => !r.IsExtraCredit).Select(r => r.Points).Sum() ?? 0;
+  private double extraCreditPoints => assignmentContext?.Assignment?.Rubric.Where(r => r.IsExtraCredit).Select(r => r.Points).Sum() ?? 0;
 }
 
 @if(assignmentContext != null)

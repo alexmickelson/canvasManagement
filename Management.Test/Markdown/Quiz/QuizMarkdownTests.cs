@@ -220,4 +220,52 @@ Which events are triggered when the user clicks on an input field?
 short_answer";
     questionMarkdown.Should().Contain(expectedMarkdown);
   }
+  [Test]
+  public void NegativePoints_IsAllowed()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the
+multi line
+description
+---
+Points: -4
+Which events are triggered when the user clicks on an input field?
+short answer
+";
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    var firstQuestion = quiz.Questions.First();
+    firstQuestion.Points.Should().Be(-4);
+  }
+  [Test]
+  public void FloatingPointPoints_IsAllowed()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the
+multi line
+description
+---
+Points: 4.56
+Which events are triggered when the user clicks on an input field?
+short answer
+";
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    var firstQuestion = quiz.Questions.First();
+    firstQuestion.Points.Should().Be(4.56);
+  }
 }

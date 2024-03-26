@@ -96,7 +96,7 @@
   private string canvasQuizUrl =>
   $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/quizzes/{quizInCanvas?.Id}";
 
-  private int? quizPoints => quizContext.Quiz?.Questions.Sum(q => q.Points);
+  private double? quizPoints => quizContext.Quiz?.Questions.Sum(q => q.Points);
   private bool showHelp = false;
 
   private readonly static string exampleMarkdownQuestion = @"QUESTION REFERENCE

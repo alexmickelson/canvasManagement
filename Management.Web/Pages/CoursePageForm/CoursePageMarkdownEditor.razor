@@ -28,7 +28,7 @@
   private string rawText { get; set; } = string.Empty;
   private string? error = null;
 
-  private MarkupString preview { get => (MarkupString)Markdown.ToHtml(pageContext?.Page?.Text ?? ""); }
+  private MarkupString preview { get => (MarkupString)MarkdownService.Render(pageContext?.Page?.Text ?? ""); }
 
   private void handleChange(string newRawPage)
   {

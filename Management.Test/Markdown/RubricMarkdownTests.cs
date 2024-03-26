@@ -68,4 +68,35 @@ public class RubricMarkdownTests
     rubric.First().IsExtraCredit.Should().BeTrue();
     rubric.First().Label.Should().Be("(Extra Credit) this is the task");
   }
+
+  [Test]
+  public void TestCanParseFloatingPointNubmers()
+  {
+    var rawRubric = @"
+    - 1.5pt: this is the task
+    ";
+
+    var rubric = LocalAssignment.ParseRubricMarkdown(rawRubric);
+    rubric.First().Points.Should().Be(1.5);
+  }
+  [Test]
+  public void TestCanParseNegativeNubmers()
+  {
+    var rawRubric = @"
+    - -2pt: this is the task
+    ";
+
+    var rubric = LocalAssignment.ParseRubricMarkdown(rawRubric);
+    rubric.First().Points.Should().Be(-2.0);
+  }
+  [Test]
+  public void TestCanParseNegativeFloatingPointNubmers()
+  {
+    var rawRubric = @"
+    - -2895.00053pt: this is the task
+    ";
+
+    var rubric = LocalAssignment.ParseRubricMarkdown(rawRubric);
+    rubric.First().Points.Should().Be(-2895.00053);
+  }
 }

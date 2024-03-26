@@ -8,7 +8,7 @@ public record LocalQuizQuestion
   public string Text { get; init; } = string.Empty;
   public string HtmlText => MarkdownService.Render(Text);
   public string QuestionType { get; init; } = string.Empty;
-  public int Points { get; init; }
+  public double Points { get; init; }
   public IEnumerable<LocalQuizQuestionAnswer> Answers { get; init; } =
     Enumerable.Empty<LocalQuizQuestionAnswer>();
   public string ToMarkdown()
@@ -59,9 +59,9 @@ public record LocalQuizQuestion
     var textHasPoints = lines.Length > 0
       && lines.First().Contains(": ")
       && lines.First().Split(": ").Length > 1
-      && int.TryParse(lines.First().Split(": ")[1], out _);
+      && double.TryParse(lines.First().Split(": ")[1], out _);
 
-    int points = firstLineIsPoints && textHasPoints ? int.Parse(lines.First().Split(": ")[1]) : 1;
+    double points = firstLineIsPoints && textHasPoints ? double.Parse(lines.First().Split(": ")[1]) : 1;
 
     var linesWithoutPoints = firstLineIsPoints ? lines[1..] : lines;
 

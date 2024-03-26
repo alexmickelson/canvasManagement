@@ -61,9 +61,7 @@
 
   private MarkupString preview { get
     {
-      var pipeline = new MarkdownPipelineBuilder()
-            .UsePipeTables().Build();
-      return (MarkupString)Markdown.ToHtml(assignmentContext?.Assignment?.Description ?? "", pipeline);
+      return (MarkupString)MarkdownService.Render(assignmentContext?.Assignment?.Description ?? "");
     }
   }
   private string HelpText()
