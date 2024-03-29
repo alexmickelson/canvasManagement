@@ -67,7 +67,8 @@ Description: {Description}
     var settings = splitInput[0];
     var quizWithoutQuestions = getQuizWithOnlySettings(settings);
 
-    var questions = splitInput[1..]
+    var rawQuestions = splitInput[1..];
+    var questions = rawQuestions
       .Where(str => !string.IsNullOrWhiteSpace(str))
       .Select((q, i) => LocalQuizQuestion.ParseMarkdown(q, i))
       .ToArray();

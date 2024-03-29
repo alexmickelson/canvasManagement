@@ -54,7 +54,7 @@ DueAt: 2023-08-21T23:59:00
 LockAt: 2023-08-21T23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
-Description: this is the 
+Description: this is the
 multi line
 description
 ---
@@ -80,4 +80,18 @@ Which events are triggered when the user clicks on an input field?
     firstQuestion.Answers.ElementAt(3).Text.Should().Be("submit");
   }
 
+
+  [Test]
+  public void CanUseBracesInAnswerFormultipleAnswer()
+  {
+    var rawMarkdownQuestion = @"
+Which events are triggered when the user clicks on an input field?
+[*] `int[] theThing()`
+[] keydown
+";
+
+    var question = LocalQuizQuestion.ParseMarkdown(rawMarkdownQuestion, 0);
+    question.Answers.First().Text.Should().Be("`int[] theThing()`");
+    question.Answers.Count().Should().Be(2);
+  }
 }

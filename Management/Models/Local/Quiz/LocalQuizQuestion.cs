@@ -114,7 +114,7 @@ public record LocalQuizQuestion
     if (linesWithoutPoints[^1].Equals("short_answer", StringComparison.CurrentCultureIgnoreCase))
       return "short_answer";
 
-    var answerLines = getAnswersGroupedByLines(linesWithoutPoints, questionIndex);
+    var answerLines = getAnswerStringsWithMultilineSupport(linesWithoutPoints, questionIndex);
     var firstAnswerLine = answerLines.First();
     var isMultipleChoice =
       firstAnswerLine.StartsWith("a)")
@@ -138,7 +138,7 @@ public record LocalQuizQuestion
     return "";
   }
 
-  private static List<string> getAnswersGroupedByLines(string[] linesWithoutPoints, int questionIndex)
+  private static List<string> getAnswerStringsWithMultilineSupport(string[] linesWithoutPoints, int questionIndex)
   {
     var indexOfAnswerStart = linesWithoutPoints
       .ToList()
@@ -175,7 +175,7 @@ public record LocalQuizQuestion
 
   private static LocalQuizQuestionAnswer[] getAnswers(string[] linesWithoutPoints, int questionIndex, string questionType)
   {
-    var answerLines = getAnswersGroupedByLines(linesWithoutPoints, questionIndex);
+    var answerLines = getAnswerStringsWithMultilineSupport(linesWithoutPoints, questionIndex);
 
     var answers = answerLines
       .Select((a, i) => LocalQuizQuestionAnswer.ParseMarkdown(a, questionType))
