@@ -32,10 +32,9 @@ public record LocalQuizQuestionAnswer
     string startingQuestionPattern = @"^(\*?[a-z]?\))|\[\s*\]|\[\*\]|\^ ";
 
     int replaceCount = 0;
-    var text = Regex.Replace(input, startingQuestionPattern, (m) =>
-    {
-      return replaceCount++ == 0 ? "" : m.Value;
-    }).Trim();
+    var text = Regex
+      .Replace(input, startingQuestionPattern, (m) => replaceCount++ == 0 ? "" : m.Value)
+      .Trim();
     return new LocalQuizQuestionAnswer()
     {
       Correct = isCorrect,
