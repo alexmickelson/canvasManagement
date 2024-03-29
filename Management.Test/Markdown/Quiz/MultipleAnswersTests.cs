@@ -94,4 +94,32 @@ Which events are triggered when the user clicks on an input field?
     question.Answers.First().Text.Should().Be("`int[] theThing()`");
     question.Answers.Count().Should().Be(2);
   }
+  
+  [Test]
+  public void CanUseBracesInAnswerFormultipleAnswer_MultiLine()
+  {
+    var rawMarkdownQuestion = @"
+Which events are triggered when the user clicks on an input field?
+[*]
+```
+int[] myNumbers = new int[] { };
+DoSomething(ref myNumbers);
+static void DoSomething(ref int[] numbers)
+{
+  // do something
+}
+```
+";
+
+    var question = LocalQuizQuestion.ParseMarkdown(rawMarkdownQuestion, 0);
+    question.Answers.First().Text.Should().Be(@"```
+int[] myNumbers = new int[] { };
+DoSomething(ref myNumbers);
+static void DoSomething(ref int[] numbers)
+{
+  // do something
+}
+```");
+    question.Answers.Count().Should().Be(1);
+  }
 }

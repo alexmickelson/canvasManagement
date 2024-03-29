@@ -153,7 +153,7 @@ public record LocalQuizQuestion
 
     var answerLinesRaw = linesWithoutPoints[indexOfAnswerStart..];
 
-    var answerStartPattern = @"^(\*?[a-z]?\))|\[\s*\]|\[\*\]|\^";
+    var answerStartPattern = @"^(\*?[a-z]?\))|(?<!\S)\[\s*\]|\[\*\]|\^";
     var answerLines = answerLinesRaw.Aggregate(new List<string>(), (acc, line) =>
     {
       var isNewAnswer = Regex.IsMatch(line, answerStartPattern);

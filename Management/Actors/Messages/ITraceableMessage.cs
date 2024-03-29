@@ -2,7 +2,7 @@ using System.Diagnostics;
 
 public interface ITraceableMessage
 {
-  public ActivitySpanId? ParentSpan {get;}
-  public ActivityTraceId? ParentTrace {get;}
+  public ActivitySpanId? ParentSpan { get; }
+  public ActivityTraceId? ParentTrace { get; }
 }
 
