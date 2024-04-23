@@ -19,6 +19,14 @@ services:
       - ~/projects/faculty/4620_Distributed/2024Spring/modules:/app/storage/distributed
       - ~/projects/faculty/3840_Telemetry/2024Spring_alex/modules:/app/storage/telemetry_and_operations
 
+      - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/fall_ux
+      - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/fall_advanced_frontend
+      - ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/fall_intro_to_web
+      - ~/projects/faculty/1420/2024-fall/modules:/app/storage/fall_1420
+      - ~/projects/faculty/1425/2024-fall/modules:/app/storage/fall_1425
+
+
+
   # collector:
   #   image: otel/opentelemetry-collector-contrib
   #   volumes:
