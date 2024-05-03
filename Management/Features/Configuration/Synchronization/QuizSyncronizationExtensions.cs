@@ -17,7 +17,7 @@ public static partial class QuizSyncronizationExtensions
   public static async Task<ulong?> AddQuizToCanvas(
     this LocalCourse localCourse,
     LocalQuiz localQuiz,
-    CanvasService canvas
+    ICanvasService canvas
   )
   {
     if (localCourse.Settings.CanvasId == null)

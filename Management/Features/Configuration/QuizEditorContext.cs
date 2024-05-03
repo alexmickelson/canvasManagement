@@ -7,12 +7,12 @@ using Management.Services.Canvas;
 
 public class QuizEditorContext(
   CoursePlanner planner,
-  CanvasService canvas,
+  ICanvasService canvas,
   MyLogger<QuizEditorContext> logger)
 {
   public event Action? StateHasChanged;
   private CoursePlanner planner { get; } = planner;
-  private CanvasService canvas { get; } = canvas;
+  private ICanvasService canvas { get; } = canvas;
   private readonly MyLogger<QuizEditorContext> logger = logger;
 
 

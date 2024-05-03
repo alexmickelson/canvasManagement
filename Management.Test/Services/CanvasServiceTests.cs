@@ -7,7 +7,7 @@
 
 // namespace Management.Test;
 
-// public class CanvasServiceTests
+// public class ICanvasServiceTests
 // {
 //   [Test]
 //   public async Task CanReadCanvasSemesters()
@@ -22,7 +22,7 @@
 //     };
 //     Mock<IWebRequestor> mockRequestor = getTermsMock(expectedTerms);
 
-//     var service = new CanvasService(mockRequestor.Object);
+//     var service = new ICanvasService(mockRequestor.Object);
 //     var canvasTerms = await service.GetTerms();
 
 //     canvasTerms.Should().BeEquivalentTo(expectedTerms);
@@ -58,7 +58,7 @@
 //       ),
 //     };
 //     Mock<IWebRequestor> mockRequestor = getTermsMock(expectedTerms);
-//     var service = new CanvasService(mockRequestor.Object);
+//     var service = new ICanvasService(mockRequestor.Object);
 
 //     var queryDate = new DateTime(2022, 6, 1);
 //     var canvasTerms = await service.GetCurrentTermsFor(queryDate);

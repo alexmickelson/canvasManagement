@@ -3,7 +3,7 @@
 @using CanvasModel.Assignments
 
 @inject CoursePlanner planner
-@inject CanvasService canvas
+@inject ICanvasService canvas
 @inject NavigationManager Navigation
 @inject AssignmentEditorContext assignmentContext
 
@@ -144,15 +144,15 @@
 
   private async Task deleteFromCanvas()
   {
-    if (assignmentInCanvas == null 
-      || planner?.LocalCourse?.Settings.CanvasId == null 
+    if (assignmentInCanvas == null
+      || planner?.LocalCourse?.Settings.CanvasId == null
       || assignmentContext.Assignment == null
     )
       return;
-      
+
     deletingAssignmentFromCanvas = true;
     await canvas.Assignments.Delete(
-      (ulong)planner.LocalCourse.Settings.CanvasId, 
+      (ulong)planner.LocalCourse.Settings.CanvasId,
       assignmentInCanvas.Id,
       assignmentContext.Assignment.Name
     );
@@ -186,8 +186,8 @@
       Toggle Help
     </button>
     <ConfirmationModal Label="Delete" Class="btn btn-danger" OnConfirmAsync="HandleDelete" />
-    <button 
-      class="btn btn-outline-secondary mx-3" 
+    <button
+      class="btn btn-outline-secondary mx-3"
       disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
       @onclick="addToCanvas"
     >
@@ -195,26 +195,26 @@
     </button>
     @if (assignmentInCanvas != null)
     {
-      <a 
-        class="btn btn-outline-secondary me-1" 
-        href="@canvasAssignmentUrl" 
+      <a
+        class="btn btn-outline-secondary me-1"
+        href="@canvasAssignmentUrl"
         target="_blank"
         disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
       >
         View in Canvas
       </a>
-      <button 
-        class="btn btn-outline-secondary mx-3" 
+      <button
+        class="btn btn-outline-secondary mx-3"
         disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
         @onclick="updateInCanvas"
       >
         Update In Canvas
       </button>
-      <ConfirmationModal 
+      <ConfirmationModal
         Disabled="@(addingAssignmentToCanvas || deletingAssignmentFromCanvas)"
-        Label="Delete from Canvas" 
-        Class="btn btn-outline-danger mx-3" 
-        OnConfirmAsync="deleteFromCanvas" 
+        Label="Delete from Canvas"
+        Class="btn btn-outline-danger mx-3"
+        OnConfirmAsync="deleteFromCanvas"
       />
     }
     <button class="btn btn-primary mx-2" @onclick="@(() => {
@@ -225,5 +225,5 @@
     </button>
   </div>
 
-  
+
 </div>

@@ -8,12 +8,12 @@ public class AssignmentEditorContext
 {
   public event Action? StateHasChanged;
 
-  public CanvasService canvas { get; }
+  public ICanvasService canvas { get; }
   private CoursePlanner planner { get; }
 
   public AssignmentEditorContext(
     MyLogger<AssignmentEditorContext> logger,
-    CanvasService canvas,
+    ICanvasService canvas,
     CoursePlanner planner
   )
   {

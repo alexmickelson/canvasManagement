@@ -7,7 +7,7 @@ public static class PageSynchronizationExtension
   public static async Task<CanvasPage?> AddPageToCanvas(
     this LocalCourse localCourse,
     LocalCoursePage localPage,
-    CanvasService canvas
+    ICanvasService canvas
   )
   {
     if (localCourse.Settings.CanvasId == null)

@@ -5,7 +5,18 @@ using RestSharp;
 
 namespace Management.Services.Canvas;
 
-public class CanvasModuleService
+
+public interface ICanvasModuleService
+{
+  Task<IEnumerable<CanvasModule>> GetModules(ulong courseId);
+  Task<CanvasModule> CreateModule(ulong courseId, string name);
+  Task UpdateModule(ulong courseId, ulong moduleId, string name, uint position);
+  Task<IEnumerable<CanvasModuleItem>> GetModuleItems(ulong courseId, ulong moduleId);
+  Task<Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>>> GetAllModulesItems(ulong courseId, IEnumerable<CanvasModule> modules);
+
+}
+
+public class CanvasModuleService: ICanvasModuleService
 {
 
   private readonly IWebRequestor webRequestor;

@@ -4,16 +4,23 @@ using RestSharp;
 
 namespace Management.Services.Canvas;
 
+public interface ICanvasQuizService
+{
+  Task<IEnumerable<CanvasQuiz>> GetAll(ulong courseId);
+  Task<ulong> Create(ulong canvasCourseId, LocalQuiz localQuiz, ulong? canvasAssignmentGroupId);
+  Task CreateQuizQuestions(ulong canvasCourseId, ulong canvasQuizId, LocalQuiz localQuiz);
+
+}
 public class CanvasQuizService(
   IWebRequestor webRequestor,
   CanvasServiceUtils utils,
-  CanvasAssignmentService assignments,
+  ICanvasAssignmentService assignments,
   ILogger<CanvasQuizService> logger
-)
+): ICanvasQuizService
 {
   private readonly IWebRequestor webRequestor = webRequestor;
   private readonly CanvasServiceUtils utils = utils;
-  private readonly CanvasAssignmentService assignments = assignments;
+  private readonly ICanvasAssignmentService assignments = assignments;
   private readonly ILogger<CanvasQuizService> logger = logger;
 
   public async Task<IEnumerable<CanvasQuiz>> GetAll(ulong courseId)

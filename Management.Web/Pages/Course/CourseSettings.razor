@@ -1,5 +1,5 @@
 @using Management.Web.Shared.Components
-@inject CanvasService canvas
+@inject ICanvasService canvas
 @inject CoursePlanner planner
 
 @code
@@ -19,23 +19,23 @@
   }
   private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
   private ulong? _selectedTermId {get; set;}
-  private ulong? selectedTermId { 
-    get => _selectedTermId; 
+  private ulong? selectedTermId {
+    get => _selectedTermId;
     set
     {
       _selectedTermId = value;
       if(selectedTerm != null && planner.LocalCourse != null)
       {
-        planner.LocalCourse = planner.LocalCourse with 
+        planner.LocalCourse = planner.LocalCourse with
         {
-          Settings = planner.LocalCourse.Settings with 
+          Settings = planner.LocalCourse.Settings with
           {
             StartDate=selectedTerm.StartAt ?? new DateTime(),
             EndDate=selectedTerm.EndAt ?? new DateTime(),
           }
         };
       }
-    } 
+    }
   }
   private EnrollmentTermModel? selectedTerm
   {
@@ -59,8 +59,8 @@
 
 }
 
-<button 
-  class="btn btn-outline-secondary" 
+<button
+  class="btn btn-outline-secondary"
   @onclick="@(() => modal.Show())"
 >
   Edit Course Settings
@@ -71,7 +71,7 @@
     <h1>Course Settings</h1>
   </Title>
   <Body>
-    
+
     <h5 class="text-center">Select Days Of Week</h5>
     <div class="row m-3">
     @foreach (DayOfWeek day in (DayOfWeek[])Enum.GetValues(typeof(DayOfWeek)))
@@ -80,16 +80,16 @@
           <button
             class="@(
               planner.LocalCourse?.Settings.DaysOfWeek.Contains(day) ?? false
-                ? "btn btn-secondary" 
+                ? "btn btn-secondary"
                 : "btn btn-outline-secondary"
-            )" 
-            @onclick="() => 
+            )"
+            @onclick="() =>
             {
               if(planner.LocalCourse?.Settings.DaysOfWeek.Contains(day) ?? false)
               {
-                planner.LocalCourse = planner.LocalCourse with 
+                planner.LocalCourse = planner.LocalCourse with
                 {
-                  Settings = planner.LocalCourse.Settings with 
+                  Settings = planner.LocalCourse.Settings with
                   {
                     DaysOfWeek = planner.LocalCourse.Settings.DaysOfWeek.Where((d) => d != day)
                   }
@@ -99,16 +99,16 @@
               {
                 if (planner.LocalCourse != null)
                 {
-                  planner.LocalCourse = planner.LocalCourse with 
+                  planner.LocalCourse = planner.LocalCourse with
                   {
-                    Settings = planner.LocalCourse.Settings with 
+                    Settings = planner.LocalCourse.Settings with
                     {
                       DaysOfWeek = planner.LocalCourse.Settings.DaysOfWeek.Append(day)
                     }
                   };
                 }
               }
-            }" 
+            }"
           >
             @day
           </button>
@@ -138,15 +138,15 @@
       </div>
     }
 
-      
+
     @if(planner.LocalCourse != null)
     {
       <div class="row justify-content-center m-3 text-center">
         <div class="col-auto">
           <div>Default Assignment Due Time</div>
-          <TimePicker Time="planner.LocalCourse.Settings.DefaultDueTime" UpdateTime="@((newTime) => 
-              planner.LocalCourse = 
-                planner.LocalCourse with 
+          <TimePicker Time="planner.LocalCourse.Settings.DefaultDueTime" UpdateTime="@((newTime) =>
+              planner.LocalCourse =
+                planner.LocalCourse with
                 { Settings = planner.LocalCourse.Settings with { DefaultDueTime=newTime } }
             )"
           />
@@ -156,8 +156,8 @@
     <AssignmentGroups />
   </Body>
   <Footer>
-    <button 
-      class="btn btn-outline-secondary" 
+    <button
+      class="btn btn-outline-secondary"
       @onclick="@(() => modal.Hide())"
     >
       Done Editing Course Settings

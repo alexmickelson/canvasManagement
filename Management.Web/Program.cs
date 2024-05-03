@@ -73,12 +73,12 @@ builder.Services.AddScoped(typeof(MyLogger<>));
 
 builder.Services.AddScoped<IWebRequestor, WebRequestor>();
 builder.Services.AddScoped<CanvasServiceUtils>();
-builder.Services.AddScoped<CanvasAssignmentService>();
-builder.Services.AddScoped<CanvasCoursePageService>();
-builder.Services.AddScoped<CanvasAssignmentGroupService>();
-builder.Services.AddScoped<CanvasQuizService>();
-builder.Services.AddScoped<CanvasModuleService>();
-builder.Services.AddScoped<CanvasService, CanvasService>();
+builder.Services.AddScoped<ICanvasAssignmentService, CanvasAssignmentService>();
+builder.Services.AddScoped<ICanvasCoursePageService, CanvasCoursePageService>();
+builder.Services.AddScoped<ICanvasAssignmentGroupService, CanvasAssignmentGroupService>();
+builder.Services.AddScoped<ICanvasQuizService, CanvasQuizService>();
+builder.Services.AddScoped<ICanvasModuleService, CanvasModuleService>();
+builder.Services.AddScoped<ICanvasService, CanvasService>();
 
 builder.Services.AddScoped<MarkdownCourseSaver>();
 builder.Services.AddScoped<CourseMarkdownLoader>();
@@ -122,7 +122,6 @@ app.UseRouting();
 app.UseResponseCompression();
 
 app.MapBlazorHub();
-app.MapHub<SignalRHub>("/SignalRHub");
 app.MapFallbackToPage("/_Host");
 
 

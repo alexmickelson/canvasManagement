@@ -1,5 +1,5 @@
 @inject CoursePlanner planner
-@inject CanvasService canvas
+@inject ICanvasService canvas
 
 @code {
 
@@ -19,7 +19,7 @@
         Name=Name
       };
 
-      planner.LocalCourse = planner.LocalCourse with 
+      planner.LocalCourse = planner.LocalCourse with
       {
         Modules = planner.LocalCourse.Modules.Append(newModule)
       };

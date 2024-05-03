@@ -6,12 +6,12 @@ using Management.Services.Canvas;
 
 public class PageEditorContext(
   CoursePlanner planner,
-  CanvasService canvas,
+  ICanvasService canvas,
   MyLogger<PageEditorContext> logger)
 {
   public event Action? StateHasChanged;
   private CoursePlanner planner { get; } = planner;
-  private CanvasService canvas { get; } = canvas;
+  private ICanvasService canvas { get; } = canvas;
   private readonly MyLogger<PageEditorContext> logger = logger;
 
 

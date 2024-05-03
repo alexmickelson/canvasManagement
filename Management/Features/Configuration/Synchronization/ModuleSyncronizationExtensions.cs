@@ -12,7 +12,7 @@ public static partial class ModuleSyncronizationExtensions
   //   this LocalCourse localCourse,
   //   ulong canvasId,
   //   IEnumerable<CanvasModule> canvasModules,
-  //   CanvasService canvas
+  //   ICanvasService canvas
   // )
   // {
   //   var currentCanvasPositions = canvasModules.ToDictionary(m => m.Id, m => m.Position);
@@ -34,7 +34,7 @@ public static partial class ModuleSyncronizationExtensions
     this LocalModule localModule,
     ulong canvasId,
     ulong moduleCanvasId,
-    CanvasService canvas
+    ICanvasService canvas
   )
   {
     var canvasModuleItems = await canvas.Modules.GetModuleItems(canvasId, moduleCanvasId);
@@ -79,7 +79,7 @@ public static partial class ModuleSyncronizationExtensions
     ulong canvasId,
     CanvasModule canvasModule,
     Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> canvasModulesItems,
-    CanvasService canvas,
+    ICanvasService canvas,
     IEnumerable<CanvasAssignment> canvasAssignments
   )
   {

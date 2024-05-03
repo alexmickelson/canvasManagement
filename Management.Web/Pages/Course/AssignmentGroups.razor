@@ -1,5 +1,5 @@
 @using Management.Web.Shared.Components
-@inject CanvasService canvas
+@inject ICanvasService canvas
 @inject CoursePlanner planner
 
 
@@ -42,7 +42,7 @@
 
   private Action<ChangeEventArgs> saveGroupName(string groupId)
   {
-    return (e) => 
+    return (e) =>
     {
       if(planner.LocalCourse != null)
       {
@@ -54,17 +54,17 @@
         );
         planner.LocalCourse = planner.LocalCourse with
         {
-          Settings = planner.LocalCourse.Settings with 
+          Settings = planner.LocalCourse.Settings with
           {
             AssignmentGroups = newGroups
           }
         };
       }
-    };  
+    };
   }
   private Action<ChangeEventArgs> saveGroupWeight(string groupId)
   {
-    return (e) => 
+    return (e) =>
     {
       if(planner.LocalCourse != null)
       {
@@ -76,13 +76,13 @@
         );
         planner.LocalCourse = planner.LocalCourse with
         {
-          Settings = planner.LocalCourse.Settings with 
+          Settings = planner.LocalCourse.Settings with
           {
             AssignmentGroups = newGroups
           }
         };
       }
-    };  
+    };
   }
 
   private async Task SyncAssignmentGroupsWithCanvas()
@@ -105,13 +105,13 @@
     <div class="row">
       <div class="col-auto">
         <label class="form-label">Group Name</label>
-        <input 
+        <input
           class="form-control"
           @bind="groupName" @oninput="nameInputCallback">
       </div>
       <div class="col-auto">
         <label class="form-label">Weight</label>
-        <input 
+        <input
           class="form-control"
           @bind="weight"
           @oninput="weightInputCallback"
@@ -120,7 +120,7 @@
     </div>
   }
   <div class="d-flex justify-content-end">
-    <button 
+    <button
       class="btn btn-outline-primary"
       @onclick="AddAssignmentGroup"
     >
@@ -128,7 +128,7 @@
     </button>
   </div>
 
-  <button 
+  <button
     class="btn btn-outline-secondary"
     @onclick="SyncAssignmentGroupsWithCanvas"
     disabled="@syncingAssignmentGroups"

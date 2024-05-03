@@ -4,7 +4,15 @@ using RestSharp;
 
 namespace Management.Services.Canvas;
 
-public class CanvasAssignmentGroupService
+
+public interface ICanvasAssignmentGroupService
+{
+  Task<IEnumerable<CanvasAssignmentGroup>> GetAll(ulong courseId);
+  Task<LocalAssignmentGroup> Create(ulong canvasCourseId, LocalAssignmentGroup localAssignmentGroup);
+  Task Update(ulong canvasCourseId, LocalAssignmentGroup localAssignmentGroup);
+
+}
+public class CanvasAssignmentGroupService: ICanvasAssignmentGroupService
 {
   private readonly IWebRequestor webRequestor;
   private readonly CanvasServiceUtils utils;

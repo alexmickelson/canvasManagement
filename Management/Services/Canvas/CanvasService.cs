@@ -9,26 +9,43 @@ using RestSharp;
 
 namespace Management.Services.Canvas;
 
+public interface ICanvasService
+{
+  ICanvasAssignmentService Assignments { get; }
+  ICanvasAssignmentGroupService AssignmentGroups { get; }
+  ICanvasModuleService Modules { get; }
+  ICanvasQuizService Quizzes { get; }
+  ICanvasCoursePageService Pages { get; }
+  Task<IEnumerable<EnrollmentTermModel>> GetTerms();
+  Task<IEnumerable<CourseModel>> GetCourses(ulong termId);
+  Task<CourseModel> GetCourse(ulong courseId);
+  Task<IEnumerable<EnrollmentTermModel>> GetCurrentTermsFor(DateTime? queryDate = null);
+  Task UpdateModuleItem(ulong canvasCourseId, ulong canvasModuleId, CanvasModuleItem item);
+  Task CreateModuleItem(ulong canvasCourseId, ulong canvasModuleId, string title, string type, ulong contentId);
+  Task CreateModuleItem(ulong canvasCourseId, ulong canvasModuleId, string title, string type, string contentId);
+  Task CreatePageModuleItem(ulong canvasCourseId, ulong canvasModuleId, string title, CanvasPage canvasPage);
+}
+
 public class CanvasService(
   IWebRequestor webRequestor,
   CanvasServiceUtils utils,
-  CanvasAssignmentService Assignments,
-  CanvasAssignmentGroupService AssignmentGroups,
-  CanvasModuleService Modules,
-  CanvasQuizService Quizzes,
-  CanvasCoursePageService Pages,
-  MyLogger<CanvasService> logger
-)
+  ICanvasAssignmentService Assignments,
+  ICanvasAssignmentGroupService AssignmentGroups,
+  ICanvasModuleService Modules,
+  ICanvasQuizService Quizzes,
+  ICanvasCoursePageService Pages,
+  MyLogger<ICanvasService> logger
+):ICanvasService
 {
   private readonly IWebRequestor webRequestor = webRequestor;
   private readonly CanvasServiceUtils utils = utils;
-  private readonly MyLogger<CanvasService> logger = logger;
+  private readonly MyLogger<ICanvasService> logger = logger;
 
-  public CanvasAssignmentService Assignments { get; } = Assignments;
-  public CanvasAssignmentGroupService AssignmentGroups { get; } = AssignmentGroups;
-  public CanvasModuleService Modules { get; } = Modules;
-  public CanvasQuizService Quizzes { get; } = Quizzes;
-  public CanvasCoursePageService Pages { get; } = Pages;
+  public ICanvasAssignmentService Assignments { get; } = Assignments;
+  public ICanvasAssignmentGroupService AssignmentGroups { get; } = AssignmentGroups;
+  public ICanvasModuleService Modules { get; } = Modules;
+  public ICanvasQuizService Quizzes { get; } = Quizzes;
+  public ICanvasCoursePageService Pages { get; } = Pages;
 
   public async Task<IEnumerable<EnrollmentTermModel>> GetTerms()
   {

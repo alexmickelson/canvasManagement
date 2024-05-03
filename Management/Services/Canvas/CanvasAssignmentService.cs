@@ -3,12 +3,28 @@ using LocalModels;
 using RestSharp;
 
 namespace Management.Services.Canvas;
-
+public interface ICanvasAssignmentService
+{
+  Task<IEnumerable<CanvasAssignment>> GetAll(ulong courseId);
+  Task<ulong> Create(
+    ulong canvasCourseId,
+    LocalAssignment localAssignment,
+    ulong? canvasAssignmentGroupId
+  );
+  Task Update(
+    ulong courseId,
+    ulong canvasAssignmentId,
+    LocalAssignment localAssignment,
+    ulong? canvasAssignmentGroupId
+  );
+  Task Delete(ulong courseId, ulong assignmentCanvasId, string assignmentName);
+  Task CreateRubric(ulong courseId, ulong assignmentCanvasId, LocalAssignment localAssignment);
+}
 public class CanvasAssignmentService(
   IWebRequestor webRequestor,
   CanvasServiceUtils utils,
   MyLogger<CanvasAssignmentService> logger
-  )
+  ): ICanvasAssignmentService
 {
   private readonly IWebRequestor webRequestor = webRequestor;
   private readonly CanvasServiceUtils utils = utils;

@@ -2,6 +2,7 @@ using RestSharp;
 
 namespace Management.Services.Canvas;
 
+
 public class CanvasServiceUtils
 {
   private const string BaseUrl = "https://snow.instructure.com/api/v1/";

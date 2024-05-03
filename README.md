@@ -46,3 +46,5 @@ make the ux easier to change course pages
 schedule planning view? just outline concepts? (maybe some non-canvas scheduled thing that only shows up in planner? like a note, could be de-emphasized in webpage)
 
 holiday schedule
+
+multi-seciton support for due dates/times

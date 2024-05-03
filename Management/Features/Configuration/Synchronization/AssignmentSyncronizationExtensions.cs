@@ -16,7 +16,7 @@ public static partial class AssignmentSyncronizationExtensions
     ulong canvasCourseId,
     LocalAssignment localAssignment,
     IEnumerable<CanvasAssignment> canvasAssignments,
-    CanvasService canvas
+    ICanvasService canvas
   )
   {
     var canvasAssignment = canvasAssignments.FirstOrDefault(
@@ -42,7 +42,7 @@ public static partial class AssignmentSyncronizationExtensions
     ulong canvasCourseId,
     LocalAssignment localAssignment,
     CanvasAssignment canvasAssignment,
-    CanvasService canvas,
+    ICanvasService canvas,
     ulong? canvasAssignmentGroupId
   )
   {

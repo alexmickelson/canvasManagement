@@ -11,7 +11,7 @@ public static partial class AssignmentGroupSyncronizationExtensions
     this LocalCourse localCourse,
     ulong courseCanvasId,
     IEnumerable<CanvasAssignmentGroup> canvasAssignmentGroups,
-    CanvasService canvas
+    ICanvasService canvas
   )
   {
     var canvasAssignmentGroupIds = canvasAssignmentGroups.Select(g => g.Id).ToArray();

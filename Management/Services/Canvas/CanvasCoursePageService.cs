@@ -6,11 +6,18 @@ using LocalModels;
 using RestSharp;
 
 namespace Management.Services.Canvas;
+public interface ICanvasCoursePageService
+{
+  Task<IEnumerable<CanvasPage>> GetAll(ulong courseId);
+  Task<CanvasPage> Create(ulong canvasCourseId, LocalCoursePage localCourse);
+  Task Update(ulong courseId, ulong canvasPageId, LocalCoursePage localCoursePage);
+  Task Delete(ulong courseId, ulong canvasPageId);
+}
 public class CanvasCoursePageService(
   IWebRequestor webRequestor,
   CanvasServiceUtils utils,
   MyLogger<CanvasCoursePageService> logger
-  )
+  ) : ICanvasCoursePageService
 {
   private readonly IWebRequestor webRequestor = webRequestor;
   private readonly CanvasServiceUtils utils = utils;

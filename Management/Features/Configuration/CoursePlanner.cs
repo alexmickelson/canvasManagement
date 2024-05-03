@@ -16,7 +16,7 @@ public class CoursePlanner
 {
   private readonly MyLogger<CoursePlanner> logger;
   private readonly FileStorageManager fileStorageManager;
-  private readonly CanvasService canvas;
+  private readonly ICanvasService canvas;
   private readonly ILogger<CoursePlanner> _otherLogger;
 
   public bool LoadingCanvasData { get; internal set; } = false;
@@ -24,7 +24,7 @@ public class CoursePlanner
   public CoursePlanner(
     MyLogger<CoursePlanner> logger,
     FileStorageManager fileStorageManager,
-    CanvasService canvas,
+    ICanvasService canvas,
     ILogger<CoursePlanner> otherLogger
   )
   {
