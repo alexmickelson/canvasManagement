@@ -39,6 +39,7 @@ public class CoursePlanner
   private int _debounceInterval = 1000;
   private LocalCourse? _localCourse { get; set; }
   private LocalCourse? _lastSavedCourse { get; set; }
+  private string loadedCourseName = "";
   public LocalCourse? LocalCourse
   {
     get => _localCourse;
@@ -48,10 +49,13 @@ public class CoursePlanner
       {
         _localCourse = null;
         StateHasChanged?.Invoke();
+
+        loadedCourseName = "";
         return;
       }
 
       var verifiedCourse = value.GeneralCourseCleanup();
+      loadedCourseName = verifiedCourse.Settings.Name;
 
       if (_localCourse == null)
       {
@@ -61,46 +65,54 @@ public class CoursePlanner
         return;
       }
 
-      _debounceTimer?.Dispose();
-      _debounceTimer = new Timer(
-        async (_) => await saveCourseToFile(verifiedCourse),
-        null,
-        _debounceInterval,
-        Timeout.Infinite
-      );
+      saveCourseToFile(verifiedCourse);
 
       _localCourse = verifiedCourse;
       StateHasChanged?.Invoke();
     }
   }
 
-  private async Task saveCourseToFile(LocalCourse courseAsOfDebounce)
+  public async Task LoadCourseByName(string courseName)
+  {
+
+  }
+
+  private void saveCourseToFile(LocalCourse courseAsOfDebounce)
   {
     _debounceTimer?.Dispose();
+    _debounceTimer = new Timer(
+        async (_) =>
+        {
+          _debounceTimer?.Dispose();
 
-    // ignore initial load of course
-    if (LocalCourse == null)
-    {
-      logger.Trace("saving course as of debounce call time");
-      await fileStorageManager.SaveCourseAsync(courseAsOfDebounce, null);
-      _lastSavedCourse = courseAsOfDebounce;
-    }
-    else
-    {
-      if (_lastSavedCourse == null)
-      {
-        logger.Trace("not saving course, no prevous saved course");
-        _lastSavedCourse = LocalCourse ?? courseAsOfDebounce;
-        return;
-      }
+          // ignore initial load of course
+          if (LocalCourse == null)
+          {
+            logger.Trace("saving course as of debounce call time");
+            await fileStorageManager.SaveCourseAsync(courseAsOfDebounce, null);
+            _lastSavedCourse = courseAsOfDebounce;
+          }
+          else
+          {
+            if (_lastSavedCourse == null)
+            {
+              logger.Trace("not saving course, no prevous saved course");
+              _lastSavedCourse = LocalCourse ?? courseAsOfDebounce;
+              return;
+            }
 
 
-      logger.Trace("Saving latest version of file");
-      var courseToSave = LocalCourse;
-      await fileStorageManager.SaveCourseAsync(courseToSave, _lastSavedCourse);
-      _lastSavedCourse = courseToSave;
+            logger.Trace("Saving latest version of file");
+            var courseToSave = LocalCourse;
+            await fileStorageManager.SaveCourseAsync(courseToSave, _lastSavedCourse);
+            _lastSavedCourse = courseToSave;
 
-    }
+          }
+        },
+        null,
+        _debounceInterval,
+        Timeout.Infinite
+      );
   }
 
   public event Action? StateHasChanged;

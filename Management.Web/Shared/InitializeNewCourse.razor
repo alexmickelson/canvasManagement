@@ -26,6 +26,7 @@
       this.InvokeAsync(updateCourses);
     }
   }
+  
   private EnrollmentTermModel? selectedTerm
   {
     get => terms?.FirstOrDefault(t => t.Id == selectedTermId);

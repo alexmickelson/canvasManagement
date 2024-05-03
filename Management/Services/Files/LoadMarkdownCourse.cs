@@ -12,7 +12,7 @@ public class CourseMarkdownLoader
     _basePath = fileConfig.GetBasePath();
   }
 
-  public async Task<IEnumerable<LocalCourse>> LoadSavedMarkdownCourses()
+  public async Task<IEnumerable<LocalCourse>> LoadSavedCourses()
   {
     var courseDirectories = Directory.GetDirectories(_basePath);
 

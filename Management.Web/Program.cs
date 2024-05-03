@@ -82,7 +82,12 @@ builder.Services.AddScoped<ICanvasService, CanvasService>();
 
 builder.Services.AddScoped<MarkdownCourseSaver>();
 builder.Services.AddScoped<CourseMarkdownLoader>();
-builder.Services.AddScoped<IFileStorageManager,FileStorageManager>();
+builder.Services.AddScoped<IFileStorageManager>(sp =>
+{
+  var manager = ActivatorUtilities.CreateInstance<FileStorageManager>(sp);
+  var logger = sp.GetRequiredService<ILogger<FileStorageManagerCached>>();
+  return new FileStorageManagerCached(manager, logger);
+});
 
 builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentEditorContext>();

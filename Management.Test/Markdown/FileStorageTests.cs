@@ -63,7 +63,7 @@ public class FileStorageTests
 
     await fileManager.SaveCourseAsync(testCourse, null);
 
-    var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
+    var loadedCourses = await fileManager.LoadSavedCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
 
     loadedCourse.Should().BeEquivalentTo(testCourse);
@@ -88,7 +88,7 @@ public class FileStorageTests
 
     await fileManager.SaveCourseAsync(testCourse, null);
 
-    var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
+    var loadedCourses = await fileManager.LoadSavedCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
 
     loadedCourse.Settings.Should().BeEquivalentTo(testCourse.Settings);
@@ -113,7 +113,7 @@ public class FileStorageTests
 
     await fileManager.SaveCourseAsync(testCourse, null);
 
-    var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
+    var loadedCourses = await fileManager.LoadSavedCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
 
     loadedCourse.Modules.Should().BeEquivalentTo(testCourse.Modules);
@@ -151,7 +151,7 @@ public class FileStorageTests
 
     await fileManager.SaveCourseAsync(testCourse, null);
 
-    var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
+    var loadedCourses = await fileManager.LoadSavedCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
 
     var actualAssignments = loadedCourse.Modules.First().Assignments;
@@ -197,7 +197,7 @@ public class FileStorageTests
 
     await fileManager.SaveCourseAsync(testCourse, null);
 
-    var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
+    var loadedCourses = await fileManager.LoadSavedCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
 
     loadedCourse.Modules.First().Quizzes.Should().BeEquivalentTo(testCourse.Modules.First().Quizzes);
@@ -264,7 +264,7 @@ public class FileStorageTests
 
     await fileManager.SaveCourseAsync(testCourse, null);
 
-    var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
+    var loadedCourses = await fileManager.LoadSavedCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
 
     loadedCourse.Should().BeEquivalentTo(testCourse);
@@ -303,7 +303,7 @@ public class FileStorageTests
 
     await fileManager.SaveCourseAsync(testCourse, null);
 
-    var loadedCourses = await fileManager.LoadSavedMarkdownCourses();
+    var loadedCourses = await fileManager.LoadSavedCourses();
     var loadedCourse = loadedCourses.First(c => c.Settings.Name == testCourse.Settings.Name);
 
     loadedCourse.Should().BeEquivalentTo(testCourse);
