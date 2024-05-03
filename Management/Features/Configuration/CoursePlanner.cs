@@ -15,7 +15,7 @@ namespace Management.Planner;
 public class CoursePlanner
 {
   private readonly MyLogger<CoursePlanner> logger;
-  private readonly FileStorageManager fileStorageManager;
+  private readonly IFileStorageManager fileStorageManager;
   private readonly ICanvasService canvas;
   private readonly ILogger<CoursePlanner> _otherLogger;
 
@@ -23,7 +23,7 @@ public class CoursePlanner
 
   public CoursePlanner(
     MyLogger<CoursePlanner> logger,
-    FileStorageManager fileStorageManager,
+    IFileStorageManager fileStorageManager,
     ICanvasService canvas,
     ILogger<CoursePlanner> otherLogger
   )

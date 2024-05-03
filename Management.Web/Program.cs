@@ -82,7 +82,7 @@ builder.Services.AddScoped<ICanvasService, CanvasService>();
 
 builder.Services.AddScoped<MarkdownCourseSaver>();
 builder.Services.AddScoped<CourseMarkdownLoader>();
-builder.Services.AddScoped<FileStorageManager>();
+builder.Services.AddScoped<IFileStorageManager,FileStorageManager>();
 
 builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentEditorContext>();

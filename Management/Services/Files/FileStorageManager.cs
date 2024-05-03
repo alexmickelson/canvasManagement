@@ -1,7 +1,15 @@
 using LocalModels;
 using Management.Services;
 
-public class FileStorageManager
+public interface IFileStorageManager
+{
+  Task SaveCourseAsync(LocalCourse course, LocalCourse? previouslyStoredCourse);
+  Task<IEnumerable<LocalCourse>> LoadSavedCourses();
+  Task<IEnumerable<LocalCourse>> LoadSavedMarkdownCourses();
+  IEnumerable<string> GetEmptyDirectories();
+}
+
+public class FileStorageManager : IFileStorageManager
 {
   private readonly MyLogger<FileStorageManager> logger;
   private readonly CourseMarkdownLoader _courseMarkdownLoader;

@@ -9,7 +9,7 @@ using NUnit.Framework.Internal;
 
 public class FileStorageTests
 {
-  private FileStorageManager fileManager { get; set; }
+  private IFileStorageManager fileManager { get; set; }
 
 
   private static string setupTempDirectory()
