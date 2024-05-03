@@ -11,7 +11,6 @@ global using Management.Services.Canvas;
 global using Management.Web.Shared;
 global using Management.Web.Shared.Components;
 using dotenv.net;
-using Management.Actors;
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -92,13 +91,6 @@ builder.Services.AddScoped<QuizEditorContext>();
 builder.Services.AddScoped<DragContainer>();
 
 builder.Services.AddSingleton<FileConfiguration>();
-
-
-// exposing actor service to controllers
-builder.Services.AddSingleton<IActorBridge, AkkaService>();
-
-// starting actor service while enabling it to use dependency injection
-builder.Services.AddHostedService<AkkaService>(sp => (AkkaService)sp.GetRequiredService<IActorBridge>());
 
 builder.Services.AddResponseCompression(opts =>
 {

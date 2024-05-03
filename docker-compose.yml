@@ -22,8 +22,8 @@ services:
       - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/fall_ux
       - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/fall_advanced_frontend
       - ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/fall_intro_to_web
-      - ~/projects/faculty/1420/2024-fall/modules:/app/storage/fall_1420
-      - ~/projects/faculty/1425/2024-fall/modules:/app/storage/fall_1425
+      - ~/projects/faculty/1420/2024-fall/Modules:/app/storage/fall_1420
+      - ~/projects/faculty/1425/2024-fall/Modules:/app/storage/fall_1425
 
 
 
