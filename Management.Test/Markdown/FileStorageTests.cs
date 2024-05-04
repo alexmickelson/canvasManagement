@@ -5,14 +5,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NSubstitute;
-using NUnit.Framework.Internal;
 
 public class FileStorageTests
 {
-  private IFileStorageManager fileManager { get; set; }
+  private FileStorageManager fileManager { get; set; }
 
 
-  private static string setupTempDirectory()
+  public FileStorageTests()
   {
     var tempDirectory = Path.GetTempPath();
     var storageDirectory = tempDirectory + "fileStorageTests";
@@ -29,14 +28,6 @@ public class FileStorageTests
         dir.Delete(true);
     }
 
-    return storageDirectory;
-  }
-
-  [SetUp]
-  public void SetUp()
-  {
-    var storageDirectory = setupTempDirectory();
-
     var fileManagerLogger = new MyLogger<FileStorageManager>(NullLogger<FileStorageManager>.Instance);
     var markdownLoaderLogger = new MyLogger<CourseMarkdownLoader>(NullLogger<CourseMarkdownLoader>.Instance);
     var markdownSaverLogger = new MyLogger<MarkdownCourseSaver>(NullLogger<MarkdownCourseSaver>.Instance);
@@ -52,7 +43,7 @@ public class FileStorageTests
     fileManager = new FileStorageManager(fileManagerLogger, markdownLoader, markdownSaver, otherLogger, fileConfiguration);
   }
 
-  [Test]
+  [Fact]
   public async Task EmptyCourse_CanBeSavedAndLoaded()
   {
     LocalCourse testCourse = new LocalCourse
@@ -69,7 +60,7 @@ public class FileStorageTests
     loadedCourse.Should().BeEquivalentTo(testCourse);
   }
 
-  [Test]
+  [Fact]
   public async Task CourseSettings_CanBeSavedAndLoaded()
   {
     LocalCourse testCourse = new()
@@ -95,7 +86,7 @@ public class FileStorageTests
   }
 
 
-  [Test]
+  [Fact]
   public async Task EmptyCourseModules_CanBeSavedAndLoaded()
   {
     LocalCourse testCourse = new()
@@ -119,7 +110,7 @@ public class FileStorageTests
     loadedCourse.Modules.Should().BeEquivalentTo(testCourse.Modules);
   }
 
-  [Test]
+  [Fact]
   public async Task CourseModules_WithAssignments_CanBeSavedAndLoaded()
   {
     LocalCourse testCourse = new()
@@ -160,7 +151,7 @@ public class FileStorageTests
   }
 
 
-  [Test]
+  [Fact]
   public async Task CourseModules_WithQuizzes_CanBeSavedAndLoaded()
   {
     LocalCourse testCourse = new()
@@ -204,7 +195,7 @@ public class FileStorageTests
   }
 
 
-  [Test]
+  [Fact]
   public async Task MarkdownStorage_FullyPopulated_DoesNotLoseData()
   {
     LocalCourse testCourse = new()
@@ -271,7 +262,7 @@ public class FileStorageTests
   }
 
 
-  [Test]
+  [Fact]
   public async Task MarkdownStorage_CanPersistPages()
   {
     LocalCourse testCourse = new()

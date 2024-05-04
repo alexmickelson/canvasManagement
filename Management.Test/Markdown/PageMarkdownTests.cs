@@ -2,7 +2,7 @@ using LocalModels;
 
 public class PageMarkdownTests
 {
-  [Test]
+  [Fact]
   public void TestCanParsePage()
   {
     var page = new LocalCoursePage

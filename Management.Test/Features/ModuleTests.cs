@@ -1,6 +1,6 @@
 // public class ModuleTests
 // {
-//   [Test]
+//   [Fact]
 //   public void CanAddModule()
 //   {
 //     var manager = new ModuleManager();
@@ -11,7 +11,7 @@
 //     manager.Modules.First().Should().Be(module);
 //   }
 
-//   [Test]
+//   [Fact]
 //   public void CanAddAssignmentToCorrectModule()
 //   {
 //     var manager = new ModuleManager();

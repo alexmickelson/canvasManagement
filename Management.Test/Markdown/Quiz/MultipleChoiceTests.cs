@@ -2,7 +2,7 @@ using LocalModels;
 
 public class MultipleChoiceTests
 {
-  [Test]
+  [Fact]
   public void QuzMarkdownIncludesMultipleChoiceQuestion()
   {
     var quiz = new LocalQuiz()
@@ -58,7 +58,7 @@ endline
   }
 
 
-  [Test]
+  [Fact]
   public void LetterOptionalForMultipleChoice()
   {
 

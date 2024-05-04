@@ -48,3 +48,5 @@ schedule planning view? just outline concepts? (maybe some non-canvas scheduled 
 holiday schedule
 
 multi-seciton support for due dates/times
+
+better error handling when files are unparseable

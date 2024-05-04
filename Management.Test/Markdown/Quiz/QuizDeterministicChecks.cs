@@ -4,7 +4,7 @@ using LocalModels;
 public class QuizDeterministicChecks
 {
 
-  [Test]
+  [Fact]
   public void SerializationIsDeterministic_EmptyQuiz()
   {
     var quiz = new LocalQuiz()
@@ -23,7 +23,7 @@ public class QuizDeterministicChecks
     parsedQuiz.Should().BeEquivalentTo(quiz);
   }
 
-  [Test]
+  [Fact]
   public void SerializationIsDeterministic_ShowCorrectAnswers()
   {
     var quiz = new LocalQuiz()
@@ -43,7 +43,7 @@ public class QuizDeterministicChecks
     parsedQuiz.Should().BeEquivalentTo(quiz);
   }
 
-  [Test]
+  [Fact]
   public void SerializationIsDeterministic_ShortAnswer()
   {
     var quiz = new LocalQuiz()
@@ -71,7 +71,7 @@ public class QuizDeterministicChecks
     parsedQuiz.Should().BeEquivalentTo(quiz);
   }
 
-  [Test]
+  [Fact]
   public void SerializationIsDeterministic_Essay()
   {
     var quiz = new LocalQuiz()
@@ -99,7 +99,7 @@ public class QuizDeterministicChecks
     parsedQuiz.Should().BeEquivalentTo(quiz);
   }
 
-  [Test]
+  [Fact]
   public void SerializationIsDeterministic_MultipleAnswer()
   {
     var quiz = new LocalQuiz()
@@ -138,7 +138,7 @@ public class QuizDeterministicChecks
     parsedQuiz.Should().BeEquivalentTo(quiz);
   }
 
-  [Test]
+  [Fact]
   public void SerializationIsDeterministic_MultipleChoice()
   {
     var quiz = new LocalQuiz()
@@ -176,7 +176,7 @@ public class QuizDeterministicChecks
     var parsedQuiz = LocalQuiz.ParseMarkdown(quizMarkdown);
     parsedQuiz.Should().BeEquivalentTo(quiz);
   }
-  [Test]
+  [Fact]
   public void SerializationIsDeterministic_Matching()
   {
     var quiz = new LocalQuiz()

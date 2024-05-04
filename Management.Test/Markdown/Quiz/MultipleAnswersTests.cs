@@ -3,7 +3,7 @@ using LocalModels;
 public class MultipleAnswersTests
 {
 
-  [Test]
+  [Fact]
   public void QuzMarkdownIncludesMultipleAnswerQuestion()
   {
     var quiz = new LocalQuiz()
@@ -43,7 +43,7 @@ oneline question
     markdown.Should().Contain(expectedQuestionString);
   }
 
-  [Test]
+  [Fact]
   public void CanParseQuestionWithMultipleAnswers()
   {
     var rawMarkdownQuiz = @"
@@ -81,7 +81,7 @@ Which events are triggered when the user clicks on an input field?
   }
 
 
-  [Test]
+  [Fact]
   public void CanUseBracesInAnswerFormultipleAnswer()
   {
     var rawMarkdownQuestion = @"
@@ -95,7 +95,7 @@ Which events are triggered when the user clicks on an input field?
     question.Answers.Count().Should().Be(2);
   }
   
-  [Test]
+  [Fact]
   public void CanUseBracesInAnswerFormultipleAnswer_MultiLine()
   {
     var rawMarkdownQuestion = @"

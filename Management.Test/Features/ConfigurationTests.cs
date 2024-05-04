@@ -2,7 +2,7 @@
 
 // public class ConfigurationTests
 // {
-//   [Test]
+//   [Fact]
 //   public void TestCanCreateConfigFromTermAndDays()
 //   {
 //     DateTime startAt = new DateTime(2022, 1, 1);

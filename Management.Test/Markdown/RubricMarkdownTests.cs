@@ -3,7 +3,7 @@ using LocalModels;
 public class RubricMarkdownTests
 {
 
-  [Test]
+  [Fact]
   public void TestCanParseOneItem()
   {
     var rawRubric = @"
@@ -17,7 +17,7 @@ public class RubricMarkdownTests
     rubric.First().Points.Should().Be(2);
   }
 
-  [Test]
+  [Fact]
   public void TestCanParseMultipleItems()
   {
     var rawRubric = @"
@@ -32,7 +32,7 @@ public class RubricMarkdownTests
     rubric.ElementAt(1).Points.Should().Be(3);
   }
 
-  [Test]
+  [Fact]
   public void TestCanParseSinglePoint()
   {
     var rawRubric = @"
@@ -45,7 +45,7 @@ public class RubricMarkdownTests
     rubric.First().Points.Should().Be(1);
   }
 
-  [Test]
+  [Fact]
   public void TestCanParseSingleExtraCredit_LowerCase()
   {
     var rawRubric = @"
@@ -57,7 +57,7 @@ public class RubricMarkdownTests
     rubric.First().Label.Should().Be("(extra credit) this is the task");
   }
 
-  [Test]
+  [Fact]
   public void TestCanParseSingleExtraCredit_UpperCase()
   {
     var rawRubric = @"
@@ -69,7 +69,7 @@ public class RubricMarkdownTests
     rubric.First().Label.Should().Be("(Extra Credit) this is the task");
   }
 
-  [Test]
+  [Fact]
   public void TestCanParseFloatingPointNubmers()
   {
     var rawRubric = @"
@@ -79,7 +79,7 @@ public class RubricMarkdownTests
     var rubric = LocalAssignment.ParseRubricMarkdown(rawRubric);
     rubric.First().Points.Should().Be(1.5);
   }
-  [Test]
+  [Fact]
   public void TestCanParseNegativeNubmers()
   {
     var rawRubric = @"
@@ -89,7 +89,7 @@ public class RubricMarkdownTests
     var rubric = LocalAssignment.ParseRubricMarkdown(rawRubric);
     rubric.First().Points.Should().Be(-2.0);
   }
-  [Test]
+  [Fact]
   public void TestCanParseNegativeFloatingPointNubmers()
   {
     var rawRubric = @"

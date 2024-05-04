@@ -1,7 +1,7 @@
 using LocalModels;
 using Management.Services;
 
-public class FileStorageManager : IFileStorageManager
+public class FileStorageManager
 {
   private readonly MyLogger<FileStorageManager> logger;
   private readonly CourseMarkdownLoader _courseMarkdownLoader;
@@ -39,7 +39,7 @@ public class FileStorageManager : IFileStorageManager
     return await _courseMarkdownLoader.LoadSavedCourses();
   }
 
-  public IEnumerable<string> GetEmptyDirectories()
+  public async Task<IEnumerable<string>> GetEmptyDirectories()
   {
     if (!Directory.Exists(_basePath))
       throw new DirectoryNotFoundException($"Cannot get empty directories,  {_basePath} does not exist");

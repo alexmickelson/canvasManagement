@@ -9,7 +9,7 @@
 
 // public class ICanvasServiceTests
 // {
-//   [Test]
+//   [Fact]
 //   public async Task CanReadCanvasSemesters()
 //   {
 //     var expectedTerms = new EnrollmentTermModel[] {
@@ -28,7 +28,7 @@
 //     canvasTerms.Should().BeEquivalentTo(expectedTerms);
 //   }
 
-//   [Test]
+//   [Fact]
 //   public async Task CanGetActiveTerms()
 //   {
 //     var expectedTerms = new EnrollmentTermModel[] {

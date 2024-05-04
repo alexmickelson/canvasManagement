@@ -2,7 +2,7 @@ using LocalModels;
 
 public class MatchingTests
 {
-  [Test]
+  [Fact]
   public void CanParseMatchingQuestion()
   {
     var rawMarkdownQuiz = @"
@@ -29,7 +29,7 @@ Match the following terms & definitions
     firstQuestion.Answers.First().MatchedText.Should().Be("a single command to be executed");
   }
 
-  [Test]
+  [Fact]
   public void CanCreateMarkdownForMatchingQuesiton()
   {
     var rawMarkdownQuiz = @"
@@ -59,7 +59,7 @@ Match the following terms & definitions
 ^ keyword - reserved word that has special meaning in a program (e.g. class, void, static, etc.)";
     questionMarkdown.Should().Contain(expectedMarkdown);
   }
-  [Test]
+  [Fact]
   public void WhitespaceIsOptional()
   {
     var rawMarkdownQuiz = @"

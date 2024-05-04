@@ -56,7 +56,7 @@
     loadingTerms = true;
     terms = await canvas.GetCurrentTermsFor();
     loadingTerms = false;
-    directoriesNotUsed = fileStorageManager.GetEmptyDirectories();
+    directoriesNotUsed = await fileStorageManager.GetEmptyDirectories();
   }
 
   private async Task SaveNewCourse()

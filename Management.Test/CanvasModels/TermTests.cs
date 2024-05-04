@@ -3,7 +3,7 @@ using CanvasModel.EnrollmentTerms;
 
 public class DeserializationTests
 {
-  [Test]
+  [Fact]
   public void TestTerm()
   {
 

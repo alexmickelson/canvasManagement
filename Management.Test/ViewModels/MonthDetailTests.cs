@@ -2,7 +2,7 @@ using Management.Web.Pages.Course.CourseCalendar;
 
 public class MonthDetailTests
 {
-  [Test]
+  [Fact]
   public void TestCanGetMonthName()
   {
     var calendarMonth = new CalendarMonth(2022, 2);

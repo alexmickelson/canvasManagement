@@ -4,7 +4,7 @@ using LocalModels;
 // try to follow syntax from https://github.com/gpoore/text2qti
 public class QuizMarkdownTests
 {
-  [Test]
+  [Fact]
   public void CanSerializeQuizToMarkdown()
   {
     var quiz = new LocalQuiz()
@@ -37,7 +37,7 @@ this is my description in markdown
   }
 
 
-  [Test]
+  [Fact]
   public void TestCanParseMarkdownQuizWithNoQuestions()
   {
     var rawMarkdownQuiz = new StringBuilder();
@@ -68,7 +68,7 @@ this is my description in markdown
     quiz.AllowedAttempts.Should().Be(-1);
     quiz.Description.Should().Be(expectedDescription.ToString());
   }
-  [Test]
+  [Fact]
   public void TestCanParseMarkdownQuizPassword()
   {
 
@@ -94,7 +94,7 @@ this is my description in markdown
     quiz.Password.Should().Be(password);
   }
 
-  [Test]
+  [Fact]
   public void TestCanParseMarkdownQuiz_CanConfigureToShowCorrectAnswers()
   {
     var rawMarkdownQuiz = new StringBuilder();
@@ -118,7 +118,7 @@ this is my description in markdown
     quiz.showCorrectAnswers.Should().BeFalse();
   }
 
-  [Test]
+  [Fact]
   public void TestCanParseQuizWithQuestions()
   {
     var rawMarkdownQuiz = @"
@@ -159,7 +159,7 @@ b) false
     firstQuestion.Answers.ElementAt(1).Text.Should().Contain("endline");
   }
 
-  [Test]
+  [Fact]
   public void CanParseMultipleQuestions()
   {
     var rawMarkdownQuiz = @"
@@ -192,7 +192,7 @@ b) false
     secondQuestion.QuestionType.Should().Be(QuestionType.MULTIPLE_CHOICE);
   }
 
-  [Test]
+  [Fact]
   public void ShortAnswerToMarkdown_IsCorrect()
   {
     var rawMarkdownQuiz = @"
@@ -220,7 +220,7 @@ Which events are triggered when the user clicks on an input field?
 short_answer";
     questionMarkdown.Should().Contain(expectedMarkdown);
   }
-  [Test]
+  [Fact]
   public void NegativePoints_IsAllowed()
   {
     var rawMarkdownQuiz = @"
@@ -244,7 +244,7 @@ short answer
     var firstQuestion = quiz.Questions.First();
     firstQuestion.Points.Should().Be(-4);
   }
-  [Test]
+  [Fact]
   public void FloatingPointPoints_IsAllowed()
   {
     var rawMarkdownQuiz = @"

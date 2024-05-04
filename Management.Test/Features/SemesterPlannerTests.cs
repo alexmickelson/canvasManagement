@@ -4,7 +4,7 @@
 
 // public class SemesterPlannerTests
 // {
-//   [Test]
+//   [Fact]
 //   public void TestCanCreatePlanner()
 //   {
 
@@ -19,7 +19,7 @@
 //     semester.Months.Count().Should().Be(1);
 //   }
 
-//   [Test]
+//   [Fact]
 //   public void TestNewPlannerHasCorrectNumberOfMonths()
 //   {
 //     var config = new SemesterCalendarConfig(
@@ -33,7 +33,7 @@
 //     semester.Months.Count().Should().Be(2);
 //   }
 
-//   [Test]
+//   [Fact]
 //   public void TestNewPlannerHandlesTermsThatWrapYears()
 //   {
 //     var config = new SemesterCalendarConfig(
@@ -47,7 +47,7 @@
 //     semester.Months.Count().Should().Be(2);
 //   }
 
-//   [Test]
+//   [Fact]
 //   public void TestSemesterGetsCorrectMonths()
 //   {
 //     var config = new SemesterCalendarConfig(
@@ -63,7 +63,7 @@
 //   }
 
 
-//   [Test]
+//   [Fact]
 //   public void TestMonthsCanWrapYears()
 //   {
 //     var config = new SemesterCalendarConfig(
@@ -81,7 +81,7 @@
 //     semester.Months.Last().Year.Should().Be(2023);
 //   }
 
-//   [Test]
+//   [Fact]
 //   public void TestSemesterTracksDaysOfWeek()
 //   {
 //     DayOfWeek[] days = new DayOfWeek[] { DayOfWeek.Monday };

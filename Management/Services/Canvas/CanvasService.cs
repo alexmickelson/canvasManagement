@@ -4,7 +4,6 @@ using CanvasModel.Courses;
 using CanvasModel.EnrollmentTerms;
 using CanvasModel.Modules;
 using CanvasModel.Pages;
-using Microsoft.Extensions.Logging;
 using RestSharp;
 
 namespace Management.Services.Canvas;
@@ -35,7 +34,7 @@ public class CanvasService(
   ICanvasQuizService Quizzes,
   ICanvasCoursePageService Pages,
   MyLogger<ICanvasService> logger
-):ICanvasService
+) : ICanvasService
 {
   private readonly IWebRequestor webRequestor = webRequestor;
   private readonly CanvasServiceUtils utils = utils;

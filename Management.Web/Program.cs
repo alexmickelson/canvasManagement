@@ -1,19 +1,25 @@
 global using System.ComponentModel.DataAnnotations;
 global using System.Text.Json;
 global using System.Text.Json.Serialization;
+
 global using CanvasModel;
 global using CanvasModel.Courses;
 global using CanvasModel.EnrollmentTerms;
+
 global using LocalModels;
+
 global using Management.Planner;
 global using Management.Services;
 global using Management.Services.Canvas;
 global using Management.Web.Shared;
 global using Management.Web.Shared.Components;
+
 using dotenv.net;
+
 using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.ResponseCompression;
+
 using OpenTelemetry;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
@@ -69,25 +75,40 @@ builder.Services.AddServerSideBlazor();
 
 builder.Services.AddLogging();
 
-builder.Services.AddScoped(typeof(MyLogger<>));
+builder.Services.AddSingleton(typeof(MyLogger<>));
 
-builder.Services.AddScoped<IWebRequestor, WebRequestor>();
-builder.Services.AddScoped<CanvasServiceUtils>();
-builder.Services.AddScoped<ICanvasAssignmentService, CanvasAssignmentService>();
-builder.Services.AddScoped<ICanvasCoursePageService, CanvasCoursePageService>();
-builder.Services.AddScoped<ICanvasAssignmentGroupService, CanvasAssignmentGroupService>();
-builder.Services.AddScoped<ICanvasQuizService, CanvasQuizService>();
-builder.Services.AddScoped<ICanvasModuleService, CanvasModuleService>();
-builder.Services.AddScoped<ICanvasService, CanvasService>();
+// stateless services
+builder.Services.AddSingleton<IWebRequestor, WebRequestor>();
+builder.Services.AddSingleton<CanvasServiceUtils>();
+builder.Services.AddSingleton<ICanvasAssignmentService, CanvasAssignmentService>();
+builder.Services.AddSingleton<ICanvasCoursePageService, CanvasCoursePageService>();
+builder.Services.AddSingleton<ICanvasAssignmentGroupService, CanvasAssignmentGroupService>();
+builder.Services.AddSingleton<ICanvasQuizService, CanvasQuizService>();
+builder.Services.AddSingleton<ICanvasModuleService, CanvasModuleService>();
+builder.Services.AddSingleton<ICanvasService, CanvasService>();
 
-builder.Services.AddScoped<MarkdownCourseSaver>();
-builder.Services.AddScoped<CourseMarkdownLoader>();
-builder.Services.AddScoped<IFileStorageManager>(sp =>
+builder.Services.AddSingleton<MarkdownCourseSaver>();
+builder.Services.AddSingleton<CourseMarkdownLoader>();
+
+builder.Services.AddSingleton<FileStorageManager>();
+
+// one actor system, maybe different actor for different pages?
+builder.Services.AddSingleton<AkkaService>();
+builder.Services.AddHostedService(sp => sp.GetRequiredService<AkkaService>());
+
+
+// TODO: need to handle scoped requirements
+builder.Services.AddSingleton(sp =>
 {
-  var manager = ActivatorUtilities.CreateInstance<FileStorageManager>(sp);
-  var logger = sp.GetRequiredService<ILogger<FileStorageManagerCached>>();
-  return new FileStorageManagerCached(manager, logger);
+  var akka = sp.GetRequiredService<AkkaService>();
+  return new CanvasQueue(akka.CanvasQueueActor ?? throw new Exception("Canvas queue actor not properly created"));
 });
+builder.Services.AddSingleton<IFileStorageManager>(sp =>
+{
+  var akka = sp.GetRequiredService<AkkaService>();
+  return new LocalStorageCache(akka.StorageActor ?? throw new Exception("Canvas queue actor not properly created"));
+});
+
 
 builder.Services.AddScoped<CoursePlanner>();
 builder.Services.AddScoped<AssignmentEditorContext>();

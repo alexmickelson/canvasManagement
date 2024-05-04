@@ -2,7 +2,7 @@ using LocalModels;
 
 public class TextAnswerTests
 {
-  [Test]
+  [Fact]
   public void CanParseEssay()
   {
     var rawMarkdownQuiz = @"
@@ -28,7 +28,7 @@ essay
     firstQuestion.Text.Should().NotContain("essay");
   }
 
-  [Test]
+  [Fact]
   public void CanParseShortAnswer()
   {
     var rawMarkdownQuiz = @"
@@ -54,7 +54,7 @@ short answer
     firstQuestion.Text.Should().NotContain("short answer");
   }
 
-  [Test]
+  [Fact]
   public void ShortAnswerToMarkdown_IsCorrect()
   {
     var rawMarkdownQuiz = @"
@@ -83,7 +83,7 @@ short_answer";
     questionMarkdown.Should().Contain(expectedMarkdown);
   }
 
-  [Test]
+  [Fact]
   public void EssayQuestionToMarkdown_IsCorrect()
   {
     var rawMarkdownQuiz = @"

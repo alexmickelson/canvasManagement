@@ -1,6 +1,6 @@
 public class CalendarMonthTests
 {
-  [Test]
+  [Fact]
   public void TestCalendarMonthCanGetFirstWeek()
   {
     var month = new CalendarMonth(2023, 2);
@@ -12,7 +12,7 @@ public class CalendarMonthTests
     month.Weeks.First().Should().BeEquivalentTo(expectedFirstWeek);
   }
 
-  [Test]
+  [Fact]
   public void TestCanGetAnotherMonthsFirstWeek()
   {
     var month = new CalendarMonth(2023, 4);
@@ -24,7 +24,7 @@ public class CalendarMonthTests
     month.Weeks.First().Should().BeEquivalentTo(expectedFirstWeek);
   }
 
-  [Test]
+  [Fact]
   public void TestCorrectNumberOfWeeks()
   {
     var month = new CalendarMonth(2023, 4);
@@ -32,7 +32,7 @@ public class CalendarMonthTests
     month.Weeks.Count().Should().Be(6);
   }
 
-  [Test]
+  [Fact]
   public void TestLastWeekIsCorrect()
   {
     var month = new CalendarMonth(2023, 4);

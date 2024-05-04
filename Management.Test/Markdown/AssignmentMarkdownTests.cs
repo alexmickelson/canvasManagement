@@ -2,7 +2,7 @@ using LocalModels;
 
 public class AssignmentMarkdownTests
 {
-  [Test]
+  [Fact]
   public void TestCanParseAssignmentSettings()
   {
     var assignment = new LocalAssignment()
@@ -24,7 +24,7 @@ public class AssignmentMarkdownTests
     var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
-  [Test]
+  [Fact]
   public void AssignmentWithEmptyRubric_CanBeParsed()
   {
     var assignment = new LocalAssignment()
@@ -43,7 +43,7 @@ public class AssignmentMarkdownTests
     var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
-  [Test]
+  [Fact]
   public void AssignmentWithEmptySubmissionTypes_CanBeParsed()
   {
     var assignment = new LocalAssignment()
@@ -66,7 +66,7 @@ public class AssignmentMarkdownTests
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
 
-  [Test]
+  [Fact]
   public void AssignmentWithoutLockAtDate_CanBeParsed()
   {
     var assignment = new LocalAssignment()
@@ -89,7 +89,7 @@ public class AssignmentMarkdownTests
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
 
-  [Test]
+  [Fact]
   public void AssignmentWithoutDescription_CanBeParsed()
   {
     var assignment = new LocalAssignment()
@@ -111,7 +111,7 @@ public class AssignmentMarkdownTests
     var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
-  [Test]
+  [Fact]
   public void Assignments_CanHaveThreeDashes()
   {
     var assignment = new LocalAssignment()
