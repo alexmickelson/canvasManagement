@@ -168,7 +168,7 @@
         {
           <QuizListItem Quiz="quiz" />
         } *@
-        @foreach(var item in Module.SortedModuleItems)
+        @foreach(var item in Module.GetSortedModuleItems())
         {
           @(item switch
           {

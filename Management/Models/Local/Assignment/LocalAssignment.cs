@@ -1,7 +1,7 @@
 
 namespace LocalModels;
 
-public record LocalAssignment : IModuleItem
+public sealed record LocalAssignment : IModuleItem
 {
   private string _name = "";
   public string Name
@@ -37,4 +37,13 @@ public record LocalAssignment : IModuleItem
   public string RubricToMarkdown() => this.AssignmentRubricToMarkdown();
   public static LocalAssignment ParseMarkdown(string input) => LocalAssignmentMarkdownParser.ParseMarkdown(input);
   public static IEnumerable<RubricItem> ParseRubricMarkdown(string rawMarkdown) => LocalAssignmentMarkdownParser.ParseRubricMarkdown(rawMarkdown);
+
+
+  public bool Equals(LocalAssignment? otherAssignment)
+  {
+    return ToMarkdown() == otherAssignment?.ToMarkdown();
+  }
+
+  public override int GetHashCode() => ToMarkdown().GetHashCode();
+
 }
