@@ -26,7 +26,7 @@ Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 }
 
 ###
-POST https://snow.instructure.com/api/v1/courses/705168/assignments
+POST https://snow.instructure.com/api/v1/courses/959700/assignments
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 {
