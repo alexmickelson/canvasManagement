@@ -90,7 +90,7 @@ builder.Services.AddSingleton<ICanvasService, CanvasService>();
 builder.Services.AddSingleton<MarkdownCourseSaver>();
 builder.Services.AddSingleton<CourseMarkdownLoader>();
 
-builder.Services.AddSingleton<FileStorageManager>();
+builder.Services.AddSingleton<FileStorageService>();
 
 // one actor system, maybe different actor for different pages?
 builder.Services.AddSingleton<AkkaService>();
@@ -106,7 +106,7 @@ builder.Services.AddSingleton(sp =>
 builder.Services.AddSingleton<IFileStorageManager>(sp =>
 {
   var akka = sp.GetRequiredService<AkkaService>();
-  return new LocalStorageCache(akka.StorageActor ?? throw new Exception("Canvas queue actor not properly created"));
+  return new LocalStorageActorWrapper(akka.StorageActor ?? throw new Exception("Canvas queue actor not properly created"));
 });
 
 
@@ -145,7 +145,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseResponseCompression();
+// app.UseResponseCompression();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");

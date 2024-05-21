@@ -33,7 +33,7 @@ public class MyLogger<T>
     var finalMessage = $"[{typeof(T)}.{memberName}] {message}";
 
     _baseLogger.Log(logLevel, finalMessage);
-    Console.WriteLine(finalMessage);
+    // Console.WriteLine(finalMessage);
   }
   public void Error(
     string message,

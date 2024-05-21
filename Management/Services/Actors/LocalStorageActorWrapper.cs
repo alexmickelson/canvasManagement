@@ -2,7 +2,7 @@ using Akka.Actor;
 
 using LocalModels;
 
-public class LocalStorageCache(IActorRef storageActor) : IFileStorageManager
+public class LocalStorageActorWrapper(IActorRef storageActor) : IFileStorageManager
 {
   private readonly IActorRef storageActor = storageActor;
 

@@ -8,8 +8,7 @@ using NSubstitute;
 
 public class FileStorageTests
 {
-  private FileStorageManager fileManager { get; set; }
-
+  private FileStorageService fileManager { get; set; }
 
   public FileStorageTests()
   {
@@ -28,10 +27,10 @@ public class FileStorageTests
         dir.Delete(true);
     }
 
-    var fileManagerLogger = new MyLogger<FileStorageManager>(NullLogger<FileStorageManager>.Instance);
+    var fileManagerLogger = new MyLogger<FileStorageService>(NullLogger<FileStorageService>.Instance);
     var markdownLoaderLogger = new MyLogger<CourseMarkdownLoader>(NullLogger<CourseMarkdownLoader>.Instance);
     var markdownSaverLogger = new MyLogger<MarkdownCourseSaver>(NullLogger<MarkdownCourseSaver>.Instance);
-    var otherLogger = NullLoggerFactory.Instance.CreateLogger<FileStorageManager>();
+    var otherLogger = NullLoggerFactory.Instance.CreateLogger<FileStorageService>();
     Environment.SetEnvironmentVariable("storageDirectory", storageDirectory);
     var config = new ConfigurationBuilder()
       .AddEnvironmentVariables()
@@ -40,7 +39,7 @@ public class FileStorageTests
 
     var markdownLoader = new CourseMarkdownLoader(markdownLoaderLogger, fileConfiguration);
     var markdownSaver = new MarkdownCourseSaver(markdownSaverLogger, fileConfiguration);
-    fileManager = new FileStorageManager(fileManagerLogger, markdownLoader, markdownSaver, otherLogger, fileConfiguration);
+    fileManager = new FileStorageService(fileManagerLogger, markdownLoader, markdownSaver, otherLogger, fileConfiguration);
   }
 
   [Fact]

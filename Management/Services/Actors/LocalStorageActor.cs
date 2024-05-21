@@ -2,14 +2,16 @@ using Akka.Actor;
 
 using LocalModels;
 
+using Management.Services;
+
 using Microsoft.Extensions.DependencyInjection;
 
 public class LocalStorageActor : ReceiveActor
 {
   private readonly IServiceProvider serviceProvider;
   private readonly IServiceScope scope;
-  private readonly ILogger<CanvasQueueActor> logger;
-  private readonly FileStorageManager storage;
+  private readonly MyLogger<CanvasQueueActor> logger;
+  private readonly FileStorageService storage;
 
   private DateTime? cacheTime { get; set; } = null;
   private IEnumerable<LocalCourse>? cachedCourses { get; set; } = null;
@@ -19,8 +21,8 @@ public class LocalStorageActor : ReceiveActor
   {
     serviceProvider = serviceProviderArg;
     scope = serviceProvider.CreateScope();
-    logger = scope.ServiceProvider.GetRequiredService<ILogger<CanvasQueueActor>>();
-    storage = scope.ServiceProvider.GetRequiredService<FileStorageManager>();
+    logger = scope.ServiceProvider.GetRequiredService<MyLogger<CanvasQueueActor>>();
+    storage = scope.ServiceProvider.GetRequiredService<FileStorageService>();
 
     Receive<EmptyDirectoryAsk>(m =>
     {
@@ -31,15 +33,14 @@ public class LocalStorageActor : ReceiveActor
 
     ReceiveAsync<SavedCoursesAsk>(async m =>
     {
-      var secondsFromLastLoad = (DateTime.Now - cacheTime)?.Seconds;
+      var secondsFromLastLoad = (DateTime.Now - cacheTime)?.TotalSeconds;
 
       if (cachedCourses != null && secondsFromLastLoad < cacheSeconds)
       {
-        logger.LogInformation("returning cached courses from file");
+        logger.Log("returning cached courses from file");
         Sender.Tell(cachedCourses);
         return;
       }
-
       cachedCourses = await storage.LoadSavedCourses();
       cacheTime = DateTime.Now;
       Sender.Tell(cachedCourses);

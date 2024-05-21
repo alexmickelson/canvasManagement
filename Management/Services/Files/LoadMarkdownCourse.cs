@@ -24,6 +24,7 @@ public class CourseMarkdownLoader
           return File.Exists(settingsPath);
         })
         .Select(async d => await LoadCourseByPath(d))
+        .ToArray()
     );
     return courses.OrderBy(c => c.Settings.Name);
   }
@@ -70,6 +71,7 @@ public class CourseMarkdownLoader
     var modules = await Task.WhenAll(
       modulePaths
         .Select(loadModuleFromPath)
+        .ToArray()
     );
     return modules.OrderBy(m => m.Name);
   }
@@ -79,7 +81,7 @@ public class CourseMarkdownLoader
     var moduleName = Path.GetFileName(modulePath);
     var assignments = await loadAssignmentsFromPath(modulePath);
     var quizzes = await loadQuizzesFromPath(modulePath);
-    var pages = await loadPagesFromPath(modulePath);
+    var pages = await loadModulePagesFromPath(modulePath);
 
     return new LocalModule()
     {
@@ -125,13 +127,13 @@ public class CourseMarkdownLoader
       {
         var rawQuiz = (await File.ReadAllTextAsync(path)).Replace("\r\n", "\n");
         return LocalQuiz.ParseMarkdown(rawQuiz);
-      });
+      })
+      .ToArray();
 
     return await Task.WhenAll(quizPromises);
   }
-  private async Task<IEnumerable<LocalCoursePage>> loadPagesFromPath(string modulePath)
+  private async Task<IEnumerable<LocalCoursePage>> loadModulePagesFromPath(string modulePath)
   {
-    using var activity = DiagnosticsConfig.Source?.StartActivity("loading Pages from path");
     var pagesPath = $"{modulePath}/pages";
     if (!Directory.Exists(pagesPath))
     {
@@ -145,7 +147,8 @@ public class CourseMarkdownLoader
       {
         var rawPage = (await File.ReadAllTextAsync(path)).Replace("\r\n", "\n");
         return LocalCoursePage.ParseMarkdown(rawPage);
-      });
+      })
+      .ToArray();
 
     return await Task.WhenAll(pagePromises);
   }

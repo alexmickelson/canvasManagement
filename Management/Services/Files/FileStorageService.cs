@@ -1,19 +1,19 @@
 using LocalModels;
 using Management.Services;
 
-public class FileStorageManager
+public class FileStorageService
 {
-  private readonly MyLogger<FileStorageManager> logger;
+  private readonly MyLogger<FileStorageService> logger;
   private readonly CourseMarkdownLoader _courseMarkdownLoader;
   private readonly MarkdownCourseSaver _saveMarkdownCourse;
-  private readonly ILogger<FileStorageManager> _otherLogger;
+  private readonly ILogger<FileStorageService> _otherLogger;
   private readonly string _basePath;
 
-  public FileStorageManager(
-    MyLogger<FileStorageManager> logger,
+  public FileStorageService(
+    MyLogger<FileStorageService> logger,
     CourseMarkdownLoader courseMarkdownLoader,
     MarkdownCourseSaver saveMarkdownCourse,
-    ILogger<FileStorageManager> otherLogger,
+    ILogger<FileStorageService> otherLogger,
     FileConfiguration fileConfig
   )
   {
@@ -36,6 +36,8 @@ public class FileStorageManager
 
   public async Task<IEnumerable<LocalCourse>> LoadSavedCourses()
   {
+
+    Console.WriteLine("loading pages from file system");
     return await _courseMarkdownLoader.LoadSavedCourses();
   }
 
