@@ -12,7 +12,6 @@ public class CanvasQueueActor : ReceiveActor
   {
     serviceProvider = serviceProviderArg;
     scope = serviceProvider.CreateScope();
-    logger  = scope.ServiceProvider.GetRequiredService<ILogger<CanvasQueueActor>>();
-    
+    logger  = scope.ServiceProvider.GetRequiredService<ILogger<CanvasQueueActor>>(); 
   }
 }

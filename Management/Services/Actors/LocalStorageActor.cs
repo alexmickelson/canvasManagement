@@ -1,12 +1,11 @@
 using Akka.Actor;
-
 using LocalModels;
-
 using Management.Services;
-
 using Microsoft.Extensions.DependencyInjection;
 
-public class LocalStorageActor : ReceiveActor
+public class IStorageActor : ReceiveActor {}
+
+public class LocalStorageActor : IStorageActor
 {
   private readonly IServiceProvider serviceProvider;
   private readonly IServiceScope scope;

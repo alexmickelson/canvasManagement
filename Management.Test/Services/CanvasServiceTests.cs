@@ -21,13 +21,10 @@
 //       ),
 //     };
 //     Mock<IWebRequestor> mockRequestor = getTermsMock(expectedTerms);
-
 //     var service = new ICanvasService(mockRequestor.Object);
 //     var canvasTerms = await service.GetTerms();
-
 //     canvasTerms.Should().BeEquivalentTo(expectedTerms);
 //   }
-
 //   [Fact]
 //   public async Task CanGetActiveTerms()
 //   {
@@ -82,5 +79,4 @@
 //       .ReturnsAsync(response);
 //     return mockRequestor;
 //   }
-
 // }
