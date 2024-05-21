@@ -98,11 +98,11 @@ builder.Services.AddHostedService(sp => sp.GetRequiredService<AkkaService>());
 
 
 // TODO: need to handle scoped requirements
-builder.Services.AddSingleton(sp =>
-{
-  var akka = sp.GetRequiredService<AkkaService>();
-  return new CanvasQueue(akka.CanvasQueueActor ?? throw new Exception("Canvas queue actor not properly created"));
-});
+// builder.Services.AddSingleton(sp =>
+// {
+//   var akka = sp.GetRequiredService<AkkaService>();
+//   return new CanvasQueueActorWrapper(akka.CoursePlannerActor ?? throw new Exception("Canvas queue actor not properly created"));
+// });
 builder.Services.AddSingleton<IFileStorageManager>(sp =>
 {
   var akka = sp.GetRequiredService<AkkaService>();

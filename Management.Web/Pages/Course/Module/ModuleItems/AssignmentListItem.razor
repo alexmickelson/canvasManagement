@@ -38,7 +38,8 @@
   }
 
   private CanvasAssignment? assignmentInCanvas => planner
-    .CanvasAssignments?
+    .CanvasData?
+    .Assignments
     .FirstOrDefault(
       a => a.Name == Assignment.Name
     );
@@ -53,8 +54,7 @@
 
   private bool NeedsToBeUpdatedInCanvas => planner.LocalCourse != null
     && planner.LocalCourse.Settings.CanvasId != null
-    && planner.CanvasAssignments != null
-    && planner.CanvasModules != null
+    && planner.CanvasData != null
     && assignmentInCanvas != null
     && Assignment.NeedsUpdates(
       (CanvasAssignment)assignmentInCanvas,

@@ -87,7 +87,8 @@
   }
 
   private bool isSyncedWithCanvas => planner
-    .CanvasModules?
+    .CanvasData?
+    .Modules
     .FirstOrDefault(
       cm => cm.Name == Module.Name
     ) != null;

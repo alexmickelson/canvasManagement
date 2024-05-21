@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+
 using CanvasModel;
 using CanvasModel.Assignments;
 using CanvasModel.Courses;
@@ -6,11 +7,24 @@ using CanvasModel.EnrollmentTerms;
 using CanvasModel.Modules;
 using CanvasModel.Pages;
 using CanvasModel.Quizzes;
+
 using LocalModels;
+
 using Management.Services;
 using Management.Services.Canvas;
 
 namespace Management.Planner;
+
+
+public record CanvasCourseData
+{
+  public required IEnumerable<CanvasAssignment> Assignments { get; init; }
+  public required IEnumerable<CanvasAssignmentGroup> AssignmentGroups { get; init; }
+  public required IEnumerable<CanvasQuiz> Quizzes { get; init; }
+  public required IEnumerable<CanvasModule> Modules { get; init; }
+  public required IEnumerable<CanvasPage> Pages { get; init; }
+  public required Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> ModulesItems { get; init; }
+}
 
 public class CoursePlanner
 {
@@ -72,11 +86,6 @@ public class CoursePlanner
     }
   }
 
-  public async Task LoadCourseByName(string courseName)
-  {
-
-  }
-
   private void saveCourseToFile(LocalCourse courseAsOfDebounce)
   {
     _debounceTimer?.Dispose();
@@ -117,23 +126,10 @@ public class CoursePlanner
 
   public event Action? StateHasChanged;
 
-  public IEnumerable<CanvasAssignment>? CanvasAssignments { get; internal set; }
-  public IEnumerable<CanvasAssignmentGroup>? CanvasAssignmentGroups { get; internal set; }
-  public IEnumerable<CanvasQuiz>? CanvasQuizzes { get; internal set; }
-  public IEnumerable<CanvasModule>? CanvasModules { get; internal set; }
-  public IEnumerable<CanvasPage>? CanvasPages { get; internal set; }
-  public Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>>? CanvasModulesItems { get; internal set; }
+  public CanvasCourseData? CanvasData { get; internal set; }
 
-  public async Task<(
-    IEnumerable<CanvasAssignment> CanvasAssignments,
-    IEnumerable<CanvasModule> CanvasModules,
-    Dictionary<CanvasModule, IEnumerable<CanvasModuleItem>> CanvasModulesItems,
-    IEnumerable<CanvasQuiz> canvasQuizzes,
-    IEnumerable<CanvasAssignmentGroup> canvasAssignmentGroups,
-    IEnumerable<CanvasPage> canvasPages
-  )> LoadCanvasData()
+  public async Task LoadCanvasData()
   {
-
     using var activity = DiagnosticsConfig.Source.StartActivity("Loading Canvas Data to Course Planner");
     LoadingCanvasData = true;
     StateHasChanged?.Invoke();
@@ -147,17 +143,26 @@ public class CoursePlanner
     var assignmentGroupsTask = canvas.AssignmentGroups.GetAll(canvasId);
     var coursePagesTask = canvas.Pages.GetAll(canvasId);
 
-    CanvasAssignments = await assignmentsTask;
-    CanvasQuizzes = await quizzesTask;
-    CanvasModules = await modulesTask;
-    CanvasAssignmentGroups = await assignmentGroupsTask;
-    CanvasPages = await coursePagesTask;
 
-    CanvasModulesItems = await canvas.Modules.GetAllModulesItems(canvasId, CanvasModules);
+    var canvasAssignments = (await assignmentsTask) ?? throw new Exception("Error loading canvas assignments");
+    var canvasQuizzes = (await quizzesTask) ?? throw new Exception("Error loading canvas quizzes");
+    var canvasAssignmentGroups = (await assignmentGroupsTask) ?? throw new Exception("Error loading canvas assignment groups");
+    var canvasPages = (await coursePagesTask) ?? throw new Exception("Error loading canvas pages");
+    var canvasModules = (await modulesTask) ?? throw new Exception("Error loading canvas modules");
+    var canvasModulesItems = (await canvas.Modules.GetAllModulesItems(canvasId, canvasModules)) ?? throw new Exception("Error loading canvas module items");
+
+    CanvasData = new CanvasCourseData
+    {
+      Assignments = canvasAssignments,
+      Quizzes = canvasQuizzes,
+      AssignmentGroups = canvasAssignmentGroups,
+      Pages = canvasPages,
+      Modules = canvasModules,
+      ModulesItems = canvasModulesItems,
+    };
 
     LoadingCanvasData = false;
     StateHasChanged?.Invoke();
-    return (CanvasAssignments, CanvasModules, CanvasModulesItems, CanvasQuizzes, CanvasAssignmentGroups, CanvasPages);
   }
 
   public async Task CreateModule(LocalModule newModule)
@@ -167,14 +172,20 @@ public class CoursePlanner
     var canvasCourseId =
       LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to use to create module");
     await canvas.Modules.CreateModule(canvasCourseId, newModule.Name);
-    CanvasModules = await canvas.Modules.GetModules(canvasCourseId);
+    var canvasModules = await canvas.Modules.GetModules(canvasCourseId);
+    if (CanvasData != null)
+    {
+      CanvasData = CanvasData with
+      {
+        Modules = canvasModules
+      };
+    }
   }
 
   public void Clear()
   {
+    CanvasData = null;
     LocalCourse = null;
-    CanvasAssignments = null;
-    CanvasModules = null;
   }
 
   public async Task SyncAssignmentGroups()
@@ -185,12 +196,11 @@ public class CoursePlanner
     var canvasCourseId =
       LocalCourse.Settings.CanvasId ?? throw new Exception("no course canvas id to use to create module");
 
+    var canvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
 
-    CanvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
+    await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(canvasCourseId, canvasAssignmentGroups, canvas);
 
-    await LocalCourse.EnsureAllAssignmentGroupsExistInCanvas(canvasCourseId, CanvasAssignmentGroups, canvas);
-
-    CanvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
+    canvasAssignmentGroups = await canvas.AssignmentGroups.GetAll(canvasCourseId);
 
     LocalCourse = LocalCourse with
     {
@@ -198,12 +208,16 @@ public class CoursePlanner
       {
         AssignmentGroups = LocalCourse.Settings.AssignmentGroups.Select(g =>
         {
-          var canvasGroup = CanvasAssignmentGroups.FirstOrDefault(c => c.Name == g.Name);
+          var canvasGroup = canvasAssignmentGroups.FirstOrDefault(c => c.Name == g.Name);
           return canvasGroup == null
             ? g
             : g with { CanvasId = canvasGroup.Id };
         })
       }
+    };
+    CanvasData = CanvasData with
+    {
+      AssignmentGroups = canvasAssignmentGroups
     };
   }
 }

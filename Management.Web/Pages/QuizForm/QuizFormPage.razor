@@ -62,7 +62,7 @@
       }
       StateHasChanged();
 
-      if (planner.CanvasQuizzes == null)
+      if (planner.CanvasData == null)
       {
         await planner.LoadCanvasData();
       }
@@ -91,7 +91,7 @@
     Navigation.NavigateTo("/course/" + planner.LocalCourse?.Settings.Name);
   }
 
-  private CanvasQuiz? quizInCanvas => planner.CanvasQuizzes?.FirstOrDefault(q => q.Title == quizContext.Quiz?.Name);
+  private CanvasQuiz? quizInCanvas => planner.CanvasData?.Quizzes.FirstOrDefault(q => q.Title == quizContext.Quiz?.Name);
 
   private string canvasQuizUrl =>
   $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/quizzes/{quizInCanvas?.Id}";

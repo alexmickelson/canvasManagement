@@ -18,8 +18,8 @@
     dragContainer.DropCallback = null;
   }
   private bool existsInCanvas =>
-    planner.CanvasQuizzes != null
-      ? Quiz.QuizIsCreated(planner.CanvasQuizzes)
+    planner.CanvasData != null
+      ? Quiz.QuizIsCreated(planner.CanvasData.Quizzes)
       : false;
 
 

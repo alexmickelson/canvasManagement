@@ -32,7 +32,7 @@
 
 
   private CanvasPage? pageInCanvas =>
-    planner.CanvasPages?.FirstOrDefault(a => a.Title == pageContext.Page?.Name);
+    planner.CanvasData?.Pages.FirstOrDefault(a => a.Title == pageContext.Page?.Name);
 
 
   private string canvasPageUrl =>

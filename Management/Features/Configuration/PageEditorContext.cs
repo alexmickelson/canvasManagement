@@ -89,7 +89,7 @@ public class PageEditorContext(
       return;
     }
     await planner.LoadCanvasData();
-    if (planner.CanvasPages == null)
+    if (planner.CanvasData == null)
     {
       logger.Log("cannot add page to canvas, failed to retrieve current pages");
       return;
@@ -143,7 +143,7 @@ public class PageEditorContext(
 
 
     await planner.LoadCanvasData();
-    if (planner.CanvasPages == null)
+    if (planner.CanvasData == null)
     {
       logger.Log("cannot update page in canvas, failed to retrieve current pages");
       return;
@@ -158,7 +158,7 @@ public class PageEditorContext(
       logger.Log("Cannot update page with null local course canvas id");
       return;
     }
-    var assignmentInCanvas = planner.CanvasPages?.FirstOrDefault(p => p.PageId == canvasPageId);
+    var assignmentInCanvas = planner.CanvasData?.Pages.FirstOrDefault(p => p.PageId == canvasPageId);
     if (assignmentInCanvas == null)
     {
       logger.Log("cannot update page in canvas, could not find canvas page with id: " + canvasPageId);
@@ -184,7 +184,7 @@ public class PageEditorContext(
   private CanvasModule getCurrentCanvasModule(LocalCoursePage quiz, LocalCourse course)
   {
     var localModule = getCurrentLocalModule(quiz, course);
-    var canvasModule = planner.CanvasModules?.FirstOrDefault(m => m.Name == localModule.Name)
+    var canvasModule = planner.CanvasData?.Modules.FirstOrDefault(m => m.Name == localModule.Name)
       ?? throw new Exception($"error in page context, canvas module with name {localModule.Name} not found in planner");
     return canvasModule;
   }

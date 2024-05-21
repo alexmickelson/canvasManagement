@@ -1,15 +1,16 @@
 using Akka.Actor;
+
 using LocalModels;
+
 using Management.Services;
+
 using Microsoft.Extensions.DependencyInjection;
 
-public class IStorageActor : ReceiveActor {}
-
-public class LocalStorageActor : IStorageActor
+public class LocalStorageActor : ReceiveActor
 {
   private readonly IServiceProvider serviceProvider;
   private readonly IServiceScope scope;
-  private readonly MyLogger<CanvasQueueActor> logger;
+  private readonly MyLogger<LocalStorageActor> logger;
   private readonly FileStorageService storage;
 
   private DateTime? cacheTime { get; set; } = null;
@@ -20,7 +21,7 @@ public class LocalStorageActor : IStorageActor
   {
     serviceProvider = serviceProviderArg;
     scope = serviceProvider.CreateScope();
-    logger = scope.ServiceProvider.GetRequiredService<MyLogger<CanvasQueueActor>>();
+    logger = scope.ServiceProvider.GetRequiredService<MyLogger<LocalStorageActor>>();
     storage = scope.ServiceProvider.GetRequiredService<FileStorageService>();
 
     Receive<EmptyDirectoryAsk>(m =>

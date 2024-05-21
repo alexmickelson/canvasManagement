@@ -137,7 +137,7 @@
   }
 
   private CanvasAssignment? assignmentInCanvas =>
-    planner.CanvasAssignments?.FirstOrDefault(a => a.Name == assignmentContext.Assignment?.Name);
+    planner.CanvasData?.Assignments.FirstOrDefault(a => a.Name == assignmentContext.Assignment?.Name);
 
   private string canvasAssignmentUrl =>
     $"https://snow.instructure.com/courses/{planner.LocalCourse?.Settings.CanvasId}/assignments/{assignmentInCanvas?.Id}";

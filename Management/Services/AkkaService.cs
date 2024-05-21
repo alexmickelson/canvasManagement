@@ -18,7 +18,7 @@ public class AkkaService(
   private readonly IConfiguration configuration = configuration;
   private readonly IServiceProvider serviceProvider = serviceProvider;
   private readonly IHostApplicationLifetime applicationLifetime = appLifetime;
-  public IActorRef? CanvasQueueActor { get; private set; }
+  public IActorRef? CoursePlannerActor { get; private set; }
   public IActorRef? StorageActor { get; private set; }
 
   public Task StartAsync(CancellationToken cancellationToken)
@@ -30,8 +30,8 @@ public class AkkaService(
 
     actorSystem = ActorSystem.Create("canavas-management-actor-system", mergedSystemSetup);
 
-    var canvasQueueProps = DependencyResolver.For(actorSystem).Props<CanvasQueueActor>();
-    CanvasQueueActor = actorSystem.ActorOf(canvasQueueProps, "canvasQueue");
+    var canvasQueueProps = DependencyResolver.For(actorSystem).Props<CoursePlannerActor>();
+    CoursePlannerActor = actorSystem.ActorOf(canvasQueueProps, "canvasQueue");
     var localStorageProps = DependencyResolver.For(actorSystem).Props<LocalStorageActor>();
     StorageActor = actorSystem.ActorOf(localStorageProps, "localStorage");
 

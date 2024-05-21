@@ -1,6 +1,9 @@
 using System.Reflection.Metadata.Ecma335;
+
 using CanvasModel.Modules;
+
 using LocalModels;
+
 using Management.Planner;
 using Management.Services;
 using Management.Services.Canvas;
@@ -91,7 +94,7 @@ public class QuizEditorContext(
       return;
     }
     await planner.LoadCanvasData();
-    if (planner.CanvasQuizzes == null)
+    if (planner.CanvasData == null)
     {
       logger.Log("cannot add quiz to canvas, failed to retrieve current quizzes");
       return;
@@ -142,7 +145,7 @@ public class QuizEditorContext(
   private CanvasModule getCurrentCanvasModule(LocalQuiz quiz, LocalCourse course)
   {
     var localModule = getCurrentLocalModule(quiz, course);
-    var canvasModule = planner.CanvasModules?.FirstOrDefault(m => m.Name == localModule.Name)
+    var canvasModule = planner.CanvasData?.Modules.FirstOrDefault(m => m.Name == localModule.Name)
       ?? throw new Exception($"error in quiz context, canvas module with name {localModule.Name} not found in planner");
     return canvasModule;
   }

@@ -72,7 +72,7 @@ public class AssignmentEditorContext
 
 
     await planner.LoadCanvasData();
-    if (planner.CanvasAssignments == null)
+    if (planner.CanvasData == null)
     {
       logger.Log("cannot update assignment in canvas, failed to retrieve current assignments");
       return;
@@ -87,7 +87,7 @@ public class AssignmentEditorContext
       logger.Log("Cannot update assignment with null local course canvas id");
       return;
     }
-    var assignmentInCanvas = planner.CanvasAssignments?.FirstOrDefault(a => a.Id == canvasAssignmentId);
+    var assignmentInCanvas = planner.CanvasData.Assignments?.FirstOrDefault(a => a.Id == canvasAssignmentId);
     if (assignmentInCanvas == null)
     {
       logger.Log("cannot update assignment in canvas, could not find canvas assignment with id: " + canvasAssignmentId);
@@ -121,7 +121,7 @@ public class AssignmentEditorContext
       return;
     }
     await planner.LoadCanvasData();
-    if (planner.CanvasAssignments == null)
+    if (planner.CanvasData == null)
     {
       logger.Log("cannot add assignment to canvas, failed to retrieve current assignments");
       return;
@@ -144,7 +144,7 @@ public class AssignmentEditorContext
     var createdAssignmentCanvasId = await planner.LocalCourse.SyncAssignmentToCanvas(
       canvasCourseId: (ulong)courseCanvasId,
       localAssignment: Assignment,
-      canvasAssignments: planner.CanvasAssignments,
+      canvasAssignments: planner.CanvasData.Assignments,
       canvas: canvas
     );
 
@@ -179,7 +179,7 @@ public class AssignmentEditorContext
   private CanvasModule getCurrentCanvasModule(LocalAssignment assignment, LocalCourse course)
   {
     var localModule = getCurrentLocalModule(assignment, course);
-    var canvasModule = planner.CanvasModules?.FirstOrDefault(m => m.Name == localModule.Name)
+    var canvasModule = planner.CanvasData?.Modules.FirstOrDefault(m => m.Name == localModule.Name)
       ?? throw new Exception($"error in assignment context, canvas module with name {localModule.Name} not found in planner");
     return canvasModule;
   }
