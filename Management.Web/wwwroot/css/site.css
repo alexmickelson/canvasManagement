@@ -91,3 +91,10 @@ body {
 .monaco-editor-background, .monaco-editor .margin {
   background-color:  var(--bs-dark-bg-subtle) !important;
 }
+
+/* markdown styling */
+blockquote {
+  padding: 10px 20px;
+  margin: 20px 0;
+  border-left: 5px solid #909090;
+}

@@ -35,7 +35,8 @@ public class DroppableAssignment : ComponentBase
         ? a
         : a with
         {
-          DueAt = defaultDueTimeDate
+          DueAt = defaultDueTimeDate,
+          LockAt = a.LockAt > defaultDueTimeDate ? a.LockAt : defaultDueTimeDate
         }
       )
     };

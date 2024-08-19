@@ -22,18 +22,17 @@
   }
 }
 
-<div class="text-center">
+<div class="">
   @if (localCourses != null)
   {
-    <h3>Stored Courses</h3>
+    <h3 class="text-center mb-3">Stored Courses</h3>
     @foreach (var course in localCourses)
     {
       var location = "/course/" + course.Settings.Name;
       <div>
-        <h4 class="m-3 hover-underline-animation" @onclick="(e) => handleClick(e, course)" role='button'>
+        <div class=" fs-4 text-start mb-3 hover-underline-animation" @onclick="(e) => handleClick(e, course)" role='button'>
           @course.Settings.Name
-        </h4>
-
+        </div>
       </div>
     }
   }

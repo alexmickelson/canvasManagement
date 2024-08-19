@@ -12,15 +12,16 @@ services:
     volumes:
       # - ./storage:/app/storage
       # - ~/projects/faculty/1410/2023-fall-alex/modules:/app/storage/1410
-      - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/web
-      - ~/projects/faculty/1810/2024-spring-alex/modules_online:/app/storage/web_online
-      - ~/projects/faculty/1400/2024_spring_alex/modules:/app/storage/1400
-      - ~/projects/faculty/1405/2024_spring_alex/modules:/app/storage/1405
-      - ~/projects/faculty/4620_Distributed/2024Spring/modules:/app/storage/distributed
-      - ~/projects/faculty/3840_Telemetry/2024Spring_alex/modules:/app/storage/telemetry_and_operations
+      - ~/projects/faculty/1810/2024-spring-alex/modules:/app/storage/spring_web
+      - ~/projects/faculty/1810/2024-spring-alex/modules_online:/app/storage/spring_web_online
+      - ~/projects/faculty/1400/2024_spring_alex/modules:/app/storage/spring_1400
+      - ~/projects/faculty/1405/2024_spring_alex/modules:/app/storage/spring_1405
+      - ~/projects/faculty/4620_Distributed/2024Spring/modules:/app/storage/spring_distributed
+      - ~/projects/faculty/3840_Telemetry/2024Spring_alex/modules:/app/storage/spring_telemetry_and_operations
 
       - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/fall_ux
       - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/fall_advanced_frontend
+      - ~/projects/faculty/4850_AdvancedFE/2023-fall-alex/modules:/app/storage/fall_advanced_frontend_2023
       - ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/fall_intro_to_web
       - ~/projects/faculty/1420/2024-fall/Modules:/app/storage/fall_1420
       - ~/projects/faculty/1425/2024-fall/Modules:/app/storage/fall_1425
