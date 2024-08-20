@@ -43,6 +43,11 @@ public static class LocalAssignmentMarkdownCreator
     {
       builder.Append($"- {submissionType}" + "\n");
     }
+    builder.Append($"AllowedFileUploadExtensions:" + "\n");
+    foreach (var fileExtension in assignment.AllowedFileUploadExtensions)
+    {
+      builder.Append($"- {fileExtension}" + "\n");
+    }
     return builder.ToString();
   }
 }

@@ -132,5 +132,25 @@ public class AssignmentMarkdownTests
     var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
     parsedAssignment.Should().BeEquivalentTo(assignment);
   }
+  [Fact]
+  public void Assignments_CanRestrictUploadTypes()
+  {
+    var assignment = new LocalAssignment()
+    {
+      Name = "test assignment",
+      Description = "here is the description",
+      DueAt = new DateTime(),
+      LockAt = new DateTime(),
+      SubmissionTypes = [AssignmentSubmissionType.ONLINE_UPLOAD],
+      AllowedFileUploadExtensions = ["pdf", "txt"],
+      LocalAssignmentGroupName = "Final Project",
+      Rubric = new List<RubricItem>() {}
+    };
+
+    var assignmentMarkdown = assignment.ToMarkdown();
+
+    var parsedAssignment = LocalAssignment.ParseMarkdown(assignmentMarkdown);
+    parsedAssignment.Should().BeEquivalentTo(assignment);
+  }
 
 }

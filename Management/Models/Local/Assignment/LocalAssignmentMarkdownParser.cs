@@ -9,7 +9,7 @@ public static class LocalAssignmentMarkdownParser
   public static LocalAssignment ParseMarkdown(string input)
   {
     var settingsString = input.Split("---")[0];
-    var (name, localAssignmentGroupName, submissionTypes, dueAt, lockAt) = parseSettings(settingsString);
+    var (name, localAssignmentGroupName, submissionTypes, fileUploadExtensions, dueAt, lockAt) = parseSettings(settingsString);
 
     var description = String.Join("---\n", input.Split("---\n")[1..]).Split("## Rubric")[0];
 
@@ -20,6 +20,7 @@ public static class LocalAssignmentMarkdownParser
       Name = name.Trim(),
       LocalAssignmentGroupName = localAssignmentGroupName.Trim(),
       SubmissionTypes = submissionTypes,
+      AllowedFileUploadExtensions = fileUploadExtensions,
       DueAt = dueAt,
       LockAt = lockAt,
       Rubric = rubric,
@@ -27,22 +28,23 @@ public static class LocalAssignmentMarkdownParser
     };
   }
 
-  private static (string name, string assignmentGroupName, List<string> submissionTypes, DateTime dueAt, DateTime? lockAt) parseSettings(string input)
+  private static (string name, string assignmentGroupName, List<string> submissionTypes, List<string> fileUploadExtensions, DateTime dueAt, DateTime? lockAt) parseSettings(string input)
   {
     var name = MarkdownUtils.ExtractLabelValue(input, "Name");
     var rawLockAt = MarkdownUtils.ExtractLabelValue(input, "LockAt");
     var rawDueAt = MarkdownUtils.ExtractLabelValue(input, "DueAt");
     var localAssignmentGroupName = MarkdownUtils.ExtractLabelValue(input, "AssignmentGroupName");
     var submissionTypes = parseSubmissionTypes(input);
+    var fileUploadExtensions = parseFileUploadExtensions(input);
 
     DateTime? lockAt = DateTime.TryParse(rawLockAt, out DateTime parsedLockAt)
       ? parsedLockAt
       : null;
     var dueAt = DateTime.TryParse(rawDueAt, out DateTime parsedDueAt)
       ? parsedDueAt
-      : throw new QuizMarkdownParseException($"Error with DueAt: {rawDueAt}");
+      : throw new AssignmentMarkdownParseException($"Error with DueAt: {rawDueAt}");
 
-    return (name, localAssignmentGroupName, submissionTypes, dueAt, lockAt);
+    return (name, localAssignmentGroupName, submissionTypes, fileUploadExtensions, dueAt, lockAt);
 
 
   }
@@ -74,6 +76,37 @@ public static class LocalAssignmentMarkdownParser
     }
 
     return submissionTypes;
+  }
+
+  private static List<string> parseFileUploadExtensions(string input)
+  {
+    input = input.Replace("\r\n", "\n");
+    List<string> allowedFileUploadExtensions = [];
+
+    // Define a regular expression pattern to match the bulleted list items
+    string startOfTypePattern = @"- (.+)";
+    Regex regex = new(startOfTypePattern);
+
+    var words = input.Split("AllowedFileUploadExtensions:");
+    if(words.Length < 2)
+      return [];
+    var inputAfterSubmissionTypes = words[1];
+
+    string[] lines = inputAfterSubmissionTypes.Split("\n", StringSplitOptions.RemoveEmptyEntries);
+
+    foreach (string line in lines)
+    {
+      string trimmedLine = line.Trim();
+      Match match = regex.Match(trimmedLine);
+
+      if (!match.Success)
+        break;
+
+      string type = match.Groups[1].Value.Trim();
+      allowedFileUploadExtensions.Add(type);
+    }
+
+    return allowedFileUploadExtensions;
   }
 
 

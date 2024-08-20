@@ -19,6 +19,7 @@ public sealed record LocalAssignment : IModuleItem
   public DateTime DueAt { get; init; }
   public string? LocalAssignmentGroupName { get; init; }
   public IEnumerable<string> SubmissionTypes { get; init; } = Array.Empty<string>();
+  public IEnumerable<string> AllowedFileUploadExtensions { get; init; } = Array.Empty<string>();
   public IEnumerable<RubricItem> Rubric { get; init; } = Array.Empty<RubricItem>();
   public double PointsPossible => Rubric.Sum(r => r.IsExtraCredit ? 0 : r.Points);
 
