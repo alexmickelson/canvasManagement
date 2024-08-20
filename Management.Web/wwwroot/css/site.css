@@ -93,8 +93,14 @@ body {
 }
 
 /* markdown styling */
+
 blockquote {
   padding: 10px 20px;
   margin: 20px 0;
   border-left: 5px solid #909090;
+}
+
+strong {
+  color: rgb(145 149 221);
+  font-size: large;
 }
