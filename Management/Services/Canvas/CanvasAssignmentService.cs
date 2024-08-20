@@ -90,6 +90,7 @@ public class CanvasAssignmentService(
     {
       name = localAssignment.Name,
       submission_types = localAssignment.SubmissionTypes.Select(t => t.ToString()),
+      allowed_extensions = localAssignment.AllowedFileUploadExtensions.Select(e => e.ToString()),
       description = localAssignment.GetDescriptionHtml(),
       due_at = localAssignment.DueAt,
       lock_at = localAssignment.LockAt,
