@@ -1,5 +1,7 @@
+@using CanvasModel.Enrollments
 @using Management.Web.Shared.Components
 @inject ICanvasService canvas
+
 @inject CoursePlanner planner
 
 @code
@@ -18,6 +20,7 @@
     planner.StateHasChanged -= reload;
   }
   private IEnumerable<EnrollmentTermModel>? terms { get; set; } = null;
+  private IEnumerable<EnrollmentModel>? studentEnrollments { get; set; } = null;
   private ulong? _selectedTermId {get; set;}
   private ulong? selectedTermId {
     get => _selectedTermId;
@@ -50,10 +53,14 @@
       {
         loading = true;
         ulong id = planner.LocalCourse?.Settings.CanvasId ?? throw new Exception("wtf how did i get here");
+        var enrollmentsTask = canvas.GetEnrolledStudents(id);
         var canvasCourse = await canvas.GetCourse(id);
         terms = await canvas.GetCurrentTermsFor(canvasCourse.StartAt);
+        studentEnrollments = await enrollmentsTask;
+
         loading = false;
       }
+      
     }
   }
 
@@ -154,6 +161,19 @@
       </div>
     }
     <AssignmentGroups />
+
+    @if(studentEnrollments != null)
+    {
+      <div>
+        Students to import to github classroom:
+        @foreach(var enrollment in studentEnrollments)
+        {
+          <div class="ps-3">
+            @(enrollment.User.DisplayName ?? enrollment.User.ShortName)
+          </div>
+        }
+      </div>
+    }
   </Body>
   <Footer>
     <button

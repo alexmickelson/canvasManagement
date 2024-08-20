@@ -8,26 +8,26 @@ public record GradeModel
   string? HtmlUrl = null,
 
   [property: JsonPropertyName("current_grade")]
-  string? CurrentGrade = null,
+  float? CurrentGrade = null,
 
   [property: JsonPropertyName("final_grade")]
-  string? FinalGrade = null,
+  float? FinalGrade = null,
 
   [property: JsonPropertyName("current_score")]
-  string? CurrentScore = null,
+  float? CurrentScore = null,
 
   [property: JsonPropertyName("final_score")]
-  string? FinalScore = null,
+  float? FinalScore = null,
 
   [property: JsonPropertyName("unposted_current_grade")]
-  string? UnpostedCurrentGrade = null,
+  float? UnpostedCurrentGrade = null,
 
   [property: JsonPropertyName("unposted_final_grade")]
-  string? UnpostedFinalGrade = null,
+  float? UnpostedFinalGrade = null,
 
   [property: JsonPropertyName("unposted_current_score")]
-  string? UnpostedCurrentScore = null,
+  float? UnpostedCurrentScore = null,
 
   [property: JsonPropertyName("unposted_final_score")]
-  string? UnpostedFinalScore = null
+  float? UnpostedFinalScore = null
 );

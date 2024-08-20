@@ -23,9 +23,13 @@ GET https://snow.instructure.com/api/v1/courses/855351/modules
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 ###
 
-GET https://snow.instructure.com/api/v1/courses/871954/modules 
+GET https://snow.instructure.com/api/v1/courses/871954 
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 ###
 GET https://snow.instructure.com/api/v1/courses/871954/modules/2972989/items
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+###
+GET https://snow.instructure.com/api/v1/courses/960410/users?enrollment_type=student
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}

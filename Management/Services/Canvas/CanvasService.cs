@@ -1,6 +1,9 @@
+using System.Security.Policy;
+
 using CanvasModel;
 using CanvasModel.Assignments;
 using CanvasModel.Courses;
+using CanvasModel.Enrollments;
 using CanvasModel.EnrollmentTerms;
 using CanvasModel.Modules;
 using CanvasModel.Pages;
@@ -23,6 +26,7 @@ public interface ICanvasService
   Task CreateModuleItem(ulong canvasCourseId, ulong canvasModuleId, string title, string type, ulong contentId);
   Task CreateModuleItem(ulong canvasCourseId, ulong canvasModuleId, string title, string type, string contentId);
   Task CreatePageModuleItem(ulong canvasCourseId, ulong canvasModuleId, string title, CanvasPage canvasPage);
+  Task<IEnumerable<EnrollmentModel>> GetEnrolledStudents(ulong canvasCourseId);
 }
 
 public class CanvasService(
@@ -190,5 +194,20 @@ public class CanvasService(
     var (newItem, _response) = await webRequestor.PostAsync<CanvasModuleItem>(request);
     if (newItem == null)
       throw new Exception("something went wrong updating module item with string content id");
+  }
+
+  public async Task<IEnumerable<EnrollmentModel>> GetEnrolledStudents(
+    ulong canvasCourseId
+  )
+  {
+    logger.Log($"getting students for corse {canvasCourseId}");
+
+    var url = $"courses/{canvasCourseId}/enrollments?enrollment_type=student";
+    var request = new RestRequest(url);
+    var (enrollments, _response) = await webRequestor.GetManyAsync<EnrollmentModel>(request);
+    if (enrollments == null)
+      throw new Exception($"something went wrong getting enrollments for {canvasCourseId}");
+
+    return enrollments;
   }
 }
