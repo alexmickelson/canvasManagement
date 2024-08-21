@@ -1,4 +1,3 @@
-
 type FetchOptions = Omit<RequestInit, "method">;
 
 const token = process.env.CANVAS_TOKEN;
@@ -20,7 +19,7 @@ const isRateLimited = async (response: Response): Promise<boolean> => {
   );
 };
 
-const deserialize = async <T>(response: Response): Promise<T | null> => {
+const deserialize = async <T>(response: Response): Promise<T | undefined> => {
   if (!response.ok) {
     console.error(`Error with response to ${response.url} ${response.status}`);
     throw new Error(
@@ -112,11 +111,11 @@ const recursiveDeleteAsync = async (
     throw e;
   }
 };
-export const WebRequestor = {
-  getManyAsync: async <T>(
+export const webRequestor = {
+  getMany: async <T>(
     url: string,
     options: FetchOptions = {}
-  ): Promise<[T[] | null, Response]> => {
+  ): Promise<[T[] | undefined, Response]> => {
     const response = await fetch(url, {
       ...options,
       method: "GET",
@@ -128,10 +127,10 @@ export const WebRequestor = {
     return [await deserialize<T[]>(response), response];
   },
 
-  getAsync: async <T>(
+  get: async <T>(
     url: string,
     options: FetchOptions = {}
-  ): Promise<[T | null, Response]> => {
+  ): Promise<[T | undefined, Response]> => {
     const response = await fetch(url, {
       ...options,
       method: "GET",
@@ -143,25 +142,19 @@ export const WebRequestor = {
     return [await deserialize<T>(response), response];
   },
 
-  postAsync: async (
-    url: string,
-    options: FetchOptions = {}
-  ): Promise<Response> => {
+  post: async (url: string, options: FetchOptions = {}): Promise<Response> => {
     return await rateLimitAwarePostAsync(url, options);
   },
 
-  postAsyncWithDeserialize: async <T>(
+  postWithDeserialize: async <T>(
     url: string,
     options: FetchOptions = {}
-  ): Promise<[T | null, Response]> => {
+  ): Promise<[T | undefined, Response]> => {
     const response = await rateLimitAwarePostAsync(url, options);
     return [await deserialize<T>(response), response];
   },
 
-  putAsync: async (
-    url: string,
-    options: FetchOptions = {}
-  ): Promise<Response> => {
+  put: async (url: string, options: FetchOptions = {}): Promise<Response> => {
     const response = await fetch(url, {
       ...options,
       method: "PUT",
@@ -174,10 +167,10 @@ export const WebRequestor = {
     return response;
   },
 
-  putAsyncWithDeserialize: async <T>(
+  putWithDeserialize: async <T>(
     url: string,
     options: FetchOptions = {}
-  ): Promise<[T | null, Response]> => {
+  ): Promise<[T | undefined, Response]> => {
     const response = await fetch(url, {
       ...options,
       method: "PUT",
@@ -190,7 +183,7 @@ export const WebRequestor = {
     return [await deserialize<T>(response), response];
   },
 
-  deleteAsync: async (
+  delete: async (
     url: string,
     options: FetchOptions = {}
   ): Promise<Response> => {
