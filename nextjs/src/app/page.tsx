@@ -1,5 +1,4 @@
 import { canvasAssignmentService } from "@/services/canvas/canvasAssignmentService";
-import Image from "next/image";
 
 export default async function Home() {
   const assignments = await canvasAssignmentService.getAll(960410);

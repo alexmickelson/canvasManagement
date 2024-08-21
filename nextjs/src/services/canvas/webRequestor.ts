@@ -34,16 +34,15 @@ const deserialize = async <T>(response: Response): Promise<T | undefined> => {
   }
 };
 
-const rateLimitAwarePostAsync = async (
+const rateLimitAwarePost = async (
   url: string,
-  options: FetchOptions,
+  body: any,
   retryCount = 0
 ): Promise<Response> => {
   const response = await fetch(url, {
-    ...options,
     method: "POST",
+    body: JSON.stringify(body),
     headers: {
-      ...options.headers,
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
@@ -55,7 +54,7 @@ const rateLimitAwarePostAsync = async (
         `Hit rate limit on post, retry count is ${retryCount} / ${rateLimitRetryCount}, retrying`
       );
       await sleep(rateLimitSleepInterval);
-      return await rateLimitAwarePostAsync(url, options, retryCount + 1);
+      return await rateLimitAwarePost(url, body, retryCount + 1);
     }
   }
 
@@ -71,7 +70,7 @@ const rateLimitAwarePostAsync = async (
   return response;
 };
 
-const recursiveDeleteAsync = async (
+const recursiveDelete = async (
   url: string,
   options: FetchOptions,
   retryCount = 0
@@ -89,7 +88,7 @@ const recursiveDeleteAsync = async (
     if (await isRateLimited(response)) {
       console.info("After delete response in rate limited");
       await sleep(rateLimitSleepInterval);
-      return await recursiveDeleteAsync(url, options, retryCount + 1);
+      return await recursiveDelete(url, options, retryCount + 1);
     }
 
     return response;
@@ -101,7 +100,7 @@ const recursiveDeleteAsync = async (
           `Hit rate limit in delete, retry count is ${retryCount} / ${rateLimitRetryCount}, retrying`
         );
         await sleep(rateLimitSleepInterval);
-        return await recursiveDeleteAsync(url, options, retryCount + 1);
+        return await recursiveDelete(url, options, retryCount + 1);
       } else {
         console.info(
           `Hit rate limit in delete, ${rateLimitRetryCount} retries did not fix it`
@@ -112,10 +111,7 @@ const recursiveDeleteAsync = async (
   }
 };
 export const webRequestor = {
-  getMany: async <T>(
-    url: string,
-    options: FetchOptions = {}
-  ): Promise<[T[] | undefined, Response]> => {
+  getMany: async <T>(url: string, options: FetchOptions = {}) => {
     const response = await fetch(url, {
       ...options,
       method: "GET",
@@ -124,13 +120,10 @@ export const webRequestor = {
         Authorization: `Bearer ${token}`,
       },
     });
-    return [await deserialize<T[]>(response), response];
+    return { data: await deserialize<T[]>(response), response };
   },
 
-  get: async <T>(
-    url: string,
-    options: FetchOptions = {}
-  ): Promise<[T | undefined, Response]> => {
+  get: async <T>(url: string, options: FetchOptions = {}) => {
     const response = await fetch(url, {
       ...options,
       method: "GET",
@@ -139,27 +132,23 @@ export const webRequestor = {
         Authorization: `Bearer ${token}`,
       },
     });
-    return [await deserialize<T>(response), response];
+    return { data: await deserialize<T>(response), response };
   },
 
-  post: async (url: string, options: FetchOptions = {}): Promise<Response> => {
-    return await rateLimitAwarePostAsync(url, options);
+  post: async (url: string, body: any) => {
+    return await rateLimitAwarePost(url, body);
   },
 
-  postWithDeserialize: async <T>(
-    url: string,
-    options: FetchOptions = {}
-  ): Promise<[T | undefined, Response]> => {
-    const response = await rateLimitAwarePostAsync(url, options);
-    return [await deserialize<T>(response), response];
+  postWithDeserialize: async <T>(url: string, body: any) => {
+    const response = await rateLimitAwarePost(url, body);
+    return { data: await deserialize<T[]>(response), response };
   },
 
-  put: async (url: string, options: FetchOptions = {}): Promise<Response> => {
+  put: async (url: string, body: any = {}) => {
     const response = await fetch(url, {
-      ...options,
       method: "PUT",
+      body: JSON.stringify(body),
       headers: {
-        ...options.headers,
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
@@ -167,26 +156,22 @@ export const webRequestor = {
     return response;
   },
 
-  putWithDeserialize: async <T>(
-    url: string,
-    options: FetchOptions = {}
-  ): Promise<[T | undefined, Response]> => {
+  putWithDeserialize: async <T>(url: string, body: any = {}) => {
     const response = await fetch(url, {
-      ...options,
+      body: JSON.stringify(body),
       method: "PUT",
       headers: {
-        ...options.headers,
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
-    return [await deserialize<T>(response), response];
+    return { data: await deserialize<T[]>(response), response };
   },
 
   delete: async (
     url: string,
     options: FetchOptions = {}
   ): Promise<Response> => {
-    return await recursiveDeleteAsync(url, options);
+    return await recursiveDelete(url, options);
   },
 };

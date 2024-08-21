@@ -1,5 +1,5 @@
 import { CanvasUserDisplayModel } from "../users/userDisplayModel";
-import { CanvasGradeModel } from "./canvasG'radeModel";
+import { CanvasGradeModel } from "./canvasGradeModel";
 
 export interface CanvasEnrollmentModel {
   id: number;
