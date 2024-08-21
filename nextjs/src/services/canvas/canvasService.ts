@@ -16,6 +16,7 @@ const getTerms = async () => {
 };
 
 export const canvasService = {
+  getTerms,
   async getCourses(termId: number) {
     const url = `courses`;
     const coursesResponse =
