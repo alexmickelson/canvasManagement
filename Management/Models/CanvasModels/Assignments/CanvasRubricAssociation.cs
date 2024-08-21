@@ -18,7 +18,7 @@ public record CanvasRubricAssociation
   public bool UseForGrading { get; set; }
 
   [JsonPropertyName("summary_data")]
-  public string? SummaryDaata { get; set; }
+  public string? SaummaryDaata { get; set; }
 
   [JsonPropertyName("purpose")]
   public required string Purpose { get; set; }
