@@ -109,6 +109,7 @@ const parseRubricMarkdown = (rawMarkdown: string) => {
 };
 
 export const assignmentMarkdownParser = {
+  parseRubricMarkdown,
   parseMarkdown(input: string): LocalAssignment {
     const settingsString = input.split("---")[0];
     const {
