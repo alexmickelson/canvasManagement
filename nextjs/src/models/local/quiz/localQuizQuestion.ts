@@ -8,9 +8,10 @@ export interface LocalQuizQuestion {
 }
 
 export enum QuestionType {
-  MultipleAnswers = "multiple_answers",
-  MultipleChoice = "multiple_choice",
-  Essay = "essay",
-  ShortAnswer = "short_answer",
-  Matching = "matching"
+  MULTIPLE_ANSWERS = "multiple_answers",
+  MULTIPLE_CHOICE = "multiple_choice",
+  ESSAY = "essay",
+  SHORT_ANSWER = "short_answer",
+  MATCHING = "matching",
+  NONE = "",
 }

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { LocalCoursePage } from "../../page/localCoursePage";
-import { pageMarkdown } from "../../page/pageMarkdown";
+import { pageMarkdownUtils } from "../../page/pageMarkdownUtils";
 
 describe("PageMarkdownTests", () => {
   it("can parse page", () => {
@@ -10,9 +10,9 @@ describe("PageMarkdownTests", () => {
       dueAt: new Date().toISOString(),
     };
 
-    const pageMarkdownString = pageMarkdown.toMarkdown(page);
+    const pageMarkdownString = pageMarkdownUtils.toMarkdown(page);
 
-    const parsedPage = pageMarkdown.parseMarkdown(pageMarkdownString);
+    const parsedPage = pageMarkdownUtils.parseMarkdown(pageMarkdownString);
 
     expect(parsedPage).toEqual(page);
   });

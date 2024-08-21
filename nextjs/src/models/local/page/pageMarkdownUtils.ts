@@ -1,7 +1,7 @@
 import { extractLabelValue } from "../assignmnet/utils/markdownUtils";
 import { LocalCoursePage } from "./localCoursePage";
 
-export const pageMarkdown = {
+export const pageMarkdownUtils = {
   toMarkdown: (page: LocalCoursePage) => {
     const printableDueDate = new Date(page.dueAt)
       .toISOString()
