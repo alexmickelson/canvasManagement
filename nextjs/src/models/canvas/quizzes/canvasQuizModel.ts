@@ -1,4 +1,4 @@
-import { CanvasLockInfo } from "../assignments/CanvasLockInfo";
+import { CanvasLockInfo } from "../assignments/canvasLockInfo";
 import { CanvasQuizPermissions } from "./canvasQuizPermission";
 
 export interface CanvasQuiz {

@@ -1,7 +1,7 @@
-import { UserDisplayModel } from "../users/userDisplayModel";
-import { FileAttachmentModel } from "./canvasFileAttachmentModel";
+import { CanvasUserDisplayModel } from "../users/userDisplayModel";
+import { CanvasFileAttachmentModel } from "./canvasFileAttachmentModel";
 
-export interface DiscussionTopicModel {
+export interface CanvasDiscussionTopicModel {
   id: number;
   title: string;
   message: string;
@@ -14,9 +14,9 @@ export interface DiscussionTopicModel {
   topic_children: number[];
   podcast_url: string;
   discussion_type: string;
-  attachments: FileAttachmentModel[];
+  attachments: CanvasFileAttachmentModel[];
   permissions: { [key: string]: boolean };
-  author: UserDisplayModel;
+  author: CanvasUserDisplayModel;
   unread_count?: number;
   subscribed?: boolean;
   posted_at?: string; // ISO 8601 date string

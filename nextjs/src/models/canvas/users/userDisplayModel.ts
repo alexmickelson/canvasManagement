@@ -1,4 +1,4 @@
-export interface UserDisplayModel {
+export interface CanvasUserDisplayModel {
   avatar_image_url: string;
   html_url: string;
   anonymous_id: string;

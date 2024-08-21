@@ -1,6 +1,6 @@
-import { EnrollmentModel } from "../enrollments/enrollmentModel";
+import { CanvasEnrollmentModel } from "../enrollments/canvasEnrollmentModel";
 
-export interface UserModel {
+export interface CanvasUserModel {
   id: number;
   name: string;
   sortable_name: string;
@@ -9,7 +9,7 @@ export interface UserModel {
   integration_id: string;
   login_id: string;
   avatar_url: string;
-  enrollments: EnrollmentModel[];
+  enrollments: CanvasEnrollmentModel[];
   email: string;
   locale: string;
   effective_locale: string;

@@ -1,4 +1,4 @@
-export interface CourseProgressModel {
+export interface CanvasCourseProgressModel {
   requirement_count?: number;
   requirement_completed_count?: number;
   next_requirement_url?: string;

@@ -1,9 +1,9 @@
-import { EnrollmentModel } from "../enrollments/enrollmentModel";
-import { CalendarLinkModel } from "./calendarLinkModel";
-import { CourseProgressModel } from "./courseProgressModel";
-import { TermModel } from "./termModel";
+import { CanvasEnrollmentModel } from "../enrollments/canvasEnrollmentModel";
+import { CanvasCalendarLinkModel } from "./canvasCalendarLinkModel";
+import { CanvasCourseProgressModel } from "./canvasCourseProgressModel";
+import { CanvasTermModel } from "./canvasTermModel";
 
-export interface CourseModel {
+export interface CanvasCourseModel {
   id: number;
   sis_course_id: string;
   uuid: string;
@@ -16,7 +16,7 @@ export interface CourseModel {
   enrollment_term_id: number;
   created_at: string; // ISO 8601 date string
   locale: string;
-  calendar: CalendarLinkModel;
+  calendar: CanvasCalendarLinkModel;
   default_view: string;
   syllabus_body: string;
   permissions: { [key: string]: boolean };
@@ -29,11 +29,11 @@ export interface CourseModel {
   grading_standard_id?: number;
   start_at?: string; // ISO 8601 date string
   end_at?: string; // ISO 8601 date string
-  enrollments?: EnrollmentModel[];
+  enrollments?: CanvasEnrollmentModel[];
   total_students?: number;
   needs_grading_count?: number;
-  term?: TermModel;
-  course_progress?: CourseProgressModel;
+  term?: CanvasTermModel;
+  course_progress?: CanvasCourseProgressModel;
   apply_assignment_group_weights?: boolean;
   is_public?: boolean;
   is_public_to_auth_users?: boolean;
@@ -50,5 +50,7 @@ export interface CourseModel {
   access_restricted_by_date?: boolean;
   blueprint?: boolean;
   blueprint_restrictions?: { [key: string]: boolean };
-  blueprint_restrictions_by_object_type?: { [key: string]: { [key: string]: boolean } };
+  blueprint_restrictions_by_object_type?: {
+    [key: string]: { [key: string]: boolean };
+  };
 }

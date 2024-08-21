@@ -1,9 +1,9 @@
-import { DiscussionTopicModel } from "../discussions/canvasDiscussionModelTopic";
-import { SubmissionModel } from "../submissions/canvasSubmissionModel";
+import { CanvasDiscussionTopicModel } from "../discussions/canvasDiscussionModelTopic";
+import { CanvasSubmissionModel } from "../submissions/canvasSubmissionModel";
 import { CanvasAssignmentDate } from "./canvasAssignmentDate";
 import { CanvasAssignmentOverride } from "./canvasAssignmentOverride";
 import { CanvasExternalToolTagAttributes } from "./canvasExternalToolTagAttributes";
-import { CanvasLockInfo } from "./CanvasLockInfo";
+import { CanvasLockInfo } from "./canvasLockInfo";
 import { CanvasRubricCriteria } from "./canvasRubricCriteria";
 import { CanvasTurnitinSettings } from "./canvasTurnitinSettings";
 
@@ -63,11 +63,11 @@ export interface CanvasAssignment {
   lock_explanation?: string;
   quiz_id?: number;
   anonymous_submissions?: boolean;
-  discussion_topic?: DiscussionTopicModel;
+  discussion_topic?: CanvasDiscussionTopicModel;
   freeze_on_copy?: boolean;
   frozen?: boolean;
   frozen_attributes?: string[];
-  submission?: SubmissionModel;
+  submission?: CanvasSubmissionModel;
   use_rubric_for_grading?: boolean;
   rubric_settings?: any;
   rubric?: CanvasRubricCriteria[];

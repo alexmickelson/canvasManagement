@@ -1,7 +1,7 @@
-import { UserDisplayModel } from "../users/userDisplayModel";
-import { GradeModel } from "./gradeModel";
+import { CanvasUserDisplayModel } from "../users/userDisplayModel";
+import { CanvasGradeModel } from "./canvasG'radeModel";
 
-export interface EnrollmentModel {
+export interface CanvasEnrollmentModel {
   id: number;
   course_id: number;
   enrollment_state: string;
@@ -10,8 +10,8 @@ export interface EnrollmentModel {
   role: string;
   role_id: number;
   html_url: string;
-  grades: GradeModel;
-  user: UserDisplayModel;
+  grades: CanvasGradeModel;
+  user: CanvasUserDisplayModel;
   override_grade: string;
   sis_course_id?: string;
   course_integration_id?: string;

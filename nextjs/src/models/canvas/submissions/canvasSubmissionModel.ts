@@ -1,20 +1,20 @@
 import { CanvasAssignment } from "../assignments/canvasAssignment";
-import { CourseModel } from "../courses/courseModel";
-import { UserModel } from "../users/canvasUserModel";
-import { UserDisplayModel } from "../users/userDisplayModel";
+import { CanvasCourseModel } from "../courses/canvasCourseModel";
+import { CanvasUserModel } from "../users/canvasUserModel";
+import { CanvasUserDisplayModel } from "../users/userDisplayModel";
 
-export interface SubmissionModel {
+export interface CanvasSubmissionModel {
   assignment_id: number;
   grade: string;
   html_url: string;
   preview_url: string;
   submission_type: string;
   user_id: number;
-  user: UserModel;
+  user: CanvasUserModel;
   workflow_state: string;
   late_policy_status: string;
   assignment?: CanvasAssignment;
-  course?: CourseModel;
+  course?: CanvasCourseModel;
   attempt?: number;
   body?: string;
   grade_matches_current_submission?: boolean;
@@ -23,7 +23,7 @@ export interface SubmissionModel {
     id: number;
     author_id: number;
     author_name: string;
-    author: UserDisplayModel;
+    author: CanvasUserDisplayModel;
     comment: string;
     created_at: string; // ISO 8601 date string
     edited_at?: string; // ISO 8601 date string

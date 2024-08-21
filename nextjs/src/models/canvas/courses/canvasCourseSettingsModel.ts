@@ -1,4 +1,4 @@
-export interface CourseSettingsModel {
+export interface CanvasCourseSettingsModel {
   allow_final_grade_override: boolean;
   allow_student_discussion_topics: boolean;
   allow_student_forum_attachments: boolean;

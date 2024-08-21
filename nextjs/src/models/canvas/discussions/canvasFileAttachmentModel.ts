@@ -1,4 +1,4 @@
-export interface FileAttachmentModel {
+export interface CanvasFileAttachmentModel {
   content_type: string;
   url: string;
   filename: string;

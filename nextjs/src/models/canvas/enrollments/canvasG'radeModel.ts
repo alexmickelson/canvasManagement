@@ -1,4 +1,4 @@
-export interface GradeModel {
+export interface CanvasGradeModel {
   html_url?: string;
   current_grade?: number;
   final_grade?: number;

@@ -17,12 +17,10 @@ export interface CanvasModuleItem {
     completed?: boolean;
   };
   published?: boolean;
-  content_details?: CanvasModuleItemContentDetails;
-}
-
-export interface CanvasModuleItemContentDetails {
-  due_at?: string; // ISO 8601 date string
-  lock_at?: string; // ISO 8601 date string
-  points_possible: number;
-  locked_for_user: boolean;
+  content_details?: {
+    due_at?: string; // ISO 8601 date string
+    lock_at?: string; // ISO 8601 date string
+    points_possible: number;
+    locked_for_user: boolean;
+  };
 }
