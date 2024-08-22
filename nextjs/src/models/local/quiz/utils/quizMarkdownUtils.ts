@@ -1,4 +1,3 @@
-import { LocalQuiz } from "../localQuiz";
 import { quizQuestionMarkdownUtils } from "./quizQuestionMarkdownUtils";
 
 const extractLabelValue = (input: string, label: string): string => {
