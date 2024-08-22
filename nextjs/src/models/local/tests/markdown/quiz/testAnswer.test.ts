@@ -9,8 +9,8 @@ describe('TextAnswerTests', () => {
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 2023-08-21T23:59:00
-LockAt: 2023-08-21T23:59:00
+DueAt: 21/08/2023 23:59:00
+LockAt: 21/08/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the 
@@ -34,8 +34,8 @@ essay
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 2023-08-21T23:59:00
-LockAt: 2023-08-21T23:59:00
+DueAt: 21/08/2023 23:59:00
+LockAt: 21/08/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the 
@@ -59,8 +59,8 @@ short answer
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 2023-08-21T23:59:00
-LockAt: 2023-08-21T23:59:00
+DueAt: 21/08/2023 23:59:00
+LockAt: 21/08/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the 
@@ -86,8 +86,8 @@ short_answer`;
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 2023-08-21T23:59:00
-LockAt: 2023-08-21T23:59:00
+DueAt: 21/08/2023 23:59:00
+LockAt: 21/08/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the 
