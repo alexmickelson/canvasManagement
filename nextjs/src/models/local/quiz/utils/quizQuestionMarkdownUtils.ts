@@ -153,13 +153,31 @@ export const quizQuestionMarkdownUtils = {
 
     const linesWithoutPoints = firstLineIsPoints ? lines.slice(1) : lines;
 
-    const linesWithoutAnswers = linesWithoutPoints.filter(
-      (line, index) =>
-        !_validFirstAnswerDelimiters.some((prefix) =>
-          line.trimStart().startsWith(prefix)
-        )
-    );
+    // const linesWithoutAnswers = linesWithoutPoints.filter(
+    //   (line, index) =>
+    //     !_validFirstAnswerDelimiters.some((prefix) =>
+    //       line.trimStart().startsWith(prefix)
+    //     )
+    // );
 
+    const { linesWithoutAnswers } = linesWithoutPoints.reduce(
+      ({ linesWithoutAnswers, taking }, currentLine) => {
+        if (!taking)
+          return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
+
+        const lineIsAnswer = _validFirstAnswerDelimiters.some((prefix) =>
+          currentLine.trimStart().startsWith(prefix)
+        );
+        if (lineIsAnswer)
+          return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
+
+        return {
+          linesWithoutAnswers: [...linesWithoutAnswers, currentLine],
+          taking: true,
+        };
+      },
+      { linesWithoutAnswers: [] as string[], taking: true }
+    );
     const questionType = getQuestionType(linesWithoutPoints, questionIndex);
 
     const questionTypesWithoutAnswers = [

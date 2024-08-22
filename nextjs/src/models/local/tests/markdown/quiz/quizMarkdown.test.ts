@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { LocalQuiz } from "../../../../../models/local/quiz/localQuiz";
 import { quizMarkdownUtils } from "../../../../../models/local/quiz/utils/quizMarkdownUtils";
+import { QuestionType } from "@/models/local/quiz/localQuizQuestion";
+import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
 
 // Test suite for QuizMarkdown
 describe("QuizMarkdownTests", () => {
@@ -49,7 +51,7 @@ description
 ---
 `;
 
-    const quiz = LocalQuiz.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
 
     const expectedDescription = `
 this is the
@@ -80,7 +82,7 @@ description
 ---
 `;
 
-    const quiz = LocalQuiz.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
 
     expect(quiz.password).toBe(password);
   });
@@ -101,7 +103,7 @@ description
 ---
 `;
 
-    const quiz = LocalQuiz.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
 
     expect(quiz.showCorrectAnswers).toBe(false);
   });
@@ -133,7 +135,7 @@ b) false
 
    endline`;
 
-    const quiz = LocalQuiz.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.questionType).toBe(QuestionType.MULTIPLE_CHOICE);
@@ -168,7 +170,7 @@ Points: 2
 b) false
 `;
 
-    const quiz = LocalQuiz.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
     const firstQuestion = quiz.questions[0];
     expect(firstQuestion.points).toBe(1);
     expect(firstQuestion.questionType).toBe(QuestionType.MULTIPLE_ANSWERS);
@@ -195,12 +197,12 @@ Which events are triggered when the user clicks on an input field?
 short answer
 `;
 
-    const quiz = LocalQuiz.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
     const firstQuestion = quiz.questions[0];
 
-    const questionMarkdown = firstQuestion.toMarkdown();
-    const expectedMarkdown = `
-Points: 1
+    const questionMarkdown =
+      quizQuestionMarkdownUtils.toMarkdown(firstQuestion);
+    const expectedMarkdown = `Points: 1
 Which events are triggered when the user clicks on an input field?
 short_answer`;
     expect(questionMarkdown).toContain(expectedMarkdown);
@@ -224,7 +226,7 @@ Which events are triggered when the user clicks on an input field?
 short answer
 `;
 
-    const quiz = LocalQuiz.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
     const firstQuestion = quiz.questions[0];
     expect(firstQuestion.points).toBe(-4);
   });
@@ -247,7 +249,7 @@ Which events are triggered when the user clicks on an input field?
 short answer
 `;
 
-    const quiz = LocalQuiz.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
     const firstQuestion = quiz.questions[0];
     expect(firstQuestion.points).toBe(4.56);
   });
