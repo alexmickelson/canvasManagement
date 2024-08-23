@@ -179,6 +179,26 @@ public record LocalQuizQuestion
 
     var answers = answerLines
       .Select((a, i) => LocalQuizQuestionAnswer.ParseMarkdown(a, questionType))
+      .Aggregate([], (IEnumerable<LocalQuizQuestionAnswer> accumulator, LocalQuizQuestionAnswer answer) =>
+      {
+        if (questionType != "matching")
+          return accumulator.Append(answer);
+
+        if(accumulator.Count() == 0)
+          return accumulator.Append(answer);
+        
+        if(answer.Text != "")
+          return accumulator.Append(answer);
+
+
+        var previousDistractors = accumulator.Last().MatchDistractors ?? [];
+        var newLastAnswer = accumulator.Last() with {
+          MatchDistractors = previousDistractors.Append(answer.MatchedText ?? "").ToArray()
+        };
+
+        return accumulator.Reverse().Skip(1).Reverse().Append(newLastAnswer);
+
+      })
       .ToArray();
 
     return answers;
