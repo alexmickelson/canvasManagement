@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
+using Akka.Util.Internal;
+
 namespace LocalModels;
 
 public record LocalQuizQuestion
@@ -37,7 +39,10 @@ public record LocalQuizQuestion
     }
     else if (QuestionType == "matching")
     {
-      return $"^ {answer.Text} - {answer.MatchedText}";
+      var distractorText = answer.MatchDistractors?.Select(
+        d => $"\n^ - {d}"
+      ).Join("") ?? "";
+      return $"^ {answer.Text} - {answer.MatchedText}" + distractorText;
     }
     else
     {
@@ -184,15 +189,16 @@ public record LocalQuizQuestion
         if (questionType != "matching")
           return accumulator.Append(answer);
 
-        if(accumulator.Count() == 0)
+        if (accumulator.Count() == 0)
           return accumulator.Append(answer);
-        
-        if(answer.Text != "")
+
+        if (answer.Text != "")
           return accumulator.Append(answer);
 
 
         var previousDistractors = accumulator.Last().MatchDistractors ?? [];
-        var newLastAnswer = accumulator.Last() with {
+        var newLastAnswer = accumulator.Last() with
+        {
           MatchDistractors = previousDistractors.Append(answer.MatchedText ?? "").ToArray()
         };
 

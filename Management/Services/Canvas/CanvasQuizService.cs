@@ -196,7 +196,8 @@ public class CanvasQuizService(
         .Select(a => new
         {
           answer_match_left = a.Text,
-          answer_match_right = a.MatchedText
+          answer_match_right = a.MatchedText,
+          matching_answer_incorrect_matches = a.MatchDistractors,
         })
         .ToArray();
 

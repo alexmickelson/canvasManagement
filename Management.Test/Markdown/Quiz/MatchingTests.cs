@@ -103,4 +103,28 @@ Match the following terms & definitions
     var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
     quiz.Questions.First().Answers.First().MatchDistractors.Should().BeEquivalentTo(["this is the distractor"]);
   }
+  [Fact]
+  public void CanHaveDistractorsAndBePersisted()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: 
+---
+Match the following terms & definitions
+
+^statement - a single command to be executed
+^ - this is the distractor
+";
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    var quizMarkdown = quiz.ToMarkdown();
+
+    quizMarkdown.Should().Contain("^ statement - a single command to be executed\n^ - this is the distractor");
+  }
 }
