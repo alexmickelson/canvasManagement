@@ -26,6 +26,7 @@ describe("MultipleAnswersTests", () => {
             { correct: true, text: "false" },
             { correct: false, text: "neither" },
           ],
+          matchDistractors: []
         },
       ],
     };

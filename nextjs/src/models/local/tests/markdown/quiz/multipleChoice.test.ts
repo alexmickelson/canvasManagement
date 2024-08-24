@@ -37,6 +37,7 @@ lines
             { correct: true, text: "true" },
             { correct: false, text: "false\n\nendline" },
           ],
+          matchDistractors: []
         },
       ],
     };
