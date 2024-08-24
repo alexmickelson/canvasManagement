@@ -1,9 +1,6 @@
 import { describe, it, expect } from "vitest";
-import {
-  RubricItem,
-  rubricItemIsExtraCredit,
-} from "../../assignmnet/rubricItem";
-import { assignmentMarkdownParser } from "../../assignmnet/utils/assignmentMarkdownParser";
+import { RubricItem, rubricItemIsExtraCredit } from "../assignmnet/rubricItem";
+import { assignmentMarkdownParser } from "../assignmnet/utils/assignmentMarkdownParser";
 
 describe("RubricMarkdownTests", () => {
   it("can parse one item", () => {

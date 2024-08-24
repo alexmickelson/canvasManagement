@@ -1,10 +1,10 @@
-import { QuestionType } from '../../../../../models/local/quiz/localQuizQuestion';
-import { quizMarkdownUtils } from '../../../../../models/local/quiz/utils/quizMarkdownUtils';
-import { quizQuestionMarkdownUtils } from '../../../../../models/local/quiz/utils/quizQuestionMarkdownUtils';
-import { describe, it, expect } from 'vitest';
+import { QuestionType } from "../../quiz/localQuizQuestion";
+import { quizMarkdownUtils } from "../../quiz/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "../../quiz/utils/quizQuestionMarkdownUtils";
+import { describe, it, expect } from "vitest";
 
-describe('TextAnswerTests', () => {
-  it('can parse essay', () => {
+describe("TextAnswerTests", () => {
+  it("can parse essay", () => {
     const rawMarkdownQuiz = `
 Name: Test Quiz
 ShuffleAnswers: true
@@ -26,10 +26,10 @@ essay
 
     expect(firstQuestion.points).toBe(1);
     expect(firstQuestion.questionType).toBe(QuestionType.ESSAY);
-    expect(firstQuestion.text).not.toContain('essay');
+    expect(firstQuestion.text).not.toContain("essay");
   });
 
-  it('can parse short answer', () => {
+  it("can parse short answer", () => {
     const rawMarkdownQuiz = `
 Name: Test Quiz
 ShuffleAnswers: true
@@ -51,10 +51,10 @@ short answer
 
     expect(firstQuestion.points).toBe(1);
     expect(firstQuestion.questionType).toBe(QuestionType.SHORT_ANSWER);
-    expect(firstQuestion.text).not.toContain('short answer');
+    expect(firstQuestion.text).not.toContain("short answer");
   });
 
-  it('short answer to markdown is correct', () => {
+  it("short answer to markdown is correct", () => {
     const rawMarkdownQuiz = `
 Name: Test Quiz
 ShuffleAnswers: true
@@ -74,14 +74,15 @@ short answer
     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
     const firstQuestion = quiz.questions[0];
 
-    const questionMarkdown = quizQuestionMarkdownUtils.toMarkdown(firstQuestion);
+    const questionMarkdown =
+      quizQuestionMarkdownUtils.toMarkdown(firstQuestion);
     const expectedMarkdown = `Points: 1
 Which events are triggered when the user clicks on an input field?
 short_answer`;
     expect(questionMarkdown).toContain(expectedMarkdown);
   });
 
-  it('essay question to markdown is correct', () => {
+  it("essay question to markdown is correct", () => {
     const rawMarkdownQuiz = `
 Name: Test Quiz
 ShuffleAnswers: true
@@ -101,7 +102,8 @@ essay
     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
     const firstQuestion = quiz.questions[0];
 
-    const questionMarkdown = quizQuestionMarkdownUtils.toMarkdown(firstQuestion);
+    const questionMarkdown =
+      quizQuestionMarkdownUtils.toMarkdown(firstQuestion);
     const expectedMarkdown = `Points: 1
 Which events are triggered when the user clicks on an input field?
 essay`;

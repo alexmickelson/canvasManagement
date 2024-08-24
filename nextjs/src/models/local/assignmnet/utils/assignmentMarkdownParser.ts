@@ -51,8 +51,8 @@ const parseSettings = (input: string) => {
   const submissionTypes = parseSubmissionTypes(input);
   const fileUploadExtensions = parseFileUploadExtensions(input);
 
-  const dueAt = timeUtils.parseDateOrThrow(rawDueAt, "DueAt");
-  const lockAt = timeUtils.parseDateOrUndefined(rawLockAt);
+  const dueAt = timeUtils.verifyDateOrThrow(rawDueAt, "DueAt");
+  const lockAt = timeUtils.verifyDateStringOrUndefined(rawLockAt);
 
   return {
     name,

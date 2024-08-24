@@ -1,10 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { LocalQuiz } from "../../../../../models/local/quiz/localQuiz";
-import {
-  LocalQuizQuestion,
-  QuestionType,
-} from "../../../../../models/local/quiz/localQuizQuestion";
-import { LocalQuizQuestionAnswer } from "../../../../../models/local/quiz/localQuizQuestionAnswer";
+import { LocalQuiz } from "../../quiz/localQuiz";
+import { LocalQuizQuestion, QuestionType } from "../../quiz/localQuizQuestion";
+import { LocalQuizQuestionAnswer } from "../../quiz/localQuizQuestionAnswer";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
 
@@ -37,7 +34,7 @@ lines
             { correct: true, text: "true" },
             { correct: false, text: "false\n\nendline" },
           ],
-          matchDistractors: []
+          matchDistractors: [],
         },
       ],
     };

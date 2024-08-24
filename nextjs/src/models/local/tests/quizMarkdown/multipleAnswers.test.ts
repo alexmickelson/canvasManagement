@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { LocalQuiz } from "../../../../../models/local/quiz/localQuiz";
-import { QuestionType } from "../../../../../models/local/quiz/localQuizQuestion";
+import { LocalQuiz } from "../../quiz/localQuiz";
+import { QuestionType } from "../../quiz/localQuizQuestion";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
 
@@ -26,7 +26,7 @@ describe("MultipleAnswersTests", () => {
             { correct: true, text: "false" },
             { correct: false, text: "neither" },
           ],
-          matchDistractors: []
+          matchDistractors: [],
         },
       ],
     };

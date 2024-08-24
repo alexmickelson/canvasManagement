@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { LocalCoursePage } from "../../page/localCoursePage";
-import { pageMarkdownUtils } from "../../page/pageMarkdownUtils";
+import { LocalCoursePage } from "../page/localCoursePage";
+import { pageMarkdownUtils } from "../page/pageMarkdownUtils";
 
 describe("PageMarkdownTests", () => {
   it("can parse page", () => {

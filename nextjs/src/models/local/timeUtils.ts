@@ -1,11 +1,12 @@
-const parseDateOrUndefined = (value: string): string | undefined => {
 
+
+export const getDateFromString = (value: string) => {
   // may need to check for other formats
-  const validDateRegex = /([1-9][1-9]|[0-2])\/(0[1-9]|[1-2][0-9]|3[01])\/\d{4} (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/;
+  const validDateRegex =
+    /([1-9][1-9]|[0-2])\/(0[1-9]|[1-2][0-9]|3[01])\/\d{4} (0[0-9]|1[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])/;
   if (!validDateRegex.test(value)) {
     return undefined;
   }
-
 
   const [datePart, timePart] = value.split(" ");
   const [day, month, year] = datePart.split("/").map(Number);
@@ -15,6 +16,26 @@ const parseDateOrUndefined = (value: string): string | undefined => {
   if (isNaN(date.getTime())) {
     return undefined;
   }
+  return date;
+};
+
+export const verifyDateStringOrUndefined = (
+  value: string
+): string | undefined => {
+  const date = getDateFromString(value);
+  return date ? dateToMarkdownString(date) : undefined;
+};
+
+export const verifyDateOrThrow = (
+  value: string,
+  labelForError: string
+): string => {
+  const myDate = verifyDateStringOrUndefined(value);
+  if (!myDate) throw new Error(`Invalid format for ${labelForError}: ${value}`);
+  return myDate;
+};
+
+export const dateToMarkdownString = (date: Date) => {
   const stringDay = String(date.getDate()).padStart(2, "0");
   const stringMonth = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
   const stringYear = date.getFullYear();
@@ -23,13 +44,4 @@ const parseDateOrUndefined = (value: string): string | undefined => {
   const stringSeconds = String(date.getSeconds()).padStart(2, "0");
 
   return `${stringDay}/${stringMonth}/${stringYear} ${stringHours}:${stringMinutes}:${stringSeconds}`;
-};
-
-export const timeUtils = {
-  parseDateOrUndefined,
-  parseDateOrThrow: (value: string, labelForError: string): string => {
-    const myDate = parseDateOrUndefined(value);
-    if (!myDate) throw new Error(`Invalid format for ${labelForError}: ${value}`);
-    return myDate;
-  },
 };

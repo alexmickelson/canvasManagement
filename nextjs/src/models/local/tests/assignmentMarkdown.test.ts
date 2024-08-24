@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { LocalAssignment } from "../../assignmnet/localAssignment";
-import { AssignmentSubmissionType } from "../../assignmnet/assignmentSubmissionType";
-import { assignmentMarkdownSerializer } from "../../assignmnet/utils/assignmentMarkdownSerializer";
-import { assignmentMarkdownParser } from "../../assignmnet/utils/assignmentMarkdownParser";
+import { LocalAssignment } from "../assignmnet/localAssignment";
+import { AssignmentSubmissionType } from "../assignmnet/assignmentSubmissionType";
+import { assignmentMarkdownSerializer } from "../assignmnet/utils/assignmentMarkdownSerializer";
+import { assignmentMarkdownParser } from "../assignmnet/utils/assignmentMarkdownParser";
 
 describe("AssignmentMarkdownTests", () => {
   it("can parse assignment settings", () => {

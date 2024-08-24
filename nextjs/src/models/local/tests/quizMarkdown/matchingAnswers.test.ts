@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { QuestionType } from "../../../../../models/local/quiz/localQuizQuestion";
+import { QuestionType } from "../../quiz/localQuizQuestion";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
 
