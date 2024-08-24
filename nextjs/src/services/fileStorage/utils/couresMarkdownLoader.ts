@@ -1,8 +1,21 @@
-import { LocalAssignment, localAssignmentMarkdown } from "@/models/local/assignmnet/localAssignment";
-import { LocalCourse, LocalCourseSettings, localCourseYamlUtils } from "@/models/local/localCourse";
+import {
+  LocalAssignment,
+  localAssignmentMarkdown,
+} from "@/models/local/assignmnet/localAssignment";
+import {
+  LocalCourse,
+  LocalCourseSettings,
+  localCourseYamlUtils,
+} from "@/models/local/localCourse";
 import { LocalModule } from "@/models/local/localModules";
-import { LocalCoursePage, localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
-import { LocalQuiz, localQuizMarkdownUtils } from "@/models/local/quiz/localQuiz";
+import {
+  LocalCoursePage,
+  localPageMarkdownUtils,
+} from "@/models/local/page/localCoursePage";
+import {
+  LocalQuiz,
+  localQuizMarkdownUtils,
+} from "@/models/local/quiz/localQuiz";
 import { promises as fs } from "fs";
 import path from "path";
 
@@ -60,7 +73,7 @@ export const courseMarkdownLoader = {
 
     const settingsString = await fs.readFile(settingsPath, "utf-8");
     const settings = localCourseYamlUtils.parseSettingYaml(settingsString);
-    
+
     const folderName = path.basename(courseDirectory);
     return { ...settings, name: folderName };
   },

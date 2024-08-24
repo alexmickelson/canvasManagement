@@ -3,7 +3,7 @@
 export const getDateFromString = (value: string) => {
   // may need to check for other formats
   const validDateRegex =
-    /\d{2}\/\d{2}\/\d{4} [0-2][0-9]|[0-5][0-9]|[0-2][0-9]:[0-5][0-9]:[0-5][0-9]/;
+    /\d{2}\/\d{2}\/\d{4} [0-2][0-9]:[0-5][0-9]:[0-5][0-9]/;
   if (!validDateRegex.test(value)) {
     return undefined;
   }

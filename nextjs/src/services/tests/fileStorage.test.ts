@@ -7,13 +7,8 @@ import { QuestionType } from "@/models/local/quiz/localQuizQuestion";
 import { fileStorageService } from "../fileStorage/fileStorageService";
 
 describe("FileStorageTests", () => {
-  let storageDirectory: string;
-
   beforeEach(() => {
-    const tempDirectory = path.resolve("./temp");
-    storageDirectory = path.join(tempDirectory, "fileStorageTests");
-    console.log(storageDirectory);
-
+    const storageDirectory = process.env.STORAGE_DIRECTORY ?? "/tmp/canvasManagerTests";
     if (fs.existsSync(storageDirectory)) {
       fs.rmdirSync(storageDirectory, { recursive: true });
     }
@@ -121,7 +116,7 @@ describe("FileStorageTests", () => {
                 { points: 4, label: "do task 1" },
                 { points: 2, label: "do task 2" },
               ],
-              allowedFileUploadExtensions: []
+              allowedFileUploadExtensions: [],
             },
           ],
           quizzes: [],
@@ -171,11 +166,11 @@ describe("FileStorageTests", () => {
                   questionType: QuestionType.ESSAY,
                   points: 1,
                   answers: [],
-                  matchDistractors: []
+                  matchDistractors: [],
                 },
               ],
               showCorrectAnswers: false,
-              allowedAttempts: 0
+              allowedAttempts: 0,
             },
           ],
           pages: [],
@@ -220,7 +215,7 @@ describe("FileStorageTests", () => {
                 { points: 4, label: "do task 1" },
                 { points: 2, label: "do task 2" },
               ],
-              allowedFileUploadExtensions: []
+              allowedFileUploadExtensions: [],
             },
           ],
           quizzes: [
@@ -239,10 +234,10 @@ describe("FileStorageTests", () => {
                   questionType: QuestionType.SHORT_ANSWER,
                   points: 1,
                   answers: [],
-                  matchDistractors: []
+                  matchDistractors: [],
                 },
               ],
-              showCorrectAnswers: false
+              showCorrectAnswers: false,
             },
           ],
           pages: [],
