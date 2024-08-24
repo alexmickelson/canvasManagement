@@ -11,9 +11,8 @@ export interface SimpleTimeOnly {
   minute: number;
 }
 
-
-
 export interface LocalCourseSettings {
+  name: string;
   assignmentGroups: LocalAssignmentGroup[];
   daysOfWeek: DayOfWeek[];
   canvasId?: number;
@@ -31,7 +30,6 @@ export enum DayOfWeek {
   Friday = "Friday",
   Saturday = "Saturday",
 }
-
 
 // export const LocalCourseSettingsUtils = {
 //   toYaml(settings: LocalCourseSettings): string {

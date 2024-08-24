@@ -1,4 +1,7 @@
-import { timeUtils } from "../../timeUtils";
+import {
+  verifyDateOrThrow,
+  verifyDateStringOrUndefined,
+} from "../../timeUtils";
 import { AssignmentSubmissionType } from "../assignmentSubmissionType";
 import { LocalAssignment } from "../localAssignment";
 import { RubricItem } from "../rubricItem";
@@ -51,8 +54,8 @@ const parseSettings = (input: string) => {
   const submissionTypes = parseSubmissionTypes(input);
   const fileUploadExtensions = parseFileUploadExtensions(input);
 
-  const dueAt = timeUtils.verifyDateOrThrow(rawDueAt, "DueAt");
-  const lockAt = timeUtils.verifyDateStringOrUndefined(rawLockAt);
+  const dueAt = verifyDateOrThrow(rawDueAt, "DueAt");
+  const lockAt = verifyDateStringOrUndefined(rawLockAt);
 
   return {
     name,

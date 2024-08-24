@@ -6,6 +6,7 @@ describe("CourseDifferencesDeletionsTests", () => {
   it("same module does not get deleted", () => {
     const oldCourse: LocalCourse = {
       settings: {
+        name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
         startDate: "09/07/2024 23:59:00",
@@ -44,6 +45,7 @@ describe("CourseDifferencesDeletionsTests", () => {
   it("changed module - old one gets deleted", () => {
     const oldCourse: LocalCourse = {
       settings: {
+        name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
         startDate: "09/07/2024 23:59:00",
@@ -83,6 +85,7 @@ describe("CourseDifferencesDeletionsTests", () => {
   it("new assignment name gets deleted", () => {
     const oldCourse: LocalCourse = {
       settings: {
+        name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
         startDate: "09/07/2024 23:59:00",
@@ -144,6 +147,7 @@ describe("CourseDifferencesDeletionsTests", () => {
   it("assignments with changed descriptions do not get deleted", () => {
     const oldCourse: LocalCourse = {
       settings: {
+        name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
         startDate: "09/07/2024 23:59:00",
@@ -200,6 +204,7 @@ describe("CourseDifferencesDeletionsTests", () => {
   it("can detect changed and unchanged assignments", () => {
     const oldCourse: LocalCourse = {
       settings: {
+        name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
         startDate: "09/07/2024 23:59:00",
@@ -276,6 +281,7 @@ describe("CourseDifferencesDeletionsTests", () => {
   it("changed quizzes get deleted", () => {
     const oldCourse: LocalCourse = {
       settings: {
+        name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
         startDate: "09/07/2024 23:59:00",
@@ -360,6 +366,7 @@ describe("CourseDifferencesDeletionsTests", () => {
   it("changed pages get deleted", () => {
     const oldCourse: LocalCourse = {
       settings: {
+        name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
         startDate: "09/07/2024 23:59:00",
