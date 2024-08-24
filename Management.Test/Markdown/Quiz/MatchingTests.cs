@@ -101,7 +101,7 @@ Match the following terms & definitions
 ";
 
     var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
-    quiz.Questions.First().Answers.First().MatchDistractors.Should().BeEquivalentTo(["this is the distractor"]);
+    quiz.Questions.First().MatchDistractors.Should().BeEquivalentTo(["this is the distractor"]);
   }
   [Fact]
   public void CanHaveDistractorsAndBePersisted()
@@ -118,7 +118,7 @@ Description:
 ---
 Match the following terms & definitions
 
-^statement - a single command to be executed
+^ statement - a single command to be executed
 ^ - this is the distractor
 ";
 

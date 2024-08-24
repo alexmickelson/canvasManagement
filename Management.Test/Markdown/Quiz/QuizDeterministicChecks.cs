@@ -195,8 +195,7 @@ public class QuizDeterministicChecks
           Text = "test matching",
           QuestionType = QuestionType.MATCHING,
           Points = 1,
-          Answers = new LocalQuizQuestionAnswer[]
-          {
+          Answers = [
             new() {
               Correct = true,
               Text="yes",
@@ -207,7 +206,7 @@ public class QuizDeterministicChecks
               Text="no",
               MatchedText = "testing no"
             }
-          }
+          ]
         }
       }
     };

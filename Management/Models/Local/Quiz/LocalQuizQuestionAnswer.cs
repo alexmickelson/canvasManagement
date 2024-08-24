@@ -9,7 +9,6 @@ public record LocalQuizQuestionAnswer
   public string Text { get; init; } = string.Empty;
 
   public string? MatchedText { get; init; }
-  public IEnumerable<string>? MatchDistractors { get; init; }
 
   public string HtmlText => MarkdownService.Render(Text);
 

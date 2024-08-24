@@ -1,5 +1,7 @@
 using CanvasModel.Quizzes;
+
 using LocalModels;
+
 using RestSharp;
 
 namespace Management.Services.Canvas;
@@ -16,7 +18,7 @@ public class CanvasQuizService(
   CanvasServiceUtils utils,
   ICanvasAssignmentService assignments,
   ILogger<CanvasQuizService> logger
-): ICanvasQuizService
+) : ICanvasQuizService
 {
   private readonly IWebRequestor webRequestor = webRequestor;
   private readonly CanvasServiceUtils utils = utils;
@@ -164,6 +166,7 @@ public class CanvasQuizService(
 
     var url = $"courses/{canvasCourseId}/quizzes/{canvasQuizId}/questions";
     var answers = getAnswers(q);
+
     var body = new
     {
       question = new
@@ -172,9 +175,12 @@ public class CanvasQuizService(
         question_type = q.QuestionType + "_question",
         points_possible = q.Points,
         position,
+        matching_answer_incorrect_matches = string.Join("\n", q.MatchDistractors),
         answers
       }
     };
+    Console.WriteLine(JsonSerializer.Serialize(q));
+    Console.WriteLine(JsonSerializer.Serialize(body));
     var request = new RestRequest(url);
     request.AddBody(body);
 
@@ -197,7 +203,6 @@ public class CanvasQuizService(
         {
           answer_match_left = a.Text,
           answer_match_right = a.MatchedText,
-          matching_answer_incorrect_matches = a.MatchDistractors,
         })
         .ToArray();
 

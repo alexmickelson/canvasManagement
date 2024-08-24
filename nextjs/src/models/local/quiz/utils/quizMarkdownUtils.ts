@@ -1,3 +1,4 @@
+import { timeUtils } from "../../timeUtils";
 import { LocalQuiz } from "../localQuiz";
 import { quizQuestionMarkdownUtils } from "./quizQuestionMarkdownUtils";
 
@@ -36,34 +37,6 @@ const parseNumberOrThrow = (value: string, label: string): number => {
   }
   return parsed;
 };
-
-const parseDateOrThrow = (value: string, label: string): string => {
-  const [datePart, timePart] = value.split(" ");
-  const [day, month, year] = datePart.split("/").map(Number);
-  const [hours, minutes, seconds] = timePart.split(":").map(Number);
-  const date = new Date(year, month - 1, day, hours, minutes, seconds);
-
-  if (isNaN(date.getTime())) {
-    throw new Error(`Error with ${label}: ${value}`);
-  }
-  const stringDay = String(date.getDate()).padStart(2, "0");
-  const stringMonth = String(date.getMonth() + 1).padStart(2, "0"); // Months are zero-based
-  const stringYear = date.getFullYear();
-  const stringHours = String(date.getHours()).padStart(2, "0");
-  const stringMinutes = String(date.getMinutes()).padStart(2, "0");
-  const stringSeconds = String(date.getSeconds()).padStart(2, "0");
-
-  return `${stringDay}/${stringMonth}/${stringYear} ${stringHours}:${stringMinutes}:${stringSeconds}`;
-};
-
-const parseDateOrNull = (value: string): string | undefined => {
-  const [datePart, timePart] = value.split(" ");
-  const [day, month, year] = datePart.split("/").map(Number);
-  const [hours, minutes, seconds] = timePart.split(":").map(Number);
-  const date = new Date(year, month - 1, day, hours, minutes, seconds);
-  return isNaN(date.getTime()) ? undefined : date.toISOString();
-};
-
 const getQuizWithOnlySettings = (settings: string): LocalQuiz => {
   const name = extractLabelValue(settings, "Name");
 
@@ -101,10 +74,10 @@ const getQuizWithOnlySettings = (settings: string): LocalQuiz => {
   );
 
   const rawDueAt = extractLabelValue(settings, "DueAt");
-  const dueAt = parseDateOrThrow(rawDueAt, "DueAt");
+  const dueAt = timeUtils.parseDateOrThrow(rawDueAt, "DueAt");
 
   const rawLockAt = extractLabelValue(settings, "LockAt");
-  const lockAt = parseDateOrNull(rawLockAt);
+  const lockAt = timeUtils.parseDateOrUndefined(rawLockAt);
 
   const description = extractDescription(settings);
   const localAssignmentGroupName = extractLabelValue(

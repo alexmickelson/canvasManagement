@@ -1,3 +1,4 @@
+import { timeUtils } from "../../timeUtils";
 import { AssignmentSubmissionType } from "../assignmentSubmissionType";
 import { LocalAssignment } from "../localAssignment";
 import { RubricItem } from "../rubricItem";
@@ -50,12 +51,8 @@ const parseSettings = (input: string) => {
   const submissionTypes = parseSubmissionTypes(input);
   const fileUploadExtensions = parseFileUploadExtensions(input);
 
-  const lockAt = (rawLockAt ? new Date(rawLockAt) : undefined)?.toISOString();
-  const dueAt = new Date(rawDueAt).toISOString();
-
-  if (isNaN(new Date(dueAt).getTime())) {
-    throw new Error(`Error with DueAt: ${rawDueAt}`);
-  }
+  const dueAt = timeUtils.parseDateOrThrow(rawDueAt, "DueAt");
+  const lockAt = timeUtils.parseDateOrUndefined(rawLockAt);
 
   return {
     name,

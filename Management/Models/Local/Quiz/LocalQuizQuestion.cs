@@ -13,10 +13,17 @@ public record LocalQuizQuestion
   public double Points { get; init; }
   public IEnumerable<LocalQuizQuestionAnswer> Answers { get; init; } =
     Enumerable.Empty<LocalQuizQuestionAnswer>();
+  public IEnumerable<string> MatchDistractors { get; init; } = [];
   public string ToMarkdown()
   {
     var answerArray = Answers.Select(getAnswerMarkdown);
-    var answersText = string.Join("\n", answerArray);
+
+
+    var distractorText = MatchDistractors
+          .Select(d => $"\n^ - {d}")
+          .Join("");
+
+    var answersText = string.Join("\n", answerArray) + distractorText;
     var questionTypeIndicator = QuestionType == "essay" || QuestionType == "short_answer" ? QuestionType : "";
 
     return $@"Points: {Points}
@@ -39,10 +46,7 @@ public record LocalQuizQuestion
     }
     else if (QuestionType == "matching")
     {
-      var distractorText = answer.MatchDistractors?.Select(
-        d => $"\n^ - {d}"
-      ).Join("") ?? "";
-      return $"^ {answer.Text} - {answer.MatchedText}" + distractorText;
+      return $"^ {answer.Text} - {answer.MatchedText}";
     }
     else
     {
@@ -98,12 +102,22 @@ public record LocalQuizQuestion
       ? getAnswers(linesWithoutPoints, questionIndex, questionType)
       : [];
 
+    var distractors = questionType == "matching"
+      ? answers.Where(a => a.Text == "").Select(a => a.MatchedText ?? "").ToArray()
+      : [];
+
+    var answersWithoutDistractors = questionType == "matching"
+      ? answers.Where(a => a.Text != "").ToArray()
+      : answers;
+
+
     return new LocalQuizQuestion()
     {
       Text = description,
       Points = points,
-      Answers = answers,
-      QuestionType = questionType
+      Answers = answersWithoutDistractors,
+      QuestionType = questionType,
+      MatchDistractors = distractors
     };
   }
 
@@ -184,27 +198,6 @@ public record LocalQuizQuestion
 
     var answers = answerLines
       .Select((a, i) => LocalQuizQuestionAnswer.ParseMarkdown(a, questionType))
-      .Aggregate([], (IEnumerable<LocalQuizQuestionAnswer> accumulator, LocalQuizQuestionAnswer answer) =>
-      {
-        if (questionType != "matching")
-          return accumulator.Append(answer);
-
-        if (accumulator.Count() == 0)
-          return accumulator.Append(answer);
-
-        if (answer.Text != "")
-          return accumulator.Append(answer);
-
-
-        var previousDistractors = accumulator.Last().MatchDistractors ?? [];
-        var newLastAnswer = accumulator.Last() with
-        {
-          MatchDistractors = previousDistractors.Append(answer.MatchedText ?? "").ToArray()
-        };
-
-        return accumulator.Reverse().Skip(1).Reverse().Append(newLastAnswer);
-
-      })
       .ToArray();
 
     return answers;
