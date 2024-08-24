@@ -1,5 +1,7 @@
 import { AssignmentSubmissionType } from "./assignmentSubmissionType";
 import { RubricItem } from "./rubricItem";
+import { assignmentMarkdownParser } from "./utils/assignmentMarkdownParser";
+import { assignmentMarkdownSerializer } from "./utils/assignmentMarkdownSerializer";
 
 export interface LocalAssignment {
   name: string;
@@ -11,3 +13,8 @@ export interface LocalAssignment {
   allowedFileUploadExtensions: string[];
   rubric: RubricItem[];
 }
+
+export const localAssignmentMarkdown = {
+  parseMarkdown: assignmentMarkdownParser.parseMarkdown,
+  toMarkdown: assignmentMarkdownSerializer.toMarkdown,
+};

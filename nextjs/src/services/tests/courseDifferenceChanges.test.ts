@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { LocalCourse } from "@/models/local/localCourse";
-import { CourseDifferences } from "../fileStorage/courseDifferences";
+import { CourseDifferences } from "../fileStorage/utils/courseDifferences";
 import { AssignmentSubmissionType } from "@/models/local/assignmnet/assignmentSubmissionType";
 
 describe("CourseDifferencesChangesTests", () => {
@@ -124,7 +124,9 @@ describe("CourseDifferencesChangesTests", () => {
 
     expect(differences.modules).not.toBeNull();
     expect(differences.modules).toHaveLength(1);
-    expect(differences.modules?.[0].assignments?.[0].description).toBe("new description");
+    expect(differences.modules?.[0].assignments?.[0].description).toBe(
+      "new description"
+    );
   });
 
   it("can properly ignore unchanged modules", () => {
@@ -241,7 +243,9 @@ describe("CourseDifferencesChangesTests", () => {
 
     expect(differences.modules).toHaveLength(1);
     expect(differences.modules?.[0].assignments).toHaveLength(1);
-    expect(differences.modules?.[0].assignments?.[0].name).toBe("test assignment 2 with a new name");
+    expect(differences.modules?.[0].assignments?.[0].name).toBe(
+      "test assignment 2 with a new name"
+    );
   });
 
   it("identical quizzes ignored", () => {
@@ -349,7 +353,9 @@ describe("CourseDifferencesChangesTests", () => {
 
     expect(differences.modules).toHaveLength(1);
     expect(differences.modules?.[0].quizzes).toHaveLength(1);
-    expect(differences.modules?.[0].quizzes?.[0].lockAt).toBe("12/31/9999 23:59:59");
+    expect(differences.modules?.[0].quizzes?.[0].lockAt).toBe(
+      "12/31/9999 23:59:59"
+    );
   });
 
   it("can detect only different quiz when other quizzes stay", () => {
@@ -515,7 +521,9 @@ describe("CourseDifferencesChangesTests", () => {
 
     expect(differences.modules).toHaveLength(1);
     expect(differences.modules?.[0].pages).toHaveLength(1);
-    expect(differences.modules?.[0].pages?.[0].text).toBe("test description changed");
+    expect(differences.modules?.[0].pages?.[0].text).toBe(
+      "test description changed"
+    );
   });
 
   it("different page detected but not same page", () => {

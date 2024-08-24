@@ -1,4 +1,5 @@
 import { LocalQuizQuestion } from "./localQuizQuestion";
+import { quizMarkdownUtils } from "./utils/quizMarkdownUtils";
 
 export interface LocalQuiz {
   name: string;
@@ -13,3 +14,8 @@ export interface LocalQuiz {
   allowedAttempts: number;
   questions: LocalQuizQuestion[];
 }
+
+export const localQuizMarkdownUtils = {
+  parseMarkdown: quizMarkdownUtils.parseMarkdown,
+  toMarkdown: quizMarkdownUtils.toMarkdown,
+};

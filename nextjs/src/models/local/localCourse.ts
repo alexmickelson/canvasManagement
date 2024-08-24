@@ -1,5 +1,6 @@
 import { LocalAssignmentGroup } from "./assignmnet/localAssignmentGroup";
 import { LocalModule } from "./localModules";
+import { parse, stringify } from "yaml";
 
 export interface LocalCourse {
   modules: LocalModule[];
@@ -30,14 +31,11 @@ export enum DayOfWeek {
   Friday = "Friday",
   Saturday = "Saturday",
 }
-
-// export const LocalCourseSettingsUtils = {
-//   toYaml(settings: LocalCourseSettings): string {
-//     return dump(settings, { noRefs: true });
-//   },
-
-//   parseYaml(rawText: string): LocalCourseSettings {
-//     const settings = load(rawText) as LocalCourseSettings;
-//     return createLocalCourseSettings(settings);
-//   },
-// };
+export const localCourseYamlUtils = {
+  parseSettingYaml: (settingsString: string): LocalCourseSettings => {
+    return parse(settingsString);
+  },
+  settingsToYaml: (settings: LocalCourseSettings) => {
+    return stringify(settings);
+  },
+};

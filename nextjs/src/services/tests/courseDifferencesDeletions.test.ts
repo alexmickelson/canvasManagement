@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { LocalCourse } from "@/models/local/localCourse";
-import { CourseDifferences } from "../fileStorage/courseDifferences";
+import { CourseDifferences } from "../fileStorage/utils/courseDifferences";
 
 describe("CourseDifferencesDeletionsTests", () => {
   it("same module does not get deleted", () => {
@@ -37,7 +37,10 @@ describe("CourseDifferencesDeletionsTests", () => {
       ],
     };
 
-    const differences = CourseDifferences.getDeletedChanges(newCourse, oldCourse);
+    const differences = CourseDifferences.getDeletedChanges(
+      newCourse,
+      oldCourse
+    );
 
     expect(differences.namesOfModulesToDeleteCompletely).toHaveLength(0);
   });
@@ -76,7 +79,10 @@ describe("CourseDifferencesDeletionsTests", () => {
       ],
     };
 
-    const differences = CourseDifferences.getDeletedChanges(newCourse, oldCourse);
+    const differences = CourseDifferences.getDeletedChanges(
+      newCourse,
+      oldCourse
+    );
 
     expect(differences.namesOfModulesToDeleteCompletely).toHaveLength(1);
     expect(differences.namesOfModulesToDeleteCompletely[0]).toBe("test module");
@@ -105,7 +111,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               dueAt: "09/07/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
-              rubric: []
+              rubric: [],
             },
           ],
           quizzes: [],
@@ -125,7 +131,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               dueAt: "09/07/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
-              rubric: []
+              rubric: [],
             },
           ],
           quizzes: [],
@@ -134,7 +140,10 @@ describe("CourseDifferencesDeletionsTests", () => {
       ],
     };
 
-    const differences = CourseDifferences.getDeletedChanges(newCourse, oldCourse);
+    const differences = CourseDifferences.getDeletedChanges(
+      newCourse,
+      oldCourse
+    );
 
     expect(differences.namesOfModulesToDeleteCompletely).toHaveLength(0);
     expect(differences.deleteContentsOfModule).toHaveLength(1);
@@ -167,7 +176,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               dueAt: "09/07/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
-              rubric: []
+              rubric: [],
             },
           ],
           quizzes: [],
@@ -187,7 +196,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               dueAt: "09/07/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
-              rubric: []
+              rubric: [],
             },
           ],
           quizzes: [],
@@ -196,7 +205,10 @@ describe("CourseDifferencesDeletionsTests", () => {
       ],
     };
 
-    const differences = CourseDifferences.getDeletedChanges(newCourse, oldCourse);
+    const differences = CourseDifferences.getDeletedChanges(
+      newCourse,
+      oldCourse
+    );
 
     expect(differences.deleteContentsOfModule).toHaveLength(0);
   });
@@ -224,7 +236,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               dueAt: "09/07/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
-              rubric: []
+              rubric: [],
             },
             {
               name: "test assignment 2",
@@ -232,7 +244,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               dueAt: "09/07/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
-              rubric: []
+              rubric: [],
             },
           ],
           quizzes: [],
@@ -252,7 +264,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               dueAt: "09/07/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
-              rubric: []
+              rubric: [],
             },
             {
               name: "test assignment 2 changed",
@@ -260,7 +272,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               dueAt: "09/07/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
-              rubric: []
+              rubric: [],
             },
           ],
           quizzes: [],
@@ -269,7 +281,10 @@ describe("CourseDifferencesDeletionsTests", () => {
       ],
     };
 
-    const differences = CourseDifferences.getDeletedChanges(newCourse, oldCourse);
+    const differences = CourseDifferences.getDeletedChanges(
+      newCourse,
+      oldCourse
+    );
 
     expect(differences.deleteContentsOfModule).toHaveLength(1);
     expect(differences.deleteContentsOfModule[0].assignments).toHaveLength(1);
@@ -304,7 +319,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               showCorrectAnswers: false,
               oneQuestionAtATime: false,
               allowedAttempts: 0,
-              questions: []
+              questions: [],
             },
             {
               name: "Test Quiz 2",
@@ -314,7 +329,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               showCorrectAnswers: false,
               oneQuestionAtATime: false,
               allowedAttempts: 0,
-              questions: []
+              questions: [],
             },
           ],
           pages: [],
@@ -336,7 +351,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               showCorrectAnswers: false,
               oneQuestionAtATime: false,
               allowedAttempts: 0,
-              questions: []
+              questions: [],
             },
             {
               name: "Test Quiz 3",
@@ -346,7 +361,7 @@ describe("CourseDifferencesDeletionsTests", () => {
               showCorrectAnswers: false,
               oneQuestionAtATime: false,
               allowedAttempts: 0,
-              questions: []
+              questions: [],
             },
           ],
           pages: [],
@@ -354,7 +369,10 @@ describe("CourseDifferencesDeletionsTests", () => {
       ],
     };
 
-    const differences = CourseDifferences.getDeletedChanges(newCourse, oldCourse);
+    const differences = CourseDifferences.getDeletedChanges(
+      newCourse,
+      oldCourse
+    );
 
     expect(differences.deleteContentsOfModule).toHaveLength(1);
     expect(differences.deleteContentsOfModule[0].quizzes).toHaveLength(1);
@@ -390,7 +408,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "Test Page 2",
               text: "test contents",
-              dueAt: "09/07/2024 23:59:00"
+              dueAt: "09/07/2024 23:59:00",
             },
           ],
         },
@@ -407,19 +425,22 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "Test Page",
               text: "test contents",
-              dueAt: "09/07/2024 23:59:00"
+              dueAt: "09/07/2024 23:59:00",
             },
             {
               name: "Test Page 3",
               text: "test contents",
-              dueAt: "09/07/2024 23:59:00"
+              dueAt: "09/07/2024 23:59:00",
             },
           ],
         },
       ],
     };
 
-    const differences = CourseDifferences.getDeletedChanges(newCourse, oldCourse);
+    const differences = CourseDifferences.getDeletedChanges(
+      newCourse,
+      oldCourse
+    );
 
     expect(differences.deleteContentsOfModule).toHaveLength(1);
     expect(differences.deleteContentsOfModule[0].pages).toHaveLength(1);
