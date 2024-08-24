@@ -59,7 +59,8 @@ describe("QuizDeterministicChecks", () => {
           text: "test short answer",
           questionType: QuestionType.SHORT_ANSWER,
           points: 1,
-          answers: []
+          answers: [],
+          matchDistractors: [],
         },
       ],
       allowedAttempts: -1,
@@ -86,6 +87,7 @@ describe("QuizDeterministicChecks", () => {
           text: "test essay",
           questionType: QuestionType.ESSAY,
           points: 1,
+          matchDistractors: [],
           answers: []
         },
       ],
@@ -113,6 +115,7 @@ describe("QuizDeterministicChecks", () => {
           text: "test multiple answer",
           questionType: QuestionType.MULTIPLE_ANSWERS,
           points: 1,
+          matchDistractors: [],
           answers: [
             { text: "yes", correct: true },
             { text: "no", correct: true },
@@ -144,6 +147,7 @@ describe("QuizDeterministicChecks", () => {
           text: "test multiple choice",
           questionType: QuestionType.MULTIPLE_CHOICE,
           points: 1,
+          matchDistractors: [],
           answers: [
             { text: "yes", correct: true },
             { text: "no", correct: false },
@@ -175,6 +179,7 @@ describe("QuizDeterministicChecks", () => {
           text: "test matching",
           questionType: QuestionType.MATCHING,
           points: 1,
+          matchDistractors: [],
           answers: [
             { text: "yes", correct: true, matchedText: "testing yes" },
             { text: "no", correct: true, matchedText: "testing no" },

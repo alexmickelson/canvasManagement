@@ -126,6 +126,12 @@ export const quizQuestionMarkdownUtils = {
     const answerArray = question.answers.map((a, i) =>
       getAnswerMarkdown(question, a, i)
     );
+
+    const distractorText =
+      question.questionType === QuestionType.MATCHING
+        ? question.matchDistractors?.map((d) => `\n^ - ${d}`).join("") ?? ""
+        : "";
+
     const answersText = answerArray.join("\n");
     const questionTypeIndicator =
       question.questionType === "essay" ||
@@ -133,7 +139,7 @@ export const quizQuestionMarkdownUtils = {
         ? question.questionType
         : "";
 
-    return `Points: ${question.points}\n${question.text}\n${answersText}${questionTypeIndicator}`;
+    return `Points: ${question.points}\n${question.text}\n${answersText}${distractorText}${questionTypeIndicator}`;
   },
 
   parseMarkdown(input: string, questionIndex: number): LocalQuizQuestion {
@@ -152,13 +158,6 @@ export const quizQuestionMarkdownUtils = {
         : 1;
 
     const linesWithoutPoints = firstLineIsPoints ? lines.slice(1) : lines;
-
-    // const linesWithoutAnswers = linesWithoutPoints.filter(
-    //   (line, index) =>
-    //     !_validFirstAnswerDelimiters.some((prefix) =>
-    //       line.trimStart().startsWith(prefix)
-    //     )
-    // );
 
     const { linesWithoutAnswers } = linesWithoutPoints.reduce(
       ({ linesWithoutAnswers, taking }, currentLine) => {
@@ -208,11 +207,22 @@ export const quizQuestionMarkdownUtils = {
       ? getAnswers(linesWithoutPoints, questionIndex, questionType)
       : [];
 
+    const answersWithoutDistractors =
+      questionType === QuestionType.MATCHING
+        ? answers.filter((a) => a.text)
+        : answers;
+
+    const distractors =
+      questionType === QuestionType.MATCHING
+        ? answers.filter((a) => !a.text).map((a) => a.matchedText ?? "")
+        : [];
+
     const question: LocalQuizQuestion = {
       text: description,
       questionType,
       points,
-      answers,
+      answers: answersWithoutDistractors,
+      matchDistractors: distractors,
     };
     return question;
   },

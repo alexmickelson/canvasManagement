@@ -5,6 +5,7 @@ export interface LocalQuizQuestion {
   questionType: QuestionType;
   points: number;
   answers: LocalQuizQuestionAnswer[];
+  matchDistractors: string[];
 }
 
 export enum QuestionType {
