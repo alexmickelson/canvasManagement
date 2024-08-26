@@ -1,4 +1,3 @@
-"use client";
 import { useState } from "react";
 import { CalendarMonthModel } from "./calendarMonthUtils";
 import { DayOfWeek, LocalCourse } from "@/models/local/localCourse";

@@ -1,4 +1,3 @@
-"use client";
 export interface CalendarMonthModel {
   year: number;
   month: number;
@@ -17,7 +16,7 @@ const weeksInMonth = (year: number, month: number): number => {
   return weeks;
 };
 
-export const createCalendarMonth = (
+const createCalendarMonth = (
   year: number,
   month: number
 ): CalendarMonthModel => {
