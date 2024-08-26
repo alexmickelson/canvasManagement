@@ -2,6 +2,5 @@
 const nextConfig = {
   
 };
-devServer.fastRefresh = true;
 
 export default nextConfig;

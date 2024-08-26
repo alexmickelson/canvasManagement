@@ -1,13 +1,16 @@
-"use client"
-import { FC, useState } from "react";
+"use client";
+import { useState } from "react";
 import { CalendarMonthModel } from "./calendarMonthUtils";
 import { DayOfWeek, LocalCourse } from "@/models/local/localCourse";
-import { Day } from "./Day";
+import Day from "./Day";
 
-export const CalendarMonth: FC<{
+export default function CalendarMonth({
+  month,
+  localCourse,
+}: {
   month: CalendarMonthModel;
   localCourse: LocalCourse;
-}> = ({ month, localCourse }) => {
+}) {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const isInPast =
@@ -60,4 +63,4 @@ export const CalendarMonth: FC<{
       </div>
     </>
   );
-};
+}
