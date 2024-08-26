@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { CalendarMonthModel } from "./calendarMonthUtils";
 import { DayOfWeek, LocalCourse } from "@/models/local/localCourse";
-import Day from "./Day";
+import Day from "./day";
 
 export default function CalendarMonth({
   month,

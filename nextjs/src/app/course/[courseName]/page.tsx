@@ -2,7 +2,7 @@
 import { useLocalCourseDetailsQuery } from "@/hooks/localCoursesHooks";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import { getMonthsBetweenDates } from "./calendarMonthUtils";
-import CalendarMonth from "./CalendarMonth";
+import CalendarMonth from "./calendarMonth";
 
 
 export default function Page({

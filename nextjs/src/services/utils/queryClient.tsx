@@ -123,21 +123,23 @@ export function createSuccessToast(message: string) {
   );
 }
 
-export const createQueryClient = () => new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 0,
+export function createQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+        retry: 0,
+      },
+      mutations: {
+        onError: addErrorAsToast,
+        retry: 0,
+      },
     },
-    mutations: {
+    queryCache: new QueryCache({
       onError: addErrorAsToast,
-      retry: 0,
-    },
-  },
-  queryCache: new QueryCache({
-    onError: addErrorAsToast,
-  }),
-  mutationCache: new MutationCache({
-    onError: addErrorAsToast,
-  }),
-});
+    }),
+    mutationCache: new MutationCache({
+      onError: addErrorAsToast,
+    }),
+  });
+}

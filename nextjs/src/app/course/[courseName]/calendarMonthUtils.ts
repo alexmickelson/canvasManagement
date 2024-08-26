@@ -5,7 +5,7 @@ export interface CalendarMonthModel {
   daysByWeek: (Date | undefined)[][];
 }
 
-const weeksInMonth = (year: number, month: number): number => {
+function weeksInMonth(year: number, month: number): number {
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
   const daysInMonth = new Date(year, month, 0).getDate();
   const longDaysInMonth = daysInMonth + firstDayOfMonth;
@@ -14,12 +14,9 @@ const weeksInMonth = (year: number, month: number): number => {
     weeks += 1;
   }
   return weeks;
-};
+}
 
-const createCalendarMonth = (
-  year: number,
-  month: number
-): CalendarMonthModel => {
+function createCalendarMonth(year: number, month: number): CalendarMonthModel {
   const daysByWeek: (Date | undefined)[][] = [];
   const weeksNumber = weeksInMonth(year, month);
   const daysInMonth = new Date(year, month, 0).getDate();
@@ -57,12 +54,12 @@ const createCalendarMonth = (
   );
 
   return { year, month, weeks, daysByWeek };
-};
+}
 
-export const getMonthsBetweenDates = (
+export function getMonthsBetweenDates(
   startDate: Date,
   endDate: Date
-): CalendarMonthModel[] => {
+): CalendarMonthModel[] {
   const monthsInTerm =
     1 +
     (endDate.getFullYear() - startDate.getFullYear()) * 12 +
@@ -76,4 +73,4 @@ export const getMonthsBetweenDates = (
       Math.floor((startDate.getMonth() + monthDiff) / 12);
     return createCalendarMonth(year, month);
   });
-};
+}

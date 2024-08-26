@@ -1,12 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { dehydrate } from "@tanstack/react-query";
-import { MyQueryClientProvider } from "@/services/utils/MyQueryClientProvider";
 import { hydrateCourses } from "@/hooks/hookHydration";
 import { createQueryClientForServer } from "@/services/utils/queryClientServer";
+import MyQueryClientProvider from "@/services/utils/MyQueryClientProvider";
 
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Canvas Manager 2.0",
@@ -30,9 +28,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <MyQueryClientProvider dehydratedState={dehydratedState}>
-        {/* <LoadingAndErrorHandling> */}
-          <body className={inter.className}>{children}</body>
-        {/* </LoadingAndErrorHandling> */}
+          <body className="bg-slate-950">{children}</body>
       </MyQueryClientProvider>
     </html>
   );
