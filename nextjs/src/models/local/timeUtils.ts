@@ -1,23 +1,38 @@
 
 
 export const getDateFromString = (value: string) => {
-  // may need to check for other formats
-  const validDateRegex =
-    /\d{2}\/\d{2}\/\d{4} [0-2][0-9]:[0-5][0-9]:[0-5][0-9]/;
+  // Updated regex to match both formats: "MM/DD/YYYY HH:mm:ss" and "M/D/YYYY h:mm:ss AM/PM"
+  const validDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}(?:\s?[APap][Mm])?$/;
   if (!validDateRegex.test(value)) {
+    console.log("invalid date format", value);
     return undefined;
   }
 
-  const [datePart, timePart] = value.split(" ");
+  const [datePart, timePartWithMeridian] = value.split(" ");
   const [day, month, year] = datePart.split("/").map(Number);
+  let [timePart, meridian] = timePartWithMeridian.split(" ");
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
-  const date = new Date(year, month - 1, day, hours, minutes, seconds);
+
+  let adjustedHours = hours;
+  if (meridian) {
+    meridian = meridian.toUpperCase();
+    if (meridian === "PM" && hours < 12) {
+      adjustedHours += 12;
+    } else if (meridian === "AM" && hours === 12) {
+      adjustedHours = 0;
+    }
+  }
+
+  const date = new Date(year, month - 1, day, adjustedHours, minutes, seconds);
 
   if (isNaN(date.getTime())) {
+    console.log("could not parse time out of value", value);
+    
     return undefined;
   }
   return date;
 };
+
 
 export const verifyDateStringOrUndefined = (
   value: string

@@ -97,7 +97,7 @@ Description:
 Match the following terms & definitions
 
 ^statement - a single command to be executed
-^ - this is the distractor
+^  - this is the distractor
 ";
 
     var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
@@ -126,5 +126,34 @@ Match the following terms & definitions
     var quizMarkdown = quiz.ToMarkdown();
 
     quizMarkdown.Should().Contain("^ statement - a single command to be executed\n^ - this is the distractor");
+  }
+  [Fact]
+  public void DistractorsDoNotAddDelimiterOntheEnd()
+  {
+    var rawMarkdownQuiz = @"
+Name: Test Quiz
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 2023-08-21T23:59:00
+LockAt: 2023-08-21T23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: 
+---
+
+Points: 2
+
+Match up the term with the best possible answer.
+^ - a variable name
+^ - A reserved word with special meaning to the compiler
+";
+
+    var quiz = LocalQuiz.ParseMarkdown(rawMarkdownQuiz);
+    var quizMarkdown = quiz.ToMarkdown();
+
+    quizMarkdown.Should().Contain(@"Match up the term with the best possible answer.
+
+^ - a variable name
+^ - A reserved word with special meaning to the compiler");
   }
 }

@@ -5,6 +5,7 @@ import { courseMarkdownLoader } from "./utils/couresMarkdownLoader";
 import { courseMarkdownSaver } from "./utils/courseMarkdownSaver";
 
 const basePath = process.env.STORAGE_DIRECTORY ?? "./storage";
+console.log("base path", basePath);
 
 export const fileStorageService = {
   async saveCourseAsync(

@@ -3,6 +3,7 @@
 import {
   DehydratedState,
   hydrate,
+  HydrationBoundary,
   QueryClientProvider,
 } from "@tanstack/react-query";
 import React from "react";
@@ -15,9 +16,9 @@ export const MyQueryClientProvider: FC<{
 }> = ({ children, dehydratedState }) => {
   const [queryClient] = useState(createQueryClient());
 
-  hydrate(queryClient, dehydratedState);
-
   return (
-    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+      <HydrationBoundary state={dehydratedState}>{children}</HydrationBoundary>
+    </QueryClientProvider>
   );
 };

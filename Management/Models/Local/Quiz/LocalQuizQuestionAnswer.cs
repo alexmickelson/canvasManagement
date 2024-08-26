@@ -19,13 +19,21 @@ public record LocalQuizQuestionAnswer
     if (questionType == QuestionType.MATCHING)
     {
 
-      string matchingPattern = @"^\^ ?";
-      var textWithoutMatchDelimiter = Regex.Replace(input, matchingPattern, string.Empty).Trim();
+      string matchingPattern = @"^\^";
+      var textWithoutMatchDelimiter = Regex.Replace(input, matchingPattern, string.Empty);
+
+      var leftRightDelimiter = " - ";
       return new LocalQuizQuestionAnswer()
       {
         Correct = true,
-        Text = textWithoutMatchDelimiter.Split('-')[0].Trim(),
-        MatchedText = string.Join("-", textWithoutMatchDelimiter.Split('-')[1..]).Trim(),
+        Text = textWithoutMatchDelimiter.Split(leftRightDelimiter)[0].Trim(),
+        MatchedText = string.Join(
+          leftRightDelimiter, 
+          textWithoutMatchDelimiter
+            .Split(leftRightDelimiter)[1..]
+            .Select(a => a.Trim())
+            .Where(a => a != "")
+        ).Trim(),
       };
     }
 
