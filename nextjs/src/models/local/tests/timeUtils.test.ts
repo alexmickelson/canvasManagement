@@ -14,6 +14,5 @@ describe("Can properly handle expected date formats", () => {
     const dateString = "8/27/2024 23:95:00"
     const dateObject = getDateFromString(dateString)
     expect(dateObject).not.toBeUndefined()
-    
   })
 })
