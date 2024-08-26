@@ -73,6 +73,7 @@ export const courseMarkdownLoader = {
 
     const settingsString = await fs.readFile(settingsPath, "utf-8");
     const settings = localCourseYamlUtils.parseSettingYaml(settingsString);
+    console.log(settingsString, settings);
 
     const folderName = path.basename(courseDirectory);
     return { ...settings, name: folderName };

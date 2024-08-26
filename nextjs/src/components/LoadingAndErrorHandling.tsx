@@ -2,6 +2,7 @@ import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { FC, ReactNode, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
+// not at top level?
 export const LoadingAndErrorHandling: FC<{ children: ReactNode }> = ({
   children,
 }) => {

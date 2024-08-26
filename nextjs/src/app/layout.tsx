@@ -4,7 +4,6 @@ import "./globals.css";
 import { dehydrate } from "@tanstack/react-query";
 import { MyQueryClientProvider } from "@/services/utils/MyQueryClientProvider";
 import { hydrateCourses } from "@/hooks/hookHydration";
-import { LoadingAndErrorHandling } from "@/components/LoadingAndErrorHandling";
 import { createQueryClientForServer } from "@/services/utils/queryClientServer";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -31,9 +30,9 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <MyQueryClientProvider dehydratedState={dehydratedState}>
-        <LoadingAndErrorHandling>
+        {/* <LoadingAndErrorHandling> */}
           <body className={inter.className}>{children}</body>
-        </LoadingAndErrorHandling>
+        {/* </LoadingAndErrorHandling> */}
       </MyQueryClientProvider>
     </html>
   );

@@ -33,9 +33,32 @@ export enum DayOfWeek {
 }
 export const localCourseYamlUtils = {
   parseSettingYaml: (settingsString: string): LocalCourseSettings => {
-    return parse(settingsString);
+    const settings = parse(settingsString);
+    return lowercaseFirstLetter(settings)
   },
   settingsToYaml: (settings: LocalCourseSettings) => {
     return stringify(settings);
   },
 };
+
+function lowercaseFirstLetter<T>(obj: T): T {
+  if (obj === null || typeof obj !== 'object') 
+    return obj as T;
+
+  if (Array.isArray(obj)) 
+    return obj.map(lowercaseFirstLetter) as unknown as T;
+
+  const result: Record<string, any> = {};
+  Object.keys(obj).forEach((key) => {
+    const value = (obj as Record<string, any>)[key];
+    const newKey = key.charAt(0).toLowerCase() + key.slice(1);
+
+    if (value && typeof value === 'object') {
+      result[newKey] = lowercaseFirstLetter(value);
+    } else {
+      result[newKey] = value;
+    }
+  });
+
+  return result as T;
+}

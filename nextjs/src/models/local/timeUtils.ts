@@ -1,5 +1,7 @@
-
-const _getDateFromAMPM = (datePart: string, timePartWithMeridian: string): Date | undefined => {
+const _getDateFromAMPM = (
+  datePart: string,
+  timePartWithMeridian: string
+): Date | undefined => {
   const [day, month, year] = datePart.split("/").map(Number);
   const [timePart, meridian] = timePartWithMeridian.split(" ");
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
@@ -18,7 +20,10 @@ const _getDateFromAMPM = (datePart: string, timePartWithMeridian: string): Date 
   return isNaN(date.getTime()) ? undefined : date;
 };
 
-const _getDateFromMilitary = (datePart: string, timePart: string): Date | undefined => {
+const _getDateFromMilitary = (
+  datePart: string,
+  timePart: string
+): Date | undefined => {
   const [day, month, year] = datePart.split("/").map(Number);
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
 
@@ -26,14 +31,20 @@ const _getDateFromMilitary = (datePart: string, timePart: string): Date | undefi
   return isNaN(date.getTime()) ? undefined : date;
 };
 
+const _getDateFromISO = (value: string): Date | undefined => {
+  const date = new Date(value);
+  return isNaN(date.getTime()) ? undefined : date;
+};
+
 export const getDateFromString = (value: string): Date | undefined => {
-  // Regex for AM/PM format: "M/D/YYYY h:mm:ss AM/PM"
-  const ampmDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}\s{1}[APap][Mm]$/;
+  const ampmDateRegex =
+    /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}\s{1}[APap][Mm]$/; //"M/D/YYYY h:mm:ss AM/PM"
+  const militaryDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}$/; //"MM/DD/YYYY HH:mm:ss"
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)$/; //"2024-08-26T00:00:00.0000000"
 
-  // Regex for military time format: "MM/DD/YYYY HH:mm:ss"
-  const militaryDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}$/;
-
-  if (ampmDateRegex.test(value)) {
+  if (isoDateRegex.test(value)) {
+    return _getDateFromISO(value);
+  } else if (ampmDateRegex.test(value)) {
     const [datePart, timePartWithMeridian] = value.split(/[\s\u202F]+/);
     return _getDateFromAMPM(datePart, timePartWithMeridian);
   } else if (militaryDateRegex.test(value)) {
@@ -45,7 +56,11 @@ export const getDateFromString = (value: string): Date | undefined => {
   }
 };
 
-
+export const getDateFromStringOrThrow = (value: string): Date => {
+  const d = getDateFromString(value);
+  if (!d) throw Error(`Invalid date format, ${value}`);
+  return d;
+};
 
 export const verifyDateStringOrUndefined = (
   value: string
