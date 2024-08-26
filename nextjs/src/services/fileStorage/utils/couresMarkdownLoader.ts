@@ -185,8 +185,8 @@ export const courseMarkdownLoader = {
 
   async directoryExists(directoryPath: string): Promise<boolean> {
     try {
-      const stat = await fs.stat(directoryPath);
-      return stat.isDirectory();
+      await fs.access(directoryPath);
+      return true;
     } catch {
       return false;
     }

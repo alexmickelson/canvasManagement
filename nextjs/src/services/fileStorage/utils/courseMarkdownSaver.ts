@@ -10,8 +10,8 @@ const basePath = process.env.STORAGE_DIRECTORY ?? "./storage";
 
 const directoryExists = async (directoryPath: string): Promise<boolean> => {
   try {
-    const stat = await fs.stat(directoryPath);
-    return stat.isDirectory();
+    await fs.access(directoryPath);
+    return true;
   } catch {
     return false;
   }
