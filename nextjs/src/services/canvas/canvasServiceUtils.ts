@@ -23,9 +23,8 @@ export const canvasServiceUtils = {
     const url = new URL(request.url!, BASE_URL);
     url.searchParams.set("per_page", "100");
 
-    const [firstData, firstResponse] = await webRequestor.get<T>(
-      url.toString()
-    );
+    const { data: firstData, response: firstResponse } =
+      await webRequestor.get<T>(url.toString());
 
     if (!firstResponse.ok) {
       console.error(
@@ -41,7 +40,7 @@ export const canvasServiceUtils = {
 
     while (nextUrl) {
       requestCount += 1;
-      const [data, response] = await webRequestor.get<T>(nextUrl);
+      const {data, response} = await webRequestor.get<T>(nextUrl);
       if (data) {
         returnData = [...returnData, data];
       }

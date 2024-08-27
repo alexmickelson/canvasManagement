@@ -56,9 +56,9 @@ export const getDateFromString = (value: string): Date | undefined => {
   }
 };
 
-export const getDateFromStringOrThrow = (value: string): Date => {
+export const getDateFromStringOrThrow = (value: string, labelForError: string): Date => {
   const d = getDateFromString(value);
-  if (!d) throw Error(`Invalid date format, ${value}`);
+  if (!d) throw Error(`Invalid date format for ${labelForError}, ${value}`);
   return d;
 };
 

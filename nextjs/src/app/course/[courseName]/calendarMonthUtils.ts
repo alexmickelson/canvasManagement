@@ -1,8 +1,9 @@
+"use client"
 export interface CalendarMonthModel {
   year: number;
   month: number;
-  weeks: (number | undefined)[][];
-  daysByWeek: (Date | undefined)[][];
+  weeks: number[][];
+  daysByWeek: (Date)[][];
 }
 
 function weeksInMonth(year: number, month: number): number {
@@ -17,41 +18,26 @@ function weeksInMonth(year: number, month: number): number {
 }
 
 function createCalendarMonth(year: number, month: number): CalendarMonthModel {
-  const daysByWeek: (Date | undefined)[][] = [];
   const weeksNumber = weeksInMonth(year, month);
   const daysInMonth = new Date(year, month, 0).getDate();
 
   let currentDay = 1;
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
 
-  for (let i = 0; i < weeksNumber; i++) {
-    const thisWeek: (Date | undefined)[] = [];
-    if (i === 0 && firstDayOfMonth !== 0) {
-      // 0 is Sunday in JavaScript
-      for (let j = 0; j < 7; j++) {
-        if (j < firstDayOfMonth) {
-          thisWeek.push(undefined);
-        } else {
-          thisWeek.push(new Date(year, month - 1, currentDay));
-          currentDay++;
-        }
+  const daysByWeek = Array.from({ length: weeksNumber }).map((_, weekIndex) =>
+    Array.from({ length: 7 }).map((_, dayIndex) => {
+      if (weekIndex === 0 && dayIndex < firstDayOfMonth) {
+        return new Date(year, month - 1, dayIndex - firstDayOfMonth + 1);
+      } else if (currentDay <= daysInMonth) {
+        return new Date(year, month - 1, currentDay++);
+      } else {
+        currentDay++;
+        return new Date(year, month, currentDay - daysInMonth);
       }
-    } else {
-      for (let j = 0; j < 7; j++) {
-        if (currentDay <= daysInMonth) {
-          thisWeek.push(new Date(year, month - 1, currentDay));
-          currentDay++;
-        } else {
-          thisWeek.push(undefined);
-        }
-      }
-    }
-    daysByWeek.push(thisWeek);
-  }
-
-  const weeks = daysByWeek.map((week) =>
-    week.map((day) => (day ? day.getDate() : undefined))
+    })
   );
+
+  const weeks = daysByWeek.map((week) => week.map((day) => day.getDate()));
 
   return { year, month, weeks, daysByWeek };
 }

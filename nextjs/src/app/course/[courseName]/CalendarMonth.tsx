@@ -1,7 +1,8 @@
+"use client"
 import { useState } from "react";
 import { CalendarMonthModel } from "./calendarMonthUtils";
 import { DayOfWeek, LocalCourse } from "@/models/local/localCourse";
-import Day from "./day";
+import Day from "./Day";
 
 export default function CalendarMonth({
   month,
@@ -55,7 +56,7 @@ export default function CalendarMonth({
         {month.daysByWeek.map((week, weekIndex) => (
           <div className="grid grid-cols-7 m-3" key={weekIndex}>
             {week.map((day, dayIndex) => (
-              <Day key={dayIndex} day={day} />
+              <Day key={dayIndex} day={day} month={month.month} />
             ))}
           </div>
         ))}

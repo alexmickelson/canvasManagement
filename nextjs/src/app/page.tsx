@@ -1,14 +1,14 @@
-"use client"
-import { useLocalCoursesQuery } from "@/hooks/localCoursesHooks";
-import Link from "next/link";
+import { HydrationBoundary } from "@tanstack/react-query";
+import CourseList from "./CourseList";
+import { getDehydratedClient } from "./layout";
 
-export default function Home() {
-  const { data: courses } = useLocalCoursesQuery();
+export default async function Home() {
+  const dehydratedState = await getDehydratedClient();
   return (
     <main className="min-h-screen">
-      {courses.map((c) => (
-        <Link href={`/course/${c.settings.name}`} key={c.settings.name}>{c.settings.name} </Link>
-      ))}
+      <HydrationBoundary state={dehydratedState}>
+        <CourseList />
+      </HydrationBoundary>
     </main>
   );
 }

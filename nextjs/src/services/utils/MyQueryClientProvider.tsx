@@ -1,12 +1,11 @@
-"use client";
-
+"use client"
 import {
   DehydratedState,
   hydrate,
   QueryClientProvider,
 } from "@tanstack/react-query";
 import React from "react";
-import { FC, ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { createQueryClient } from "./queryClient";
 
 export default function MyQueryClientProvider({
