@@ -1,8 +1,8 @@
 "use client";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
-import { useCourseContext } from "./courseContext";
-import { getMonthsBetweenDates } from "./calendarMonthUtils";
-import CalendarMonth from "./CalendarMonth";
+import { useCourseContext } from "./context/courseContext";
+import { getMonthsBetweenDates } from "./calendar/calendarMonthUtils";
+import CalendarMonth from "./calendar/CalendarMonth";
 
 export default function CourseDetails() {
   const context = useCourseContext();

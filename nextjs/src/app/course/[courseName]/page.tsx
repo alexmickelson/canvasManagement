@@ -1,6 +1,7 @@
-import CourseDetailsWrapper from "@/app/CourseDetailsWrapper";
 import { getDehydratedClient } from "@/app/layout";
 import { HydrationBoundary } from "@tanstack/react-query";
+import CourseContextProvider from "./context/CourseContextProvider";
+import CourseDetails from "./CourseDetails";
 
 export default async function CoursePage({
   params: { courseName },
@@ -10,7 +11,9 @@ export default async function CoursePage({
   const dehydratedState = await getDehydratedClient();
   return (
     <HydrationBoundary state={dehydratedState}>
-      <CourseDetailsWrapper courseName={courseName} />
+      <CourseContextProvider localCourseName={courseName}>
+        <CourseDetails />
+      </CourseContextProvider>
     </HydrationBoundary>
   );
 }
