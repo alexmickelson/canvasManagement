@@ -1,3 +1,4 @@
+import { borderRadius } from "tailwindcss/defaultTheme";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -6,7 +7,12 @@ const config: Config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  theme: {},
+  theme: {
+    borderRadius: {
+      ...borderRadius,
+      xl: "24px",
+    },
+  },
   plugins: [],
 };
 export default config;

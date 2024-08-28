@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-        <body className="bg-slate-900 h-screen p-1">{children}</body>
+        <body className="bg-slate-900 h-screen p-1 text-slate-300">{children}</body>
       </Providers>
     </html>
   );

@@ -6,8 +6,7 @@ import { useCourseContext } from "../context/courseContext";
 export default function Day({ day, month }: { day: Date; month: number }) {
   const context = useCourseContext();
 
-
-  const isInSameMonth = day.getMonth() + 1 != month
+  const isInSameMonth = day.getMonth() + 1 != month;
   const backgroundClass = isInSameMonth ? "" : "bg-slate-900";
 
   const todaysAssignments = context.localCourse.modules
@@ -50,17 +49,21 @@ export default function Day({ day, month }: { day: Date; month: number }) {
       );
     });
   return (
-    <div className={"border rounded rounded-3 p-2 pb-4 m-1 " + backgroundClass}>
+    <div
+      className={
+        "border border-slate-600 rounded-lg p-2 pb-4 m-1 " + backgroundClass
+      }
+    >
       {day.getDate()}
       <ul className="list-disc ms-4">
         {todaysAssignments.map((a) => (
-          <li key={a.name}> {a.name}</li>
+          <li key={a.name}>{a.name}</li>
         ))}
         {todaysQuizzes.map((q) => (
-          <li key={q.name}> {q.name}</li>
+          <li key={q.name}>{q.name}</li>
         ))}
         {todaysPages.map((p) => (
-          <li key={p.name}> {p.name}</li>
+          <li key={p.name}>{p.name}</li>
         ))}
       </ul>
     </div>
