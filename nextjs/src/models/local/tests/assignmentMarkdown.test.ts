@@ -9,8 +9,8 @@ describe("AssignmentMarkdownTests", () => {
     const assignment: LocalAssignment = {
       name: "test assignment",
       description: "here is the description",
-      dueAt: "21/08/2023 23:59:00",
-      lockAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
       submissionTypes: [AssignmentSubmissionType.ONLINE_UPLOAD],
       localAssignmentGroupName: "Final Project",
       rubric: [
@@ -32,8 +32,8 @@ describe("AssignmentMarkdownTests", () => {
     const assignment: LocalAssignment = {
       name: "test assignment",
       description: "here is the description",
-      dueAt: "21/08/2023 23:59:00",
-      lockAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
       submissionTypes: [AssignmentSubmissionType.ONLINE_UPLOAD],
       localAssignmentGroupName: "Final Project",
       rubric: [],
@@ -52,8 +52,8 @@ describe("AssignmentMarkdownTests", () => {
     const assignment: LocalAssignment = {
       name: "test assignment",
       description: "here is the description",
-      dueAt: "21/08/2023 23:59:00",
-      lockAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
       submissionTypes: [],
       localAssignmentGroupName: "Final Project",
       rubric: [
@@ -75,7 +75,7 @@ describe("AssignmentMarkdownTests", () => {
     const assignment: LocalAssignment = {
       name: "test assignment",
       description: "here is the description",
-      dueAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
       lockAt: undefined,
       submissionTypes: [],
       localAssignmentGroupName: "Final Project",
@@ -98,8 +98,8 @@ describe("AssignmentMarkdownTests", () => {
     const assignment: LocalAssignment = {
       name: "test assignment",
       description: "",
-      dueAt: "21/08/2023 23:59:00",
-      lockAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
       submissionTypes: [],
       localAssignmentGroupName: "Final Project",
       rubric: [
@@ -121,8 +121,8 @@ describe("AssignmentMarkdownTests", () => {
     const assignment: LocalAssignment = {
       name: "test assignment",
       description: "test assignment\n---\nsomestuff",
-      dueAt: "21/08/2023 23:59:00",
-      lockAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
       submissionTypes: [],
       localAssignmentGroupName: "Final Project",
       rubric: [],
@@ -141,8 +141,8 @@ describe("AssignmentMarkdownTests", () => {
     const assignment: LocalAssignment = {
       name: "test assignment",
       description: "here is the description",
-      dueAt: "21/08/2023 23:59:00",
-      lockAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
       submissionTypes: [AssignmentSubmissionType.ONLINE_UPLOAD],
       allowedFileUploadExtensions: ["pdf", "txt"],
       localAssignmentGroupName: "Final Project",

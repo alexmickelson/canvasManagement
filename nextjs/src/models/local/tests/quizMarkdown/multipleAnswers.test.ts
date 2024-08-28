@@ -9,8 +9,8 @@ describe("MultipleAnswersTests", () => {
     const quiz: LocalQuiz = {
       name: "Test Quiz",
       description: "desc",
-      dueAt: "21/08/2023 23:59:00",
-      lockAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
       shuffleAnswers: true,
       oneQuestionAtATime: false,
       showCorrectAnswers: false,
@@ -45,8 +45,8 @@ oneline question
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the

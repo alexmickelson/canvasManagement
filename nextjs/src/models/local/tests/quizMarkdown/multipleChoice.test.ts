@@ -10,8 +10,8 @@ describe("MultipleChoiceTests", () => {
     const quiz: LocalQuiz = {
       name: "Test Quiz",
       description: "desc",
-      dueAt: "21/08/2023 23:59:00",
-      lockAt: "21/08/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
       shuffleAnswers: true,
       oneQuestionAtATime: false,
       showCorrectAnswers: false,

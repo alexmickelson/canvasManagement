@@ -6,8 +6,8 @@ import { assignmentMarkdownSerializer } from "./utils/assignmentMarkdownSerializ
 export interface LocalAssignment {
   name: string;
   description: string;
-  lockAt?: string; // 21/08/2023 23:59:00
-  dueAt: string; // 21/08/2023 23:59:00
+  lockAt?: string; // 08/21/2023 23:59:00
+  dueAt: string; // 08/21/2023 23:59:00
   localAssignmentGroupName?: string;
   submissionTypes: AssignmentSubmissionType[];
   allowedFileUploadExtensions: string[];

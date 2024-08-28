@@ -6,7 +6,7 @@ describe("PageMarkdownTests", () => {
     const page: LocalCoursePage = {
       name: "test title",
       text: "test text content",
-      dueAt: "09/07/2024 23:59:00",
+      dueAt: "07/09/2024 23:59:00",
     };
 
     const pageMarkdownString = localPageMarkdownUtils.toMarkdown(page);

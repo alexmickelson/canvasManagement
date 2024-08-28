@@ -10,8 +10,8 @@ describe("CourseDifferencesChangesTests", () => {
         name: "Test Course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -40,8 +40,8 @@ describe("CourseDifferencesChangesTests", () => {
         name: "Test Course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -74,8 +74,8 @@ describe("CourseDifferencesChangesTests", () => {
         name: "Test Course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -88,7 +88,7 @@ describe("CourseDifferencesChangesTests", () => {
             {
               name: "test assignment",
               description: "",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -108,7 +108,7 @@ describe("CourseDifferencesChangesTests", () => {
             {
               name: "test assignment",
               description: "new description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -130,7 +130,7 @@ describe("CourseDifferencesChangesTests", () => {
   });
 
   it("can properly ignore unchanged modules", () => {
-    const commonDate = "09/07/2024 23:59:00";
+    const commonDate = "07/09/2024 23:59:00";
     const oldCourse: LocalCourse = {
       settings: {
         name: "Test Course",
@@ -171,7 +171,7 @@ describe("CourseDifferencesChangesTests", () => {
   });
 
   it("only changed assignment represented", () => {
-    const commonDate = "09/07/2024 23:59:00";
+    const commonDate = "07/09/2024 23:59:00";
     const oldCourse: LocalCourse = {
       settings: {
         name: "Test Course",
@@ -249,7 +249,7 @@ describe("CourseDifferencesChangesTests", () => {
   });
 
   it("identical quizzes ignored", () => {
-    const commonDate = "09/07/2024 23:59:00";
+    const commonDate = "07/09/2024 23:59:00";
     const oldCourse: LocalCourse = {
       settings: {
         name: "Test Course",
@@ -292,7 +292,7 @@ describe("CourseDifferencesChangesTests", () => {
   });
 
   it("can detect different quiz", () => {
-    const commonDate = "09/07/2024 23:59:00";
+    const commonDate = "07/09/2024 23:59:00";
     const oldCourse: LocalCourse = {
       settings: {
         name: "Test Course",
@@ -359,7 +359,7 @@ describe("CourseDifferencesChangesTests", () => {
   });
 
   it("can detect only different quiz when other quizzes stay", () => {
-    const commonDate = "09/07/2024 23:59:00";
+    const commonDate = "07/09/2024 23:59:00";
     const oldCourse: LocalCourse = {
       settings: {
         name: "Test Course",
@@ -433,7 +433,7 @@ describe("CourseDifferencesChangesTests", () => {
   });
 
   it("same pages not detected", () => {
-    const commonDate = "09/07/2024 23:59:00";
+    const commonDate = "07/09/2024 23:59:00";
     const oldCourse: LocalCourse = {
       settings: {
         name: "Test Course",
@@ -471,7 +471,7 @@ describe("CourseDifferencesChangesTests", () => {
   });
 
   it("different page detected", () => {
-    const commonDate = "09/07/2024 23:59:00";
+    const commonDate = "07/09/2024 23:59:00";
     const oldCourse: LocalCourse = {
       settings: {
         name: "Test Course",
@@ -527,7 +527,7 @@ describe("CourseDifferencesChangesTests", () => {
   });
 
   it("different page detected but not same page", () => {
-    const commonDate = "09/07/2024 23:59:00";
+    const commonDate = "07/09/2024 23:59:00";
     const oldCourse: LocalCourse = {
       settings: {
         name: "Test Course",

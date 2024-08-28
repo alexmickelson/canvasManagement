@@ -24,7 +24,7 @@ const _getDateFromMilitary = (
   datePart: string,
   timePart: string
 ): Date | undefined => {
-  const [day, month, year] = datePart.split("/").map(Number);
+  const [month, day, year] = datePart.split("/").map(Number);
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
 
   const date = new Date(year, month - 1, day, hours, minutes, seconds);
@@ -86,5 +86,5 @@ export const dateToMarkdownString = (date: Date) => {
   const stringMinutes = String(date.getMinutes()).padStart(2, "0");
   const stringSeconds = String(date.getSeconds()).padStart(2, "0");
 
-  return `${stringDay}/${stringMonth}/${stringYear} ${stringHours}:${stringMinutes}:${stringSeconds}`;
+  return `${stringMonth}/${stringDay}/${stringYear} ${stringHours}:${stringMinutes}:${stringSeconds}`;
 };

@@ -41,8 +41,8 @@ this is my description in markdown
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the
@@ -72,8 +72,8 @@ Name: Test Quiz
 Password: ${password}
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the
@@ -93,8 +93,8 @@ Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 ShowCorrectAnswers: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the
@@ -113,8 +113,8 @@ description
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the
@@ -153,8 +153,8 @@ b) false
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the
@@ -185,8 +185,8 @@ b) false
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the
@@ -213,8 +213,8 @@ short_answer`;
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the
@@ -236,8 +236,8 @@ short answer
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: this is the

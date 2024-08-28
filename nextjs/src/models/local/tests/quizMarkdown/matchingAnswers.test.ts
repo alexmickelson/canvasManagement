@@ -9,8 +9,8 @@ describe("MatchingTests", () => {
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: 
@@ -37,8 +37,8 @@ Match the following terms & definitions
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: 
@@ -69,8 +69,8 @@ Match the following terms & definitions
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: 
@@ -89,8 +89,8 @@ Match the following terms & definitions
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: 
@@ -112,8 +112,8 @@ Match the following terms & definitions
 Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
-DueAt: 21/08/2023 23:59:00
-LockAt: 21/08/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
 AssignmentGroup: Assignments
 AllowedAttempts: -1
 Description: 

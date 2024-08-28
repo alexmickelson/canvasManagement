@@ -9,8 +9,8 @@ describe("CourseDifferencesDeletionsTests", () => {
         name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -51,8 +51,8 @@ describe("CourseDifferencesDeletionsTests", () => {
         name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -94,8 +94,8 @@ describe("CourseDifferencesDeletionsTests", () => {
         name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -108,7 +108,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "test assignment",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -128,7 +128,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "test assignment changed name",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -159,8 +159,8 @@ describe("CourseDifferencesDeletionsTests", () => {
         name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -173,7 +173,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "test assignment",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -193,7 +193,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "test assignment",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -219,8 +219,8 @@ describe("CourseDifferencesDeletionsTests", () => {
         name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -233,7 +233,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "test assignment",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -241,7 +241,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "test assignment 2",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -261,7 +261,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "test assignment",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -269,7 +269,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "test assignment 2 changed",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               submissionTypes: [],
               allowedFileUploadExtensions: [],
               rubric: [],
@@ -299,8 +299,8 @@ describe("CourseDifferencesDeletionsTests", () => {
         name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -314,7 +314,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "Test Quiz",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               shuffleAnswers: false,
               showCorrectAnswers: false,
               oneQuestionAtATime: false,
@@ -324,7 +324,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "Test Quiz 2",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               shuffleAnswers: false,
               showCorrectAnswers: false,
               oneQuestionAtATime: false,
@@ -346,7 +346,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "Test Quiz",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               shuffleAnswers: false,
               showCorrectAnswers: false,
               oneQuestionAtATime: false,
@@ -356,7 +356,7 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "Test Quiz 3",
               description: "test description",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
               shuffleAnswers: false,
               showCorrectAnswers: false,
               oneQuestionAtATime: false,
@@ -387,8 +387,8 @@ describe("CourseDifferencesDeletionsTests", () => {
         name: "test course",
         assignmentGroups: [],
         daysOfWeek: [],
-        startDate: "09/07/2024 23:59:00",
-        endDate: "09/07/2024 23:59:00",
+        startDate: "07/09/2024 23:59:00",
+        endDate: "07/09/2024 23:59:00",
         defaultDueTime: {
           hour: 23,
           minute: 59,
@@ -403,12 +403,12 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "Test Page",
               text: "test contents",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
             },
             {
               name: "Test Page 2",
               text: "test contents",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
             },
           ],
         },
@@ -425,12 +425,12 @@ describe("CourseDifferencesDeletionsTests", () => {
             {
               name: "Test Page",
               text: "test contents",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
             },
             {
               name: "Test Page 3",
               text: "test contents",
-              dueAt: "09/07/2024 23:59:00",
+              dueAt: "07/09/2024 23:59:00",
             },
           ],
         },

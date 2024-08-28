@@ -4,13 +4,13 @@ import { CalendarMonthModel } from "./calendarMonthUtils";
 import { DayOfWeek, LocalCourse } from "@/models/local/localCourse";
 import Day from "./Day";
 
-export default function CalendarMonth({
+export const CalendarMonth = ({
   month,
   localCourse,
 }: {
   month: CalendarMonthModel;
   localCourse: LocalCourse;
-}) {
+}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const isInPast =
