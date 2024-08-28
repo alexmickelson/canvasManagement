@@ -57,7 +57,7 @@ export default function Day({ day, month }: { day: Date; month: number }) {
       {day.getDate()}
       <ul className="list-disc ms-4">
         {todaysAssignments.map((a) => (
-          <li key={a.name}>{a.name}</li>
+          <li key={a.name} >{a.name}</li>
         ))}
         {todaysQuizzes.map((q) => (
           <li key={q.name}>{q.name}</li>

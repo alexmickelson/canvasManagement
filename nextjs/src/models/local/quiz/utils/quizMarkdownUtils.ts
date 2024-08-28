@@ -76,6 +76,7 @@ const getQuizWithOnlySettings = (settings: string): LocalQuiz => {
   const rawDueAt = extractLabelValue(settings, "DueAt");
   const dueAt = verifyDateOrThrow(rawDueAt, "DueAt");
 
+
   const rawLockAt = extractLabelValue(settings, "LockAt");
   const lockAt = verifyDateStringOrUndefined(rawLockAt);
 

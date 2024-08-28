@@ -28,4 +28,15 @@ describe("Can properly handle expected date formats", () => {
     expect(dateObject?.getHours()).toBe(23);
     expect(dateObject?.getSeconds()).toBe(0);
   });
+  it("can get correct time from format", () => {
+    const dateString = "8/27/2024 1:00:00 AM";
+    const dateObject = getDateFromString(dateString);
+
+    expect(dateObject?.getDate()).toBe(27);
+    expect(dateObject?.getMonth()).toBe(8 - 1); // 0 based
+    expect(dateObject?.getFullYear()).toBe(2024);
+    expect(dateObject?.getMinutes()).toBe(0);
+    expect(dateObject?.getHours()).toBe(1);
+    expect(dateObject?.getSeconds()).toBe(0);
+  });
 });

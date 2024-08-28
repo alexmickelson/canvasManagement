@@ -19,7 +19,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
 
   return (
     <>
-      <h3 className="text-center">
+      <h3 className="text-center text-2xl">
         <button
           type="button"
           className="btn btn-link"

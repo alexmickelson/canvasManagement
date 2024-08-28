@@ -2,7 +2,7 @@ const _getDateFromAMPM = (
   datePart: string,
   timePartWithMeridian: string
 ): Date | undefined => {
-  const [day, month, year] = datePart.split("/").map(Number);
+  const [month, day, year] = datePart.split("/").map(Number);
   const [timePart, meridian] = timePartWithMeridian.split(" ");
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
 
@@ -56,7 +56,10 @@ export const getDateFromString = (value: string): Date | undefined => {
   }
 };
 
-export const getDateFromStringOrThrow = (value: string, labelForError: string): Date => {
+export const getDateFromStringOrThrow = (
+  value: string,
+  labelForError: string
+): Date => {
   const d = getDateFromString(value);
   if (!d) throw Error(`Invalid date format for ${labelForError}, ${value}`);
   return d;
@@ -73,9 +76,9 @@ export const verifyDateOrThrow = (
   value: string,
   labelForError: string
 ): string => {
-  const myDate = verifyDateStringOrUndefined(value);
+  const myDate = getDateFromString(value);
   if (!myDate) throw new Error(`Invalid format for ${labelForError}: ${value}`);
-  return myDate;
+  return dateToMarkdownString(myDate);
 };
 
 export const dateToMarkdownString = (date: Date) => {
