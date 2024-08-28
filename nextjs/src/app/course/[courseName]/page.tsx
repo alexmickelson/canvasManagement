@@ -20,7 +20,7 @@ export default async function CoursePage({
             <div className="flex-1 min-h-0">
               <CourseCalendar />
             </div>
-            <div className="m-5">
+            <div className="w-96 p-3">
               <ModuleList />
             </div>
           </div>

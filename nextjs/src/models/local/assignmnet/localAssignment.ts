@@ -1,9 +1,10 @@
+import { IModuleItem } from "../IModuleItem";
 import { AssignmentSubmissionType } from "./assignmentSubmissionType";
 import { RubricItem } from "./rubricItem";
 import { assignmentMarkdownParser } from "./utils/assignmentMarkdownParser";
 import { assignmentMarkdownSerializer } from "./utils/assignmentMarkdownSerializer";
 
-export interface LocalAssignment {
+export interface LocalAssignment extends IModuleItem {
   name: string;
   description: string;
   lockAt?: string; // 08/21/2023 23:59:00

@@ -12,6 +12,8 @@ const config: Config = {
       ...borderRadius,
       xl: "24px",
     },
+    extend: {
+    }
   },
   plugins: [],
 };

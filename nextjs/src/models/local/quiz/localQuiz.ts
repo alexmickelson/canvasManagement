@@ -1,7 +1,8 @@
+import { IModuleItem } from "../IModuleItem";
 import { LocalQuizQuestion } from "./localQuizQuestion";
 import { quizMarkdownUtils } from "./utils/quizMarkdownUtils";
 
-export interface LocalQuiz {
+export interface LocalQuiz extends IModuleItem {
   name: string;
   description: string;
   password?: string;
