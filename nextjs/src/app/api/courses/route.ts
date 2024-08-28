@@ -1,3 +1,6 @@
+import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+
 export async function GET() {
-  return Response.json([]);
+  const courses = await fileStorageService.loadSavedCourses();
+  return Response.json(courses);
 }

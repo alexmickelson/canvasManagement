@@ -1,9 +1,9 @@
-"use client"
-import { useLocalCoursesQuery } from "@/hooks/localCoursesHooks";
+"use client";
+import { useLocalCourseNamesQuery } from "@/hooks/localCoursesHooks";
 import Link from "next/link";
 
 export default function CourseList() {
-  const { data: courses } = useLocalCoursesQuery();
+  const { data: courses } = useLocalCourseNamesQuery();
   return (
     <div>
       {courses.map((c) => (
