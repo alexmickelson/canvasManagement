@@ -10,8 +10,9 @@ export interface DraggableItem {
 
 export interface CourseContextInterface {
   localCourse: LocalCourse;
-  startModuleDrag: (dragging: DraggableItem) => void;
-  stopModuleDrag: (droppedOnDay?: Date) => void;
+  startItemDrag: (dragging: DraggableItem) => void;
+  endItemDrag: () => void;
+  itemDrop: (droppedOnDay?: Date) => void;
 }
 
 const defaultValue: CourseContextInterface = {
@@ -29,10 +30,9 @@ const defaultValue: CourseContextInterface = {
       },
     },
   },
-  startModuleDrag: () => { },
-  stopModuleDrag: function (droppedOnDay?: Date): void {
-    throw new Error("Function not implemented.");
-  }
+  startItemDrag: () => {},
+  endItemDrag: () => {},
+  itemDrop: () => {},
 };
 
 export const CourseContext =

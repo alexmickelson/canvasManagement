@@ -1,5 +1,10 @@
 import { LocalCourse } from "@/models/local/localCourse";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import {
+  dataTagSymbol,
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
 
 export const localCourseKeys = {
@@ -29,6 +34,25 @@ export const useLocalCourseDetailsQuery = (courseName: string) => {
         throw Error(`Could not find course with name ${courseName}`);
       }
       return course;
+    },
+  });
+};
+
+export const useUpdateCourseMutation = (courseName: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (body: {
+      updatedCourse: LocalCourse;
+      previousCourse: LocalCourse;
+    }) => {
+      const url = `/api/courses/${courseName}`;
+      await axios.put(url, body);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: localCourseKeys.allCourses }); //optimize?
+    },
+    scope: {
+      id: "update course",
     },
   });
 };

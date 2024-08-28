@@ -4,12 +4,17 @@ import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import { useCourseContext } from "../context/courseContext";
 
 export default function Day({ day, month }: { day: Date; month: number }) {
-  const context = useCourseContext();
+  const {
+    localCourse: { modules },
+    startItemDrag,
+    endItemDrag,
+    itemDrop,
+  } = useCourseContext();
 
   const isInSameMonth = day.getMonth() + 1 != month;
   const backgroundClass = isInSameMonth ? "" : "bg-slate-900";
 
-  const todaysAssignments = context.localCourse.modules
+  const todaysAssignments = modules
     .flatMap((m) => m.assignments)
     .filter((a) => {
       const dueDate = getDateFromStringOrThrow(
@@ -22,7 +27,7 @@ export default function Day({ day, month }: { day: Date; month: number }) {
         dueDate.getDate() === day.getDate()
       );
     });
-  const todaysQuizzes = context.localCourse.modules
+  const todaysQuizzes = modules
     .flatMap((m) => m.quizzes)
     .filter((q) => {
       const dueDate = getDateFromStringOrThrow(
@@ -35,7 +40,7 @@ export default function Day({ day, month }: { day: Date; month: number }) {
         dueDate.getDate() === day.getDate()
       );
     });
-  const todaysPages = context.localCourse.modules
+  const todaysPages = modules
     .flatMap((m) => m.pages)
     .filter((p) => {
       const dueDate = getDateFromStringOrThrow(
@@ -53,17 +58,34 @@ export default function Day({ day, month }: { day: Date; month: number }) {
       className={
         "border border-slate-600 rounded-lg p-2 pb-4 m-1 " + backgroundClass
       }
+      onDrop={() => itemDrop(day)}
+      onDragOver={(e) => e.preventDefault()}
     >
       {day.getDate()}
       <ul className="list-disc ms-4">
         {todaysAssignments.map((a) => (
-          <li key={a.name} >{a.name}</li>
+          <li key={a.name}>{a.name}</li>
         ))}
         {todaysQuizzes.map((q) => (
-          <li key={q.name}>{q.name}</li>
+          <li
+            key={q.name}
+            role="button"
+            draggable="true"
+            onDragStart={() => startItemDrag({ type: "quiz", item: q })}
+            onDragEnd={endItemDrag}
+          >
+            {q.name}
+          </li>
         ))}
         {todaysPages.map((p) => (
-          <li key={p.name}>{p.name}</li>
+          <li
+            key={p.name}
+            role="button"
+            draggable="true"
+            // onDragStart={() => startItemDrag({ type: "page", item: p })}
+          >
+            {p.name}
+          </li>
         ))}
       </ul>
     </div>
