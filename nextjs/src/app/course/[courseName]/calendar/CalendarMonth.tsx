@@ -1,16 +1,10 @@
-"use client"
+"use client";
 import { useState } from "react";
 import { CalendarMonthModel } from "./calendarMonthUtils";
-import { DayOfWeek, LocalCourse } from "@/models/local/localCourse";
+import { DayOfWeek } from "@/models/local/localCourse";
 import Day from "./Day";
 
-export const CalendarMonth = ({
-  month,
-  localCourse,
-}: {
-  month: CalendarMonthModel;
-  localCourse: LocalCourse;
-}) => {
+export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const isInPast =
@@ -40,14 +34,7 @@ export const CalendarMonth = ({
       <div id={monthName}>
         <div className="grid grid-cols-7 text-center fw-bold">
           {weekDaysList.map((day) => (
-            <div
-              key={day}
-              className={
-                localCourse?.settings.daysOfWeek.includes(day)
-                  ? "col"
-                  : "col text-secondary"
-              }
-            >
+            <div key={day} className={""}>
               {day}
             </div>
           ))}
@@ -63,4 +50,4 @@ export const CalendarMonth = ({
       </div>
     </>
   );
-}
+};

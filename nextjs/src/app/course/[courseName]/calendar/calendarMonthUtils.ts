@@ -32,7 +32,7 @@ function createCalendarMonth(year: number, month: number): CalendarMonthModel {
         return new Date(year, month - 1, currentDay++);
       } else {
         currentDay++;
-        return new Date(year, month, currentDay - daysInMonth);
+        return new Date(year, month, currentDay - daysInMonth - 1);
       }
     })
   );

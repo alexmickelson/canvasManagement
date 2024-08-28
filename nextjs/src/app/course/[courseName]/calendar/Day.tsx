@@ -6,7 +6,9 @@ import { useCourseContext } from "../context/courseContext";
 export default function Day({ day, month }: { day: Date; month: number }) {
   const context = useCourseContext();
 
-  const backgroundClass = day.getMonth() + 1 != month ? "" : "bg-slate-900";
+
+  const isInSameMonth = day.getMonth() + 1 != month
+  const backgroundClass = isInSameMonth ? "" : "bg-slate-900";
 
   const todaysAssignments = context.localCourse.modules
     .flatMap((m) => m.assignments)
@@ -15,13 +17,11 @@ export default function Day({ day, month }: { day: Date; month: number }) {
         a.dueAt,
         "due at for assignment in day"
       );
-
-      const isSame =
+      return (
         dueDate.getFullYear() === day.getFullYear() &&
         dueDate.getMonth() === day.getMonth() &&
-        dueDate.getDate() === day.getDate();
-      if (a.name === "Chapter 3") console.log(a.name, dueDate, day, isSame);
-      return isSame;
+        dueDate.getDate() === day.getDate()
+      );
     });
   const todaysQuizzes = context.localCourse.modules
     .flatMap((m) => m.quizzes)
