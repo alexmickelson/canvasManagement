@@ -3,7 +3,7 @@ import CourseContextProvider from "./context/CourseContextProvider";
 import CourseCalendar from "./calendar/CourseCalendar";
 import { HydrationBoundary } from "@tanstack/react-query";
 import CourseSettings from "./CourseSettings";
-import ModuleList from "./ModuleList";
+import ModuleList from "./modules/ModuleList";
 
 export default async function CoursePage({
   params: { courseName },
@@ -14,13 +14,13 @@ export default async function CoursePage({
   return (
     <HydrationBoundary state={dehydratedState}>
       <CourseContextProvider localCourseName={courseName}>
-        <div>
+        <div className="h-full flex flex-col">
           <CourseSettings />
-          <div className="flex flex-row">
-            <div className="grow">
+          <div className="flex flex-row min-h-0">
+            <div className="flex-1 min-h-0">
               <CourseCalendar />
             </div>
-            <div className="w-96">
+            <div className="m-5">
               <ModuleList />
             </div>
           </div>

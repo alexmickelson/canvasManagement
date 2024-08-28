@@ -19,10 +19,10 @@ export default function CourseCalendar() {
   const months = getMonthsBetweenDates(startDateTime, endDateTime);
 
   return (
-    <>
+    <div className="overflow-y-scroll h-full border bg-slate-950">
       {months.map((month) => (
         <CalendarMonth key={month.month + "" + month.year} month={month} />
       ))}
-    </>
+    </div>
   );
 }
