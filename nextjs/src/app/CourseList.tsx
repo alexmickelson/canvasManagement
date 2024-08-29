@@ -7,8 +7,8 @@ export default function CourseList() {
   return (
     <div>
       {courses.map((c) => (
-        <Link href={`/course/${c.settings.name}`} key={c.settings.name}>
-          {c.settings.name}{" "}
+        <Link href={`/course/${c}`} key={c}>
+          {c}{" "}
         </Link>
       ))}
     </div>

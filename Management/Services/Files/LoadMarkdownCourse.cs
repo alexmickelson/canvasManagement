@@ -1,4 +1,5 @@
 using LocalModels;
+
 using Management.Services;
 
 public class CourseMarkdownLoader
@@ -38,14 +39,23 @@ public class CourseMarkdownLoader
       throw new LoadCourseFromFileException(errorMessage);
     }
 
-    LocalCourseSettings settings = await loadCourseSettings(courseDirectory);
-    var modules = await loadCourseModules(courseDirectory);
-
-    return new()
+    try
     {
-      Settings = settings,
-      Modules = modules
-    };
+
+      LocalCourseSettings settings = await loadCourseSettings(courseDirectory);
+      var modules = await loadCourseModules(courseDirectory);
+
+      return new()
+      {
+        Settings = settings,
+        Modules = modules
+      };
+    }
+    catch (Exception)
+    {
+      Console.WriteLine($"failed to load course at path: ${courseDirectory}");
+      throw;
+    }
   }
 
   private async Task<LocalCourseSettings> loadCourseSettings(string courseDirectory)
@@ -106,7 +116,15 @@ public class CourseMarkdownLoader
       .Select(async filePath =>
       {
         var rawFile = (await File.ReadAllTextAsync(filePath)).Replace("\r\n", "\n");
-        return LocalAssignment.ParseMarkdown(rawFile);
+        try
+        {
+          return LocalAssignment.ParseMarkdown(rawFile);
+        }
+        catch
+        {
+          Console.WriteLine($"error loading assignment at path {filePath}");
+          throw;
+        }
       })
       .ToArray();
     return await Task.WhenAll(assignmentPromises);
@@ -145,8 +163,17 @@ public class CourseMarkdownLoader
     var pagePromises = pageFiles
       .Select(async path =>
       {
+
         var rawPage = (await File.ReadAllTextAsync(path)).Replace("\r\n", "\n");
-        return LocalCoursePage.ParseMarkdown(rawPage);
+        try
+        {
+          return LocalCoursePage.ParseMarkdown(rawPage);
+        }
+        catch
+        {
+          Console.WriteLine($"error loading page at path {path}");
+          throw;
+        }
       })
       .ToArray();
 
