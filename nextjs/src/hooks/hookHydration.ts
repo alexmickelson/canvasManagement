@@ -1,5 +1,5 @@
 import { QueryClient } from "@tanstack/react-query";
-import { localCourseKeys } from "./localCoursesHooks";
+import { localCourseKeys } from "./localCourse/localCoursesHooks";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 
 export const hydrateCourses = async (queryClient: QueryClient) => {

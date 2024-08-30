@@ -127,7 +127,7 @@ export const fileStorageService = {
       courseName,
       moduleName,
       "assignments",
-      assignmentName + ".md"
+      assignmentName
     );
     const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
       /\r\n/g,
@@ -142,7 +142,7 @@ export const fileStorageService = {
       courseName,
       moduleName,
       "quizzes",
-      quizName + ".md"
+      quizName
     );
     const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
       /\r\n/g,
@@ -157,7 +157,7 @@ export const fileStorageService = {
       courseName,
       moduleName,
       "pages",
-      pageName + ".md"
+      pageName
     );
     const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
       /\r\n/g,

@@ -50,6 +50,7 @@ export default function CourseContextProvider({
   return (
     <CourseContext.Provider
       value={{
+        courseName: localCourseName,
         startItemDrag: (d) => {
           setItemBeingDragged(d);
         },

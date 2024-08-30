@@ -1,12 +1,5 @@
-import { LocalAssignment } from "@/models/local/assignmnet/localAssignment";
-import { LocalCourse, LocalCourseSettings } from "@/models/local/localCourse";
-import { LocalModule } from "@/models/local/localModules";
-import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
+import { LocalCourseSettings } from "@/models/local/localCourse";
 import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQueries,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import axios from "axios";
@@ -97,89 +90,7 @@ export const useModuleNamesQuery = (courseName: string) =>
     },
   });
 
-export const useModuleAssignmentNamesQuery = (
-  courseName: string,
-  moduleName: string
-) =>
-  useSuspenseQuery({
-    queryKey: localCourseKeys.moduleAssignmentNames(courseName, moduleName),
-    queryFn: async (): Promise<string[]> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/assignments`;
-      const response = await axios.get(url);
-      return response.data;
-    },
-  });
-export const useModuleQuizNamesQuery = (
-  courseName: string,
-  moduleName: string
-) =>
-  useSuspenseQuery({
-    queryKey: localCourseKeys.moduleQuizzeNames(courseName, moduleName),
-    queryFn: async (): Promise<string[]> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/quizzes`;
-      const response = await axios.get(url);
-      return response.data;
-    },
-  });
 
-export const useModulePageNamesQuery = (
-  courseName: string,
-  moduleName: string
-) =>
-  useSuspenseQuery({
-    queryKey: localCourseKeys.modulePageNames(courseName, moduleName),
-    queryFn: async (): Promise<string[]> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/pages`;
-      const response = await axios.get(url);
-      return response.data;
-    },
-  });
-
-export const useAssignmentQuery = (
-  courseName: string,
-  moduleName: string,
-  assignmentName: string
-) =>
-  useSuspenseQuery({
-    queryKey: localCourseKeys.assignment(
-      courseName,
-      moduleName,
-      assignmentName
-    ),
-    queryFn: async (): Promise<LocalAssignment> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/assignments/${assignmentName}`;
-      const response = await axios.get(url);
-      return response.data;
-    },
-  });
-
-export const useQuizQuery = (
-  courseName: string,
-  moduleName: string,
-  quizName: string
-) =>
-  useSuspenseQuery({
-    queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
-    queryFn: async (): Promise<LocalQuiz> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/quizzes/${quizName}`;
-      const response = await axios.get(url);
-      return response.data;
-    },
-  });
-
-export const usePageQuery = (
-  courseName: string,
-  moduleName: string,
-  pageName: string
-) =>
-  useSuspenseQuery({
-    queryKey: localCourseKeys.quiz(courseName, moduleName, pageName),
-    queryFn: async (): Promise<LocalCoursePage> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/pages/${pageName}`;
-      const response = await axios.get(url);
-      return response.data;
-    },
-  });
 
 // export const useUpdateCourseMutation = (courseName: string) => {
 //   const queryClient = useQueryClient();

@@ -1,6 +1,7 @@
 "use client";
 
-import { useLocalCourseSettingsQuery } from "@/hooks/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+
 
 export default function CourseSettings({ courseName }: { courseName: string }) {
   const { data: settings } = useLocalCourseSettingsQuery(courseName);

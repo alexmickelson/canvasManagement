@@ -1,5 +1,5 @@
 "use client";
-import { useLocalCourseNamesQuery } from "@/hooks/localCoursesHooks";
+import { useLocalCourseNamesQuery } from "@/hooks/localCourse/localCoursesHooks";
 import Link from "next/link";
 
 export default function CourseList() {

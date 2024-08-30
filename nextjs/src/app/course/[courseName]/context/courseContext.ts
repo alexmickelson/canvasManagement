@@ -8,15 +8,17 @@ export interface DraggableItem {
 }
 
 export interface CourseContextInterface {
+  courseName: string;
   startItemDrag: (dragging: DraggableItem) => void;
   endItemDrag: () => void;
   itemDrop: (droppedOnDay?: Date) => void;
 }
 
 const defaultValue: CourseContextInterface = {
-  startItemDrag: () => {},
-  endItemDrag: () => {},
-  itemDrop: () => {},
+  startItemDrag: () => { },
+  endItemDrag: () => { },
+  itemDrop: () => { },
+  courseName: ""
 };
 
 export const CourseContext =

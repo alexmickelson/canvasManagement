@@ -2,14 +2,50 @@ import { IModuleItem } from "@/models/local/IModuleItem";
 import { LocalModule } from "@/models/local/localModules";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import React, { useState } from "react";
+import { useCourseContext } from "../context/courseContext";
+import {
+  useAssignmentNamesQuery,
+  useAssignmentsQueries,
+} from "@/hooks/localCourse/assignmentHooks";
+import {
+  useQuizNamesQuery,
+  useQuizzesQueries,
+} from "@/hooks/localCourse/quizHooks";
+import {
+  usePageNamesQuery,
+  usePagesQueries,
+} from "@/hooks/localCourse/pageHooks";
 
-export default function ExpandableModule({ module }: { module: LocalModule }) {
+export default function ExpandableModule({
+  moduleName,
+}: {
+  moduleName: string;
+}) {
+  const { courseName } = useCourseContext();
+  const { data: assignmentNames } = useAssignmentNamesQuery(
+    courseName,
+    moduleName
+  );
+  const { data: assignments } = useAssignmentsQueries(
+    courseName,
+    moduleName,
+    assignmentNames
+  );
+  const { data: quizNames } = useQuizNamesQuery(courseName, moduleName);
+  const { data: quizzes } = useQuizzesQueries(
+    courseName,
+    moduleName,
+    quizNames
+  );
+  const { data: pageNames } = usePageNamesQuery(courseName, moduleName);
+  const { data: pages } = usePagesQueries(courseName, moduleName, pageNames);
+
   const [expanded, setExpanded] = useState(false);
 
   const moduleItems: {
     type: "assignment" | "quiz" | "page";
     item: IModuleItem;
-  }[] = module.assignments
+  }[] = assignments
     .map(
       (
         a
@@ -21,8 +57,8 @@ export default function ExpandableModule({ module }: { module: LocalModule }) {
         item: a,
       })
     )
-    .concat(module.quizzes.map((q) => ({ type: "quiz", item: q })))
-    .concat(module.pages.map((p) => ({ type: "page", item: p })))
+    .concat(quizzes.map((q) => ({ type: "quiz", item: q })))
+    .concat(pages.map((p) => ({ type: "page", item: p })))
     .sort(
       (a, b) =>
         getDateFromStringOrThrow(
@@ -42,7 +78,7 @@ export default function ExpandableModule({ module }: { module: LocalModule }) {
         role="button"
         onClick={() => setExpanded((e) => !e)}
       >
-        {module.name}
+        {moduleName}
       </div>
       <div
         className={
