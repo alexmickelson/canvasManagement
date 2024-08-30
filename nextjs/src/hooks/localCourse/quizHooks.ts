@@ -1,5 +1,10 @@
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
-import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQueries,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 
@@ -48,3 +53,29 @@ function getQuizQueryConfig(
     },
   };
 }
+
+export const useUpdateQuizMutation = (courseName: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      quiz,
+      moduleName,
+      quizName,
+    }: {
+      quiz: LocalQuiz;
+      moduleName: string;
+      quizName: string;
+    }) => {
+      const url = `/api/courses/${courseName}/modules/${moduleName}/quizzes/${quizName}`;
+      await axios.put(url, quiz);
+    },
+    onSuccess: (_, { moduleName, quizName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
+      });
+      // queryClient.invalidateQueries({
+      //   queryKey: localCourseKeys.quizNames(courseName, moduleName),
+      // });
+    },
+  });
+};

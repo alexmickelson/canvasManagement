@@ -23,69 +23,69 @@ const saveSettings = async (course: LocalCourse, courseDirectory: string) => {
   await fs.writeFile(settingsFilePath, settingsYaml);
 };
 
-const saveModules = async (
-  course: LocalCourse,
-  courseDirectory: string,
-  previouslyStoredCourse?: LocalCourse
-) => {
-  for (const localModule of course.modules) {
-    const moduleDirectory = path.join(courseDirectory, localModule.name);
-    if (!(await directoryExists(moduleDirectory))) {
-      await fs.mkdir(moduleDirectory, { recursive: true });
-    }
+// const saveModules = async (
+//   course: LocalCourse,
+//   courseDirectory: string,
+//   previouslyStoredCourse?: LocalCourse
+// ) => {
+//   for (const localModule of course.modules) {
+//     const moduleDirectory = path.join(courseDirectory, localModule.name);
+//     if (!(await directoryExists(moduleDirectory))) {
+//       await fs.mkdir(moduleDirectory, { recursive: true });
+//     }
 
-    await saveQuizzes(course, localModule, previouslyStoredCourse);
-    await saveAssignments(course, localModule, previouslyStoredCourse);
-    await savePages(course, localModule, previouslyStoredCourse);
-  }
+//     await saveQuizzes(course, localModule, previouslyStoredCourse);
+//     await saveAssignments(course, localModule, previouslyStoredCourse);
+//     await savePages(course, localModule, previouslyStoredCourse);
+//   }
 
-  const moduleNames = course.modules.map((m) => m.name);
-  const moduleDirectories = await fs.readdir(courseDirectory, {
-    withFileTypes: true,
-  });
+//   const moduleNames = course.modules.map((m) => m.name);
+//   const moduleDirectories = await fs.readdir(courseDirectory, {
+//     withFileTypes: true,
+//   });
 
-  for (const dirent of moduleDirectories) {
-    if (dirent.isDirectory() && !moduleNames.includes(dirent.name)) {
-      const moduleDirPath = path.join(courseDirectory, dirent.name);
-      console.log(
-        `Deleting extra module directory, it was probably renamed ${moduleDirPath}`
-      );
-      await fs.rmdir(moduleDirPath, { recursive: true });
-    }
-  }
-};
+//   for (const dirent of moduleDirectories) {
+//     if (dirent.isDirectory() && !moduleNames.includes(dirent.name)) {
+//       const moduleDirPath = path.join(courseDirectory, dirent.name);
+//       console.log(
+//         `Deleting extra module directory, it was probably renamed ${moduleDirPath}`
+//       );
+//       await fs.rmdir(moduleDirPath, { recursive: true });
+//     }
+//   }
+// };
 
-const saveQuizzes = async (
-  course: LocalCourse,
-  module: LocalModule,
-  previouslyStoredCourse?: LocalCourse
-) => {
-  const quizzesDirectory = path.join(
-    basePath,
-    course.settings.name,
-    module.name,
-    "quizzes"
-  );
-  if (!(await directoryExists(quizzesDirectory))) {
-    await fs.mkdir(quizzesDirectory, { recursive: true });
-  }
+// const saveQuizzes = async (
+//   course: LocalCourse,
+//   module: LocalModule,
+//   previouslyStoredCourse?: LocalCourse
+// ) => {
+//   const quizzesDirectory = path.join(
+//     basePath,
+//     course.settings.name,
+//     module.name,
+//     "quizzes"
+//   );
+//   if (!(await directoryExists(quizzesDirectory))) {
+//     await fs.mkdir(quizzesDirectory, { recursive: true });
+//   }
 
-  for (const quiz of module.quizzes) {
-    const previousModule = previouslyStoredCourse?.modules.find(
-      (m) => m.name === module.name
-    );
-    const previousQuiz = previousModule?.quizzes.find((q) => q === quiz);
+//   for (const quiz of module.quizzes) {
+//     const previousModule = previouslyStoredCourse?.modules.find(
+//       (m) => m.name === module.name
+//     );
+//     const previousQuiz = previousModule?.quizzes.find((q) => q === quiz);
 
-    if (!previousQuiz) {
-      const markdownPath = path.join(quizzesDirectory, `${quiz.name}.md`);
-      const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
-      console.log(`Saving quiz ${markdownPath}`);
-      await fs.writeFile(markdownPath, quizMarkdown);
-    }
-  }
+//     if (!previousQuiz) {
+//       const markdownPath = path.join(quizzesDirectory, `${quiz.name}.md`);
+//       const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
+//       console.log(`Saving quiz ${markdownPath}`);
+//       await fs.writeFile(markdownPath, quizMarkdown);
+//     }
+//   }
 
-  await removeOldQuizzes(quizzesDirectory, module);
-};
+//   await removeOldQuizzes(quizzesDirectory, module);
+// };
 
 const saveAssignments = async (
   course: LocalCourse,
@@ -232,14 +232,14 @@ const removeOldPages = async (pagesDirectory: string, module: LocalModule) => {
   }
 };
 
-export const courseMarkdownSaver = {
-  async save(course: LocalCourse, previouslyStoredCourse?: LocalCourse) {
-    const courseDirectory = path.join(basePath, course.settings.name);
-    if (!(await directoryExists(courseDirectory))) {
-      await fs.mkdir(courseDirectory, { recursive: true });
-    }
+// export const courseMarkdownSaver = {
+//   async save(course: LocalCourse, previouslyStoredCourse?: LocalCourse) {
+//     const courseDirectory = path.join(basePath, course.settings.name);
+//     if (!(await directoryExists(courseDirectory))) {
+//       await fs.mkdir(courseDirectory, { recursive: true });
+//     }
 
-    await saveSettings(course, courseDirectory);
-    await saveModules(course, courseDirectory, previouslyStoredCourse);
-  },
-};
+//     await saveSettings(course, courseDirectory);
+//     await saveModules(course, courseDirectory, previouslyStoredCourse);
+//   },
+// };

@@ -5,15 +5,14 @@ import {
   LocalCourseSettings,
   localCourseYamlUtils,
 } from "@/models/local/localCourse";
-import { courseMarkdownLoader } from "./utils/courseMarkdownLoader";
-import { courseMarkdownSaver } from "./utils/courseMarkdownSaver";
 import {
   directoryOrFileExists,
   hasFileSystemEntries,
 } from "./utils/fileSystemUtils";
 import { localAssignmentMarkdown } from "@/models/local/assignmnet/localAssignment";
-import { localQuizMarkdownUtils } from "@/models/local/quiz/localQuiz";
+import { LocalQuiz, localQuizMarkdownUtils } from "@/models/local/quiz/localQuiz";
 import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
+import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 
 const basePath = process.env.STORAGE_DIRECTORY ?? "./storage";
 console.log("base path", basePath);
@@ -90,8 +89,9 @@ export const fileStorageService = {
     }
 
     const assignmentFiles = await fs.readdir(filePath);
-    return assignmentFiles;
+    return assignmentFiles.map(f => f.replace(/\.md$/, ''));
   },
+
   async getQuizNames(courseName: string, moduleName: string) {
     const filePath = path.join(basePath, courseName, moduleName, "quizzes");
     if (!(await directoryOrFileExists(filePath))) {
@@ -102,8 +102,9 @@ export const fileStorageService = {
     }
 
     const files = await fs.readdir(filePath);
-    return files;
+    return files.map(f => f.replace(/\.md$/, ''));
   },
+
   async getPageNames(courseName: string, moduleName: string) {
     const filePath = path.join(basePath, courseName, moduleName, "pages");
     if (!(await directoryOrFileExists(filePath))) {
@@ -114,7 +115,7 @@ export const fileStorageService = {
     }
 
     const files = await fs.readdir(filePath);
-    return files;
+    return files.map(f => f.replace(/\.md$/, ''));
   },
 
   async getAssignment(
@@ -127,7 +128,7 @@ export const fileStorageService = {
       courseName,
       moduleName,
       "assignments",
-      assignmentName
+      assignmentName + ".md"
     );
     const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
       /\r\n/g,
@@ -142,7 +143,7 @@ export const fileStorageService = {
       courseName,
       moduleName,
       "quizzes",
-      quizName
+      quizName + ".md"
     );
     const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
       /\r\n/g,
@@ -151,13 +152,27 @@ export const fileStorageService = {
     return localQuizMarkdownUtils.parseMarkdown(rawFile);
   },
 
+  async updateQuiz(courseName: string, moduleName: string, quizName: string, quiz: LocalQuiz) {
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "quizzes",
+      quizName+".md"
+    );
+
+    const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
+    console.log(`Saving quiz ${filePath}`);
+    await fs.writeFile(filePath, quizMarkdown);
+  },
+
   async getPage(courseName: string, moduleName: string, pageName: string) {
     const filePath = path.join(
       basePath,
       courseName,
       moduleName,
       "pages",
-      pageName
+      pageName + ".md"
     );
     const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
       /\r\n/g,

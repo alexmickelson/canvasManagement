@@ -30,7 +30,6 @@ export default function CourseCalendar() {
         bg-slate-950
       "
     >
-      Month Goes Here
       {months.map((month) => (
         <CalendarMonth key={month.month + "" + month.year} month={month} />
       ))}

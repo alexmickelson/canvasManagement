@@ -54,7 +54,13 @@ export default function DayItemsInModule({
             key={q.name}
             role="button"
             draggable="true"
-            onDragStart={() => startItemDrag({ type: "quiz", item: q })}
+            onDragStart={() =>
+              startItemDrag({
+                type: "quiz",
+                item: q,
+                sourceModuleName: moduleName,
+              })
+            }
             onDragEnd={endItemDrag}
           >
             {q.name}
@@ -65,7 +71,13 @@ export default function DayItemsInModule({
             key={p.name}
             role="button"
             draggable="true"
-            onDragStart={() => startItemDrag({ type: "page", item: p })}
+            onDragStart={() =>
+              startItemDrag({
+                type: "page",
+                item: p,
+                sourceModuleName: moduleName,
+              })
+            }
           >
             {p.name}
           </li>

@@ -4,6 +4,7 @@ import { createContext, useContext } from "react";
 
 export interface DraggableItem {
   item: IModuleItem;
+  sourceModuleName: string;
   type: "quiz" | "assignment" | "page";
 }
 
