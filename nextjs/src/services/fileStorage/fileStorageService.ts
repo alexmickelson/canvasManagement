@@ -11,6 +11,9 @@ import {
   directoryOrFileExists,
   hasFileSystemEntries,
 } from "./utils/fileSystemUtils";
+import { localAssignmentMarkdown } from "@/models/local/assignmnet/localAssignment";
+import { localQuizMarkdownUtils } from "@/models/local/quiz/localQuiz";
+import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
 
 const basePath = process.env.STORAGE_DIRECTORY ?? "./storage";
 console.log("base path", basePath);
@@ -71,12 +74,96 @@ export const fileStorageService = {
 
     const modulePromises = moduleDirectories
       .filter((dirent) => dirent.isDirectory())
-      .map((dirent) =>
-        dirent.name
-      );
+      .map((dirent) => dirent.name);
 
     const modules = await Promise.all(modulePromises);
     return modules.sort((a, b) => a.localeCompare(b));
+  },
+
+  async getAssignmentNames(courseName: string, moduleName: string) {
+    const filePath = path.join(basePath, courseName, moduleName, "assignments");
+    if (!(await directoryOrFileExists(filePath))) {
+      console.log(
+        `Error loading course by name, assignments folder does not exist in ${filePath}`
+      );
+      await fs.mkdir(filePath);
+    }
+
+    const assignmentFiles = await fs.readdir(filePath);
+    return assignmentFiles;
+  },
+  async getQuizNames(courseName: string, moduleName: string) {
+    const filePath = path.join(basePath, courseName, moduleName, "quizzes");
+    if (!(await directoryOrFileExists(filePath))) {
+      console.log(
+        `Error loading course by name, quiz folder does not exist in ${filePath}`
+      );
+      await fs.mkdir(filePath);
+    }
+
+    const files = await fs.readdir(filePath);
+    return files;
+  },
+  async getPageNames(courseName: string, moduleName: string) {
+    const filePath = path.join(basePath, courseName, moduleName, "pages");
+    if (!(await directoryOrFileExists(filePath))) {
+      console.log(
+        `Error loading course by name, pages folder does not exist in ${filePath}`
+      );
+      await fs.mkdir(filePath);
+    }
+
+    const files = await fs.readdir(filePath);
+    return files;
+  },
+
+  async getAssignment(
+    courseName: string,
+    moduleName: string,
+    assignmentName: string
+  ) {
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "assignments",
+      assignmentName + ".md"
+    );
+    const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
+      /\r\n/g,
+      "\n"
+    );
+    return localAssignmentMarkdown.parseMarkdown(rawFile);
+  },
+
+  async getQuiz(courseName: string, moduleName: string, quizName: string) {
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "quizzes",
+      quizName + ".md"
+    );
+    const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
+      /\r\n/g,
+      "\n"
+    );
+    return localQuizMarkdownUtils.parseMarkdown(rawFile);
+  },
+
+  async getPage(courseName: string, moduleName: string, pageName: string) {
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "pages",
+      pageName + ".md"
+    );
+    const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
+      /\r\n/g,
+      "\n"
+    );
+    return localPageMarkdownUtils.parseMarkdown(rawFile);
   },
 
   async getEmptyDirectories(): Promise<string[]> {

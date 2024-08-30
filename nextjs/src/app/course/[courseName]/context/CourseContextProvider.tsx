@@ -1,12 +1,7 @@
 "use client";
 import { ReactNode, useState } from "react";
 import { CourseContext, DraggableItem } from "./courseContext";
-import {
-  useLocalCourseSettingsQuery,
-  useUpdateCourseMutation,
-} from "@/hooks/localCoursesHooks";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
-import { LocalCourse } from "@/models/local/localCourse";
 import { dateToMarkdownString } from "@/models/local/timeUtils";
 
 export default function CourseContextProvider({
@@ -16,8 +11,6 @@ export default function CourseContextProvider({
   children: ReactNode;
   localCourseName: string;
 }) {
-  const { data: settings } = useLocalCourseSettingsQuery(localCourseName);
-  const updateCourseMutation = useUpdateCourseMutation(localCourseName);
   const [itemBeingDragged, setItemBeingDragged] = useState<
     DraggableItem | undefined
   >();

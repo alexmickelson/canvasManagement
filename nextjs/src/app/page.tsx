@@ -1,6 +1,15 @@
-import { HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import CourseList from "./CourseList";
-import { getDehydratedClient } from "./layout";
+import { createQueryClientForServer } from "@/services/utils/queryClientServer";
+import { hydrateCourses } from "@/hooks/hookHydration";
+
+async function getDehydratedClient() {
+  const queryClient = createQueryClientForServer();
+
+  await hydrateCourses(queryClient);
+  const dehydratedState = dehydrate(queryClient);
+  return dehydratedState;
+}
 
 export default async function Home() {
   const dehydratedState = await getDehydratedClient();

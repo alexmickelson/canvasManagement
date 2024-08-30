@@ -9,14 +9,6 @@ export const metadata: Metadata = {
   title: "Canvas Manager 2.0",
 };
 
-export async function getDehydratedClient() {
-  const queryClient = createQueryClientForServer();
-
-  await hydrateCourses(queryClient);
-  const dehydratedState = dehydrate(queryClient);
-  return dehydratedState;
-}
-
 export default function RootLayout({
   children,
 }: Readonly<{

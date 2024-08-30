@@ -1,16 +1,21 @@
-import { getDehydratedClient } from "@/app/layout";
 import CourseContextProvider from "./context/CourseContextProvider";
 import CourseCalendar from "./calendar/CourseCalendar";
-import { HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import CourseSettings from "./CourseSettings";
 import ModuleList from "./modules/ModuleList";
+import { createQueryClientForServer } from "@/services/utils/queryClientServer";
+import { hydrateCourse } from "@/hooks/hookHydration";
 
 export default async function CoursePage({
   params: { courseName },
 }: {
   params: { courseName: string };
 }) {
-  const dehydratedState = await getDehydratedClient();
+  const queryClient = createQueryClientForServer();
+
+  await hydrateCourse(queryClient, courseName);
+  const dehydratedState = dehydrate(queryClient);
+
   return (
     <HydrationBoundary state={dehydratedState}>
       <CourseContextProvider localCourseName={courseName}>
