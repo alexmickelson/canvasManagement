@@ -8,7 +8,6 @@ export default function Day({ day, month }: { day: Date; month: number }) {
   const { data: moduleNames } = useModuleNamesQuery(courseName);
   const isInSameMonth = day.getMonth() + 1 != month;
   const backgroundClass = isInSameMonth ? "" : "bg-slate-900";
-  console.log("render");
 
   return (
     <>

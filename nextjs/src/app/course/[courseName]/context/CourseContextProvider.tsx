@@ -2,8 +2,12 @@
 import { ReactNode, useCallback, useState } from "react";
 import { CourseContext, DraggableItem } from "./courseContext";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
-import { dateToMarkdownString } from "@/models/local/timeUtils";
+import {
+  dateToMarkdownString,
+  getDateFromStringOrThrow,
+} from "@/models/local/timeUtils";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
 export default function CourseContextProvider({
   localCourseName,
@@ -13,6 +17,7 @@ export default function CourseContextProvider({
   localCourseName: string;
 }) {
   const updateQuizMutation = useUpdateQuizMutation(localCourseName);
+  const { data: settings } = useLocalCourseSettingsQuery(localCourseName);
   const [itemBeingDragged, setItemBeingDragged] = useState<
     DraggableItem | undefined
   >();
@@ -20,10 +25,20 @@ export default function CourseContextProvider({
   const itemDrop = useCallback(
     (day: Date | undefined) => {
       if (itemBeingDragged && day) {
+        day.setHours(settings.defaultDueTime.hour);
+        day.setHours(settings.defaultDueTime.minute);
         if (itemBeingDragged.type === "quiz") {
+          const previousQuiz = itemBeingDragged.item as LocalQuiz;
+
           const quiz: LocalQuiz = {
-            ...(itemBeingDragged.item as LocalQuiz),
+            ...previousQuiz,
             dueAt: dateToMarkdownString(day),
+            lockAt:
+              previousQuiz.lockAt &&
+              (getDateFromStringOrThrow(previousQuiz.lockAt, "lockAt date") >
+              day
+                ? previousQuiz.lockAt
+                : dateToMarkdownString(day)),
           };
           updateQuizMutation.mutate({
             quiz: quiz,
@@ -34,7 +49,7 @@ export default function CourseContextProvider({
       }
       setItemBeingDragged(undefined);
     },
-    [itemBeingDragged, updateQuizMutation]
+    [itemBeingDragged, settings.defaultDueTime.hour, settings.defaultDueTime.minute, updateQuizMutation]
   );
 
   return (
