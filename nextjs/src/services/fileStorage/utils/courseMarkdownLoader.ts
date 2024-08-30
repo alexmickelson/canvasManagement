@@ -18,54 +18,55 @@ import {
 } from "@/models/local/quiz/localQuiz";
 import { promises as fs } from "fs";
 import path from "path";
+import { directoryOrFileExists } from "./fileSystemUtils";
 
 const basePath = process.env.STORAGE_DIRECTORY ?? "./storage";
 
 export const courseMarkdownLoader = {
-  async loadSavedCourses(): Promise<LocalCourse[]> {
-    const courseDirectories = await fs.readdir(basePath, {
-      withFileTypes: true,
-    });
-    const coursePromises = courseDirectories
-      .filter((dirent) => dirent.isDirectory())
-      .map(async (dirent) => {
-        const coursePath = path.join(basePath, dirent.name);
-        const settingsPath = path.join(coursePath, "settings.yml");
-        if (await this.fileExists(settingsPath)) {
-          return this.loadCourseByPath(coursePath);
-        }
-        return null;
-      });
+  // async loadSavedCourses(): Promise<LocalCourse[]> {
+  //   const courseDirectories = await fs.readdir(basePath, {
+  //     withFileTypes: true,
+  //   });
+  //   const coursePromises = courseDirectories
+  //     .filter((dirent) => dirent.isDirectory())
+  //     .map(async (dirent) => {
+  //       const coursePath = path.join(basePath, dirent.name);
+  //       const settingsPath = path.join(coursePath, "settings.yml");
+  //       if (await directoryOrFileExists(settingsPath)) {
+  //         return this.loadCourseByPath(coursePath);
+  //       }
+  //       return null;
+  //     });
 
-    const courses = (await Promise.all(coursePromises)).filter(
-      (course) => course !== null
-    ) as LocalCourse[];
-    return courses.sort((a, b) =>
-      a.settings.name.localeCompare(b.settings.name)
-    );
-  },
+  //   const courses = (await Promise.all(coursePromises)).filter(
+  //     (course) => course !== null
+  //   ) as LocalCourse[];
+  //   return courses.sort((a, b) =>
+  //     a.settings.name.localeCompare(b.settings.name)
+  //   );
+  // },
 
-  async loadCourseByPath(courseDirectory: string): Promise<LocalCourse> {
-    if (!(await this.directoryExists(courseDirectory))) {
-      const errorMessage = `Error loading course by name, could not find folder ${courseDirectory}`;
-      console.log(errorMessage);
-      throw new Error(errorMessage);
-    }
+  // async loadCourseByPath(courseDirectory: string): Promise<LocalCourse> {
+  //   if (!(await directoryOrFileExists(courseDirectory))) {
+  //     const errorMessage = `Error loading course by name, could not find folder ${courseDirectory}`;
+  //     console.log(errorMessage);
+  //     throw new Error(errorMessage);
+  //   }
 
-    const settings = await this.loadCourseSettings(courseDirectory);
-    const modules = await this.loadCourseModules(courseDirectory);
+  //   const settings = await this.loadCourseSettings(courseDirectory);
+  //   const modules = await this.loadCourseModules(courseDirectory);
 
-    return {
-      settings,
-      modules,
-    };
-  },
+  //   return {
+  //     settings,
+  //     modules,
+  //   };
+  // },
 
   async loadCourseSettings(
     courseDirectory: string
   ): Promise<LocalCourseSettings> {
     const settingsPath = path.join(courseDirectory, "settings.yml");
-    if (!(await this.fileExists(settingsPath))) {
+    if (!(await directoryOrFileExists(settingsPath))) {
       const errorMessage = `Error loading course by name, settings file ${settingsPath}`;
       console.log(errorMessage);
       throw new Error(errorMessage);
@@ -110,7 +111,7 @@ export const courseMarkdownLoader = {
     modulePath: string
   ): Promise<LocalAssignment[]> {
     const assignmentsPath = path.join(modulePath, "assignments");
-    if (!(await this.directoryExists(assignmentsPath))) {
+    if (!(await directoryOrFileExists(assignmentsPath))) {
       console.log(
         `Error loading course by name, assignments folder does not exist in ${modulePath}`
       );
@@ -132,7 +133,7 @@ export const courseMarkdownLoader = {
 
   async loadQuizzesFromPath(modulePath: string): Promise<LocalQuiz[]> {
     const quizzesPath = path.join(modulePath, "quizzes");
-    if (!(await this.directoryExists(quizzesPath))) {
+    if (!(await directoryOrFileExists(quizzesPath))) {
       console.log(
         `Quizzes folder does not exist in ${modulePath}, creating now`
       );
@@ -156,7 +157,7 @@ export const courseMarkdownLoader = {
     modulePath: string
   ): Promise<LocalCoursePage[]> {
     const pagesPath = path.join(modulePath, "pages");
-    if (!(await this.directoryExists(pagesPath))) {
+    if (!(await directoryOrFileExists(pagesPath))) {
       console.log(`Pages folder does not exist in ${modulePath}, creating now`);
       await fs.mkdir(pagesPath);
     }
@@ -172,23 +173,5 @@ export const courseMarkdownLoader = {
     });
 
     return await Promise.all(pagePromises);
-  },
-
-  async fileExists(filePath: string): Promise<boolean> {
-    try {
-      await fs.access(filePath);
-      return true;
-    } catch {
-      return false;
-    }
-  },
-
-  async directoryExists(directoryPath: string): Promise<boolean> {
-    try {
-      await fs.access(directoryPath);
-      return true;
-    } catch {
-      return false;
-    }
   },
 };

@@ -5,18 +5,18 @@ import { getMonthsBetweenDates } from "./calendarMonthUtils";
 import { CalendarMonth } from "./CalendarMonth";
 
 export default function CourseCalendar() {
-  const {
-    localCourse: {
-      settings: { startDate, endDate },
-    },
-  } = useCourseContext();
+  // const {
+  //   localCourse: {
+  //     settings: { startDate, endDate },
+  //   },
+  // } = useCourseContext();
 
-  const startDateTime = getDateFromStringOrThrow(
-    startDate,
-    "course start date"
-  );
-  const endDateTime = getDateFromStringOrThrow(endDate, "course end date");
-  const months = getMonthsBetweenDates(startDateTime, endDateTime);
+  // const startDateTime = getDateFromStringOrThrow(
+  //   startDate,
+  //   "course start date"
+  // );
+  // const endDateTime = getDateFromStringOrThrow(endDate, "course end date");
+  // const months = getMonthsBetweenDates(startDateTime, endDateTime);
 
   return (
     <div
@@ -29,9 +29,10 @@ export default function CourseCalendar() {
         bg-slate-950
       "
     >
-      {months.map((month) => (
+      Month Goes Here
+      {/* {months.map((month) => (
         <CalendarMonth key={month.month + "" + month.year} month={month} />
-      ))}
+      ))} */}
     </div>
   );
 }

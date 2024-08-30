@@ -1,4 +1,4 @@
-import { LocalCourse } from "@/models/local/localCourse";
+import { LocalCourse, LocalCourseSettings } from "@/models/local/localCourse";
 import {
   useMutation,
   useQueryClient,
@@ -8,30 +8,29 @@ import axios from "axios";
 
 export const localCourseKeys = {
   allCourses: ["all courses"] as const,
-  courseDetail: (courseName: string) => ["course details", courseName] as const,
+  courseSettings: (courseName: string) =>
+    ["course details", courseName, "settings"] as const,
 };
 
 export const useLocalCourseNamesQuery = () =>
   useSuspenseQuery({
     queryKey: localCourseKeys.allCourses,
-    queryFn: async (): Promise<LocalCourse[]> => {
+    queryFn: async (): Promise<string[]> => {
       const url = `/api/courses`;
       const response = await axios.get(url);
       return response.data;
     },
-    select: (courses) => courses.map((c) => c.settings.name),
   });
 
-export const useLocalCourseDetailsQuery = (courseName: string) => {
-  return useSuspenseQuery({
-    queryKey: localCourseKeys.courseDetail(courseName),
-    queryFn: async (): Promise<LocalCourse> => {
-      const url = `/api/courses/${courseName}`;
+export const useLocalCourseSettingsQuery = (courseName: string) =>
+  useSuspenseQuery({
+    queryKey: localCourseKeys.courseSettings(courseName),
+    queryFn: async (): Promise<LocalCourseSettings> => {
+      const url = `/api/courses/${courseName}/settings`;
       const response = await axios.get(url);
       return response.data;
     },
   });
-};
 
 export const useUpdateCourseMutation = (courseName: string) => {
   const queryClient = useQueryClient();
@@ -45,7 +44,7 @@ export const useUpdateCourseMutation = (courseName: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.courseDetail(courseName),
+        queryKey: localCourseKeys.courseSettings(courseName),
       });
     },
     scope: {

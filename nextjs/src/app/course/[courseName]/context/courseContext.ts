@@ -1,6 +1,5 @@
 "use client";
 import { IModuleItem } from "@/models/local/IModuleItem";
-import { LocalCourse } from "@/models/local/localCourse";
 import { createContext, useContext } from "react";
 
 export interface DraggableItem {
@@ -9,27 +8,12 @@ export interface DraggableItem {
 }
 
 export interface CourseContextInterface {
-  localCourse: LocalCourse;
   startItemDrag: (dragging: DraggableItem) => void;
   endItemDrag: () => void;
   itemDrop: (droppedOnDay?: Date) => void;
 }
 
 const defaultValue: CourseContextInterface = {
-  localCourse: {
-    modules: [],
-    settings: {
-      name: "",
-      assignmentGroups: [],
-      daysOfWeek: [],
-      startDate: "",
-      endDate: "",
-      defaultDueTime: {
-        hour: 0,
-        minute: 0,
-      },
-    },
-  },
   startItemDrag: () => {},
   endItemDrag: () => {},
   itemDrop: () => {},

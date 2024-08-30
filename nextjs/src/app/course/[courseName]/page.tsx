@@ -15,7 +15,7 @@ export default async function CoursePage({
     <HydrationBoundary state={dehydratedState}>
       <CourseContextProvider localCourseName={courseName}>
         <div className="h-full flex flex-col">
-          <CourseSettings />
+          <CourseSettings courseName={courseName} />
           <div className="flex flex-row min-h-0">
             <div className="flex-1 min-h-0">
               <CourseCalendar />

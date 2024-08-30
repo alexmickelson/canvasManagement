@@ -5,6 +5,6 @@ import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 export const hydrateCourses = async (queryClient: QueryClient) => {
   await queryClient.prefetchQuery({
     queryKey: localCourseKeys.allCourses,
-    queryFn: async () => await fileStorageService.loadSavedCourses(),
+    queryFn: async () => await fileStorageService.getCourseNames(),
   });
 };

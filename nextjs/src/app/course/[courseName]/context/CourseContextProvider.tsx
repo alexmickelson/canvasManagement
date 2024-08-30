@@ -2,7 +2,7 @@
 import { ReactNode, useState } from "react";
 import { CourseContext, DraggableItem } from "./courseContext";
 import {
-  useLocalCourseDetailsQuery,
+  useLocalCourseSettingsQuery,
   useUpdateCourseMutation,
 } from "@/hooks/localCoursesHooks";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
@@ -16,8 +16,8 @@ export default function CourseContextProvider({
   children: ReactNode;
   localCourseName: string;
 }) {
-  const { data: course } = useLocalCourseDetailsQuery(localCourseName);
-  const updateCourseMutation = useUpdateCourseMutation(course.settings.name);
+  const { data: settings } = useLocalCourseSettingsQuery(localCourseName);
+  const updateCourseMutation = useUpdateCourseMutation(localCourseName);
   const [itemBeingDragged, setItemBeingDragged] = useState<
     DraggableItem | undefined
   >();
@@ -30,34 +30,33 @@ export default function CourseContextProvider({
       dueAt: dateToMarkdownString(day),
     };
 
-    const localModule = course.modules.find((m) =>
-      m.quizzes.map((q) => q.name).includes(updatedQuiz.name)
-    );
-    if (!localModule)
-      console.log("could not find module for quiz ", updatedQuiz);
+    // const localModule = course.modules.find((m) =>
+    //   m.quizzes.map((q) => q.name).includes(updatedQuiz.name)
+    // );
+    // if (!localModule)
+    //   console.log("could not find module for quiz ", updatedQuiz);
 
-    const updatedCourse: LocalCourse = {
-      ...course,
-      modules: course.modules.map((m) =>
-        m.name !== localModule?.name
-          ? m
-          : {
-              ...m,
-              quizzes: m.quizzes.map((q) =>
-                q.name === updatedQuiz.name ? updatedQuiz : q
-              ),
-            }
-      ),
-    };
-    updateCourseMutation.mutate({
-      updatedCourse,
-      previousCourse: course,
-    });
+    // const updatedCourse: LocalCourse = {
+    //   ...course,
+    //   modules: course.modules.map((m) =>
+    //     m.name !== localModule?.name
+    //       ? m
+    //       : {
+    //           ...m,
+    //           quizzes: m.quizzes.map((q) =>
+    //             q.name === updatedQuiz.name ? updatedQuiz : q
+    //           ),
+    //         }
+    //   ),
+    // };
+    // updateCourseMutation.mutate({
+    //   updatedCourse,
+    //   previousCourse: course,
+    // });
   };
   return (
     <CourseContext.Provider
       value={{
-        localCourse: course,
         startItemDrag: (d) => {
           setItemBeingDragged(d);
         },

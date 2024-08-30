@@ -1,8 +1,8 @@
 "use client";
 
-import { useCourseContext } from "./context/courseContext";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCoursesHooks";
 
-export default function CourseSettings() {
-  const context = useCourseContext();
-  return <div>{context.localCourse.settings.name}</div>;
+export default function CourseSettings({ courseName }: { courseName: string }) {
+  const { data: settings } = useLocalCourseSettingsQuery(courseName);
+  return <div>{settings.name}</div>;
 }
