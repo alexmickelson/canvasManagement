@@ -1,11 +1,11 @@
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { localCourseKeys } from "./localCoursesHooks";
+import { localCourseKeys } from "./localCourseKeys";
 
 export const usePageNamesQuery = (courseName: string, moduleName: string) =>
   useSuspenseQuery({
-    queryKey: localCourseKeys.modulePageNames(courseName, moduleName),
+    queryKey: localCourseKeys.pageNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
       const url = `/api/courses/${courseName}/modules/${moduleName}/pages`;
       const response = await axios.get(url);

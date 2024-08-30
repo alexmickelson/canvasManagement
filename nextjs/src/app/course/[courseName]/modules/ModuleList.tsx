@@ -8,7 +8,6 @@ export default function ModuleList() {
   const { data: moduleNames } = useModuleNamesQuery(courseName);
   return (
     <div>
-      modules here
       {moduleNames.map((m) => (
         <ExpandableModule key={m} moduleName={m}/>
       ))}

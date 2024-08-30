@@ -1,11 +1,11 @@
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { localCourseKeys } from "./localCoursesHooks";
+import { localCourseKeys } from "./localCourseKeys";
 
 export const useQuizNamesQuery = (courseName: string, moduleName: string) =>
   useSuspenseQuery({
-    queryKey: localCourseKeys.moduleQuizzeNames(courseName, moduleName),
+    queryKey: localCourseKeys.quizNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
       const url = `/api/courses/${courseName}/modules/${moduleName}/quizzes`;
       const response = await axios.get(url);

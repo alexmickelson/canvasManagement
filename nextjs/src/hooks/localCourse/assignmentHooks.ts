@@ -1,5 +1,5 @@
 import axios from "axios";
-import { localCourseKeys } from "./localCoursesHooks";
+import { localCourseKeys } from "./localCourseKeys";
 import { LocalAssignment } from "@/models/local/assignmnet/localAssignment";
 import { useSuspenseQuery, useSuspenseQueries } from "@tanstack/react-query";
 
@@ -8,7 +8,7 @@ export const useAssignmentNamesQuery = (
   moduleName: string
 ) =>
   useSuspenseQuery({
-    queryKey: localCourseKeys.moduleAssignmentNames(courseName, moduleName),
+    queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
       const url = `/api/courses/${courseName}/modules/${moduleName}/assignments`;
       const response = await axios.get(url);

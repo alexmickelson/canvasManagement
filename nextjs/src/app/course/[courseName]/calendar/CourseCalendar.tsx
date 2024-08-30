@@ -3,20 +3,21 @@ import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import { useCourseContext } from "../context/courseContext";
 import { getMonthsBetweenDates } from "./calendarMonthUtils";
 import { CalendarMonth } from "./CalendarMonth";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
 export default function CourseCalendar() {
-  // const {
-  //   localCourse: {
-  //     settings: { startDate, endDate },
-  //   },
-  // } = useCourseContext();
+  const { courseName } = useCourseContext();
+  const { data: settings } = useLocalCourseSettingsQuery(courseName);
 
-  // const startDateTime = getDateFromStringOrThrow(
-  //   startDate,
-  //   "course start date"
-  // );
-  // const endDateTime = getDateFromStringOrThrow(endDate, "course end date");
-  // const months = getMonthsBetweenDates(startDateTime, endDateTime);
+  const startDateTime = getDateFromStringOrThrow(
+    settings.startDate,
+    "course start date"
+  );
+  const endDateTime = getDateFromStringOrThrow(
+    settings.endDate,
+    "course end date"
+  );
+  const months = getMonthsBetweenDates(startDateTime, endDateTime);
 
   return (
     <div
@@ -30,9 +31,9 @@ export default function CourseCalendar() {
       "
     >
       Month Goes Here
-      {/* {months.map((month) => (
+      {months.map((month) => (
         <CalendarMonth key={month.month + "" + month.year} month={month} />
-      ))} */}
+      ))}
     </div>
   );
 }

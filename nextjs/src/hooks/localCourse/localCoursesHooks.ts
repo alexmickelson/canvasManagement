@@ -1,64 +1,13 @@
 import { LocalCourseSettings } from "@/models/local/localCourse";
-import {
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
-
-export const localCourseKeys = {
-  allCourses: ["all courses"] as const,
-  settings: (courseName: string) =>
-    ["course details", courseName, "settings"] as const,
-  moduleNames: (courseName: string) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      { type: "names" } as const,
-    ] as const,
-  moduleAssignmentNames: (courseName: string, moduleName: string) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "assignments",
-    ] as const,
-  moduleQuizzeNames: (courseName: string, moduleName: string) =>
-    ["course details", courseName, "modules", moduleName, "quizzes"] as const,
-  modulePageNames: (courseName: string, moduleName: string) =>
-    ["course details", courseName, "modules", moduleName, "pages"] as const,
-  assignment: (
-    courseName: string,
-    moduleName: string,
-    assignmentName: string
-  ) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "assignments",
-      assignmentName,
-    ] as const,
-  quiz: (courseName: string, moduleName: string, quizName: string) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "quizzes",
-      quizName,
-    ] as const,
-  page: (courseName: string, moduleName: string, pageName: string) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "pages",
-      pageName,
-    ] as const,
-};
+import { localCourseKeys } from "./localCourseKeys";
+import {
+  useAssignmentNamesQuery,
+  useAssignmentsQueries,
+} from "./assignmentHooks";
+import { usePageNamesQuery, usePagesQueries } from "./pageHooks";
+import { useQuizNamesQuery, useQuizzesQueries } from "./quizHooks";
 
 export const useLocalCourseNamesQuery = () =>
   useSuspenseQuery({
@@ -90,7 +39,33 @@ export const useModuleNamesQuery = (courseName: string) =>
     },
   });
 
+export const useModuleDataQuery = (courseName: string, moduleName: string) => {
+  const { data: assignmentNames } = useAssignmentNamesQuery(
+    courseName,
+    moduleName
+  );
+  const { data: quizNames } = useQuizNamesQuery(courseName, moduleName);
+  const { data: pageNames } = usePageNamesQuery(courseName, moduleName);
 
+  const { data: assignments } = useAssignmentsQueries(
+    courseName,
+    moduleName,
+    assignmentNames
+  );
+  const { data: quizzes } = useQuizzesQueries(
+    courseName,
+    moduleName,
+    quizNames
+  );
+  const { data: pages } = usePagesQueries(courseName, moduleName, pageNames);
+
+  
+  return {
+    assignments,
+    quizzes,
+    pages,
+  };
+};
 
 // export const useUpdateCourseMutation = (courseName: string) => {
 //   const queryClient = useQueryClient();
