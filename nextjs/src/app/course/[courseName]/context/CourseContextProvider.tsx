@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { CourseContext, DraggableItem } from "./courseContext";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { dateToMarkdownString } from "@/models/local/timeUtils";
@@ -17,38 +17,26 @@ export default function CourseContextProvider({
     DraggableItem | undefined
   >();
 
-  const updateQuiz = (day: Date) => {
-    if (!itemBeingDragged) return;
+  const itemDrop = useCallback(
+    (day: Date | undefined) => {
+      if (itemBeingDragged && day) {
+        if (itemBeingDragged.type === "quiz") {
+          const quiz: LocalQuiz = {
+            ...(itemBeingDragged.item as LocalQuiz),
+            dueAt: dateToMarkdownString(day),
+          };
+          updateQuizMutation.mutate({
+            quiz: quiz,
+            quizName: quiz.name,
+            moduleName: itemBeingDragged.sourceModuleName,
+          });
+        }
+      }
+      setItemBeingDragged(undefined);
+    },
+    [itemBeingDragged, updateQuizMutation]
+  );
 
-    const updatedQuiz: LocalQuiz = {
-      ...(itemBeingDragged.item as LocalQuiz),
-      dueAt: dateToMarkdownString(day),
-    };
-
-    // const localModule = course.modules.find((m) =>
-    //   m.quizzes.map((q) => q.name).includes(updatedQuiz.name)
-    // );
-    // if (!localModule)
-    //   console.log("could not find module for quiz ", updatedQuiz);
-
-    // const updatedCourse: LocalCourse = {
-    //   ...course,
-    //   modules: course.modules.map((m) =>
-    //     m.name !== localModule?.name
-    //       ? m
-    //       : {
-    //           ...m,
-    //           quizzes: m.quizzes.map((q) =>
-    //             q.name === updatedQuiz.name ? updatedQuiz : q
-    //           ),
-    //         }
-    //   ),
-    // };
-    // updateCourseMutation.mutate({
-    //   updatedCourse,
-    //   previousCourse: course,
-    // });
-  };
   return (
     <CourseContext.Provider
       value={{
@@ -59,22 +47,7 @@ export default function CourseContextProvider({
         endItemDrag: () => {
           setItemBeingDragged(undefined);
         },
-        itemDrop: (day) => {
-          if (itemBeingDragged && day) {
-            if (itemBeingDragged.type === "quiz") {
-              const quiz: LocalQuiz = {
-                ...(itemBeingDragged.item as LocalQuiz),
-                dueAt: dateToMarkdownString(day),
-              };
-              updateQuizMutation.mutate({
-                quiz: quiz,
-                quizName: quiz.name,
-                moduleName: itemBeingDragged.sourceModuleName,
-              });
-            }
-          }
-          setItemBeingDragged(undefined);
-        },
+        itemDrop,
       }}
     >
       {children}

@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { dehydrate } from "@tanstack/react-query";
-import { hydrateCourses } from "@/hooks/hookHydration";
-import { createQueryClientForServer } from "@/services/utils/queryClientServer";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
@@ -16,9 +13,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <Providers>
-        <body className="bg-slate-900 h-screen p-1 text-slate-300">{children}</body>
-      </Providers>
+      <body className="bg-slate-900 h-screen p-1 text-slate-300">
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
