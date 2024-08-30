@@ -2,6 +2,7 @@ import React from "react";
 import { useCourseContext } from "../context/courseContext";
 import { useModuleDataQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
+import Link from "next/link";
 
 export default function DayItemsInModule({
   day,
@@ -63,7 +64,7 @@ export default function DayItemsInModule({
             }
             onDragEnd={endItemDrag}
           >
-            {q.name}
+            <Link href={`/course/${courseName}/modules/${moduleName}/quiz/${q.name}`}>{q.name}</Link>
           </li>
         ))}
         {todaysPages.map((p) => (

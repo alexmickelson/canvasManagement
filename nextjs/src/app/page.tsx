@@ -1,18 +1,14 @@
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import CourseList from "./CourseList";
-import { createQueryClientForServer } from "@/services/utils/queryClientServer";
 import { hydrateCourses } from "@/hooks/hookHydration";
+import { getQueryClient } from "./providersQueryClientUtils";
 
-async function getDehydratedClient() {
-  const queryClient = createQueryClientForServer();
-
-  await hydrateCourses(queryClient);
-  const dehydratedState = dehydrate(queryClient);
-  return dehydratedState;
-}
 
 export default async function Home() {
-  const dehydratedState = await getDehydratedClient();
+  const queryClient = getQueryClient();
+  await hydrateCourses(queryClient);
+  const dehydratedState = dehydrate(queryClient);
+
   return (
     <main className="min-h-screen">
       <HydrationBoundary state={dehydratedState}>

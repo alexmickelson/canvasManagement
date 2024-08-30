@@ -123,23 +123,23 @@ export function createSuccessToast(message: string) {
   );
 }
 
-export function createQueryClient() {
-  return new QueryClient({
-    defaultOptions: {
-      queries: {
-        refetchOnWindowFocus: false,
-        retry: 0,
-      },
-      mutations: {
-        onError: addErrorAsToast,
-        retry: 0,
-      },
-    },
-    queryCache: new QueryCache({
-      onError: addErrorAsToast,
-    }),
-    mutationCache: new MutationCache({
-      onError: addErrorAsToast,
-    }),
-  });
-}
+// export function createQueryClient() {
+//   return new QueryClient({
+//     defaultOptions: {
+//       queries: {
+//         refetchOnWindowFocus: false,
+//         retry: 0,
+//       },
+//       mutations: {
+//         onError: addErrorAsToast,
+//         retry: 0,
+//       },
+//     },
+//     queryCache: new QueryCache({
+//       onError: addErrorAsToast,
+//     }),
+//     mutationCache: new MutationCache({
+//       onError: addErrorAsToast,
+//     }),
+//   });
+// }
