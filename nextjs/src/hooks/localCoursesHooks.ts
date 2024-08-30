@@ -1,4 +1,5 @@
 import { LocalCourse, LocalCourseSettings } from "@/models/local/localCourse";
+import { LocalModule } from "@/models/local/localModules";
 import {
   useMutation,
   useQueryClient,
@@ -8,8 +9,21 @@ import axios from "axios";
 
 export const localCourseKeys = {
   allCourses: ["all courses"] as const,
-  courseSettings: (courseName: string) =>
+  settings: (courseName: string) =>
     ["course details", courseName, "settings"] as const,
+  moduleNames: (courseName: string) =>
+    [
+      "course details",
+      courseName,
+      "modules",
+      { type: "names" } as const,
+    ] as const,
+    moduleAssignmentNames: (courseName: string, moduleName: string) =>
+      ["course details", courseName, "modules", moduleName, "assignments"] as const,
+    moduleQuizzeNames: (courseName: string, moduleName: string) =>
+      ["course details", courseName, "modules", moduleName, "quizzes"] as const,
+    modulePageNames: (courseName: string, moduleName: string) =>
+      ["course details", courseName, "modules", moduleName, "pages"] as const,
 };
 
 export const useLocalCourseNamesQuery = () =>
@@ -24,13 +38,24 @@ export const useLocalCourseNamesQuery = () =>
 
 export const useLocalCourseSettingsQuery = (courseName: string) =>
   useSuspenseQuery({
-    queryKey: localCourseKeys.courseSettings(courseName),
+    queryKey: localCourseKeys.settings(courseName),
     queryFn: async (): Promise<LocalCourseSettings> => {
       const url = `/api/courses/${courseName}/settings`;
       const response = await axios.get(url);
       return response.data;
     },
   });
+
+export const useLocalCourseModuleNamesQuery = (courseName: string) =>
+  useSuspenseQuery({
+    queryKey: localCourseKeys.moduleNames(courseName),
+    queryFn: async (): Promise<string[]> => {
+      const url = `/api/courses/${courseName}/modules`;
+      const response = await axios.get(url);
+      return response.data;
+    },
+  });
+
 
 export const useUpdateCourseMutation = (courseName: string) => {
   const queryClient = useQueryClient();
@@ -44,7 +69,7 @@ export const useUpdateCourseMutation = (courseName: string) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.courseSettings(courseName),
+        queryKey: localCourseKeys.settings(courseName),
       });
     },
     scope: {

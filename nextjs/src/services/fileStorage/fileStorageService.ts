@@ -46,7 +46,7 @@ export const fileStorageService = {
 
     return courseNamesFromDirectories;
   },
-  
+
   async getCourseSettings(courseName: string): Promise<LocalCourseSettings> {
     const courseDirectory = path.join(basePath, courseName);
     const settingsPath = path.join(courseDirectory, "settings.yml");
@@ -61,6 +61,22 @@ export const fileStorageService = {
 
     const folderName = path.basename(courseDirectory);
     return { ...settings, name: folderName };
+  },
+
+  async getModuleNames(courseName: string) {
+    const courseDirectory = path.join(basePath, courseName);
+    const moduleDirectories = await fs.readdir(courseDirectory, {
+      withFileTypes: true,
+    });
+
+    const modulePromises = moduleDirectories
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) =>
+        dirent.name
+      );
+
+    const modules = await Promise.all(modulePromises);
+    return modules.sort((a, b) => a.localeCompare(b));
   },
 
   async getEmptyDirectories(): Promise<string[]> {
