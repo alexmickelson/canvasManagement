@@ -79,6 +79,10 @@ export const useUpdateQuizMutation = () => {
       moduleName: string;
       quizName: string;
     }) => {
+      queryClient.setQueryData(
+        localCourseKeys.quiz(courseName, moduleName, quizName),
+        quiz
+      );
       const url =
         "/api/courses/" +
         encodeURIComponent(courseName) +
@@ -86,19 +90,15 @@ export const useUpdateQuizMutation = () => {
         encodeURIComponent(moduleName) +
         "/quizzes/" +
         encodeURIComponent(quizName);
-      queryClient.setQueryData(
-        localCourseKeys.quiz(courseName, moduleName, quizName),
-        quiz
-      );
       await axios.put(url, quiz);
     },
     onSuccess: (_, { moduleName, quizName }) => {
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
       });
-      // queryClient.invalidateQueries({
-      //   queryKey: localCourseKeys.quizNames(courseName, moduleName),
-      // });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.quizNames(courseName, moduleName),
+      });
     },
   });
 };

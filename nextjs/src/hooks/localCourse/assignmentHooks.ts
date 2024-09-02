@@ -2,7 +2,7 @@
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
-import { useSuspenseQuery, useSuspenseQueries } from "@tanstack/react-query";
+import { useSuspenseQuery, useSuspenseQueries, useQueryClient, useMutation } from "@tanstack/react-query";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
 export const useAssignmentNamesQuery = (moduleName: string) => {
@@ -70,5 +70,42 @@ export const useAssignmentsQueries = (
       data: results.map((r) => r.data),
       pending: results.some((r) => r.isPending),
     }),
+  });
+};
+
+export const useUpdateAssignmentMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      assignment,
+      moduleName,
+      assignmentName,
+    }: {
+      assignment: LocalAssignment;
+      moduleName: string;
+      assignmentName: string;
+    }) => {
+      queryClient.setQueryData(
+        localCourseKeys.assignment(courseName, moduleName, assignmentName),
+        assignment
+      );
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/assignments/" +
+        encodeURIComponent(assignmentName);
+      await axios.put(url, assignment);
+    },
+    onSuccess: (_, { moduleName, assignmentName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.assignment(courseName, moduleName, assignmentName),
+      });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
+      });
+    },
   });
 };

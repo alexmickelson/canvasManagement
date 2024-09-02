@@ -1,6 +1,11 @@
-"use client"
+"use client";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQueries,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
@@ -65,3 +70,40 @@ function getPageQueryConfig(
     },
   };
 }
+
+export const useUpdatePageMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      page,
+      moduleName,
+      pageName,
+    }: {
+      page: LocalCoursePage;
+      moduleName: string;
+      pageName: string;
+    }) => {
+      queryClient.setQueryData(
+        localCourseKeys.page(courseName, moduleName, pageName),
+        page
+      );
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/pages/" +
+        encodeURIComponent(pageName);
+      await axios.put(url, page);
+    },
+    onSuccess: (_, { moduleName, pageName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
+      });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+      });
+    },
+  });
+};

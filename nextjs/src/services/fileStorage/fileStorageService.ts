@@ -9,10 +9,11 @@ import {
   directoryOrFileExists,
   hasFileSystemEntries,
 } from "./utils/fileSystemUtils";
-import { localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
+import { LocalAssignment, localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
 import { LocalQuiz, localQuizMarkdownUtils } from "@/models/local/quiz/localQuiz";
-import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
+import { LocalCoursePage, localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
+import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
 
 const basePath = process.env.STORAGE_DIRECTORY ?? "./storage";
 console.log("base path", basePath);
@@ -136,6 +137,19 @@ export const fileStorageService = {
     );
     return localAssignmentMarkdown.parseMarkdown(rawFile);
   },
+  async updateAssignment(courseName: string, moduleName: string, assignmentName: string, assignment: LocalAssignment) {
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "assignments",
+      assignmentName+".md"
+    );
+
+    const assignmentMarkdown = assignmentMarkdownSerializer.toMarkdown(assignment);
+    console.log(`Saving assignment ${filePath}`);
+    await fs.writeFile(filePath, assignmentMarkdown);
+  },
 
   async getQuiz(courseName: string, moduleName: string, quizName: string) {
     const filePath = path.join(
@@ -179,6 +193,19 @@ export const fileStorageService = {
       "\n"
     );
     return localPageMarkdownUtils.parseMarkdown(rawFile);
+  },
+  async updatePage(courseName: string, moduleName: string, pageName: string, page: LocalCoursePage) {
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "pages",
+      pageName+".md"
+    );
+
+    const pageMarkdown = localPageMarkdownUtils.toMarkdown(page);
+    console.log(`Saving page ${filePath}`);
+    await fs.writeFile(filePath, pageMarkdown);
   },
 
   async getEmptyDirectories(): Promise<string[]> {
