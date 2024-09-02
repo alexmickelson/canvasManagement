@@ -4,20 +4,24 @@ import { useCourseContext } from "../context/courseContext";
 import { getMonthsBetweenDates } from "./calendarMonthUtils";
 import { CalendarMonth } from "./CalendarMonth";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useMemo } from "react";
 
 export default function CourseCalendar() {
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery(courseName);
 
-  const startDateTime = getDateFromStringOrThrow(
-    settings.startDate,
-    "course start date"
+  const startDateTime = useMemo(
+    () => getDateFromStringOrThrow(settings.startDate, "course start date"),
+    [settings.startDate]
   );
-  const endDateTime = getDateFromStringOrThrow(
-    settings.endDate,
-    "course end date"
+  const endDateTime = useMemo(
+    () => getDateFromStringOrThrow(settings.endDate, "course end date"),
+    [settings.endDate]
   );
-  const months = getMonthsBetweenDates(startDateTime, endDateTime);
+  const months = useMemo(
+    () => getMonthsBetweenDates(startDateTime, endDateTime),
+    [endDateTime, startDateTime]
+  );
 
   return (
     <div

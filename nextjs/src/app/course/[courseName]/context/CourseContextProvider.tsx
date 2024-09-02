@@ -49,19 +49,26 @@ export default function CourseContextProvider({
       }
       setItemBeingDragged(undefined);
     },
-    [itemBeingDragged, settings.defaultDueTime.hour, settings.defaultDueTime.minute, updateQuizMutation]
+    [
+      itemBeingDragged,
+      settings.defaultDueTime.hour,
+      settings.defaultDueTime.minute,
+      updateQuizMutation,
+    ]
   );
 
+  const startItemDrag = useCallback((d: DraggableItem) => {
+    setItemBeingDragged(d);
+  }, []);
+  const endItemDrag = useCallback(() => {
+    setItemBeingDragged(undefined);
+  }, []);
   return (
     <CourseContext.Provider
       value={{
         courseName: localCourseName,
-        startItemDrag: (d) => {
-          setItemBeingDragged(d);
-        },
-        endItemDrag: () => {
-          setItemBeingDragged(undefined);
-        },
+        startItemDrag: startItemDrag,
+        endItemDrag: endItemDrag,
         itemDrop,
       }}
     >

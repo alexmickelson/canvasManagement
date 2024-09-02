@@ -27,8 +27,8 @@ export const usePagesQueries = (
   courseName: string,
   moduleName: string,
   pageNames: string[]
-) =>
-  useSuspenseQueries({
+) => {
+  return useSuspenseQueries({
     queries: pageNames.map((name) =>
       getPageQueryConfig(courseName, moduleName, name)
     ),
@@ -37,6 +37,7 @@ export const usePagesQueries = (
       pending: results.some((r) => r.isPending),
     }),
   });
+};
 
 function getPageQueryConfig(
   courseName: string,
@@ -44,7 +45,7 @@ function getPageQueryConfig(
   pageName: string
 ) {
   return {
-    queryKey: localCourseKeys.quiz(courseName, moduleName, pageName),
+    queryKey: localCourseKeys.page(courseName, moduleName, pageName),
     queryFn: async (): Promise<LocalCoursePage> => {
       const url =
         "/api/courses/" +
@@ -53,8 +54,15 @@ function getPageQueryConfig(
         encodeURIComponent(moduleName) +
         "/pages/" +
         encodeURIComponent(pageName);
-      const response = await axios.get(url);
-      return response.data;
+      try {
+        console.log("making a request to get a page");
+        const response = await axios.get(url);
+        return response.data;
+      } catch (e) {
+        console.log("error getting page", e, url);
+        debugger;
+        throw e;
+      }
     },
   };
 }

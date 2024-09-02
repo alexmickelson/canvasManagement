@@ -27,7 +27,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
           aria-expanded={!isCollapsed}
           aria-controls={monthName}
         > */}
-          {monthName}
+        {monthName}
         {/* </button> */}
       </h3>
 
@@ -41,13 +41,25 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
         </div>
 
         {month.daysByWeek.map((week, weekIndex) => (
-          <div className="grid grid-cols-7 m-3" key={weekIndex}>
-            {week.map((day, dayIndex) => (
-              <Day key={dayIndex} day={day} month={month.month} />
-            ))}
-          </div>
+          <CalendarWeek key={weekIndex} week={week} monthNumber={month.month} />
         ))}
       </div>
     </>
   );
 };
+
+function CalendarWeek({
+  week,
+  monthNumber,
+}: {
+  week: Date[];
+  monthNumber: number;
+}) {
+  return (
+    <div className="grid grid-cols-7 m-3">
+      {week.map((day, dayIndex) => (
+        <Day key={dayIndex} day={day} month={monthNumber} />
+      ))}
+    </div>
+  );
+}

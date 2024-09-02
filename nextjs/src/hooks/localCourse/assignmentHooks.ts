@@ -15,7 +15,7 @@ export const useAssignmentNamesQuery = (
         encodeURIComponent(courseName) +
         "/modules/" +
         encodeURIComponent(moduleName) +
-        "/assignments"
+        "/assignments";
       const response = await axios.get(url);
       return response.data;
     },
@@ -41,8 +41,6 @@ const getAssignmentQueryConfig = (
         encodeURIComponent(moduleName) +
         "/assignments/" +
         encodeURIComponent(assignmentName);
-
-      console.log(url);
       const response = await axios.get(url);
       return response.data;
     },

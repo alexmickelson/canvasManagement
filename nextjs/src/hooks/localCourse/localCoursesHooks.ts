@@ -8,6 +8,7 @@ import {
 } from "./assignmentHooks";
 import { usePageNamesQuery, usePagesQueries } from "./pageHooks";
 import { useQuizNamesQuery, useQuizzesQueries } from "./quizHooks";
+import { useMemo } from "react";
 
 export const useLocalCourseNamesQuery = () =>
   useSuspenseQuery({
@@ -59,11 +60,14 @@ export const useModuleDataQuery = (courseName: string, moduleName: string) => {
   );
   const { data: pages } = usePagesQueries(courseName, moduleName, pageNames);
 
-  return {
-    assignments,
-    quizzes,
-    pages,
-  };
+  return useMemo(
+    () => ({
+      assignments,
+      quizzes,
+      pages,
+    }),
+    [assignments, pages, quizzes]
+  );
 };
 
 // export const useUpdateCourseMutation = (courseName: string) => {
