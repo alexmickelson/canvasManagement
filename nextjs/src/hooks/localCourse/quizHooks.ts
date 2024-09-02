@@ -12,7 +12,12 @@ export const useQuizNamesQuery = (courseName: string, moduleName: string) =>
   useSuspenseQuery({
     queryKey: localCourseKeys.quizNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/quizzes`;
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/quizzes";
       const response = await axios.get(url);
       return response.data;
     },
@@ -47,7 +52,13 @@ function getQuizQueryConfig(
   return {
     queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
     queryFn: async (): Promise<LocalQuiz> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/quizzes/${quizName}`;
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/quizzes/" +
+        encodeURIComponent(quizName);
       const response = await axios.get(url);
       return response.data;
     },
@@ -66,7 +77,13 @@ export const useUpdateQuizMutation = (courseName: string) => {
       moduleName: string;
       quizName: string;
     }) => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/quizzes/${quizName}`;
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/quizzes/" +
+        encodeURIComponent(quizName);
       await axios.put(url, quiz);
     },
     onSuccess: (_, { moduleName, quizName }) => {

@@ -20,15 +20,15 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   return (
     <>
       <h3 className="text-center text-2xl">
-        <button
+        {/* <button
           type="button"
           className="btn btn-link"
           onClick={toggleCollapse}
           aria-expanded={!isCollapsed}
           aria-controls={monthName}
-        >
+        > */}
           {monthName}
-        </button>
+        {/* </button> */}
       </h3>
 
       <div id={monthName}>

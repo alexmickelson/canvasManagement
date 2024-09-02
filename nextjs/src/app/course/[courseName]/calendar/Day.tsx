@@ -10,20 +10,21 @@ export default function Day({ day, month }: { day: Date; month: number }) {
   const backgroundClass = isInSameMonth ? "" : "bg-slate-900";
 
   return (
-    <>
+    <div
+      className={
+        "border border-slate-600 rounded-lg p-2 pb-4 m-1 " + backgroundClass
+      }
+    >
+      {day.getDate()}
       {moduleNames.map((moduleName) => (
         <div
           key={"" + day + month + moduleName}
-          className={
-            "border border-slate-600 rounded-lg p-2 pb-4 m-1 " + backgroundClass
-          }
           onDrop={() => itemDrop(day)}
           onDragOver={(e) => e.preventDefault()}
         >
-          {day.getDate()}
           <DayItemsInModule day={day} moduleName={moduleName} />
         </div>
       ))}
-    </>
+    </div>
   );
 }

@@ -7,7 +7,12 @@ export const usePageNamesQuery = (courseName: string, moduleName: string) =>
   useSuspenseQuery({
     queryKey: localCourseKeys.pageNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/pages`;
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/pages";
       const response = await axios.get(url);
       return response.data;
     },
@@ -41,7 +46,13 @@ function getPageQueryConfig(
   return {
     queryKey: localCourseKeys.quiz(courseName, moduleName, pageName),
     queryFn: async (): Promise<LocalCoursePage> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/pages/${pageName}`;
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/pages/" +
+        encodeURIComponent(pageName);
       const response = await axios.get(url);
       return response.data;
     },

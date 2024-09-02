@@ -14,7 +14,7 @@ export default async function CourseLayout({
   await hydrateCourse(queryClient, courseName);
   const dehydratedState = dehydrate(queryClient);
 
-  console.log("hydrated course state", courseName, dehydratedState);
+  // console.log("hydrated course state", courseName, dehydratedState);
   return (
     <HydrationBoundary state={dehydratedState}>{children}</HydrationBoundary>
   );

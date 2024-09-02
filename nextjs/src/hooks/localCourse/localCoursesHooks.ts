@@ -59,7 +59,6 @@ export const useModuleDataQuery = (courseName: string, moduleName: string) => {
   );
   const { data: pages } = usePagesQueries(courseName, moduleName, pageNames);
 
-  
   return {
     assignments,
     quizzes,

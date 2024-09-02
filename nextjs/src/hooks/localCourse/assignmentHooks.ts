@@ -10,7 +10,12 @@ export const useAssignmentNamesQuery = (
   useSuspenseQuery({
     queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/assignments`;
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/assignments"
       const response = await axios.get(url);
       return response.data;
     },
@@ -21,6 +26,7 @@ const getAssignmentQueryConfig = (
   moduleName: string,
   assignmentName: string
 ) => {
+  if (assignmentName === "Final Project Milestone ") console.log(moduleName);
   return {
     queryKey: localCourseKeys.assignment(
       courseName,
@@ -28,7 +34,15 @@ const getAssignmentQueryConfig = (
       assignmentName
     ),
     queryFn: async (): Promise<LocalAssignment> => {
-      const url = `/api/courses/${courseName}/modules/${moduleName}/assignments/${assignmentName}`;
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/assignments/" +
+        encodeURIComponent(assignmentName);
+
+      console.log(url);
       const response = await axios.get(url);
       return response.data;
     },
