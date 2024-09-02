@@ -1,6 +1,6 @@
 "use client";
 import { IModuleItem } from "@/models/local/IModuleItem";
-import { createContext, useContext } from "react";
+import { createContext, useContext, DragEvent } from "react";
 
 export interface DraggableItem {
   item: IModuleItem;
@@ -9,13 +9,9 @@ export interface DraggableItem {
 }
 
 export interface DraggingContextInterface {
-  startItemDrag: (dragging: DraggableItem) => void;
-  endItemDrag: () => void;
-  itemDrop: (droppedOnDay?: string) => void;
+  itemDrop: (e:  DragEvent<HTMLDivElement>,droppedOnDay?: string) => void;
 }
 const defaultDraggingValue: DraggingContextInterface = {
-  startItemDrag: () => { },
-  endItemDrag: () => { },
   itemDrop: () => { },
 };
 export const DraggingContext = createContext<DraggingContextInterface>(defaultDraggingValue);

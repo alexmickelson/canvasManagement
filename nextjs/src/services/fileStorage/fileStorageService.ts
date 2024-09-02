@@ -9,7 +9,7 @@ import {
   directoryOrFileExists,
   hasFileSystemEntries,
 } from "./utils/fileSystemUtils";
-import { localAssignmentMarkdown } from "@/models/local/assignmnet/localAssignment";
+import { localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
 import { LocalQuiz, localQuizMarkdownUtils } from "@/models/local/quiz/localQuiz";
 import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";

@@ -1,10 +1,9 @@
 import {
   dehydrate,
   HydrationBoundary,
-  QueryClient,
 } from "@tanstack/react-query";
-import { hydrateCourse } from "@/hooks/hookHydration";
 import { getQueryClient } from "@/app/providersQueryClientUtils";
+import { hydrateCourse } from "@/hooks/hookHydration";
 
 export default async function CourseLayout({
   children,

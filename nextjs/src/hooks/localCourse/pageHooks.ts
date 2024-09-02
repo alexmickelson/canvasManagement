@@ -1,3 +1,4 @@
+"use client"
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -54,7 +55,6 @@ function getPageQueryConfig(
         "/pages/" +
         encodeURIComponent(pageName);
       try {
-        console.log("making a request to get a page");
         const response = await axios.get(url);
         return response.data;
       } catch (e) {

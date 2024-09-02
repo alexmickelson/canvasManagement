@@ -1,6 +1,7 @@
+"use client"
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
-import { LocalAssignment } from "@/models/local/assignmnet/localAssignment";
+import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { useSuspenseQuery, useSuspenseQueries } from "@tanstack/react-query";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 

@@ -1,4 +1,4 @@
-import { LocalAssignment } from "./assignmnet/localAssignment";
+import { LocalAssignment } from "./assignment/localAssignment";
 import { IModuleItem } from "./IModuleItem";
 import { LocalCoursePage } from "./page/localCoursePage";
 import { LocalQuiz } from "./quiz/localQuiz";

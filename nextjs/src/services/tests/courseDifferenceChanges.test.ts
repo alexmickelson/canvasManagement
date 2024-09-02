@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { LocalCourse } from "@/models/local/localCourse";
 import { CourseDifferences } from "../fileStorage/utils/courseDifferences";
-import { AssignmentSubmissionType } from "@/models/local/assignmnet/assignmentSubmissionType";
+import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
 
 describe("CourseDifferencesChangesTests", () => {
   it("can detect new settings", () => {

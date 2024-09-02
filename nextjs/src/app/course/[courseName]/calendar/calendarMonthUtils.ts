@@ -34,14 +34,14 @@ function createCalendarMonth(year: number, month: number): CalendarMonthModel {
     Array.from({ length: 7 }).map((_, dayIndex) => {
       if (weekIndex === 0 && dayIndex < firstDayOfMonth) {
         return dateToMarkdownString(
-          new Date(year, month - 1, dayIndex - firstDayOfMonth + 1)
+          new Date(year, month - 1, dayIndex - firstDayOfMonth + 1, 12, 0, 0)
         );
       } else if (currentDay <= daysInMonth) {
-        return dateToMarkdownString(new Date(year, month - 1, currentDay++));
+        return dateToMarkdownString(new Date(year, month - 1, currentDay++, 12, 0, 0));
       } else {
         currentDay++;
         return dateToMarkdownString(
-          new Date(year, month, currentDay - daysInMonth - 1)
+          new Date(year, month, currentDay - daysInMonth - 1, 12, 0, 0)
         );
       }
     })

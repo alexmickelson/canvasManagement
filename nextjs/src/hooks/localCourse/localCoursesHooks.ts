@@ -1,3 +1,4 @@
+"use client";
 import { LocalCourseSettings } from "@/models/local/localCourse";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
@@ -45,32 +46,35 @@ export const useModuleNamesQuery = () => {
   });
 };
 
-export const useModuleDataQuery = (moduleName: string) => {
-  const { data: assignmentNames } = useAssignmentNamesQuery(
-    moduleName
-  );
-  const { data: quizNames } = useQuizNamesQuery(moduleName);
-  const { data: pageNames } = usePageNamesQuery(moduleName);
+// dangerous? really slowed down page...
+// maybe it only slowed down with react query devtools...
+// export const useModuleDataQuery = (moduleName: string) => {
+//   console.log("running");
+//   const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
+//   const { data: quizNames } = useQuizNamesQuery(moduleName);
+//   const { data: pageNames } = usePageNamesQuery(moduleName);
 
-  const { data: assignments } = useAssignmentsQueries(
-    moduleName,
-    assignmentNames
-  );
-  const { data: quizzes } = useQuizzesQueries(
-    moduleName,
-    quizNames
-  );
-  const { data: pages } = usePagesQueries(moduleName, pageNames);
+//   const { data: assignments } = useAssignmentsQueries(
+//     moduleName,
+//     assignmentNames
+//   );
+//   const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
+//   const { data: pages } = usePagesQueries(moduleName, pageNames);
 
-  return useMemo(
-    () => ({
-      assignments,
-      quizzes,
-      pages,
-    }),
-    [assignments, pages, quizzes]
-  );
-};
+//   return {
+//     assignments,
+//     quizzes,
+//     pages,
+//   };
+//   // return useMemo(
+//   //   () => ({
+//   //     assignments,
+//   //     quizzes,
+//   //     pages,
+//   //   }),
+//   //   [assignments, pages, quizzes]
+//   // );
+// };
 
 // export const useUpdateCourseMutation = (courseName: string) => {
 //   const queryClient = useQueryClient();

@@ -1,4 +1,4 @@
-import { LocalAssignmentGroup } from "./assignmnet/localAssignmentGroup";
+import { LocalAssignmentGroup } from "./assignment/localAssignmentGroup";
 import { LocalModule } from "./localModules";
 import { parse, stringify } from "yaml";
 

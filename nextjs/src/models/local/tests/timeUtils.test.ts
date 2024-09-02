@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { getDateFromString } from "../timeUtils";
+import { dateToMarkdownString, getDateFromString } from "../timeUtils";
 
 describe("Can properly handle expected date formats", () => {
   it("can use AM/PM dates", () => {
@@ -38,5 +38,13 @@ describe("Can properly handle expected date formats", () => {
     expect(dateObject?.getMinutes()).toBe(0);
     expect(dateObject?.getHours()).toBe(1);
     expect(dateObject?.getSeconds()).toBe(0);
+  });
+  it("can get correct time from format", () => {
+    const dateString = "08/27/2024 23:59:00";
+    const dateObject = getDateFromString(dateString);
+
+    expect(dateObject).not.toBeUndefined()
+    const updatedString = dateToMarkdownString(dateObject!)
+    expect(updatedString).toBe(dateString)
   });
 });

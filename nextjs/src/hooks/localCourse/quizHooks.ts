@@ -1,3 +1,4 @@
+"use client"
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   useMutation,
@@ -66,9 +67,8 @@ function getQuizQueryConfig(
 }
 
 export const useUpdateQuizMutation = () => {
-
   const { courseName } = useCourseContext();
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
       quiz,
@@ -89,9 +89,9 @@ export const useUpdateQuizMutation = () => {
       await axios.put(url, quiz);
     },
     onSuccess: (_, { moduleName, quizName }) => {
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
-      });
+      // queryClient.invalidateQueries({
+      //   queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
+      // });
       // queryClient.invalidateQueries({
       //   queryKey: localCourseKeys.quizNames(courseName, moduleName),
       // });

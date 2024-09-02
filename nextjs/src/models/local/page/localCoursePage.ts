@@ -1,4 +1,4 @@
-import { extractLabelValue } from "../assignmnet/utils/markdownUtils";
+import { extractLabelValue } from "../assignment/utils/markdownUtils";
 import { IModuleItem } from "../IModuleItem";
 import { verifyDateOrThrow } from "../timeUtils";
 

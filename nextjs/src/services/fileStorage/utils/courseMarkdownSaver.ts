@@ -1,4 +1,4 @@
-import { localAssignmentMarkdown } from "@/models/local/assignmnet/localAssignment";
+import { localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
 import { LocalCourse, localCourseYamlUtils } from "@/models/local/localCourse";
 import { LocalModule } from "@/models/local/localModules";
 import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";

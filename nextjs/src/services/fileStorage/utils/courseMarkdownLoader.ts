@@ -1,7 +1,7 @@
 import {
   LocalAssignment,
   localAssignmentMarkdown,
-} from "@/models/local/assignmnet/localAssignment";
+} from "@/models/local/assignment/localAssignment";
 import {
   LocalCourse,
   LocalCourseSettings,

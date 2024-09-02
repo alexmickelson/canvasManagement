@@ -1,17 +1,25 @@
+import { useAssignmentNamesQuery, useAssignmentsQueries } from "@/hooks/localCourse/assignmentHooks";
+import { usePageNamesQuery, usePagesQueries } from "@/hooks/localCourse/pageHooks";
+import { useQuizNamesQuery, useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import { useState } from "react";
-import { useCourseContext } from "../context/courseContext";
-import { useModuleDataQuery } from "@/hooks/localCourse/localCoursesHooks";
 
 export default function ExpandableModule({
   moduleName,
 }: {
   moduleName: string;
 }) {
-  const { assignments, quizzes, pages } = useModuleDataQuery(
-    moduleName
+  const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
+  const { data: quizNames } = useQuizNamesQuery(moduleName);
+  const { data: pageNames } = usePageNamesQuery(moduleName);
+
+  const { data: assignments } = useAssignmentsQueries(
+    moduleName,
+    assignmentNames
   );
+  const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
+  const { data: pages } = usePagesQueries(moduleName, pageNames);
 
   const [expanded, setExpanded] = useState(false);
 
