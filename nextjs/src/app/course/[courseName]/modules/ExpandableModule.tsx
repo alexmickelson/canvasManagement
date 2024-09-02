@@ -9,9 +9,7 @@ export default function ExpandableModule({
 }: {
   moduleName: string;
 }) {
-  const { courseName } = useCourseContext();
   const { assignments, quizzes, pages } = useModuleDataQuery(
-    courseName,
     moduleName
   );
 

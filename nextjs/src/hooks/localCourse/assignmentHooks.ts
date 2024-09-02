@@ -2,12 +2,11 @@ import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { LocalAssignment } from "@/models/local/assignmnet/localAssignment";
 import { useSuspenseQuery, useSuspenseQueries } from "@tanstack/react-query";
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
-export const useAssignmentNamesQuery = (
-  courseName: string,
-  moduleName: string
-) =>
-  useSuspenseQuery({
+export const useAssignmentNamesQuery = (moduleName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery({
     queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
       const url =
@@ -20,13 +19,13 @@ export const useAssignmentNamesQuery = (
       return response.data;
     },
   });
+};
 
 const getAssignmentQueryConfig = (
   courseName: string,
   moduleName: string,
   assignmentName: string
 ) => {
-  if (assignmentName === "Final Project Milestone ") console.log(moduleName);
   return {
     queryKey: localCourseKeys.assignment(
       courseName,
@@ -47,20 +46,22 @@ const getAssignmentQueryConfig = (
   };
 };
 export const useAssignmentQuery = (
-  courseName: string,
   moduleName: string,
   assignmentName: string
-) =>
-  useSuspenseQuery(
+) => {
+  const { courseName } = useCourseContext();
+
+  return useSuspenseQuery(
     getAssignmentQueryConfig(courseName, moduleName, assignmentName)
   );
+};
 
 export const useAssignmentsQueries = (
-  courseName: string,
   moduleName: string,
   assignmentNames: string[]
-) =>
-  useSuspenseQueries({
+) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQueries({
     queries: assignmentNames.map((name) =>
       getAssignmentQueryConfig(courseName, moduleName, name)
     ),
@@ -69,3 +70,4 @@ export const useAssignmentsQueries = (
       pending: results.some((r) => r.isPending),
     }),
   });
+};

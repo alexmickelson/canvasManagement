@@ -2,9 +2,11 @@ import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { useSuspenseQueries, useSuspenseQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
-export const usePageNamesQuery = (courseName: string, moduleName: string) =>
-  useSuspenseQuery({
+export const usePageNamesQuery = (moduleName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery({
     queryKey: localCourseKeys.pageNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
       const url =
@@ -17,17 +19,14 @@ export const usePageNamesQuery = (courseName: string, moduleName: string) =>
       return response.data;
     },
   });
-export const usePageQuery = (
-  courseName: string,
-  moduleName: string,
-  pageName: string
-) => useSuspenseQuery(getPageQueryConfig(courseName, moduleName, pageName));
+};
+export const usePageQuery = (moduleName: string, pageName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery(getPageQueryConfig(courseName, moduleName, pageName));
+};
 
-export const usePagesQueries = (
-  courseName: string,
-  moduleName: string,
-  pageNames: string[]
-) => {
+export const usePagesQueries = (moduleName: string, pageNames: string[]) => {
+  const { courseName } = useCourseContext();
   return useSuspenseQueries({
     queries: pageNames.map((name) =>
       getPageQueryConfig(courseName, moduleName, name)

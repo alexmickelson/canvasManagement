@@ -52,7 +52,7 @@ function CalendarWeek({
   week,
   monthNumber,
 }: {
-  week: Date[];
+  week: string[]; //date strings
   monthNumber: number;
 }) {
   return (

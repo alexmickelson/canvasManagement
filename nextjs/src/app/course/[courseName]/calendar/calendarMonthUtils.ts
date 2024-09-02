@@ -1,9 +1,15 @@
-"use client"
+"use client";
+
+import {
+  dateToMarkdownString,
+  getDateFromStringOrThrow,
+} from "@/models/local/timeUtils";
+
 export interface CalendarMonthModel {
   year: number;
   month: number;
   weeks: number[][];
-  daysByWeek: (Date)[][];
+  daysByWeek: string[][]; //iso date is memo-izable
 }
 
 function weeksInMonth(year: number, month: number): number {
@@ -27,17 +33,25 @@ function createCalendarMonth(year: number, month: number): CalendarMonthModel {
   const daysByWeek = Array.from({ length: weeksNumber }).map((_, weekIndex) =>
     Array.from({ length: 7 }).map((_, dayIndex) => {
       if (weekIndex === 0 && dayIndex < firstDayOfMonth) {
-        return new Date(year, month - 1, dayIndex - firstDayOfMonth + 1);
+        return dateToMarkdownString(
+          new Date(year, month - 1, dayIndex - firstDayOfMonth + 1)
+        );
       } else if (currentDay <= daysInMonth) {
-        return new Date(year, month - 1, currentDay++);
+        return dateToMarkdownString(new Date(year, month - 1, currentDay++));
       } else {
         currentDay++;
-        return new Date(year, month, currentDay - daysInMonth - 1);
+        return dateToMarkdownString(
+          new Date(year, month, currentDay - daysInMonth - 1)
+        );
       }
     })
   );
 
-  const weeks = daysByWeek.map((week) => week.map((day) => day.getDate()));
+  const weeks = daysByWeek.map((week) =>
+    week.map((day) =>
+      getDateFromStringOrThrow(day, "calculating weeks").getDate()
+    )
+  );
 
   return { year, month, weeks, daysByWeek };
 }

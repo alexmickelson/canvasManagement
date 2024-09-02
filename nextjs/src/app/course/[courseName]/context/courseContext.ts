@@ -1,25 +1,12 @@
 "use client";
-import { IModuleItem } from "@/models/local/IModuleItem";
 import { createContext, useContext } from "react";
-
-export interface DraggableItem {
-  item: IModuleItem;
-  sourceModuleName: string;
-  type: "quiz" | "assignment" | "page";
-}
 
 export interface CourseContextInterface {
   courseName: string;
-  startItemDrag: (dragging: DraggableItem) => void;
-  endItemDrag: () => void;
-  itemDrop: (droppedOnDay?: Date) => void;
 }
 
 const defaultValue: CourseContextInterface = {
-  startItemDrag: () => { },
-  endItemDrag: () => { },
-  itemDrop: () => { },
-  courseName: ""
+  courseName: "",
 };
 
 export const CourseContext =
@@ -28,3 +15,4 @@ export const CourseContext =
 export function useCourseContext() {
   return useContext(CourseContext);
 }
+

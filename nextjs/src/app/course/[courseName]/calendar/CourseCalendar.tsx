@@ -1,14 +1,12 @@
 "use client";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
-import { useCourseContext } from "../context/courseContext";
 import { getMonthsBetweenDates } from "./calendarMonthUtils";
 import { CalendarMonth } from "./CalendarMonth";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useMemo } from "react";
 
 export default function CourseCalendar() {
-  const { courseName } = useCourseContext();
-  const { data: settings } = useLocalCourseSettingsQuery(courseName);
+  const { data: settings } = useLocalCourseSettingsQuery();
 
   const startDateTime = useMemo(
     () => getDateFromStringOrThrow(settings.startDate, "course start date"),

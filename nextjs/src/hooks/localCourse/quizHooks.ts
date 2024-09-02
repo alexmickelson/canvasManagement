@@ -7,9 +7,11 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
-export const useQuizNamesQuery = (courseName: string, moduleName: string) =>
-  useSuspenseQuery({
+export const useQuizNamesQuery = (moduleName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery({
     queryKey: localCourseKeys.quizNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
       const url =
@@ -22,19 +24,16 @@ export const useQuizNamesQuery = (courseName: string, moduleName: string) =>
       return response.data;
     },
   });
+};
 
-export const useQuizQuery = (
-  courseName: string,
-  moduleName: string,
-  quizName: string
-) => useSuspenseQuery(getQuizQueryConfig(courseName, moduleName, quizName));
+export const useQuizQuery = (moduleName: string, quizName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery(getQuizQueryConfig(courseName, moduleName, quizName));
+};
 
-export const useQuizzesQueries = (
-  courseName: string,
-  moduleName: string,
-  quizNames: string[]
-) =>
-  useSuspenseQueries({
+export const useQuizzesQueries = (moduleName: string, quizNames: string[]) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQueries({
     queries: quizNames.map((name) =>
       getQuizQueryConfig(courseName, moduleName, name)
     ),
@@ -43,6 +42,7 @@ export const useQuizzesQueries = (
       pending: results.some((r) => r.isPending),
     }),
   });
+};
 
 function getQuizQueryConfig(
   courseName: string,
@@ -65,7 +65,9 @@ function getQuizQueryConfig(
   };
 }
 
-export const useUpdateQuizMutation = (courseName: string) => {
+export const useUpdateQuizMutation = () => {
+
+  const { courseName } = useCourseContext();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({

@@ -4,8 +4,7 @@ import { useCourseContext } from "../context/courseContext";
 import ExpandableModule from "./ExpandableModule";
 
 export default function ModuleList() {
-  const { courseName } = useCourseContext();
-  const { data: moduleNames } = useModuleNamesQuery(courseName);
+  const { data: moduleNames } = useModuleNamesQuery();
   return (
     <div>
       {moduleNames.map((m) => (

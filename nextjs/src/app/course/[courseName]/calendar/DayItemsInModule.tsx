@@ -7,20 +7,20 @@ import Link from "next/link";
 import { LocalAssignment } from "@/models/local/assignmnet/localAssignment";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
+import { useDraggingContext } from "../context/DraggingContext";
 
 export default function DayItemsInModule({
   day,
   moduleName,
 }: {
-  day: Date;
+  day: string;
   moduleName: string;
 }) {
-  const { courseName, endItemDrag, startItemDrag } = useCourseContext();
+  const { courseName } = useCourseContext();
+  const { endItemDrag, startItemDrag } = useDraggingContext();
   const { assignments, quizzes, pages } = useModuleDataQuery(
-    courseName,
     moduleName
   );
-
   const todaysAssignments = useMemo(
     () =>
       assignments.filter((a) => {
@@ -28,10 +28,14 @@ export default function DayItemsInModule({
           a.dueAt,
           "due at for assignment in day"
         );
+        const dayAsDate = getDateFromStringOrThrow(
+          day,
+          "in assignment in DayItemsInModule"
+        );
         return (
-          dueDate.getFullYear() === day.getFullYear() &&
-          dueDate.getMonth() === day.getMonth() &&
-          dueDate.getDate() === day.getDate()
+          dueDate.getFullYear() === dayAsDate.getFullYear() &&
+          dueDate.getMonth() === dayAsDate.getMonth() &&
+          dueDate.getDate() === dayAsDate.getDate()
         );
       }),
     [assignments, day]
@@ -43,10 +47,14 @@ export default function DayItemsInModule({
           q.dueAt,
           "due at for quiz in day"
         );
+        const dayAsDate = getDateFromStringOrThrow(
+          day,
+          "in quizzes in DayItemsInModule"
+        );
         return (
-          dueDate.getFullYear() === day.getFullYear() &&
-          dueDate.getMonth() === day.getMonth() &&
-          dueDate.getDate() === day.getDate()
+          dueDate.getFullYear() === dayAsDate.getFullYear() &&
+          dueDate.getMonth() === dayAsDate.getMonth() &&
+          dueDate.getDate() === dayAsDate.getDate()
         );
       }),
     [day, quizzes]
@@ -58,10 +66,14 @@ export default function DayItemsInModule({
           p.dueAt,
           "due at for page in day"
         );
+        const dayAsDate = getDateFromStringOrThrow(
+          day,
+          "in pages in DayItemsInModule"
+        );
         return (
-          dueDate.getFullYear() === day.getFullYear() &&
-          dueDate.getMonth() === day.getMonth() &&
-          dueDate.getDate() === day.getDate()
+          dueDate.getFullYear() === dayAsDate.getFullYear() &&
+          dueDate.getMonth() === dayAsDate.getMonth() &&
+          dueDate.getDate() === dayAsDate.getDate()
         );
       }),
     [day, pages]
@@ -128,6 +140,7 @@ export default function DayItemsInModule({
             role="button"
             draggable="true"
             onDragStart={starPageDrag(p)}
+            onDragEnd={endItemDrag}
           >
             {p.name}
           </li>

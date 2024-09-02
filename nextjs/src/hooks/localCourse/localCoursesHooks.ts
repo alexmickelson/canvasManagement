@@ -9,6 +9,7 @@ import {
 import { usePageNamesQuery, usePagesQueries } from "./pageHooks";
 import { useQuizNamesQuery, useQuizzesQueries } from "./quizHooks";
 import { useMemo } from "react";
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
 export const useLocalCourseNamesQuery = () =>
   useSuspenseQuery({
@@ -20,8 +21,9 @@ export const useLocalCourseNamesQuery = () =>
     },
   });
 
-export const useLocalCourseSettingsQuery = (courseName: string) =>
-  useSuspenseQuery({
+export const useLocalCourseSettingsQuery = () => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery({
     queryKey: localCourseKeys.settings(courseName),
     queryFn: async (): Promise<LocalCourseSettings> => {
       const url = `/api/courses/${courseName}/settings`;
@@ -29,9 +31,11 @@ export const useLocalCourseSettingsQuery = (courseName: string) =>
       return response.data;
     },
   });
+};
 
-export const useModuleNamesQuery = (courseName: string) =>
-  useSuspenseQuery({
+export const useModuleNamesQuery = () => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery({
     queryKey: localCourseKeys.moduleNames(courseName),
     queryFn: async (): Promise<string[]> => {
       const url = `/api/courses/${courseName}/modules`;
@@ -39,26 +43,24 @@ export const useModuleNamesQuery = (courseName: string) =>
       return response.data;
     },
   });
+};
 
-export const useModuleDataQuery = (courseName: string, moduleName: string) => {
+export const useModuleDataQuery = (moduleName: string) => {
   const { data: assignmentNames } = useAssignmentNamesQuery(
-    courseName,
     moduleName
   );
-  const { data: quizNames } = useQuizNamesQuery(courseName, moduleName);
-  const { data: pageNames } = usePageNamesQuery(courseName, moduleName);
+  const { data: quizNames } = useQuizNamesQuery(moduleName);
+  const { data: pageNames } = usePageNamesQuery(moduleName);
 
   const { data: assignments } = useAssignmentsQueries(
-    courseName,
     moduleName,
     assignmentNames
   );
   const { data: quizzes } = useQuizzesQueries(
-    courseName,
     moduleName,
     quizNames
   );
-  const { data: pages } = usePagesQueries(courseName, moduleName, pageNames);
+  const { data: pages } = usePagesQueries(moduleName, pageNames);
 
   return useMemo(
     () => ({

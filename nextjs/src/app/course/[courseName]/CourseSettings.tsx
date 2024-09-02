@@ -2,8 +2,7 @@
 
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
-
-export default function CourseSettings({ courseName }: { courseName: string }) {
-  const { data: settings } = useLocalCourseSettingsQuery(courseName);
+export default function CourseSettings() {
+  const { data: settings } = useLocalCourseSettingsQuery();
   return <div>{settings.name}</div>;
 }
