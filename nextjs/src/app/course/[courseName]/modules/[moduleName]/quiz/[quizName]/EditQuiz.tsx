@@ -24,8 +24,10 @@ export default function EditQuiz({
   useEffect(() => {
     const delay = 500;
     const handler = setTimeout(() => {
-      if (quizMarkdownUtils.toMarkdown(quiz) !== quizText) {
-        // handle when parsing does not work
+      if (
+        quizMarkdownUtils.toMarkdown(quiz) !==
+        quizMarkdownUtils.toMarkdown(quizMarkdownUtils.parseMarkdown(quizText))
+      ) {
         try {
           const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
           updateQuizMutation.mutate({
@@ -50,10 +52,7 @@ export default function EditQuiz({
       <div className="columns-2 min-h-0 flex-1">
         <MonacoEditor value={quizText} onChange={setQuizText} />
         <div>
-          <div className="text-red-300">
-
-          {error && error}
-          </div>
+          <div className="text-red-300">{error && error}</div>
           <QuizPreview quiz={quiz} />
         </div>
       </div>
