@@ -9,3 +9,8 @@
     text-wrap: balance;
   }
 }
+
+/* monaco editor */
+.monaco-editor-background, .monaco-editor .margin {
+  background-color:  black !important;
+}

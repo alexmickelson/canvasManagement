@@ -1,8 +1,12 @@
 "use client";
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
-import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
+import {
+  useQuizQuery,
+  useUpdateQuizMutation,
+} from "@/hooks/localCourse/quizHooks";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import QuizPreview from "./QuizPreview";
 
 export default function EditQuiz({
   moduleName,
@@ -12,13 +16,47 @@ export default function EditQuiz({
   moduleName: string;
 }) {
   const { data: quiz } = useQuizQuery(moduleName, quizName);
+  const updateQuizMutation = useUpdateQuizMutation();
   const [quizText, setQuizText] = useState(quizMarkdownUtils.toMarkdown(quiz));
+  const [error, setError] = useState("");
   // console.log(quizText);
 
+  useEffect(() => {
+    const delay = 500;
+    const handler = setTimeout(() => {
+      if (quizMarkdownUtils.toMarkdown(quiz) !== quizText) {
+        // handle when parsing does not work
+        try {
+          const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
+          updateQuizMutation.mutate({
+            quiz: updatedQuiz,
+            moduleName,
+            quizName,
+          });
+        } catch (e: any) {
+          setError(e.toString());
+        }
+      }
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [moduleName, quiz, quizName, quizText, updateQuizMutation]);
+
   return (
-    <div>
+    <div className="h-full flex flex-col">
       {quiz.name}
-      <MonacoEditor value={quizText} onChange={setQuizText} />
+      <div className="columns-2 min-h-0 flex-1">
+        <MonacoEditor value={quizText} onChange={setQuizText} />
+        <div>
+          <div className="text-red-300">
+
+          {error && error}
+          </div>
+          <QuizPreview quiz={quiz} />
+        </div>
+      </div>
     </div>
   );
 }

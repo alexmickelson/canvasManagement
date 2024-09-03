@@ -15,8 +15,6 @@ export default function InnerMonacoEditor({
   const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
   const divRef = useRef<HTMLDivElement>(null);
 
-  // const monacoRef = useRef<Monaco | null>(null);
-
   useEffect(() => {
     if (divRef.current && !editorRef.current) {
       loader.init().then((monaco) => {
@@ -47,12 +45,13 @@ export default function InnerMonacoEditor({
       });
     }
   }, [onChange, value]);
+
   return (
     <div
       id="myMonacoEditor"
       className="Editor"
       ref={divRef}
-      style={{ height: "500px", width: "100%" }}
+      style={{ height: "100%", overflow: "hidden" }}
     ></div>
   );
 }
