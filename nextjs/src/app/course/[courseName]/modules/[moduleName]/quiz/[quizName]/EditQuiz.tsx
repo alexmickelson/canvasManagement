@@ -1,5 +1,5 @@
 "use client";
-import MonacoEditor from "@/components/MonacoEditor";
+import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
 
 export default function EditQuiz({
@@ -15,7 +15,12 @@ export default function EditQuiz({
     <div>
       {quiz.name}
 
-      {/* <MonacoEditor /> */}
+      <MonacoEditor
+        value={""}
+        onChange={function (value: string): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
     </div>
   );
 }

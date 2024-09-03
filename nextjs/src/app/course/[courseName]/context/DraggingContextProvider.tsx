@@ -17,7 +17,6 @@ export default function DraggingContextProvider({
   children,
 }: {
   children: ReactNode;
-  localCourseName: string;
 }) {
   const updateQuizMutation = useUpdateQuizMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();
@@ -73,7 +72,8 @@ export default function DraggingContextProvider({
         const assignment: LocalAssignment = {
           ...previousAssignment,
           dueAt: dateToMarkdownString(dayAsDate),
-          lockAt: previousAssignment.lockAt &&
+          lockAt:
+            previousAssignment.lockAt &&
             (getDateFromStringOrThrow(
               previousAssignment.lockAt,
               "lockAt date"
@@ -92,6 +92,7 @@ export default function DraggingContextProvider({
       settings.defaultDueTime.hour,
       settings.defaultDueTime.minute,
       updateAssignmentMutation,
+      updatePageMutation,
       updateQuizMutation,
     ]
   );

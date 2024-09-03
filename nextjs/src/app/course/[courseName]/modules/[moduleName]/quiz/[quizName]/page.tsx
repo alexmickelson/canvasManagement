@@ -6,5 +6,7 @@ export default async function Page({
 }: {
   params: { quizName: string; moduleName: string };
 }) {
-  return <EditQuiz quizName={quizName} moduleName={moduleName} />;
+  const decodedQuizName = decodeURIComponent(quizName)
+  const decodedModuleName = decodeURIComponent(moduleName)
+  return <EditQuiz quizName={decodedQuizName} moduleName={decodedModuleName} />;
 }

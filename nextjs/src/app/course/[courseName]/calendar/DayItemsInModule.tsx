@@ -1,12 +1,20 @@
 "use client";
 import React, { useMemo } from "react";
 import { useCourseContext } from "../context/courseContext";
-import { useModuleDataQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import Link from "next/link";
-import { usePageNamesQuery, usePagesQueries } from "@/hooks/localCourse/pageHooks";
-import { useQuizNamesQuery, useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
-import { useAssignmentNamesQuery, useAssignmentsQueries } from "@/hooks/localCourse/assignmentHooks";
+import {
+  usePageNamesQuery,
+  usePagesQueries,
+} from "@/hooks/localCourse/pageHooks";
+import {
+  useQuizNamesQuery,
+  useQuizzesQueries,
+} from "@/hooks/localCourse/quizHooks";
+import {
+  useAssignmentNamesQuery,
+  useAssignmentsQueries,
+} from "@/hooks/localCourse/assignmentHooks";
 
 export default function DayItemsInModule({
   day,
@@ -74,7 +82,7 @@ function Pages({ moduleName, day }: { moduleName: string; day: string }) {
 function Quizzes({ moduleName, day }: { moduleName: string; day: string }) {
   const { data: quizNames } = useQuizNamesQuery(moduleName);
   const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
-  
+
   const { courseName } = useCourseContext();
   const todaysQuizzes = useMemo(
     () =>
@@ -115,7 +123,14 @@ function Quizzes({ moduleName, day }: { moduleName: string; day: string }) {
           onDragEnd={(e) => e.preventDefault()}
         >
           <Link
-            href={`/course/${courseName}/modules/${moduleName}/quiz/${q.name}`}
+            href={
+              "/course/" +
+              encodeURIComponent(courseName) +
+              "/modules/" +
+              encodeURIComponent(moduleName) +
+              "/quiz/" +
+              encodeURIComponent(q.name)
+            }
           >
             {q.name}
           </Link>
