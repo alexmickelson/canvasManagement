@@ -1,6 +1,15 @@
-import { useAssignmentNamesQuery, useAssignmentsQueries } from "@/hooks/localCourse/assignmentHooks";
-import { usePageNamesQuery, usePagesQueries } from "@/hooks/localCourse/pageHooks";
-import { useQuizNamesQuery, useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
+import {
+  useAssignmentNamesQuery,
+  useAssignmentsQueries,
+} from "@/hooks/localCourse/assignmentHooks";
+import {
+  usePageNamesQuery,
+  usePagesQueries,
+} from "@/hooks/localCourse/pageHooks";
+import {
+  useQuizNamesQuery,
+  useQuizzesQueries,
+} from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import { useState } from "react";
@@ -65,9 +74,12 @@ export default function ExpandableModule({
         className={
           `
           overflow-hidden 
-           transition-all duration-1000 ease-in
           ` + (expanded ? " max-h-[30vh]" : " max-h-0")
+          //  transition-all duration-1000 ease-in
         }
+        style={{
+          transition: "max-height 1s cubic-bezier(0, 1, 0, 1)",
+        }}
       >
         <hr />
         {moduleItems.map(({ type, item }) => (
