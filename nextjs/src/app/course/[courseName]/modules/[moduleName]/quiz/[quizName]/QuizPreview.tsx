@@ -8,7 +8,7 @@ import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 export default function QuizPreview({ quiz }: { quiz: LocalQuiz }) {
   return (
-    <div>
+    <div  style={{ overflow: "scroll", height: "100%" }}>
       <div className="columns-2">
         <div className="text-end">Name</div>
         <div>{quiz.name}</div>
@@ -47,6 +47,15 @@ export default function QuizPreview({ quiz }: { quiz: LocalQuiz }) {
           question={question}
         />
       ))}
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 }

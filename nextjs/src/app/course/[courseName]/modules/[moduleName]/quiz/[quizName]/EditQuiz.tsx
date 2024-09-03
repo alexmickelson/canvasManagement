@@ -19,7 +19,6 @@ export default function EditQuiz({
   const updateQuizMutation = useUpdateQuizMutation();
   const [quizText, setQuizText] = useState(quizMarkdownUtils.toMarkdown(quiz));
   const [error, setError] = useState("");
-  // console.log(quizText);
 
   useEffect(() => {
     const delay = 500;
@@ -51,10 +50,15 @@ export default function EditQuiz({
       {quiz.name}
       <div className="columns-2 min-h-0 flex-1">
         <MonacoEditor value={quizText} onChange={setQuizText} />
-        <div>
+        <div className="h-full">
           <div className="text-red-300">{error && error}</div>
           <QuizPreview quiz={quiz} />
         </div>
+      </div>
+      <div className="p-5">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Add to canvas....
+        </button>
       </div>
     </div>
   );
