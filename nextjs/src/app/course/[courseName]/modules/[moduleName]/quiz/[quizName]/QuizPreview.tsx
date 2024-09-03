@@ -61,7 +61,6 @@ export default function QuizPreview({ quiz }: { quiz: LocalQuiz }) {
 }
 
 function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
-  console.log(question);
   return (
     <div className="rounded">
       <div>Points: {question.points}</div>

@@ -33,6 +33,7 @@ export default function DayItemsInModule({
 }
 
 function Pages({ moduleName, day }: { moduleName: string; day: string }) {
+  const { courseName } = useCourseContext();
   const { data: pageNames } = usePageNamesQuery(moduleName);
   const { data: pages } = usePagesQueries(moduleName, pageNames);
   const todaysPages = useMemo(
@@ -72,7 +73,18 @@ function Pages({ moduleName, day }: { moduleName: string; day: string }) {
             );
           }}
         >
-          {p.name}
+          <Link
+            href={
+              "/course/" +
+              encodeURIComponent(courseName) +
+              "/modules/" +
+              encodeURIComponent(moduleName) +
+              "/page/" +
+              encodeURIComponent(p.name)
+            }
+          >
+            {p.name}
+          </Link>
         </li>
       ))}
     </>
@@ -82,8 +94,8 @@ function Pages({ moduleName, day }: { moduleName: string; day: string }) {
 function Quizzes({ moduleName, day }: { moduleName: string; day: string }) {
   const { data: quizNames } = useQuizNamesQuery(moduleName);
   const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
-
   const { courseName } = useCourseContext();
+
   const todaysQuizzes = useMemo(
     () =>
       quizzes.filter((q) => {
@@ -142,6 +154,7 @@ function Quizzes({ moduleName, day }: { moduleName: string; day: string }) {
 
 function Assignments({ moduleName, day }: { moduleName: string; day: string }) {
   const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
+  const { courseName } = useCourseContext();
   const { data: assignments } = useAssignmentsQueries(
     moduleName,
     assignmentNames
@@ -183,7 +196,18 @@ function Assignments({ moduleName, day }: { moduleName: string; day: string }) {
             );
           }}
         >
-          {a.name}
+          <Link
+            href={
+              "/course/" +
+              encodeURIComponent(courseName) +
+              "/modules/" +
+              encodeURIComponent(moduleName) +
+              "/assignment/" +
+              encodeURIComponent(a.name)
+            }
+          >
+            {a.name}
+          </Link>
         </li>
       ))}
     </>

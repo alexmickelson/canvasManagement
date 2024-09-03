@@ -47,9 +47,10 @@ export default function EditQuiz({
 
   return (
     <div className="h-full flex flex-col">
-      {quiz.name}
       <div className="columns-2 min-h-0 flex-1">
-        <MonacoEditor value={quizText} onChange={setQuizText} />
+        <div className="flex-1 h-full">
+          <MonacoEditor value={quizText} onChange={setQuizText} />
+        </div>
         <div className="h-full">
           <div className="text-red-300">{error && error}</div>
           <QuizPreview quiz={quiz} />
