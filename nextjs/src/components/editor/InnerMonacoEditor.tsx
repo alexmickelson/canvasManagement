@@ -2,60 +2,57 @@
 import React, { useRef, useEffect } from "react";
 // import * as monaco from "monaco-editor";
 import Editor, { Monaco } from "@monaco-editor/react";
-// @ts-ignore
-// self.MonacoEnvironment = {
-// 	getWorkerUrl: function (_moduleId: any, label: string) {
-// 		if (label === 'json') {
-// 			return './json.worker.bundle.js';
-// 		}
-// 		if (label === 'css' || label === 'scss' || label === 'less') {
-// 			return './css.worker.bundle.js';
-// 		}
-// 		if (label === 'html' || label === 'handlebars' || label === 'razor') {
-// 			return './html.worker.bundle.js';
-// 		}
-// 		if (label === 'typescript' || label === 'javascript') {
-// 			return './ts.worker.bundle.js';
-// 		}
-// 		return './editor.worker.bundle.js';
-// 	}
-// };
+import loader from "@monaco-editor/loader";
+import { editor } from "monaco-editor/esm/vs/editor/editor.api";
 
 export default function InnerMonacoEditor({
   value,
   onChange,
 }: {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value: string) => void; // must be memoized
 }) {
-  console.log("monaco editor");
- 
-  const monacoRef = useRef(null);
+  const editorRef = useRef<editor.IStandaloneCodeEditor | null>(null);
+  const divRef = useRef<HTMLDivElement>(null);
 
-  function handleEditorWillMount(monaco: Monaco) {
-    // here is the monaco instance
-    // do something before editor is mounted
-    monaco.languages.typescript.javascriptDefaults.setEagerModelSync(true);
-  }
+  // const monacoRef = useRef<Monaco | null>(null);
 
-  function handleEditorDidMount(editor: Monaco, monaco: Monaco) {
-    // here is another way to get monaco instance
-    // you can also store it in `useRef` for further usage
-    monacoRef.current = monaco;
-  }
+  useEffect(() => {
+    if (divRef.current && !editorRef.current) {
+      loader.init().then((monaco) => {
+        if (divRef.current && !editorRef.current) {
+          const properties: editor.IStandaloneEditorConstructionOptions = {
+            value: value,
+            language: "markdown",
+            tabSize: 2,
+            theme: "vs-dark",
+            minimap: {
+              enabled: false,
+            },
+            lineNumbers: "off",
+            wordWrap: "on",
+            automaticLayout: true,
+            fontFamily: "Roboto-mono",
+            fontSize: 16,
+            padding: {
+              top: 10,
+            },
+          };
+
+          editorRef.current = monaco.editor.create(divRef.current, properties);
+          editorRef.current.onDidChangeModelContent((e) => {
+            onChange(editorRef.current?.getModel()?.getValue() ?? "");
+          });
+        }
+      });
+    }
+  }, [onChange, value]);
   return (
-    // <div
-    //   className="Editor"
-    //   ref={divEl}
-    //   style={{ height: "500px", width: "100%" }}
-    // ></div>
-    <Editor
-      height="90vh"
-      defaultLanguage="markdown"
-      theme="vs-dark"
-      
-      defaultValue="// some comment"
-      onChange={(value) => console.log(value)}
-    />
+    <div
+      id="myMonacoEditor"
+      className="Editor"
+      ref={divRef}
+      style={{ height: "500px", width: "100%" }}
+    ></div>
   );
 }
