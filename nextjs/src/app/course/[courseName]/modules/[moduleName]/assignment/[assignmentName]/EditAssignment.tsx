@@ -1,8 +1,11 @@
 "use client";
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
-import { useAssignmentQuery } from "@/hooks/localCourse/assignmentHooks";
+import {
+  useAssignmentQuery,
+  useUpdateAssignmentMutation,
+} from "@/hooks/localCourse/assignmentHooks";
 import { localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
 
 export default function EditAssignment({
@@ -13,11 +16,47 @@ export default function EditAssignment({
   moduleName: string;
 }) {
   const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
+  const updateAssignment = useUpdateAssignmentMutation();
+
   const [assignmentText, setAssignmentText] = useState(
     localAssignmentMarkdown.toMarkdown(assignment)
   );
+  console.log(assignmentText);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    const delay = 500;
+    const handler = setTimeout(() => {
+      const updatedAssignment =
+        localAssignmentMarkdown.parseMarkdown(assignmentText);
+      if (
+        localAssignmentMarkdown.toMarkdown(assignment) !==
+        localAssignmentMarkdown.toMarkdown(updatedAssignment)
+      ) {
+        console.log("updating assignment");
+        try {
+          updateAssignment.mutate({
+            assignment: updatedAssignment,
+            moduleName,
+            assignmentName,
+          });
+        } catch (e: any) {
+          setError(e.toString());
+        }
+      }
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [
+    assignment,
+    assignmentName,
+    assignmentText,
+    moduleName,
+    updateAssignment,
+  ]);
+  
   return (
     <div className="h-full flex flex-col">
       <div className="columns-2 min-h-0 flex-1">

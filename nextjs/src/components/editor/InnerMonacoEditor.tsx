@@ -1,7 +1,5 @@
 "use client";
 import React, { useRef, useEffect } from "react";
-// import * as monaco from "monaco-editor";
-import Editor, { Monaco } from "@monaco-editor/react";
 import loader from "@monaco-editor/loader";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
 
@@ -48,7 +46,6 @@ export default function InnerMonacoEditor({
 
   return (
     <div
-      id="myMonacoEditor"
       className="Editor"
       ref={divRef}
       style={{ height: "100%", overflow: "hidden" }}

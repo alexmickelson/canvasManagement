@@ -54,3 +54,7 @@ ol {
 hr {
   @apply border-t border-gray-200 my-4;
 }
+
+blockquote {
+  @apply border-l-4 border-gray-300 pl-4 italic text-gray-700;
+}
