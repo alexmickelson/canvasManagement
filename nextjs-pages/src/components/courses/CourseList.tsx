@@ -4,6 +4,7 @@ import Link from "next/link";
 
 export default function CourseList() {
   const { data: courses } = useLocalCourseNamesQuery();
+  console.log(courses);
   return (
     <div>
       {courses.map((c) => (

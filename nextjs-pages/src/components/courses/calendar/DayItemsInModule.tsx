@@ -1,6 +1,5 @@
 "use client";
 import React, { useMemo } from "react";
-import { useCourseContext } from "../context/courseContext";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import Link from "next/link";
 import {
@@ -15,6 +14,7 @@ import {
   useAssignmentNamesQuery,
   useAssignmentsQueries,
 } from "@/hooks/localCourse/assignmentHooks";
+import { useCourseContext } from "@/components/contexts/courseContext";
 
 export default function DayItemsInModule({
   day,
@@ -81,7 +81,7 @@ function Pages({ moduleName, day }: { moduleName: string; day: string }) {
               encodeURIComponent(moduleName) +
               "/page/" +
               encodeURIComponent(p.name)
-            } shallow={true}
+            }
           >
             {p.name}
           </Link>
@@ -142,7 +142,7 @@ function Quizzes({ moduleName, day }: { moduleName: string; day: string }) {
               encodeURIComponent(moduleName) +
               "/quiz/" +
               encodeURIComponent(q.name)
-            } shallow={true}
+            }
           >
             {q.name}
           </Link>
@@ -204,7 +204,7 @@ function Assignments({ moduleName, day }: { moduleName: string; day: string }) {
               encodeURIComponent(moduleName) +
               "/assignment/" +
               encodeURIComponent(a.name)
-            } shallow={true}
+            }
           >
             {a.name}
           </Link>
