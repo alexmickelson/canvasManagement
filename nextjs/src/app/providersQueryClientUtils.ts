@@ -9,6 +9,7 @@ export function makeQueryClient() {
         staleTime: 60_000,
         refetchOnWindowFocus: false,
         retry: 0,
+        refetchOnMount: false
       },
     },
   });

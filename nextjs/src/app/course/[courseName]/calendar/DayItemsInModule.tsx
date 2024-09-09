@@ -81,7 +81,8 @@ function Pages({ moduleName, day }: { moduleName: string; day: string }) {
               encodeURIComponent(moduleName) +
               "/page/" +
               encodeURIComponent(p.name)
-            } shallow={true}
+            }
+            shallow={true}
           >
             {p.name}
           </Link>
@@ -142,7 +143,8 @@ function Quizzes({ moduleName, day }: { moduleName: string; day: string }) {
               encodeURIComponent(moduleName) +
               "/quiz/" +
               encodeURIComponent(q.name)
-            } shallow={true}
+            }
+            shallow={true}
           >
             {q.name}
           </Link>
@@ -204,7 +206,8 @@ function Assignments({ moduleName, day }: { moduleName: string; day: string }) {
               encodeURIComponent(moduleName) +
               "/assignment/" +
               encodeURIComponent(a.name)
-            } shallow={true}
+            }
+            shallow={true}
           >
             {a.name}
           </Link>
