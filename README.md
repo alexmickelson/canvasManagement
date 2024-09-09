@@ -50,3 +50,7 @@ holiday schedule
 multi-seciton support for due dates/times
 
 better error handling when files are unparseable
+
+## monaco PR?
+
+<https://github.com/serdarciplak/BlazorMonaco/pull/137>
