@@ -10,13 +10,12 @@ import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
-export const useQuizNamesQuery = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery({
+
+export function getQuizNamesQueryConfig(courseName: string, moduleName: string) {
+  return {
     queryKey: localCourseKeys.quizNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
-      const url =
-        "/api/courses/" +
+      const url = "/api/courses/" +
         encodeURIComponent(courseName) +
         "/modules/" +
         encodeURIComponent(moduleName) +
@@ -24,7 +23,11 @@ export const useQuizNamesQuery = (moduleName: string) => {
       const response = await axios.get(url);
       return response.data;
     },
-  });
+  };
+}
+export const useQuizNamesQuery = (moduleName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery(getQuizNamesQueryConfig(courseName, moduleName));
 };
 
 export const useQuizQuery = (moduleName: string, quizName: string) => {
@@ -45,7 +48,7 @@ export const useQuizzesQueries = (moduleName: string, quizNames: string[]) => {
   });
 };
 
-function getQuizQueryConfig(
+export function getQuizQueryConfig(
   courseName: string,
   moduleName: string,
   quizName: string

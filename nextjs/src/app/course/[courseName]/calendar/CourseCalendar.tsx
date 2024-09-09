@@ -4,6 +4,7 @@ import { getMonthsBetweenDates } from "./calendarMonthUtils";
 import { CalendarMonth } from "./CalendarMonth";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useMemo } from "react";
+import CalendarItemsContextProvider from "../context/CalendarItemsContextProvider";
 
 export default function CourseCalendar() {
   const { data: settings } = useLocalCourseSettingsQuery();
@@ -32,9 +33,11 @@ export default function CourseCalendar() {
         bg-slate-950
       "
     >
-      {months.map((month) => (
-        <CalendarMonth key={month.month + "" + month.year} month={month} />
-      ))}
+      <CalendarItemsContextProvider>
+        {months.map((month) => (
+          <CalendarMonth key={month.month + "" + month.year} month={month} />
+        ))}
+      </CalendarItemsContextProvider>
     </div>
   );
 }

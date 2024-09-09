@@ -1,28 +1,40 @@
-"use client"
+"use client";
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
-import { useSuspenseQuery, useSuspenseQueries, useQueryClient, useMutation } from "@tanstack/react-query";
+import {
+  useSuspenseQuery,
+  useSuspenseQueries,
+  useQueryClient,
+  useMutation,
+} from "@tanstack/react-query";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+
+export const getAssignmentNamesQueryConfig = (
+  courseName: string,
+  moduleName: string
+) => ({
+  queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
+  queryFn: async (): Promise<string[]> => {
+    const url =
+      "/api/courses/" +
+      encodeURIComponent(courseName) +
+      "/modules/" +
+      encodeURIComponent(moduleName) +
+      "/assignments";
+    const response = await axios.get(url);
+    return response.data;
+  },
+});
 
 export const useAssignmentNamesQuery = (moduleName: string) => {
   const { courseName } = useCourseContext();
-  return useSuspenseQuery({
-    queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
-    queryFn: async (): Promise<string[]> => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/assignments";
-      const response = await axios.get(url);
-      return response.data;
-    },
-  });
+  return useSuspenseQuery(
+    getAssignmentNamesQueryConfig(courseName, moduleName)
+  );
 };
 
-const getAssignmentQueryConfig = (
+export const getAssignmentQueryConfig = (
   courseName: string,
   moduleName: string,
   assignmentName: string
@@ -46,6 +58,7 @@ const getAssignmentQueryConfig = (
     },
   };
 };
+
 export const useAssignmentQuery = (
   moduleName: string,
   assignmentName: string
@@ -101,7 +114,11 @@ export const useUpdateAssignmentMutation = () => {
     },
     onSuccess: (_, { moduleName, assignmentName }) => {
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.assignment(courseName, moduleName, assignmentName),
+        queryKey: localCourseKeys.assignment(
+          courseName,
+          moduleName,
+          assignmentName
+        ),
       });
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.assignmentNames(courseName, moduleName),

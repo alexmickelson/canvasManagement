@@ -91,3 +91,8 @@ export const dateToMarkdownString = (date: Date) => {
 
   return `${stringMonth}/${stringDay}/${stringYear} ${stringHours}:${stringMinutes}:${stringSeconds}`;
 };
+
+
+export const getDateOnlyMarkdownString = (date: Date) => {
+  return dateToMarkdownString(date).split(" ")[0]
+}

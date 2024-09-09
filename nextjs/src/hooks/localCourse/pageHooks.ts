@@ -10,9 +10,11 @@ import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
-export const usePageNamesQuery = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery({
+export function getPageNamesQueryConfig(
+  courseName: string,
+  moduleName: string
+) {
+  return {
     queryKey: localCourseKeys.pageNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
       const url =
@@ -24,8 +26,14 @@ export const usePageNamesQuery = (moduleName: string) => {
       const response = await axios.get(url);
       return response.data;
     },
-  });
+  };
+}
+
+export const usePageNamesQuery = (moduleName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery(getPageNamesQueryConfig(courseName, moduleName));
 };
+
 export const usePageQuery = (moduleName: string, pageName: string) => {
   const { courseName } = useCourseContext();
   return useSuspenseQuery(getPageQueryConfig(courseName, moduleName, pageName));
@@ -44,7 +52,7 @@ export const usePagesQueries = (moduleName: string, pageNames: string[]) => {
   });
 };
 
-function getPageQueryConfig(
+export function getPageQueryConfig(
   courseName: string,
   moduleName: string,
   pageName: string
