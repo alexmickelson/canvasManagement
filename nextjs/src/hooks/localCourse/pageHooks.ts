@@ -9,6 +9,7 @@ import {
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import { axiosClient } from "@/services/axiosUtils";
 
 export function getPageNamesQueryConfig(
   courseName: string,
@@ -23,7 +24,7 @@ export function getPageNamesQueryConfig(
         "/modules/" +
         encodeURIComponent(moduleName) +
         "/pages";
-      const response = await axios.get(url);
+      const response = await axiosClient.get(url);
       return response.data;
     },
   };
@@ -68,7 +69,7 @@ export function getPageQueryConfig(
         "/pages/" +
         encodeURIComponent(pageName);
       try {
-        const response = await axios.get(url);
+        const response = await axiosClient.get(url);
         return response.data;
       } catch (e) {
         console.log("error getting page", e, url);
@@ -103,7 +104,7 @@ export const useUpdatePageMutation = () => {
         encodeURIComponent(moduleName) +
         "/pages/" +
         encodeURIComponent(pageName);
-      await axios.put(url, page);
+      await axiosClient.put(url, page);
     },
     onSuccess: (_, { moduleName, pageName }) => {
       queryClient.invalidateQueries({

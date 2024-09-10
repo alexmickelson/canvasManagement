@@ -5,6 +5,8 @@ import { Suspense } from "react";
 import { getQueryClient } from "./providersQueryClientUtils";
 import { hydrateCourses } from "@/hooks/hookHydration";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { ToastBar, Toaster } from "react-hot-toast";
+import { MyToaster } from "./MyToaster";
 
 export const metadata: Metadata = {
   title: "Canvas Manager 2.0",
@@ -21,7 +23,20 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
+      <head>
+      </head>
       <body className="bg-slate-900 h-screen p-1 text-slate-300">
+        {/* <Toaster
+          containerClassName=""
+          toastOptions={{
+            className: "bg-slate-900",
+            error: { duration: Infinity },
+            style: {
+              // backgroundColor: "black",
+            },
+          }}
+        /> */}
+        <MyToaster />
         <Suspense>
           <Providers>
             <HydrationBoundary state={dehydratedState}>

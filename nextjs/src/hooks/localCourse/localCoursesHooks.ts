@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
+import { axiosClient } from "@/services/axiosUtils";
 import {
   getAssignmentNamesQueryConfig,
   getAssignmentQueryConfig,
@@ -23,7 +24,7 @@ export const useLocalCourseNamesQuery = () =>
     queryKey: localCourseKeys.allCourses,
     queryFn: async (): Promise<string[]> => {
       const url = `/api/courses`;
-      const response = await axios.get(url);
+      const response = await axiosClient.get(url);
       return response.data;
     },
   });
@@ -34,7 +35,7 @@ export const useLocalCourseSettingsQuery = () => {
     queryKey: localCourseKeys.settings(courseName),
     queryFn: async (): Promise<LocalCourseSettings> => {
       const url = `/api/courses/${courseName}/settings`;
-      const response = await axios.get(url);
+      const response = await axiosClient.get(url);
       return response.data;
     },
   });
@@ -46,7 +47,7 @@ export const useModuleNamesQuery = () => {
     queryKey: localCourseKeys.moduleNames(courseName),
     queryFn: async (): Promise<string[]> => {
       const url = `/api/courses/${courseName}/modules`;
-      const response = await axios.get(url);
+      const response = await axiosClient.get(url);
       return response.data;
     },
   });
@@ -185,7 +186,7 @@ export const useAllCourseDataQuery = () => {
 //       previousCourse: LocalCourse;
 //     }) => {
 //       const url = `/api/courses/${courseName}`;
-//       await axios.put(url, body);
+//       await axiosClient.put(url, body);
 //     },
 //     onSuccess: () => {
 //       queryClient.invalidateQueries({

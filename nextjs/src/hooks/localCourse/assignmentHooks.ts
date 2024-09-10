@@ -9,6 +9,7 @@ import {
   useMutation,
 } from "@tanstack/react-query";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import { axiosClient } from "@/services/axiosUtils";
 
 export const getAssignmentNamesQueryConfig = (
   courseName: string,
@@ -22,7 +23,7 @@ export const getAssignmentNamesQueryConfig = (
       "/modules/" +
       encodeURIComponent(moduleName) +
       "/assignments";
-    const response = await axios.get(url);
+    const response = await axiosClient.get(url);
     return response.data;
   },
 });
@@ -53,7 +54,7 @@ export const getAssignmentQueryConfig = (
         encodeURIComponent(moduleName) +
         "/assignments/" +
         encodeURIComponent(assignmentName);
-      const response = await axios.get(url);
+      const response = await axiosClient.get(url);
       return response.data;
     },
   };
@@ -110,7 +111,7 @@ export const useUpdateAssignmentMutation = () => {
         encodeURIComponent(moduleName) +
         "/assignments/" +
         encodeURIComponent(assignmentName);
-      await axios.put(url, assignment);
+      await axiosClient.put(url, assignment);
     },
     onSuccess: (_, { moduleName, assignmentName }) => {
       queryClient.invalidateQueries({

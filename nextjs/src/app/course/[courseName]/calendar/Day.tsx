@@ -107,7 +107,7 @@ function DraggableListItem({
         e.dataTransfer.setData(
           "draggableItem",
           JSON.stringify({
-            type: "assignment",
+            type,
             item,
             sourceModuleName: moduleName,
           })

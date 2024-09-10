@@ -6,9 +6,9 @@ import {
   useSuspenseQueries,
   useSuspenseQuery,
 } from "@tanstack/react-query";
-import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import { axiosClient } from "@/services/axiosUtils";
 
 
 export function getQuizNamesQueryConfig(courseName: string, moduleName: string) {
@@ -20,7 +20,7 @@ export function getQuizNamesQueryConfig(courseName: string, moduleName: string) 
         "/modules/" +
         encodeURIComponent(moduleName) +
         "/quizzes";
-      const response = await axios.get(url);
+      const response = await axiosClient.get(url);
       return response.data;
     },
   };
@@ -63,7 +63,7 @@ export function getQuizQueryConfig(
         encodeURIComponent(moduleName) +
         "/quizzes/" +
         encodeURIComponent(quizName);
-      const response = await axios.get(url);
+      const response = await axiosClient.get(url);
       return response.data;
     },
   };
@@ -93,7 +93,7 @@ export const useUpdateQuizMutation = () => {
         encodeURIComponent(moduleName) +
         "/quizzes/" +
         encodeURIComponent(quizName);
-      await axios.put(url, quiz);
+      await axiosClient.put(url, quiz);
     },
     onSuccess: (_, { moduleName, quizName }) => {
       queryClient.invalidateQueries({

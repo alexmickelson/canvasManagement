@@ -39,10 +39,16 @@ const settingsToMarkdown = (assignment: LocalAssignment) => {
 
 export const assignmentMarkdownSerializer = {
   toMarkdown(assignment: LocalAssignment): string {
-    const settingsMarkdown = settingsToMarkdown(assignment);
-    const rubricMarkdown = assignmentRubricToMarkdown(assignment);
-    const assignmentMarkdown = `${settingsMarkdown}\n---\n\n${assignment.description}\n\n## Rubric\n\n${rubricMarkdown}`;
+    try {
+      const settingsMarkdown = settingsToMarkdown(assignment);
+      const rubricMarkdown = assignmentRubricToMarkdown(assignment);
+      const assignmentMarkdown = `${settingsMarkdown}\n---\n\n${assignment.description}\n\n## Rubric\n\n${rubricMarkdown}`;
 
-    return assignmentMarkdown;
+      return assignmentMarkdown;
+    } catch (e) {
+      console.log(assignment);
+      console.log("Error converting assignment to markdown");
+      throw e;
+    }
   },
 };
