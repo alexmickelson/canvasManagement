@@ -1,7 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
 import {
-  LocalCourse,
   LocalCourseSettings,
   localCourseYamlUtils,
 } from "@/models/local/localCourse";
@@ -28,18 +27,6 @@ const basePath = process.env.STORAGE_DIRECTORY ?? "./storage";
 console.log("base path", basePath);
 
 export const fileStorageService = {
-  // async saveCourseAsync(
-  //   course: LocalCourse,
-  //   previouslyStoredCourse?: LocalCourse
-  // ) {
-  //   await courseMarkdownSaver.save(course, previouslyStoredCourse);
-  // },
-
-  // async loadSavedCourses(): Promise<LocalCourse[]> {
-  //   console.log("loading pages from file system");
-  //   return (await courseMarkdownLoader.loadSavedCourses()) || [];
-  // },
-
   async getCourseNames() {
     console.log("loading course ids");
     const courseDirectories = await fs.readdir(basePath, {

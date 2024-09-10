@@ -57,6 +57,10 @@ export const useUpdateLocalCourseSettingsMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (updatedSettings: LocalCourseSettings) => {
+      queryClient.setQueryData(
+        localCourseKeys.settings(courseName),
+        updatedSettings
+      );
       const url = `/api/courses/${courseName}/settings`;
       await axiosClient.put(url, updatedSettings);
     },

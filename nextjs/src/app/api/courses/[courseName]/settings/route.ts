@@ -12,6 +12,7 @@ export const GET = async (
     const settings = await fileStorageService.getCourseSettings(courseName);
     return Response.json(settings);
   });
+  
 export const PUT = async (
   request: Request,
   { params: { courseName } }: { params: { courseName: string } }
