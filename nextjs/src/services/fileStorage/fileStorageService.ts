@@ -75,6 +75,21 @@ export const fileStorageService = {
     return { ...settings, name: folderName };
   },
 
+  async updateCourseSettings(
+    courseName: string,
+    settings: LocalCourseSettings
+  ) {
+    const courseDirectory = path.join(basePath, courseName);
+    const settingsPath = path.join(courseDirectory, "settings.yml");
+
+    const { name, ...settingsWithoutName } = settings;
+    const settingsMarkdown =
+      localCourseYamlUtils.settingsToYaml(settingsWithoutName);
+
+    console.log(`Saving settings ${settingsPath}`);
+    await fs.writeFile(settingsPath, settingsMarkdown);
+  },
+
   async getModuleNames(courseName: string) {
     const courseDirectory = path.join(basePath, courseName);
     const moduleDirectories = await fs.readdir(courseDirectory, {

@@ -1,7 +1,9 @@
 "use client";
 import { LocalCourseSettings } from "@/models/local/localCourse";
 import {
+  useMutation,
   useQueries,
+  useQueryClient,
   useSuspenseQueries,
   useSuspenseQuery,
 } from "@tanstack/react-query";
@@ -14,9 +16,18 @@ import {
   useAssignmentNamesQuery,
   useAssignmentsQueries,
 } from "./assignmentHooks";
-import { getPageNamesQueryConfig, getPageQueryConfig, usePageNamesQuery, usePagesQueries } from "./pageHooks";
-import { getQuizNamesQueryConfig, getQuizQueryConfig, useQuizNamesQuery, useQuizzesQueries } from "./quizHooks";
-import { useMemo } from "react";
+import {
+  getPageNamesQueryConfig,
+  getPageQueryConfig,
+  usePageNamesQuery,
+  usePagesQueries,
+} from "./pageHooks";
+import {
+  getQuizNamesQueryConfig,
+  getQuizQueryConfig,
+  useQuizNamesQuery,
+  useQuizzesQueries,
+} from "./quizHooks";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
 export const useLocalCourseNamesQuery = () =>
@@ -37,6 +48,22 @@ export const useLocalCourseSettingsQuery = () => {
       const url = `/api/courses/${courseName}/settings`;
       const response = await axiosClient.get(url);
       return response.data;
+    },
+  });
+};
+
+export const useUpdateLocalCourseSettingsMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (updatedSettings: LocalCourseSettings) => {
+      const url = `/api/courses/${courseName}/settings`;
+      await axiosClient.put(url, updatedSettings);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.settings(courseName),
+      });
     },
   });
 };
@@ -116,7 +143,7 @@ export const useAllCourseDataQuery = () => {
     }),
   });
 
-  const {data: quizNamesAndModules } = useSuspenseQueries({
+  const { data: quizNamesAndModules } = useSuspenseQueries({
     queries: moduleNames.map((moduleName) =>
       getQuizNamesQueryConfig(courseName, moduleName)
     ),
@@ -132,9 +159,8 @@ export const useAllCourseDataQuery = () => {
   });
 
   const { data: quizzesAndModules } = useSuspenseQueries({
-    queries: quizNamesAndModules.map(
-      ({ moduleName, quizName }, i) =>
-        getQuizQueryConfig(courseName, moduleName, quizName)
+    queries: quizNamesAndModules.map(({ moduleName, quizName }, i) =>
+      getQuizQueryConfig(courseName, moduleName, quizName)
     ),
     combine: (results) => ({
       data: results.flatMap((r, i) => ({
@@ -145,7 +171,7 @@ export const useAllCourseDataQuery = () => {
     }),
   });
 
-  const {data: pageNamesAndModules } = useSuspenseQueries({
+  const { data: pageNamesAndModules } = useSuspenseQueries({
     queries: moduleNames.map((moduleName) =>
       getPageNamesQueryConfig(courseName, moduleName)
     ),
@@ -161,9 +187,8 @@ export const useAllCourseDataQuery = () => {
   });
 
   const { data: pagesAndModules } = useSuspenseQueries({
-    queries: pageNamesAndModules.map(
-      ({ moduleName, pageName }, i) =>
-        getPageQueryConfig(courseName, moduleName, pageName)
+    queries: pageNamesAndModules.map(({ moduleName, pageName }, i) =>
+      getPageQueryConfig(courseName, moduleName, pageName)
     ),
     combine: (results) => ({
       data: results.flatMap((r, i) => ({
@@ -174,8 +199,7 @@ export const useAllCourseDataQuery = () => {
     }),
   });
 
-
-  return {  assignmentsAndModules, quizzesAndModules, pagesAndModules };
+  return { assignmentsAndModules, quizzesAndModules, pagesAndModules };
 };
 
 // export const useUpdateCourseMutation = (courseName: string) => {

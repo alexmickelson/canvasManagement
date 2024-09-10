@@ -59,7 +59,7 @@ ol {
   padding-left: 1.5rem;
 }
 hr {
-  @apply border-t border-gray-200 my-4;
+  @apply border-t border-gray-500 my-4;
 }
 
 blockquote {
@@ -75,4 +75,10 @@ p {
 
 button {
   @apply bg-blue-900 hover:bg-blue-700 text-blue-50 font-bold py-1 px-3 rounded transition-all duration-200;
+}
+
+select {
+  @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm;
+  @apply focus:outline-none focus:ring-blue-500 focus:border-blue-500 ;
+  @apply bg-slate-800;
 }
