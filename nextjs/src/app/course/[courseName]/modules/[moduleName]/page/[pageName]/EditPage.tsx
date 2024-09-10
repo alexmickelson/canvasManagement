@@ -1,10 +1,15 @@
 "use client";
 
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
-import { usePageQuery } from "@/hooks/localCourse/pageHooks";
+import {
+  usePageQuery,
+  useUpdatePageMutation,
+} from "@/hooks/localCourse/pageHooks";
 import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PagePreview from "./PagePreview";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useCanvasPagesQuery } from "@/hooks/canvas/canvasPageHooks";
 
 export default function EditPage({
   moduleName,
@@ -14,10 +19,42 @@ export default function EditPage({
   moduleName: string;
 }) {
   const { data: page } = usePageQuery(moduleName, pageName);
+  const updatePage = useUpdatePageMutation();
   const [pageText, setPageText] = useState(
     localPageMarkdownUtils.toMarkdown(page)
   );
   const [error, setError] = useState("");
+
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const { data: canvasPages } = useCanvasPagesQuery(settings.canvasId ?? 0);
+  console.log("canvas pages", canvasPages);
+  const pageInCanvas = canvasPages?.find((p) => p.title === pageName);
+
+  useEffect(() => {
+    const delay = 500;
+    const handler = setTimeout(() => {
+      const updatedPage = localPageMarkdownUtils.parseMarkdown(pageText);
+      if (
+        localPageMarkdownUtils.toMarkdown(page) !==
+        localPageMarkdownUtils.toMarkdown(updatedPage)
+      ) {
+        console.log("updating assignment");
+        try {
+          updatePage.mutate({
+            page: updatedPage,
+            moduleName,
+            pageName,
+          });
+        } catch (e: any) {
+          setError(e.toString());
+        }
+      }
+    }, delay);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [moduleName, page, pageName, pageText, updatePage]);
 
   return (
     <div className="h-full flex flex-col">
@@ -27,13 +64,22 @@ export default function EditPage({
         </div>
         <div className="h-full">
           <div className="text-red-300">{error && error}</div>
-          <PagePreview page={page} />
+          <div className="h-full overflow-y-auto">
+            <br />
+            <PagePreview page={page} />
+          </div>
         </div>
       </div>
-      <div className="p-5">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Add to canvas....
-        </button>
+      <div className="p-5 flex flex-row">
+        {pageInCanvas && (
+          <a
+            target="_blank"
+            href={`https://snow.instructure.com/courses/${settings.canvasId}/pages/${pageInCanvas.page_id}`}
+          >
+            View Page In Canvas
+          </a>
+        )}
+        <button>Add to canvas</button>
       </div>
     </div>
   );

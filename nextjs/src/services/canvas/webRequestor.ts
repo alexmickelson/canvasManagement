@@ -1,11 +1,12 @@
+import { axiosClient } from "../axiosUtils";
+
 type FetchOptions = Omit<RequestInit, "method">;
 
-const token = process.env.CANVAS_TOKEN;
+const token = process.env.NEXT_PUBLIC_CANVAS_TOKEN;
 if (!token) {
   throw new Error("CANVAS_TOKEN not in environment");
 }
 
-const baseUrl = `${process.env.CANVAS_URL}/api/v1/`;
 const rateLimitRetryCount = 6;
 const rateLimitSleepInterval = 1000;
 
@@ -112,27 +113,21 @@ const recursiveDelete = async (
 };
 export const webRequestor = {
   getMany: async <T>(url: string, options: FetchOptions = {}) => {
-    const response = await fetch(url, {
-      ...options,
-      method: "GET",
+    const response = await axiosClient.get<T[]>(url, {
       headers: {
-        ...options.headers,
         Authorization: `Bearer ${token}`,
       },
     });
-    return { data: await deserialize<T[]>(response), response };
+    return { data: response.data, response };
   },
 
-  get: async <T>(url: string, options: FetchOptions = {}) => {
-    const response = await fetch(url, {
-      ...options,
-      method: "GET",
+  get: async <T>(url: string) => {
+    const response = await axiosClient.get<T>(url, {
       headers: {
-        ...options.headers,
         Authorization: `Bearer ${token}`,
       },
     });
-    return { data: await deserialize<T>(response), response };
+    return { data: response.data, response };
   },
 
   post: async (url: string, body: any) => {

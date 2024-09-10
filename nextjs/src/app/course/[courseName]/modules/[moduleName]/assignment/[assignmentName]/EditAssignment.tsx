@@ -21,7 +21,6 @@ export default function EditAssignment({
   const [assignmentText, setAssignmentText] = useState(
     localAssignmentMarkdown.toMarkdown(assignment)
   );
-  console.log(assignmentText);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -69,7 +68,7 @@ export default function EditAssignment({
         </div>
       </div>
       <div className="p-5">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <button>
           Add to canvas....
         </button>
       </div>

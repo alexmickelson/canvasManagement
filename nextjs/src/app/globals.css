@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -12,36 +12,37 @@
 
 :root {
   font-family: "DM Sans", sans-serif;
+  @apply text-lg;
 }
 
 /* monaco editor */
 .monaco-editor-background,
 .monaco-editor .margin {
-  background-color: black !important;
+  background-color: #18181b !important;
 }
 
 h1 {
-  @apply text-4xl font-bold;
+  @apply text-4xl font-bold my-1;
 }
 
 h2 {
-  @apply text-3xl font-semibold;
+  @apply text-3xl font-semibold my-1;
 }
 
 h3 {
-  @apply text-2xl font-semibold;
+  @apply text-2xl font-semibold my-1;
 }
 
 h4 {
-  @apply text-xl font-medium;
+  @apply text-xl font-medium my-1;
 }
 
 h5 {
-  @apply text-lg font-medium;
+  @apply text-lg font-medium my-1;
 }
 
 h6 {
-  @apply text-base font-medium;
+  @apply text-base font-medium my-1;
 }
 
 strong {
@@ -62,5 +63,16 @@ hr {
 }
 
 blockquote {
-  @apply border-l-4 border-gray-300 pl-4 italic text-gray-700;
+  @apply border-l-4 border-gray-300 pl-4 italic text-gray-400 m-5 pe-3;
+}
+
+code {
+  @apply font-mono text-sm bg-gray-800 px-1;
+}
+p {
+  @apply mb-3;
+}
+
+button {
+  @apply bg-blue-900 hover:bg-blue-700 text-blue-50 font-bold py-1 px-3 rounded transition-all duration-200;
 }

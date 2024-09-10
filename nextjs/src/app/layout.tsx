@@ -26,16 +26,6 @@ export default async function RootLayout({
       <head>
       </head>
       <body className="bg-slate-900 h-screen p-1 text-slate-300">
-        {/* <Toaster
-          containerClassName=""
-          toastOptions={{
-            className: "bg-slate-900",
-            error: { duration: Infinity },
-            style: {
-              // backgroundColor: "black",
-            },
-          }}
-        /> */}
         <MyToaster />
         <Suspense>
           <Providers>

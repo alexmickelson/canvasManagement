@@ -29,13 +29,6 @@ export const canvasService = {
   async getCourse(courseId: number): Promise<CanvasCourseModel> {
     const url = `courses/${courseId}`;
     const { data, response } = await webRequestor.get<CanvasCourseModel>(url);
-
-    if (!data) {
-      console.error((await response?.text()) ?? "");
-      console.error(response?.url ?? "");
-      throw new Error("Error getting course from Canvas");
-    }
-
     return data;
   },
 
