@@ -2,11 +2,6 @@ import { axiosClient } from "../axiosUtils";
 
 type FetchOptions = Omit<RequestInit, "method">;
 
-const token = process.env.NEXT_PUBLIC_CANVAS_TOKEN;
-if (!token) {
-  throw new Error("CANVAS_TOKEN not in environment");
-}
-
 const rateLimitRetryCount = 6;
 const rateLimitSleepInterval = 1000;
 
@@ -44,7 +39,6 @@ const rateLimitAwarePost = async (
     method: "POST",
     body: JSON.stringify(body),
     headers: {
-      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
   });
@@ -81,8 +75,6 @@ const recursiveDelete = async (
       ...options,
       method: "DELETE",
       headers: {
-        ...options.headers,
-        Authorization: `Bearer ${token}`,
       },
     });
 
@@ -113,20 +105,12 @@ const recursiveDelete = async (
 };
 export const webRequestor = {
   getMany: async <T>(url: string, options: FetchOptions = {}) => {
-    const response = await axiosClient.get<T[]>(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosClient.get<T[]>(url);
     return { data: response.data, response };
   },
 
   get: async <T>(url: string) => {
-    const response = await axiosClient.get<T>(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await axiosClient.get<T>(url);
     return { data: response.data, response };
   },
 
@@ -144,7 +128,6 @@ export const webRequestor = {
       method: "PUT",
       body: JSON.stringify(body),
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });
@@ -156,7 +139,6 @@ export const webRequestor = {
       body: JSON.stringify(body),
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
     });

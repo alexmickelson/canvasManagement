@@ -7,6 +7,7 @@ const baseCanvasUrl = "https://snow.instructure.com/api/v1";
 
 export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {
+    console.log("requesting pages");
     const url = `${baseCanvasUrl}/courses/${courseId}/pages`;
     const pages = await canvasServiceUtils.paginatedRequest<CanvasPage[]>({
       url,

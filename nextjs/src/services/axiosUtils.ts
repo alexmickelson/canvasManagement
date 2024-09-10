@@ -1,11 +1,15 @@
 import { isServer } from "@tanstack/react-query";
-import axios, { AxiosInstance, AxiosError } from "axios";
+import axios, { AxiosInstance, AxiosError, AxiosHeaders } from "axios";
 import toast from "react-hot-toast";
+
+const token = process.env.NEXT_PUBLIC_CANVAS_TOKEN;
+if (!token) {
+  throw new Error("NEXT_PUBLIC_CANVAS_TOKEN not in environment");
+}
 
 export const axiosClient: AxiosInstance = axios.create();
 
 if (!isServer) {
-  console.log("not on the server, setting up interceptor");
   axiosClient.interceptors.request.use((config) => {
     if (
       config.url &&
@@ -20,6 +24,16 @@ if (!isServer) {
     return config;
   });
 }
+
+axiosClient.interceptors.request.use((config) => {
+  if (
+    config.url &&
+    config.url.startsWith("https://snow.instructure.com/api/v1/")
+  ) {
+    config.headers.set("Authorization", `Bearer ${token}`);
+  }
+  return config;
+});
 
 axiosClient.interceptors.response.use(
   (response) => response,
