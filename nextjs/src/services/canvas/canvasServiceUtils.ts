@@ -1,7 +1,7 @@
 // services/canvasServiceUtils.ts
 
 import { AxiosResponseHeaders, RawAxiosResponseHeaders } from "axios";
-import { webRequestor } from "./webRequestor";
+import { axiosClient } from "../axiosUtils";
 
 const getNextUrl = (
   headers: AxiosResponseHeaders | RawAxiosResponseHeaders
@@ -28,19 +28,20 @@ export const canvasServiceUtils = {
     const url = new URL(request.url);
     url.searchParams.set("per_page", "100");
 
-    const { data: firstData, response: firstResponse } =
-      await webRequestor.get<T>(url.toString());
+    const { data: firstData, headers: firstHeaders } = await axiosClient.get<T>(
+      url.toString()
+    );
 
     var returnData: T[] = firstData ? [firstData] : [];
-    var nextUrl = getNextUrl(firstResponse.headers);
+    var nextUrl = getNextUrl(firstHeaders);
 
     while (nextUrl) {
       requestCount += 1;
-      const { data, response } = await webRequestor.get<T>(nextUrl);
+      const { data, headers } = await axiosClient.get<T>(nextUrl);
       if (data) {
         returnData = [...returnData, data];
       }
-      nextUrl = getNextUrl(response.headers);
+      nextUrl = getNextUrl(headers);
     }
 
     if (requestCount > 1) {

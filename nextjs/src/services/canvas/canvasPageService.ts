@@ -1,7 +1,6 @@
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { canvasServiceUtils } from "./canvasServiceUtils";
-import { webRequestor } from "./webRequestor";
 
 const baseCanvasUrl = "https://snow.instructure.com/api/v1";
 

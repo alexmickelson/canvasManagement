@@ -1,10 +1,10 @@
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
 import { canvasServiceUtils } from "./canvasServiceUtils";
-import { webRequestor } from "./webRequestor";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasModuleItem } from "@/models/canvas/modules/canvasModuleItems";
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { CanvasEnrollmentModel } from "@/models/canvas/enrollments/canvasEnrollmentModel";
+import { axiosClient } from "../axiosUtils";
 
 const getTerms = async () => {
   const url = `accounts/10/terms`;
@@ -28,7 +28,7 @@ export const canvasService = {
 
   async getCourse(courseId: number): Promise<CanvasCourseModel> {
     const url = `courses/${courseId}`;
-    const { data, response } = await webRequestor.get<CanvasCourseModel>(url);
+    const { data } = await axiosClient.get<CanvasCourseModel>(url);
     return data;
   },
 
@@ -62,8 +62,7 @@ export const canvasService = {
     const body = {
       module_item: { title: item.title, position: item.position },
     };
-    const { data, response } =
-      await webRequestor.putWithDeserialize<CanvasModuleItem>(url, body);
+    const { data } = await axiosClient.put<CanvasModuleItem>(url, body);
 
     if (!data) throw new Error("Something went wrong updating module item");
   },
@@ -78,10 +77,7 @@ export const canvasService = {
     console.log(`Creating new module item ${title}`);
     const url = `courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
     const body = { module_item: { title, type, content_id: contentId } };
-    const response = await webRequestor.post(url, body);
-
-    if (!response.ok)
-      throw new Error("Something went wrong creating module item");
+    const response = await axiosClient.post(url, body);
   },
 
   async createPageModuleItem(
@@ -95,18 +91,13 @@ export const canvasService = {
     const body = {
       module_item: { title, type: "Page", page_url: canvasPage.url },
     };
-    const { data, response } =
-      await webRequestor.postWithDeserialize<CanvasModuleItem>(url, body);
-
-    if (!response.ok)
-      throw new Error("Something went wrong creating page module item");
+    await axiosClient.post<CanvasModuleItem>(url, body);
   },
 
   async getEnrolledStudents(canvasCourseId: number) {
     console.log(`Getting students for course ${canvasCourseId}`);
     const url = `courses/${canvasCourseId}/enrollments?enrollment_type=student`;
-    const { data, response } =
-      await webRequestor.getMany<CanvasEnrollmentModel>(url);
+    const { data } = await axiosClient.get<CanvasEnrollmentModel[]>(url);
 
     if (!data)
       throw new Error(
