@@ -9,7 +9,12 @@ import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
 import { useEffect, useState } from "react";
 import PagePreview from "./PagePreview";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { useCanvasPagesQuery } from "@/hooks/canvas/canvasPageHooks";
+import {
+  useCanvasPagesQuery,
+  useCreateCanvasPageMutation,
+} from "@/hooks/canvas/canvasPageHooks";
+import { Spinner } from "@/components/Spinner";
+import EditPageButtons from "./EditPageButtons";
 
 export default function EditPage({
   moduleName,
@@ -26,9 +31,6 @@ export default function EditPage({
   const [error, setError] = useState("");
 
   const { data: settings } = useLocalCourseSettingsQuery();
-  const { data: canvasPages } = useCanvasPagesQuery(settings.canvasId ?? 0);
-  console.log("canvas pages", canvasPages);
-  const pageInCanvas = canvasPages?.find((p) => p.title === pageName);
 
   useEffect(() => {
     const delay = 500;
@@ -70,17 +72,13 @@ export default function EditPage({
           </div>
         </div>
       </div>
-      <div className="p-5 flex flex-row">
-        {pageInCanvas && (
-          <a
-            target="_blank"
-            href={`https://snow.instructure.com/courses/${settings.canvasId}/pages/${pageInCanvas.page_id}`}
-          >
-            View Page In Canvas
-          </a>
-        )}
-        <button>Add to canvas</button>
-      </div>
+      {settings.canvasId && (
+        <EditPageButtons
+          pageName={pageName}
+          moduleName={moduleName}
+          courseCanvasId={settings.canvasId}
+        />
+      )}
     </div>
   );
 }

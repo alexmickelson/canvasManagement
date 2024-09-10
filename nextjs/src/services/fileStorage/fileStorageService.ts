@@ -9,9 +9,18 @@ import {
   directoryOrFileExists,
   hasFileSystemEntries,
 } from "./utils/fileSystemUtils";
-import { LocalAssignment, localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
-import { LocalQuiz, localQuizMarkdownUtils } from "@/models/local/quiz/localQuiz";
-import { LocalCoursePage, localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
+import {
+  LocalAssignment,
+  localAssignmentMarkdown,
+} from "@/models/local/assignment/localAssignment";
+import {
+  LocalQuiz,
+  localQuizMarkdownUtils,
+} from "@/models/local/quiz/localQuiz";
+import {
+  LocalCoursePage,
+  localPageMarkdownUtils,
+} from "@/models/local/page/localCoursePage";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
 
@@ -90,7 +99,7 @@ export const fileStorageService = {
     }
 
     const assignmentFiles = await fs.readdir(filePath);
-    return assignmentFiles.map(f => f.replace(/\.md$/, ''));
+    return assignmentFiles.map((f) => f.replace(/\.md$/, ""));
   },
 
   async getQuizNames(courseName: string, moduleName: string) {
@@ -103,7 +112,7 @@ export const fileStorageService = {
     }
 
     const files = await fs.readdir(filePath);
-    return files.map(f => f.replace(/\.md$/, ''));
+    return files.map((f) => f.replace(/\.md$/, ""));
   },
 
   async getPageNames(courseName: string, moduleName: string) {
@@ -116,7 +125,7 @@ export const fileStorageService = {
     }
 
     const files = await fs.readdir(filePath);
-    return files.map(f => f.replace(/\.md$/, ''));
+    return files.map((f) => f.replace(/\.md$/, ""));
   },
 
   async getAssignment(
@@ -137,16 +146,22 @@ export const fileStorageService = {
     );
     return localAssignmentMarkdown.parseMarkdown(rawFile);
   },
-  async updateAssignment(courseName: string, moduleName: string, assignmentName: string, assignment: LocalAssignment) {
+  async updateAssignment(
+    courseName: string,
+    moduleName: string,
+    assignmentName: string,
+    assignment: LocalAssignment
+  ) {
     const filePath = path.join(
       basePath,
       courseName,
       moduleName,
       "assignments",
-      assignmentName+".md"
+      assignmentName + ".md"
     );
 
-    const assignmentMarkdown = assignmentMarkdownSerializer.toMarkdown(assignment);
+    const assignmentMarkdown =
+      assignmentMarkdownSerializer.toMarkdown(assignment);
     console.log(`Saving assignment ${filePath}`);
     await fs.writeFile(filePath, assignmentMarkdown);
   },
@@ -166,13 +181,18 @@ export const fileStorageService = {
     return localQuizMarkdownUtils.parseMarkdown(rawFile);
   },
 
-  async updateQuiz(courseName: string, moduleName: string, quizName: string, quiz: LocalQuiz) {
+  async updateQuiz(
+    courseName: string,
+    moduleName: string,
+    quizName: string,
+    quiz: LocalQuiz
+  ) {
     const filePath = path.join(
       basePath,
       courseName,
       moduleName,
       "quizzes",
-      quizName+".md"
+      quizName + ".md"
     );
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
@@ -194,18 +214,36 @@ export const fileStorageService = {
     );
     return localPageMarkdownUtils.parseMarkdown(rawFile);
   },
-  async updatePage(courseName: string, moduleName: string, pageName: string, page: LocalCoursePage) {
+  async updatePage(
+    courseName: string,
+    moduleName: string,
+    pageName: string,
+    page: LocalCoursePage
+  ) {
     const filePath = path.join(
       basePath,
       courseName,
       moduleName,
       "pages",
-      pageName+".md"
+      page.name + ".md"
     );
 
     const pageMarkdown = localPageMarkdownUtils.toMarkdown(page);
     console.log(`Saving page ${filePath}`);
     await fs.writeFile(filePath, pageMarkdown);
+
+    const pageNameIsChanged = pageName !== page.name;
+    if (pageNameIsChanged) {
+      console.log("removing old page after name change " + pageName);
+      const oldFilePath = path.join(
+        basePath,
+        courseName,
+        moduleName,
+        "pages",
+        pageName + ".md"
+      );
+      await fs.unlink(oldFilePath);
+    }
   },
 
   async getEmptyDirectories(): Promise<string[]> {
