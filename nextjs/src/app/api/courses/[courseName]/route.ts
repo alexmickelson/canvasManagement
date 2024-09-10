@@ -1,14 +1,16 @@
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { withErrorHandling } from "@/services/withErrorHandling";
 
-export async function PUT(
+export const PUT = async (
   request: Request,
   { params: { courseName } }: { params: { courseName: string } }
-) {
-  const { updatedCourse, previousCourse } = await request.json();
+) =>
+  await withErrorHandling(async () => {
+    const { updatedCourse, previousCourse } = await request.json();
 
-  console.log(updatedCourse);
-  console.log(courseName);
+    console.log(updatedCourse);
+    console.log(courseName);
 
-  // await fileStorageService.saveCourseAsync(updatedCourse, previousCourse);
-  return Response.json({});
-}
+    // await fileStorageService.saveCourseAsync(updatedCourse, previousCourse);
+    return Response.json({});
+  });

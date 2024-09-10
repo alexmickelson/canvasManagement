@@ -1,14 +1,16 @@
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { withErrorHandling } from "@/services/withErrorHandling";
 
-export async function GET(
+export const GET = async (
   _request: Request,
   {
     params: { courseName, moduleName },
   }: { params: { courseName: string; moduleName: string } }
-) {
-  const settings = await fileStorageService.getPageNames(
-    courseName,
-    moduleName
-  );
-  return Response.json(settings);
-}
+) =>
+  await withErrorHandling(async () => {
+    const settings = await fileStorageService.getPageNames(
+      courseName,
+      moduleName
+    );
+    return Response.json(settings);
+  });

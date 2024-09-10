@@ -1,33 +1,38 @@
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { withErrorHandling } from "@/services/withErrorHandling";
 
-export async function GET(
+export const GET = async (
   _request: Request,
   {
     params: { courseName, moduleName, assignmentName },
   }: {
     params: { courseName: string; moduleName: string; assignmentName: string };
   }
-) {
-  const settings = await fileStorageService.getAssignment(
-    courseName,
-    moduleName,
-    assignmentName
-  );
-  return Response.json(settings);
-}
+) =>
+  await withErrorHandling(async () => {
+    const settings = await fileStorageService.getAssignment(
+      courseName,
+      moduleName,
+      assignmentName
+    );
+    return Response.json(settings);
+  });
 
-export async function PUT(
+export const PUT = async (
   request: Request,
   {
     params: { courseName, moduleName, assignmentName },
-  }: { params: { courseName: string; moduleName: string; assignmentName: string } }
-) {
-  const assignment = await request.json()
-  await fileStorageService.updateAssignment(
-    courseName,
-    moduleName,
-    assignmentName,
-    assignment
-  );
-  return Response.json({});
-}
+  }: {
+    params: { courseName: string; moduleName: string; assignmentName: string };
+  }
+) =>
+  await withErrorHandling(async () => {
+    const assignment = await request.json();
+    await fileStorageService.updateAssignment(
+      courseName,
+      moduleName,
+      assignmentName,
+      assignment
+    );
+    return Response.json({});
+  });

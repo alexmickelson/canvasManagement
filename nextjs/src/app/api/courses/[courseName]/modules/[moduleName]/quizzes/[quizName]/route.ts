@@ -1,25 +1,26 @@
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { withErrorHandling } from "@/services/withErrorHandling";
 
-export async function GET(
+export const GET = async (
   _request: Request,
   {
     params: { courseName, moduleName, quizName },
   }: { params: { courseName: string; moduleName: string; quizName: string } }
-) {
+) => await withErrorHandling(async () => {
   const quiz = await fileStorageService.getQuiz(
     courseName,
     moduleName,
     quizName
   );
   return Response.json(quiz);
-}
+})
 
-export async function PUT(
+export const PUT = async (
   request: Request,
   {
     params: { courseName, moduleName, quizName },
   }: { params: { courseName: string; moduleName: string; quizName: string } }
-) {
+) => await withErrorHandling(async () => {
   const quiz = await request.json()
   await fileStorageService.updateQuiz(
     courseName,
@@ -28,4 +29,4 @@ export async function PUT(
     quiz
   );
   return Response.json({});
-}
+})
