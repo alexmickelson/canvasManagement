@@ -19,7 +19,6 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
     { month: "long" }
   );
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
-  // const collapseClass = isInPast ? "collapse _hide" : "collapse _show";
   const weekDaysList: DayOfWeek[] = Object.values(DayOfWeek);
 
   console.log(isCollapsed);
@@ -32,22 +31,13 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
         onClick={toggleCollapse}
         role="button"
       >
-        {/* <button
-          type="button"
-          className="btn btn-link"
-          onClick={toggleCollapse}
-          aria-expanded={!isCollapsed}
-          aria-controls={monthName}
-        > */}
         {monthName}
-        {/* </button> */}
       </h3>
 
       <div
         id={monthName}
         className={"panel"}
         style={{
-          // display: isCollapsed ? "none" : "block",
           maxHeight: isCollapsed ? "0" : "100vh",
         }}
       >
