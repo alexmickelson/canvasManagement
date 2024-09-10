@@ -3,12 +3,17 @@ import { useState } from "react";
 import { CalendarMonthModel } from "./calendarMonthUtils";
 import { DayOfWeek } from "@/models/local/localCourse";
 import Day from "./Day";
+import "./calendarMonth.css";
 
 export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-
+  const weekInMilliseconds = 604_800_000;
   const isInPast =
-    new Date(month.year, month.month - 1, 1) < new Date(Date.now());
+    new Date(month.year, month.month, 1) <
+    new Date(Date.now() - weekInMilliseconds);
+
+  console.log(month, isInPast);
+  const [isCollapsed, setIsCollapsed] = useState(isInPast);
+
   const monthName = new Date(month.year, month.month - 1, 1).toLocaleString(
     "default",
     { month: "long" }
@@ -17,9 +22,16 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   // const collapseClass = isInPast ? "collapse _hide" : "collapse _show";
   const weekDaysList: DayOfWeek[] = Object.values(DayOfWeek);
 
+  console.log(isCollapsed);
   return (
     <>
-      <h3 className="text-center text-2xl">
+      <h3
+        className={
+          "text-center text-2xl transition-all duration-500 hover:text-slate-50 underline hover:scale-105"
+        }
+        onClick={toggleCollapse}
+        role="button"
+      >
         {/* <button
           type="button"
           className="btn btn-link"
@@ -31,7 +43,14 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
         {/* </button> */}
       </h3>
 
-      <div id={monthName}>
+      <div
+        id={monthName}
+        className={"panel"}
+        style={{
+          // display: isCollapsed ? "none" : "block",
+          maxHeight: isCollapsed ? "0" : "100vh",
+        }}
+      >
         <div className="grid grid-cols-7 text-center fw-bold">
           {weekDaysList.map((day) => (
             <div key={day} className={""}>
