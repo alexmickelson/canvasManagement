@@ -6,19 +6,21 @@ import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { CanvasEnrollmentModel } from "@/models/canvas/enrollments/canvasEnrollmentModel";
 import { axiosClient } from "../axiosUtils";
 
-const getTerms = async () => {
-  const url = `accounts/10/terms`;
-  const data = await canvasServiceUtils.paginatedRequest<{
+const baseCanvasUrl = "https://snow.instructure.com/api/v1";
+
+const getAllTerms = async () => {
+  const url = `${baseCanvasUrl}/accounts/10/terms`;
+  const {data} = await axiosClient.get<{
     enrollment_terms: CanvasEnrollmentTermModel[];
-  }>({ url });
+  }[]>(url);
   const terms = data.flatMap((r) => r.enrollment_terms);
   return terms;
 };
 
 export const canvasService = {
-  getTerms,
+  getAllTerms,
   async getCourses(termId: number) {
-    const url = `courses`;
+    const url = `${baseCanvasUrl}/courses`;
     const coursesResponse =
       await canvasServiceUtils.paginatedRequest<CanvasCourseModel>({ url });
     return coursesResponse
@@ -27,13 +29,13 @@ export const canvasService = {
   },
 
   async getCourse(courseId: number): Promise<CanvasCourseModel> {
-    const url = `courses/${courseId}`;
+    const url = `${baseCanvasUrl}/courses/${courseId}`;
     const { data } = await axiosClient.get<CanvasCourseModel>(url);
     return data;
   },
 
   async getCurrentTermsFor(queryDate: Date = new Date()) {
-    const terms = await getTerms();
+    const terms = await getAllTerms();
     const currentTerms = terms
       .filter(
         (t) =>
@@ -58,7 +60,7 @@ export const canvasService = {
     item: CanvasModuleItem
   ) {
     console.log(`Updating module item ${item.title}`);
-    const url = `courses/${canvasCourseId}/modules/${canvasModuleId}/items/${item.id}`;
+    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/modules/${canvasModuleId}/items/${item.id}`;
     const body = {
       module_item: { title: item.title, position: item.position },
     };
@@ -75,7 +77,7 @@ export const canvasService = {
     contentId: number | string
   ): Promise<void> {
     console.log(`Creating new module item ${title}`);
-    const url = `courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
+    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
     const body = { module_item: { title, type, content_id: contentId } };
     const response = await axiosClient.post(url, body);
   },
@@ -87,7 +89,7 @@ export const canvasService = {
     canvasPage: CanvasPage
   ): Promise<void> {
     console.log(`Creating new module item ${title}`);
-    const url = `courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
+    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
     const body = {
       module_item: { title, type: "Page", page_url: canvasPage.url },
     };
@@ -96,7 +98,7 @@ export const canvasService = {
 
   async getEnrolledStudents(canvasCourseId: number) {
     console.log(`Getting students for course ${canvasCourseId}`);
-    const url = `courses/${canvasCourseId}/enrollments?enrollment_type=student`;
+    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/enrollments?enrollment_type=student`;
     const { data } = await axiosClient.get<CanvasEnrollmentModel[]>(url);
 
     if (!data)

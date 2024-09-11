@@ -34,6 +34,7 @@ export const canvasServiceUtils = {
 
     var returnData: T[] = firstData ? [firstData] : [];
     var nextUrl = getNextUrl(firstHeaders);
+    console.log("got first request", nextUrl, firstHeaders);
 
     while (nextUrl) {
       requestCount += 1;

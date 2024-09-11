@@ -6,7 +6,7 @@ import {
 } from "@/hooks/localCourse/localCoursesHooks";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
 import { useEffect, useState } from "react";
-import TextInput from "./TextInput";
+import TextInput from "../../../../components/form/TextInput";
 import { useSetAssignmentGroupsMutation } from "@/hooks/canvas/canvasCourseHooks";
 
 export default function AssignmentGroupManagement() {

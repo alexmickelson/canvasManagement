@@ -9,7 +9,7 @@ import { useCourseContext } from "../context/courseContext";
 import Link from "next/link";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { DayOfWeek, getDayOfWeek } from "@/models/local/localCourse";
+import {  getDayOfWeek } from "@/models/local/localCourse";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
