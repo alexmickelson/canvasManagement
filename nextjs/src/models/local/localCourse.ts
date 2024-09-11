@@ -16,7 +16,7 @@ export interface LocalCourseSettings {
   name: string;
   assignmentGroups: LocalAssignmentGroup[];
   daysOfWeek: DayOfWeek[];
-  canvasId?: number;
+  canvasId: number;
   startDate: string;
   endDate: string;
   defaultDueTime: SimpleTimeOnly;

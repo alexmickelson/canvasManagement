@@ -4,6 +4,7 @@ import StartAndEndDate from "./StartAndEndDate";
 import SettingsHeader from "./SettingsHeader";
 import DefaultDueTime from "./DefaultDueTime";
 import DaysOfWeekSelector from "./DaysOfWeekSelector";
+import AssignmentGroupManagement from "./AssignmentGroupManagement";
 
 export default function page() {
   return (
@@ -12,6 +13,7 @@ export default function page() {
       <DaysOfWeekSelector />
       <StartAndEndDate />
       <DefaultDueTime />
+      <AssignmentGroupManagement />
     </div>
   );
 }
