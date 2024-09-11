@@ -24,6 +24,7 @@ export default function SelectInput<T>({
           setValue(option);
         }}
       >
+        <option></option>
         {options.map((o) => (
           <option key={getOptionName(o)}>{getOptionName(o)}</option>
         ))}

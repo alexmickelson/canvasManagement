@@ -3,7 +3,7 @@ import { useCourseContext } from "../context/courseContext";
 import StartAndEndDate from "./StartAndEndDate";
 import SettingsHeader from "./SettingsHeader";
 import DefaultDueTime from "./DefaultDueTime";
-import DaysOfWeekSelector from "./DaysOfWeekSelector";
+import DaysOfWeekSettings from "./DaysOfWeekSettings";
 import AssignmentGroupManagement from "./AssignmentGroupManagement";
 
 export default function page() {
@@ -11,7 +11,7 @@ export default function page() {
     <div className="flex justify-center">
       <div className=" w-fit mt-5">
         <SettingsHeader />
-        <DaysOfWeekSelector />
+        <DaysOfWeekSettings />
         <StartAndEndDate />
         <DefaultDueTime />
         <AssignmentGroupManagement />
