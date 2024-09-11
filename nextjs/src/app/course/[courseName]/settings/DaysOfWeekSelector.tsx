@@ -21,7 +21,7 @@ export default function DaysOfWeekSelector() {
               key={day}
               className={
                 hasDay
-                  ? "bg-blue-200 text-blue-900"
+                  ? "bg-blue-300 text-blue-950 border-blue-500 border"
                   : "bg-slate-900 border-blue-900 border "
               }
               onClick={() => {

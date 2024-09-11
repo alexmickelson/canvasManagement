@@ -66,20 +66,30 @@ export default function AssignmentGroupManagement() {
           />
         </div>
       ))}
-      <button
-        onClick={() => {
-          setAssignmentGroups((oldGroups) => [
-            ...oldGroups,
-            {
-              id: Date.now().toString(),
-              name: "",
-              weight: 0,
-            },
-          ]);
-        }}
-      >
-        Add Assignment Group
-      </button>
+      <div className="flex gap-3 mt-3">
+        <button
+          className="btn-danger"
+          onClick={() => {
+            setAssignmentGroups((oldGroups) => oldGroups.slice(1));
+          }}
+        >
+          Remove Assignment Group
+        </button>
+        <button
+          onClick={() => {
+            setAssignmentGroups((oldGroups) => [
+              ...oldGroups,
+              {
+                id: Date.now().toString(),
+                name: "",
+                weight: 0,
+              },
+            ]);
+          }}
+        >
+          Add Assignment Group
+        </button>
+      </div>
     </div>
   );
 }

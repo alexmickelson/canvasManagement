@@ -4,5 +4,5 @@ import React from "react";
 
 export default function SettingsHeader() {
   const { data: settings } = useLocalCourseSettingsQuery();
-  return <div>Settings for {settings.name}</div>;
+  return <h3 className="text-center mb-3">{settings.name} <span className="text-slate-500 text-xl"> settings</span></h3>;
 }

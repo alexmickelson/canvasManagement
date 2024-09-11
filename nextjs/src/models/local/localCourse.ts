@@ -31,6 +31,12 @@ export enum DayOfWeek {
   Friday = "Friday",
   Saturday = "Saturday",
 }
+
+export function getDayOfWeek(date: Date): DayOfWeek {
+  const dayIndex = date.getDay(); // Returns 0 for Sunday, 1 for Monday, etc.
+  return DayOfWeek[Object.keys(DayOfWeek)[dayIndex] as keyof typeof DayOfWeek];
+}
+
 export const localCourseYamlUtils = {
   parseSettingYaml: (settingsString: string): LocalCourseSettings => {
     const settings = parse(settingsString);

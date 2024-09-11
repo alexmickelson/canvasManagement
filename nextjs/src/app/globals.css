@@ -73,12 +73,29 @@ p {
   @apply mb-3;
 }
 
-button {
-  @apply bg-blue-900 hover:bg-blue-700 text-blue-50 font-bold py-1 px-3 rounded transition-all duration-200;
+button,
+.btn {
+  @apply bg-blue-900 hover:bg-blue-700 text-blue-50;
+  @apply font-bold py-1 px-3 rounded transition-all duration-200;
+}
+
+.btn-danger {
+  @apply bg-red-800 hover:bg-red-900 text-red-100;
 }
 
 select {
   @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm;
-  @apply focus:outline-none focus:ring-blue-500 focus:border-blue-500 ;
+  @apply focus:outline-none focus:ring-blue-500 focus:border-blue-500;
   @apply bg-slate-800;
+}
+
+
+.collapsable {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .5s ease-out;
+}
+
+.collapsable.expand {
+  max-height: 100vh;
 }
