@@ -10,9 +10,11 @@ const baseCanvasUrl = "https://snow.instructure.com/api/v1";
 
 const getAllTerms = async () => {
   const url = `${baseCanvasUrl}/accounts/10/terms`;
-  const {data} = await axiosClient.get<{
-    enrollment_terms: CanvasEnrollmentTermModel[];
-  }[]>(url);
+  const { data } = await axiosClient.get<
+    {
+      enrollment_terms: CanvasEnrollmentTermModel[];
+    }[]
+  >(url);
   const terms = data.flatMap((r) => r.enrollment_terms);
   return terms;
 };
@@ -21,11 +23,12 @@ export const canvasService = {
   getAllTerms,
   async getCourses(termId: number) {
     const url = `${baseCanvasUrl}/courses`;
-    const coursesResponse =
-      await canvasServiceUtils.paginatedRequest<CanvasCourseModel>({ url });
-    return coursesResponse
-      .flat()
+    const response = await axiosClient.get<CanvasCourseModel[][]>(url);
+    const allCourses = response.data;
+    const coursesInTerm = allCourses
+      .flatMap((l) => l)
       .filter((c) => c.enrollment_term_id === termId);
+    return coursesInTerm;
   },
 
   async getCourse(courseId: number): Promise<CanvasCourseModel> {

@@ -50,12 +50,6 @@ export async function GET(
   return withErrorHandling(async () => {
     try {
       const url = getUrl(params);
-      // const response = await axiosClient.get(url, {
-      //   headers: {
-      //     // Include other headers from the incoming request if needed:
-      //     "Content-Type": "application/json",
-      //   },
-      // });
 
       var requestCount = 1;
       url.searchParams.set("per_page", "100");
@@ -100,7 +94,7 @@ export async function POST(
     try {
       const url = getUrl(params);
       const body = await req.json();
-      const response = await axiosClient.post(url, body);
+      const response = await axiosClient.post(url.toString(), body);
 
       const headers = proxyResponseHeaders(response);
       return new NextResponse(JSON.stringify(response.data), { headers });
@@ -123,7 +117,7 @@ export async function PUT(
     try {
       const url = getUrl(params);
       const body = await req.json();
-      const response = await axiosClient.put(url, body);
+      const response = await axiosClient.put(url.toString(), body);
 
       const headers = proxyResponseHeaders(response);
       return new NextResponse(JSON.stringify(response.data), { headers });
@@ -143,7 +137,7 @@ export async function DELETE(
   return withErrorHandling(async () => {
     try {
       const url = getUrl(params);
-      const response = await axiosClient.delete(url);
+      const response = await axiosClient.delete(url.toString());
 
       const headers = proxyResponseHeaders(response);
       return new NextResponse(JSON.stringify(response.data), { headers });

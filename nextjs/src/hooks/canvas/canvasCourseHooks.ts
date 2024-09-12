@@ -8,7 +8,16 @@ export const canvasCourseKeys = {
     ["canvas", canavasId, "course details"] as const,
   assignmentGroups: (canavasId: number) =>
     ["canvas", canavasId, "assignment groups"] as const,
+  courseListInTerm: (canvasTermId: number | undefined) =>
+    ["canvas courses in term", canvasTermId] as const,
 };
+
+export const useCourseListInTermQuery = (canvasTermId: number | undefined) =>
+  useSuspenseQuery({
+    queryKey: canvasCourseKeys.courseListInTerm(canvasTermId),
+    queryFn: async () =>
+      canvasTermId ? await canvasService.getCourses(canvasTermId) : [],
+  });
 
 export const useCanvasCourseQuery = (canvasId: number) =>
   useSuspenseQuery({

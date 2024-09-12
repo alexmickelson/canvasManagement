@@ -32,16 +32,23 @@ export const fileStorageService = {
     const courseDirectories = await fs.readdir(basePath, {
       withFileTypes: true,
     });
-    const coursePromises = courseDirectories
-      .filter((dirent) => dirent.isDirectory())
-      .filter(async (dirent) => {
-        const coursePath = path.join(basePath, dirent.name);
-        const settingsPath = path.join(coursePath, "settings.yml");
-        return await directoryOrFileExists(settingsPath);
-      });
-    const courseNamesFromDirectories = (await Promise.all(coursePromises)).map(
-      (c) => c.name
+    const coursePromises = await Promise.all(
+      courseDirectories
+        .filter((dirent) => dirent.isDirectory())
+        .map(async (dirent) => {
+          const coursePath = path.join(basePath, dirent.name);
+          const settingsPath = path.join(coursePath, "settings.yml");
+          const hasSettings = await directoryOrFileExists(settingsPath);
+          return {
+            dirent,
+            hasSettings,
+          };
+        })
     );
+
+    const courseNamesFromDirectories = coursePromises
+      .filter(({ hasSettings }) => hasSettings)
+      .map(({ dirent }) => dirent.name);
 
     return courseNamesFromDirectories;
   },
@@ -256,10 +263,22 @@ export const fileStorageService = {
     }
 
     const directories = await fs.readdir(basePath, { withFileTypes: true });
-    const emptyDirectories = directories
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => path.join(basePath, dirent.name))
-      .filter(async (dir) => !(await hasFileSystemEntries(dir)));
+    console.log(directories);
+    const emptyDirectories = (
+      await Promise.all(
+        directories
+          .filter((dirent) => dirent.isDirectory())
+          .map((dirent) => path.join(dirent.name))
+          .map(async (directory) => {
+            return {
+              directory,
+              files: await fs.readdir(path.join(basePath, directory)),
+            };
+          })
+      )
+    )
+      .filter(({ files }) => files.length === 0)
+      .map(({ directory }) => directory);
 
     return emptyDirectories;
   },
