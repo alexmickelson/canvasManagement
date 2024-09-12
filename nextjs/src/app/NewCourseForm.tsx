@@ -14,7 +14,7 @@ export default function NewCourseForm() {
   const [selectedDaysOfWeek, setSelectedDaysOfWeek] = useState<DayOfWeek[]>([]);
 
   return (
-    <form>
+    <div>
       <SelectInput
         value={selectedTerm}
         setValue={setSelectedTerm}
@@ -38,6 +38,6 @@ export default function NewCourseForm() {
           />
         </div>
       )}
-    </form>
+    </div>
   );
 }
