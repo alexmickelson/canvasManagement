@@ -9,7 +9,8 @@ import { useCourseContext } from "../context/courseContext";
 import Link from "next/link";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import {  getDayOfWeek } from "@/models/local/localCourse";
+import { getDayOfWeek } from "@/models/local/localCourse";
+import { getModuleItemUrl } from "@/services/urlUtils";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
@@ -32,13 +33,11 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const classIsToday = settings.daysOfWeek.includes(getDayOfWeek(dayAsDate));
 
   const todayClass = classIsToday ? " bg-slate-900 " : " ";
-  const monthClass = isInSameMonth ? " border border-slate-600 " : " "
+  const monthClass = isInSameMonth ? " border border-slate-600 " : " ";
 
   return (
     <div
-      className={
-        " rounded-lg p-2 pb-4 m-1 " + todayClass + monthClass
-      }
+      className={" rounded-lg p-2 pb-4 m-1 " + todayClass + monthClass}
       onDrop={(e) => itemDrop(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
@@ -135,14 +134,7 @@ function DraggableListItem({
       }}
     >
       <Link
-        href={
-          "/course/" +
-          encodeURIComponent(courseName) +
-          "/modules/" +
-          encodeURIComponent(moduleName) +
-          `/${type}/` +
-          encodeURIComponent(item.name)
-        }
+        href={getModuleItemUrl(courseName, moduleName, type, item.name)}
         shallow={true}
       >
         {item.name}

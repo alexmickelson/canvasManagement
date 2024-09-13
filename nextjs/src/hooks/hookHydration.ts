@@ -1,26 +1,28 @@
 import { QueryClient } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourse/localCourseKeys";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { LocalCourseSettings } from "@/models/local/localCourse";
 // https://tanstack.com/query/latest/docs/framework/react/guides/ssr
 export const hydrateCourses = async (queryClient: QueryClient) => {
-  const courseNames = await fileStorageService.getCourseNames();
+  const allSettings = await fileStorageService.getAllCoursesSettings();
+  const courseNames = allSettings.map((s) => s.name);
   await queryClient.prefetchQuery({
-    queryKey: localCourseKeys.allCourses,
-    queryFn: () => courseNames,
+    queryKey: localCourseKeys.allCoursesSettings,
+    queryFn: () => allSettings,
   });
 
   await Promise.all(
-    courseNames.map(async (courseName) => {
-      await hydrateCourse(queryClient, courseName);
+    allSettings.map(async (settings) => {
+      await hydrateCourse(queryClient, settings);
     })
   );
 };
 
 export const hydrateCourse = async (
   queryClient: QueryClient,
-  courseName: string
+  courseSettings: LocalCourseSettings
 ) => {
-  const settings = await fileStorageService.getCourseSettings(courseName);
+  const courseName = courseSettings.name
   const moduleNames = await fileStorageService.getModuleNames(courseName);
   const modulesData = await Promise.all(
     moduleNames.map(async (moduleName) => {
@@ -69,7 +71,7 @@ export const hydrateCourse = async (
 
   await queryClient.prefetchQuery({
     queryKey: localCourseKeys.settings(courseName),
-    queryFn: () => settings,
+    queryFn: () => courseSettings,
   });
   await queryClient.prefetchQuery({
     queryKey: localCourseKeys.moduleNames(courseName),

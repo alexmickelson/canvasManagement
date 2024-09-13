@@ -17,6 +17,11 @@ describe("Can properly handle expected date formats", () => {
     const dateObject = getDateFromString(dateString);
     expect(dateObject).not.toBeUndefined();
   });
+  it("can use other ISO format", () => {
+    const dateString = "2024-08-26T06:00:00Z";
+    const dateObject = getDateFromString(dateString);
+    expect(dateObject).not.toBeUndefined();
+  });
   it("can get correct time from format", () => {
     const dateString = "08/28/2024 23:59:00";
     const dateObject = getDateFromString(dateString);

@@ -1,5 +1,5 @@
 "use client";
-import { LocalCourseSettings } from "@/models/local/localCourse";
+import { LocalCourse, LocalCourseSettings } from "@/models/local/localCourse";
 import {
   useMutation,
   useQueries,
@@ -30,24 +30,43 @@ import {
 } from "./quizHooks";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
-export const useLocalCourseNamesQuery = () =>
+export const useLocalCoursesSettingsQuery = () =>
   useSuspenseQuery({
-    queryKey: localCourseKeys.allCourses,
-    queryFn: async (): Promise<string[]> => {
-      const url = `/api/courses`;
-      const response = await axiosClient.get(url);
+    queryKey: localCourseKeys.allCoursesSettings,
+    queryFn: async () => {
+      const url = `/api/courses/settings`;
+      const response = await axiosClient.get<LocalCourseSettings[]>(url);
       return response.data;
     },
   });
 
 export const useLocalCourseSettingsQuery = () => {
   const { courseName } = useCourseContext();
+  const { data: settingsList } = useLocalCoursesSettingsQuery();
   return useSuspenseQuery({
     queryKey: localCourseKeys.settings(courseName),
-    queryFn: async (): Promise<LocalCourseSettings> => {
-      const url = `/api/courses/${courseName}/settings`;
-      const response = await axiosClient.get(url);
-      return response.data;
+    queryFn: () => {
+      const s = settingsList.find((s) => s.name === courseName);
+      if (!s) {
+        console.log(courseName, settingsList);
+        throw Error("Could not find settings for course " + courseName);
+      }
+      return s;
+    },
+  });
+};
+
+export const useCreateLocalCourseMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (newCourse: LocalCourse) => {
+      const url = `/api/courses`;
+      await axiosClient.post(url, newCourse);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.allCoursesSettings,
+      });
     },
   });
 };
@@ -67,6 +86,9 @@ export const useUpdateLocalCourseSettingsMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.settings(courseName),
+      });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.allCoursesSettings,
       });
     },
   });

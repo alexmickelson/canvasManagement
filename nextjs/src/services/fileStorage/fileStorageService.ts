@@ -4,10 +4,7 @@ import {
   LocalCourseSettings,
   localCourseYamlUtils,
 } from "@/models/local/localCourse";
-import {
-  directoryOrFileExists,
-  hasFileSystemEntries,
-} from "./utils/fileSystemUtils";
+import { directoryOrFileExists } from "./utils/fileSystemUtils";
 import {
   LocalAssignment,
   localAssignmentMarkdown,
@@ -53,6 +50,15 @@ export const fileStorageService = {
     return courseNamesFromDirectories;
   },
 
+  async getAllCoursesSettings() {
+    const courses = await fileStorageService.getCourseNames();
+
+    const settings = await Promise.all(
+      courses.map(async (c) => await fileStorageService.getCourseSettings(c))
+    );
+    return settings;
+  },
+
   async getCourseSettings(courseName: string): Promise<LocalCourseSettings> {
     const courseDirectory = path.join(basePath, courseName);
     const settingsPath = path.join(courseDirectory, "settings.yml");
@@ -96,6 +102,11 @@ export const fileStorageService = {
 
     const modules = await Promise.all(modulePromises);
     return modules.sort((a, b) => a.localeCompare(b));
+  },
+  async createModule(courseName: string, moduleName: string) {
+    const courseDirectory = path.join(basePath, courseName);
+
+    await fs.mkdir(courseDirectory + "/" + moduleName, { recursive: true });
   },
 
   async getAssignmentNames(courseName: string, moduleName: string) {
@@ -263,7 +274,6 @@ export const fileStorageService = {
     }
 
     const directories = await fs.readdir(basePath, { withFileTypes: true });
-    console.log(directories);
     const emptyDirectories = (
       await Promise.all(
         directories
@@ -281,5 +291,11 @@ export const fileStorageService = {
       .map(({ directory }) => directory);
 
     return emptyDirectories;
+  },
+
+  async createCourseFolderForTesting(courseName: string) {
+    const courseDirectory = path.join(basePath, courseName);
+
+    await fs.mkdir(courseDirectory, { recursive: true });
   },
 };

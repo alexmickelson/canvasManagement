@@ -67,7 +67,7 @@ blockquote {
 }
 
 code {
-  @apply font-mono text-sm bg-gray-800 px-1;
+  @apply font-mono text-sm bg-gray-800 px-1 leading-tight inline-block;
 }
 p {
   @apply mb-3;

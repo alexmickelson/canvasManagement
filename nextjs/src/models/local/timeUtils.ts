@@ -37,10 +37,11 @@ const _getDateFromISO = (value: string): Date | undefined => {
 };
 
 export const getDateFromString = (value: string): Date | undefined => {
+
   const ampmDateRegex =
     /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}\s{1}[APap][Mm]$/; //"M/D/YYYY h:mm:ss AM/PM"
   const militaryDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}$/; //"MM/DD/YYYY HH:mm:ss"
-  const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)$/; //"2024-08-26T00:00:00.0000000"
+  const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}((.\d+)|(Z))$/; //"2024-08-26T00:00:00.0000000"
 
   if (isoDateRegex.test(value)) {
     return _getDateFromISO(value);

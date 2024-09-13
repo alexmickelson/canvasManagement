@@ -1,5 +1,5 @@
-import AddNewCourse from "./AddNewCourse";
 import CourseList from "./CourseList";
+import AddNewCourse from "./newCourse/AddNewCourse";
 
 export default async function Home() {
   return (

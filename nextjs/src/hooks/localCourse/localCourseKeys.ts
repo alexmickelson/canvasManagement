@@ -1,5 +1,6 @@
 export const localCourseKeys = {
-  allCourses: ["all courses"] as const,
+  allCoursesSettings: ["all courses settings"] as const,
+  allCoursesNames: ["all courses names"] as const,
   settings: (courseName: string) =>
     ["course details", courseName, "settings"] as const,
   moduleNames: (courseName: string) =>

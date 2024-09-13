@@ -3,22 +3,16 @@
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import Link from "next/link";
 import { useCourseContext } from "./context/courseContext";
+import { getCourseSettingsUrl } from "@/services/urlUtils";
 
 export default function CourseSettingsLink() {
-  const {courseName} = useCourseContext();
+  const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   return (
     <div>
       {settings.name}
 
-      <Link
-        href={
-          "/course/" +
-          encodeURIComponent(courseName) +
-          "/settings"
-        }
-        shallow={true}
-      >
+      <Link href={getCourseSettingsUrl(courseName)} shallow={true}>
         Course Settings
       </Link>
     </div>
