@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import { useCourseContext } from "./courseContext";
 import {
   useAllCourseDataQuery,
-  useModuleDataQuery,
 } from "@/hooks/localCourse/localCoursesHooks";
 import {
   CalendarItemsContext,

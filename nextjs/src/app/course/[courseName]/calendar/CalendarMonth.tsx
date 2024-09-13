@@ -10,7 +10,6 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
     new Date(month.year, month.month, 1) <
     new Date(Date.now() - weekInMilliseconds);
 
-  console.log(month, isInPast);
   const [isCollapsed, setIsCollapsed] = useState(isInPast);
 
   const monthName = new Date(month.year, month.month - 1, 1).toLocaleString(
@@ -20,7 +19,6 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   const toggleCollapse = () => setIsCollapsed(!isCollapsed);
   const weekDaysList: DayOfWeek[] = Object.values(DayOfWeek);
 
-  console.log(isCollapsed);
   return (
     <>
       <div className="flex justify-center">

@@ -87,14 +87,12 @@ export default function NewCourseForm() {
                     daysOfWeek: selectedDaysOfWeek,
                     canvasId: selectedCanvasCourse.id,
                     startDate: selectedTerm.start_at ?? "",
-                    endDate: selectedTerm.start_at ?? "",
+                    endDate: selectedTerm.end_at ?? "",
                     defaultDueTime: { hour: 11, minute: 59 },
                   },
                 })
                 .then(() => {
-                  router.push(getCourseUrl(selectedDirectory), undefined, {
-                    shallow: true,
-                  });
+                  router.push(getCourseUrl(selectedDirectory));
                 });
             }
           }}
