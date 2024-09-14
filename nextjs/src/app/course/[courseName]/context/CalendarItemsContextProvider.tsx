@@ -1,20 +1,13 @@
 import { ReactNode } from "react";
-import { useCourseContext } from "./courseContext";
-import {
-  useAllCourseDataQuery,
-} from "@/hooks/localCourse/localCoursesHooks";
 import {
   CalendarItemsContext,
   CalendarItemsInterface,
 } from "./calendarItemsContext";
 import {
-  dateToMarkdownString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
-import { LocalCoursePage } from "@/models/local/page/localCoursePage";
+import { useAllCourseDataQuery } from "@/hooks/localCourse/localCourseModuleHooks";
 
 export default function CalendarItemsContextProvider({
   children,

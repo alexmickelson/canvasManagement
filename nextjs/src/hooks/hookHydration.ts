@@ -4,7 +4,7 @@ import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { LocalCourseSettings } from "@/models/local/localCourse";
 // https://tanstack.com/query/latest/docs/framework/react/guides/ssr
 export const hydrateCourses = async (queryClient: QueryClient) => {
-  const allSettings = await fileStorageService.getAllCoursesSettings();
+  const allSettings = await fileStorageService.settings.getAllCoursesSettings();
   const courseNames = allSettings.map((s) => s.name);
   await queryClient.prefetchQuery({
     queryKey: localCourseKeys.allCoursesSettings,
@@ -22,21 +22,26 @@ export const hydrateCourse = async (
   queryClient: QueryClient,
   courseSettings: LocalCourseSettings
 ) => {
-  const courseName = courseSettings.name
-  const moduleNames = await fileStorageService.getModuleNames(courseName);
+  const courseName = courseSettings.name;
+  const moduleNames = await fileStorageService.modules.getModuleNames(
+    courseName
+  );
   const modulesData = await Promise.all(
     moduleNames.map(async (moduleName) => {
       const [assignmentNames, pageNames, quizNames] = await Promise.all([
-        await fileStorageService.getAssignmentNames(courseName, moduleName),
-        await fileStorageService.getPageNames(courseName, moduleName),
-        await fileStorageService.getQuizNames(courseName, moduleName),
+        await fileStorageService.assignments.getAssignmentNames(
+          courseName,
+          moduleName
+        ),
+        await fileStorageService.pages.getPageNames(courseName, moduleName),
+        await fileStorageService.quizzes.getQuizNames(courseName, moduleName),
       ]);
 
       const [assignments, quizzes, pages] = await Promise.all([
         await Promise.all(
           assignmentNames.map(
             async (assignmentName) =>
-              await fileStorageService.getAssignment(
+              await fileStorageService.assignments.getAssignment(
                 courseName,
                 moduleName,
                 assignmentName
@@ -46,13 +51,13 @@ export const hydrateCourse = async (
         await Promise.all(
           quizNames.map(
             async (quizName) =>
-              await fileStorageService.getQuiz(courseName, moduleName, quizName)
+              await fileStorageService.quizzes.getQuiz(courseName, moduleName, quizName)
           )
         ),
         await Promise.all(
           pageNames.map(
             async (pageName) =>
-              await fileStorageService.getPage(courseName, moduleName, pageName)
+              await fileStorageService.pages.getPage(courseName, moduleName, pageName)
           )
         ),
       ]);

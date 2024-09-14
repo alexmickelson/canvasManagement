@@ -8,7 +8,7 @@ export const GET = async (
   }: { params: { courseName: string; moduleName: string } }
 ) =>
   await withErrorHandling(async () => {
-    const settings = await fileStorageService.getPageNames(
+    const settings = await fileStorageService.pages.getPageNames(
       courseName,
       moduleName
     );

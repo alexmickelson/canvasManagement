@@ -12,7 +12,7 @@ export default function CourseSettingsLink() {
     <div>
       {settings.name}
 
-      <Link href={getCourseSettingsUrl(courseName)} shallow={true}>
+      <Link className="mx-3 underline" href={getCourseSettingsUrl(courseName)} shallow={true}>
         Course Settings
       </Link>
     </div>

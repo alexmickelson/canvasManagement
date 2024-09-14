@@ -6,6 +6,16 @@ export const GET = async (
   { params: { courseName } }: { params: { courseName: string } }
 ) =>
   await withErrorHandling(async () => {
-    const settings = await fileStorageService.getModuleNames(courseName);
+    const settings = await fileStorageService.modules.getModuleNames(courseName);
     return Response.json(settings);
+  });
+
+export const POST = async (
+  request: Request,
+  { params: { courseName } }: { params: { courseName: string } }
+) =>
+  await withErrorHandling(async () => {
+    const { moduleName } = await request.json();
+    await fileStorageService.modules.createModule(courseName, moduleName);
+    return Response.json({});
   });

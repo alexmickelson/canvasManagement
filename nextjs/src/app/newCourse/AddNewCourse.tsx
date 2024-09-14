@@ -10,7 +10,7 @@ export default function AddNewCourse() {
     <div>
       <button onClick={() => setShowForm(true)}>Add New Course</button>
 
-      <div className={" collapsable " + (showForm && "expand")}>
+      <div className={" collapsible " + (showForm && "expand")}>
         <div className="border rounded-md p-3 m-3">
           <SuspenseAndErrorHandling>
             {showForm && <NewCourseForm />}

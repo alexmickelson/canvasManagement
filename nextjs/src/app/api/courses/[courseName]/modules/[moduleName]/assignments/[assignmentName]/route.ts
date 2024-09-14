@@ -10,7 +10,7 @@ export const GET = async (
   }
 ) =>
   await withErrorHandling(async () => {
-    const settings = await fileStorageService.getAssignment(
+    const settings = await fileStorageService.assignments.getAssignment(
       courseName,
       moduleName,
       assignmentName
@@ -28,7 +28,7 @@ export const PUT = async (
 ) =>
   await withErrorHandling(async () => {
     const assignment = await request.json();
-    await fileStorageService.updateAssignment(
+    await fileStorageService.assignments.updateAssignment(
       courseName,
       moduleName,
       assignmentName,

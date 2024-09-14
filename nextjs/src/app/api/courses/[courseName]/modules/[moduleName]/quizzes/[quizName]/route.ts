@@ -7,7 +7,7 @@ export const GET = async (
     params: { courseName, moduleName, quizName },
   }: { params: { courseName: string; moduleName: string; quizName: string } }
 ) => await withErrorHandling(async () => {
-  const quiz = await fileStorageService.getQuiz(
+  const quiz = await fileStorageService.quizzes.getQuiz(
     courseName,
     moduleName,
     quizName
@@ -22,7 +22,7 @@ export const PUT = async (
   }: { params: { courseName: string; moduleName: string; quizName: string } }
 ) => await withErrorHandling(async () => {
   const quiz = await request.json()
-  await fileStorageService.updateQuiz(
+  await fileStorageService.quizzes.updateQuiz(
     courseName,
     moduleName,
     quizName,

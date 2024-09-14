@@ -9,7 +9,7 @@ export const GET = async (
     if (courseName.includes(".js.map")) {
       return Response.json({});
     }
-    const settings = await fileStorageService.getCourseSettings(courseName);
+    const settings = await fileStorageService.settings.getCourseSettings(courseName);
     return Response.json(settings);
   });
   
@@ -20,7 +20,7 @@ export const PUT = async (
   await withErrorHandling(async () => {
     const settings = await request.json();
 
-    await fileStorageService.updateCourseSettings(courseName, settings);
+    await fileStorageService.settings.updateCourseSettings(courseName, settings);
 
     return Response.json({});
   });

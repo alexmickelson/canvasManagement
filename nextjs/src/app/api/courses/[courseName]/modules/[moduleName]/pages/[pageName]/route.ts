@@ -8,7 +8,7 @@ export const GET = async (
   }: { params: { courseName: string; moduleName: string; pageName: string } }
 ) =>
   await withErrorHandling(async () => {
-    const settings = await fileStorageService.getPage(
+    const settings = await fileStorageService.pages.getPage(
       courseName,
       moduleName,
       pageName
@@ -24,6 +24,6 @@ export const PUT = async (
 ) =>
   await withErrorHandling(async () => {
     const page = await request.json();
-    await fileStorageService.updatePage(courseName, moduleName, pageName, page);
+    await fileStorageService.pages.updatePage(courseName, moduleName, pageName, page);
     return Response.json({});
   });

@@ -11,7 +11,7 @@ export const GET = async () =>
 export const POST = async (request: Request) =>
   await withErrorHandling(async () => {
     const newCourse: LocalCourse = await request.json();
-    await fileStorageService.updateCourseSettings(
+    await fileStorageService.settings.updateCourseSettings(
       newCourse.settings.name,
       newCourse.settings
     );

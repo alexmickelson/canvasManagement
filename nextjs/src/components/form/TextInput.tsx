@@ -4,17 +4,19 @@ export default function TextInput({
   value,
   setValue,
   label,
+  className,
 }: {
   value: string;
   setValue: (newValue: string) => void;
   label: string;
+  className?: string;
 }) {
   return (
-    <label className="block">
+    <label className={"block " + className}>
       {label}
       <br />
       <input
-        className="bg-slate-800 rounded-md  px-1"
+        className="bg-slate-800 rounded-md w-full px-1"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />

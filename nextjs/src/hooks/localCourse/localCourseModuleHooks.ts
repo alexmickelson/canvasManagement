@@ -1,7 +1,18 @@
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { axiosClient } from "@/services/axiosUtils";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQueries,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourseKeys";
+import {
+  getAssignmentNamesQueryConfig,
+  getAssignmentQueryConfig,
+} from "./assignmentHooks";
+import { getPageNamesQueryConfig, getPageQueryConfig } from "./pageHooks";
+import { getQuizNamesQueryConfig, getQuizQueryConfig } from "./quizHooks";
 
 export const useModuleNamesQuery = () => {
   const { courseName } = useCourseContext();
@@ -17,11 +28,18 @@ export const useModuleNamesQuery = () => {
 
 export const useCreateModuleMutation = () => {
   const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (moduleName: string) => { 
+    mutationFn: async (moduleName: string) => {
       const url = `/api/courses/${courseName}/modules`;
-      const response = await axiosClient.post(url, {moduleName});
-      return response.data;},
+      const response = await axiosClient.post(url, { moduleName });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.moduleNames(courseName),
+      });
+    },
   });
 };
 
@@ -55,94 +73,94 @@ export const useCreateModuleMutation = () => {
 //   // );
 // };
 
-// export const useAllCourseDataQuery = () => {
-//   const { courseName } = useCourseContext();
-//   const { data: moduleNames } = useModuleNamesQuery();
+export const useAllCourseDataQuery = () => {
+  const { courseName } = useCourseContext();
+  const { data: moduleNames } = useModuleNamesQuery();
 
-//   const { data: assignmentNamesAndModules } = useSuspenseQueries({
-//     queries: moduleNames.map((moduleName) =>
-//       getAssignmentNamesQueryConfig(courseName, moduleName)
-//     ),
-//     combine: (results) => ({
-//       data: results.flatMap((r, i) =>
-//         r.data.map((assignmentName) => ({
-//           moduleName: moduleNames[i],
-//           assignmentName,
-//         }))
-//       ),
-//       pending: results.some((r) => r.isPending),
-//     }),
-//   });
+  const { data: assignmentNamesAndModules } = useSuspenseQueries({
+    queries: moduleNames.map((moduleName) =>
+      getAssignmentNamesQueryConfig(courseName, moduleName)
+    ),
+    combine: (results) => ({
+      data: results.flatMap((r, i) =>
+        r.data.map((assignmentName) => ({
+          moduleName: moduleNames[i],
+          assignmentName,
+        }))
+      ),
+      pending: results.some((r) => r.isPending),
+    }),
+  });
 
-//   const { data: assignmentsAndModules } = useSuspenseQueries({
-//     queries: assignmentNamesAndModules.map(
-//       ({ moduleName, assignmentName }, i) =>
-//         getAssignmentQueryConfig(courseName, moduleName, assignmentName)
-//     ),
-//     combine: (results) => ({
-//       data: results.flatMap((r, i) => ({
-//         moduleName: assignmentNamesAndModules[i].moduleName,
-//         assignment: r.data,
-//       })),
-//       pending: results.some((r) => r.isPending),
-//     }),
-//   });
+  const { data: assignmentsAndModules } = useSuspenseQueries({
+    queries: assignmentNamesAndModules.map(
+      ({ moduleName, assignmentName }, i) =>
+        getAssignmentQueryConfig(courseName, moduleName, assignmentName)
+    ),
+    combine: (results) => ({
+      data: results.flatMap((r, i) => ({
+        moduleName: assignmentNamesAndModules[i].moduleName,
+        assignment: r.data,
+      })),
+      pending: results.some((r) => r.isPending),
+    }),
+  });
 
-//   const { data: quizNamesAndModules } = useSuspenseQueries({
-//     queries: moduleNames.map((moduleName) =>
-//       getQuizNamesQueryConfig(courseName, moduleName)
-//     ),
-//     combine: (results) => ({
-//       data: results.flatMap((r, i) =>
-//         r.data.map((quizName) => ({
-//           moduleName: moduleNames[i],
-//           quizName: quizName,
-//         }))
-//       ),
-//       pending: results.some((r) => r.isPending),
-//     }),
-//   });
+  const { data: quizNamesAndModules } = useSuspenseQueries({
+    queries: moduleNames.map((moduleName) =>
+      getQuizNamesQueryConfig(courseName, moduleName)
+    ),
+    combine: (results) => ({
+      data: results.flatMap((r, i) =>
+        r.data.map((quizName) => ({
+          moduleName: moduleNames[i],
+          quizName: quizName,
+        }))
+      ),
+      pending: results.some((r) => r.isPending),
+    }),
+  });
 
-//   const { data: quizzesAndModules } = useSuspenseQueries({
-//     queries: quizNamesAndModules.map(({ moduleName, quizName }, i) =>
-//       getQuizQueryConfig(courseName, moduleName, quizName)
-//     ),
-//     combine: (results) => ({
-//       data: results.flatMap((r, i) => ({
-//         moduleName: quizNamesAndModules[i].moduleName,
-//         quiz: r.data,
-//       })),
-//       pending: results.some((r) => r.isPending),
-//     }),
-//   });
+  const { data: quizzesAndModules } = useSuspenseQueries({
+    queries: quizNamesAndModules.map(({ moduleName, quizName }, i) =>
+      getQuizQueryConfig(courseName, moduleName, quizName)
+    ),
+    combine: (results) => ({
+      data: results.flatMap((r, i) => ({
+        moduleName: quizNamesAndModules[i].moduleName,
+        quiz: r.data,
+      })),
+      pending: results.some((r) => r.isPending),
+    }),
+  });
 
-//   const { data: pageNamesAndModules } = useSuspenseQueries({
-//     queries: moduleNames.map((moduleName) =>
-//       getPageNamesQueryConfig(courseName, moduleName)
-//     ),
-//     combine: (results) => ({
-//       data: results.flatMap((r, i) =>
-//         r.data.map((pageName) => ({
-//           moduleName: moduleNames[i],
-//           pageName,
-//         }))
-//       ),
-//       pending: results.some((r) => r.isPending),
-//     }),
-//   });
+  const { data: pageNamesAndModules } = useSuspenseQueries({
+    queries: moduleNames.map((moduleName) =>
+      getPageNamesQueryConfig(courseName, moduleName)
+    ),
+    combine: (results) => ({
+      data: results.flatMap((r, i) =>
+        r.data.map((pageName) => ({
+          moduleName: moduleNames[i],
+          pageName,
+        }))
+      ),
+      pending: results.some((r) => r.isPending),
+    }),
+  });
 
-//   const { data: pagesAndModules } = useSuspenseQueries({
-//     queries: pageNamesAndModules.map(({ moduleName, pageName }, i) =>
-//       getPageQueryConfig(courseName, moduleName, pageName)
-//     ),
-//     combine: (results) => ({
-//       data: results.flatMap((r, i) => ({
-//         moduleName: pageNamesAndModules[i].moduleName,
-//         page: r.data,
-//       })),
-//       pending: results.some((r) => r.isPending),
-//     }),
-//   });
+  const { data: pagesAndModules } = useSuspenseQueries({
+    queries: pageNamesAndModules.map(({ moduleName, pageName }, i) =>
+      getPageQueryConfig(courseName, moduleName, pageName)
+    ),
+    combine: (results) => ({
+      data: results.flatMap((r, i) => ({
+        moduleName: pageNamesAndModules[i].moduleName,
+        page: r.data,
+      })),
+      pending: results.some((r) => r.isPending),
+    }),
+  });
 
-//   return { assignmentsAndModules, quizzesAndModules, pagesAndModules };
-// };
+  return { assignmentsAndModules, quizzesAndModules, pagesAndModules };
+};

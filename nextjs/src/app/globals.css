@@ -90,12 +90,12 @@ select {
 }
 
 
-.collapsable {
+.collapsible {
   max-height: 0;
   overflow: hidden;
   transition: max-height .5s ease-out;
 }
 
-.collapsable.expand {
+.collapsible.expand {
   max-height: 100vh;
 }

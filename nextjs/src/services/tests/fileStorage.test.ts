@@ -32,9 +32,9 @@ describe("FileStorageTests", () => {
       canvasId: 0,
     };
 
-    await fileStorageService.updateCourseSettings(name, settings);
+    await fileStorageService.settings.updateCourseSettings(name, settings);
 
-    const loadedSettings = await fileStorageService.getCourseSettings(name);
+    const loadedSettings = await fileStorageService.settings.getCourseSettings(name);
 
     expect(loadedSettings).toEqual(settings);
   });
@@ -43,9 +43,9 @@ describe("FileStorageTests", () => {
     const courseName = "test empty course";
     const moduleName = "test module 1";
 
-    await fileStorageService.createModule(courseName, moduleName);
+    await fileStorageService.modules.createModule(courseName, moduleName);
 
-    const moduleNames = await fileStorageService.getModuleNames(courseName);
+    const moduleNames = await fileStorageService.modules.getModuleNames(courseName);
 
     expect(moduleNames).toContain(moduleName);
   });

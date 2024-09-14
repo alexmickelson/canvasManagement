@@ -11,6 +11,9 @@ import { IModuleItem } from "@/models/local/IModuleItem";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDayOfWeek } from "@/models/local/localCourse";
 import { getModuleItemUrl } from "@/services/urlUtils";
+import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { LocalQuiz } from "@/models/local/quiz/localQuiz";
+import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
@@ -74,9 +77,9 @@ export default function Day({ day, month }: { day: string; month: number }) {
 
 function getTodaysItems(todaysModules: {
   [moduleName: string]: {
-    assignments: import("/home/alexm/projects/canvasManagement/nextjs/src/models/local/assignment/localAssignment").LocalAssignment[];
-    quizzes: import("/home/alexm/projects/canvasManagement/nextjs/src/models/local/quiz/localQuiz").LocalQuiz[];
-    pages: import("/home/alexm/projects/canvasManagement/nextjs/src/models/local/page/localCoursePage").LocalCoursePage[];
+    assignments: LocalAssignment[];
+    quizzes: LocalQuiz[];
+    pages: LocalCoursePage[];
   };
 }) {
   const todaysAssignments = todaysModules

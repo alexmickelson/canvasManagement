@@ -25,7 +25,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
         <h3
           className={
             "text-2xl transition-all duration-500 " +
-            "hover:text-slate-50 underline hover:scale-105 "
+            "hover:text-slate-50 underline hover:scale-105 `"
           }
           onClick={toggleCollapse}
           role="button"
@@ -36,7 +36,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
 
       <div
         id={monthName}
-        className={"collapsable " + (isCollapsed ? "" : "expand")}
+        className={"collapsible " + (isCollapsed ? "" : "expand")}
       >
         <div className="grid grid-cols-7 text-center fw-bold">
           {weekDaysList.map((day) => (
