@@ -62,7 +62,7 @@ function CalendarWeek({
   monthNumber: number;
 }) {
   return (
-    <div className="grid grid-cols-7 m-3">
+    <div className="grid grid-cols-7 m-1">
       {week.map((day, dayIndex) => (
         <Day key={dayIndex} day={day} month={monthNumber} />
       ))}

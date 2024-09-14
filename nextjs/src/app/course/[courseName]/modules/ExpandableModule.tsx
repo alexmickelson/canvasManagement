@@ -83,7 +83,7 @@ export default function ExpandableModule({
         <Modal buttonText="New Item">
           {({ closeModal }) => (
             <div>
-              <NewItemForm moduleName={moduleName} />
+              <NewItemForm moduleName={moduleName} onCreate={closeModal} />
               <br />
               <button onClick={closeModal}>close</button>
             </div>

@@ -40,12 +40,12 @@ export default function Day({ day, month }: { day: string; month: number }) {
 
   return (
     <div
-      className={" rounded-lg p-2 pb-4 m-1 " + todayClass + monthClass}
+      className={" rounded-lg pb-4 m-1 " + todayClass + monthClass}
       onDrop={(e) => itemDrop(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
-      {dayAsDate.getDate()}
-      <ul className="list-disc">
+      <div className="ms-1">{dayAsDate.getDate()}</div>
+      <div>
         {todaysAssignments.map(({ assignment, moduleName }) => (
           <DraggableListItem
             key={assignment.name}
@@ -70,7 +70,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
             item={page}
           />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }
@@ -122,7 +122,11 @@ function DraggableListItem({
 }) {
   const { courseName } = useCourseContext();
   return (
-    <li
+    <div
+      className={
+        " border rounded-sm px-1 mx-1 break-all " +
+        " border-slate-600 bg-slate-800 "
+      }
       role="button"
       draggable="true"
       onDragStart={(e) => {
@@ -142,6 +146,6 @@ function DraggableListItem({
       >
         {item.name}
       </Link>
-    </li>
+    </div>
   );
 }

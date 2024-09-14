@@ -30,6 +30,10 @@ export default function Modal({
         onClick={closeModal}
       >
         <div
+          onClick={(e) => {
+            // e.preventDefault();
+            e.stopPropagation();
+          }}
           className={
             ` bg-slate-800 p-6 rounded-lg shadow-lg w-1/3  ` +
             ` transition-all duration-400 ` +

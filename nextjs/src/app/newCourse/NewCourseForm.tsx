@@ -88,7 +88,7 @@ export default function NewCourseForm() {
                     canvasId: selectedCanvasCourse.id,
                     startDate: selectedTerm.start_at ?? "",
                     endDate: selectedTerm.end_at ?? "",
-                    defaultDueTime: { hour: 11, minute: 59 },
+                    defaultDueTime: { hour: 23, minute: 59 },
                   },
                 })
                 .then(() => {

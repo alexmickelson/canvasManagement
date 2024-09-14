@@ -11,7 +11,13 @@ import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentG
 import { dateToMarkdownString } from "@/models/local/timeUtils";
 import React, { useState } from "react";
 
-export default function NewItemForm({ moduleName }: { moduleName: string }) {
+export default function NewItemForm({
+  moduleName,
+  onCreate = () => {},
+}: {
+  moduleName: string;
+  onCreate?: () => void;
+}) {
   const [type, setType] = useState<"Assignment" | "Quiz" | "Page">(
     "Assignment"
   );
@@ -31,12 +37,14 @@ export default function NewItemForm({ moduleName }: { moduleName: string }) {
       className="flex flex-col gap-3"
       onSubmit={(e) => {
         e.preventDefault();
+        const dueAt = dateToMarkdownString(new Date());
+        console.log("submitting");
         if (type === "Assignment") {
           createAssignment.mutate({
             assignment: {
               name,
               description: "",
-              dueAt: dateToMarkdownString(new Date()),
+              dueAt,
               submissionTypes: [
                 AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
                 AssignmentSubmissionType.ONLINE_UPLOAD,
@@ -48,8 +56,32 @@ export default function NewItemForm({ moduleName }: { moduleName: string }) {
             assignmentName: name,
           });
         } else if (type === "Quiz") {
+          createQuiz.mutate({
+            quiz: {
+              name,
+              description: "",
+              dueAt,
+              shuffleAnswers: true,
+              showCorrectAnswers: true,
+              oneQuestionAtATime: true,
+              allowedAttempts: -1,
+              questions: [],
+            },
+            moduleName: moduleName,
+            quizName: name,
+          });
         } else if (type === "Page") {
+          createPage.mutate({
+            page: {
+              name,
+              text: "",
+              dueAt,
+            },
+            moduleName: moduleName,
+            pageName: name,
+          });
         }
+        onCreate();
       }}
     >
       <div>
@@ -64,19 +96,21 @@ export default function NewItemForm({ moduleName }: { moduleName: string }) {
         <TextInput label={type + " Name"} value={name} setValue={setName} />
       </div>
       <div>
-        <ButtonSelect
-          options={settings.assignmentGroups}
-          getName={(g) => g?.name ?? ""}
-          setSelectedOption={setAssignmentGroup}
-          selectedOption={assignmentGroup}
-        />
+        {type !== "Page" && (
+          <ButtonSelect
+            options={settings.assignmentGroups}
+            getName={(g) => g?.name ?? ""}
+            setSelectedOption={setAssignmentGroup}
+            selectedOption={assignmentGroup}
+          />
+        )}
       </div>
       {settings.assignmentGroups.length === 0 && (
         <div>
           No assignment groups created, create them in the course settings page
         </div>
       )}
-      <button>Create</button>
+      <button type="submit">Create</button>
       {isPending && <Spinner />}
     </form>
   );
