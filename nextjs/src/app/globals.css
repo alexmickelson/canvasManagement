@@ -83,6 +83,11 @@ button,
   @apply bg-red-800 hover:bg-red-900 text-red-100;
 }
 
+.btn-outline {
+  @apply bg-transparent text-blue-200 border border-blue-500;
+  @apply hover:border-blue-500 hover:text-blue-100 hover:bg-blue-900;
+}
+
 select {
   @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm sm:text-sm;
   @apply focus:outline-none focus:ring-blue-500 focus:border-blue-500;

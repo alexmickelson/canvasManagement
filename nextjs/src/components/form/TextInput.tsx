@@ -16,7 +16,7 @@ export default function TextInput({
       {label}
       <br />
       <input
-        className="bg-slate-800 rounded-md w-full px-1"
+        className="bg-slate-800 border border-slate-500 rounded-md w-full px-1"
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />

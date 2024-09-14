@@ -28,7 +28,26 @@ export const PUT = async (
 ) =>
   await withErrorHandling(async () => {
     const assignment = await request.json();
-    await fileStorageService.assignments.updateAssignment(
+    await fileStorageService.assignments.updateOrCreateAssignment(
+      courseName,
+      moduleName,
+      assignmentName,
+      assignment
+    );
+    return Response.json({});
+  });
+
+export const POST = async (
+  request: Request,
+  {
+    params: { courseName, moduleName, assignmentName },
+  }: {
+    params: { courseName: string; moduleName: string; assignmentName: string };
+  }
+) =>
+  await withErrorHandling(async () => {
+    const assignment = await request.json();
+    await fileStorageService.assignments.updateOrCreateAssignment(
       courseName,
       moduleName,
       assignmentName,

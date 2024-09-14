@@ -105,3 +105,41 @@ export const useUpdateQuizMutation = () => {
     },
   });
 };
+
+
+export const useCreateQuizMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      quiz,
+      moduleName,
+      quizName,
+    }: {
+      quiz: LocalQuiz;
+      moduleName: string;
+      quizName: string;
+    }) => {
+      queryClient.setQueryData(
+        localCourseKeys.quiz(courseName, moduleName, quizName),
+        quiz
+      );
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/quizzes/" +
+        encodeURIComponent(quizName);
+      await axiosClient.post(url, quiz);
+    },
+    onSuccess: (_, { moduleName, quizName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
+      });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.quizNames(courseName, moduleName),
+      });
+    },
+  });
+};

@@ -116,3 +116,41 @@ export const useUpdatePageMutation = () => {
     },
   });
 };
+
+
+export const useCreatePageMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      page,
+      moduleName,
+      pageName,
+    }: {
+      page: LocalCoursePage;
+      moduleName: string;
+      pageName: string;
+    }) => {
+      queryClient.setQueryData(
+        localCourseKeys.page(courseName, moduleName, pageName),
+        page
+      );
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/pages/" +
+        encodeURIComponent(pageName);
+      await axiosClient.post(url, page);
+    },
+    onSuccess: (_, { moduleName, pageName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
+      });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+      });
+    },
+  });
+};

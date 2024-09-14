@@ -13,6 +13,8 @@ import {
 import { IModuleItem } from "@/models/local/IModuleItem";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 import { useState } from "react";
+import Modal from "../../../../components/Modal";
+import NewItemForm from "./NewItemForm";
 
 export default function ExpandableModule({
   moduleName,
@@ -72,16 +74,21 @@ export default function ExpandableModule({
       </div>
       <div
         className={
-          `
-          overflow-hidden 
-          ` + (expanded ? " max-h-[30vh]" : " max-h-0")
-          //  transition-all duration-1000 ease-in
+          ` overflow-hidden ` + (expanded ? " max-h-[30vh]" : " max-h-0")
         }
         style={{
           transition: "max-height 1s cubic-bezier(0, 1, 0, 1)",
         }}
       >
-        <hr />
+        <Modal buttonText="New Item">
+          {({ closeModal }) => (
+            <div>
+              <NewItemForm moduleName={moduleName} />
+              <br />
+              <button onClick={closeModal}>close</button>
+            </div>
+          )}
+        </Modal>
         {moduleItems.map(({ type, item }) => (
           <div key={item.name}>{item.name}</div>
         ))}

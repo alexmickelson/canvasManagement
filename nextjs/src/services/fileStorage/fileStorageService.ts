@@ -147,12 +147,21 @@ export const fileStorageService = {
       );
       return localAssignmentMarkdown.parseMarkdown(rawFile);
     },
-    async updateAssignment(
+    async updateOrCreateAssignment(
       courseName: string,
       moduleName: string,
       assignmentName: string,
       assignment: LocalAssignment
     ) {
+      const folder = path.join(
+        basePath,
+        courseName,
+        moduleName,
+        "assignments",
+      );
+      await fs.mkdir(folder, { recursive: true });
+  
+
       const filePath = path.join(
         basePath,
         courseName,
@@ -201,6 +210,13 @@ export const fileStorageService = {
       quizName: string,
       quiz: LocalQuiz
     ) {
+      const folder = path.join(
+        basePath,
+        courseName,
+        moduleName,
+        "quizzes",
+      );
+      await fs.mkdir(folder, { recursive: true });
       const filePath = path.join(
         basePath,
         courseName,
@@ -248,6 +264,14 @@ export const fileStorageService = {
       pageName: string,
       page: LocalCoursePage
     ) {
+      const folder = path.join(
+        basePath,
+        courseName,
+        moduleName,
+        "pages",
+      );
+      await fs.mkdir(folder, { recursive: true });
+
       const filePath = path.join(
         basePath,
         courseName,

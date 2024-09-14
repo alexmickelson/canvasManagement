@@ -127,3 +127,46 @@ export const useUpdateAssignmentMutation = () => {
     },
   });
 };
+
+
+export const useCreateAssignmentMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      assignment,
+      moduleName,
+      assignmentName,
+    }: {
+      assignment: LocalAssignment;
+      moduleName: string;
+      assignmentName: string;
+    }) => {
+      queryClient.setQueryData(
+        localCourseKeys.assignment(courseName, moduleName, assignmentName),
+        assignment
+      );
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/assignments/" +
+        encodeURIComponent(assignmentName);
+      await axiosClient.post(url, assignment);
+    },
+    onSuccess: (_, { moduleName, assignmentName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.assignment(
+          courseName,
+          moduleName,
+          assignmentName
+        ),
+      });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
+      });
+    },
+  });
+};
+
