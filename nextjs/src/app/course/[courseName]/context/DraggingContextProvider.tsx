@@ -25,9 +25,9 @@ export default function DraggingContextProvider({
 
   const itemDrop = useCallback(
     (e: DragEvent<HTMLDivElement>, day: string | undefined) => {
-      const itemBeingDragged = JSON.parse(
-        e.dataTransfer.getData("draggableItem")
-      );
+      const rawData = e.dataTransfer.getData("draggableItem");
+      // console.log(rawData);
+      const itemBeingDragged = JSON.parse(rawData);
 
       if (itemBeingDragged && day) {
         const dayAsDate = getDateFromStringOrThrow(day, "in drop callback");

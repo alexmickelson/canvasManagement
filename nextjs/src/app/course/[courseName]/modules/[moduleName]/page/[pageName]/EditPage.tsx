@@ -35,21 +35,22 @@ export default function EditPage({
   useEffect(() => {
     const delay = 500;
     const handler = setTimeout(() => {
-      const updatedPage = localPageMarkdownUtils.parseMarkdown(pageText);
-      if (
-        localPageMarkdownUtils.toMarkdown(page) !==
-        localPageMarkdownUtils.toMarkdown(updatedPage)
-      ) {
-        console.log("updating assignment");
-        try {
+      try {
+        const updatedPage = localPageMarkdownUtils.parseMarkdown(pageText);
+        if (
+          localPageMarkdownUtils.toMarkdown(page) !==
+          localPageMarkdownUtils.toMarkdown(updatedPage)
+        ) {
+          console.log("updating page");
           updatePage.mutate({
             page: updatedPage,
             moduleName,
             pageName,
           });
-        } catch (e: any) {
-          setError(e.toString());
         }
+        setError("");
+      } catch (e: any) {
+        setError(e.toString());
       }
     }, delay);
 

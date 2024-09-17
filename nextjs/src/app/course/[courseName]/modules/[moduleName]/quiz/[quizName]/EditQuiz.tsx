@@ -23,20 +23,23 @@ export default function EditQuiz({
   useEffect(() => {
     const delay = 500;
     const handler = setTimeout(() => {
-      if (
-        quizMarkdownUtils.toMarkdown(quiz) !==
-        quizMarkdownUtils.toMarkdown(quizMarkdownUtils.parseMarkdown(quizText))
-      ) {
-        try {
+      try {
+        if (
+          quizMarkdownUtils.toMarkdown(quiz) !==
+          quizMarkdownUtils.toMarkdown(
+            quizMarkdownUtils.parseMarkdown(quizText)
+          )
+        ) {
           const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
           updateQuizMutation.mutate({
             quiz: updatedQuiz,
             moduleName,
             quizName,
           });
-        } catch (e: any) {
-          setError(e.toString());
         }
+        setError("");
+      } catch (e: any) {
+        setError(e.toString());
       }
     }, delay);
 

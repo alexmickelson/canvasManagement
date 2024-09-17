@@ -122,10 +122,13 @@ function DraggableListItem({
 }) {
   const { courseName } = useCourseContext();
   return (
-    <div
+    <Link
+      href={getModuleItemUrl(courseName, moduleName, type, item.name)}
+      shallow={true}
       className={
         " border rounded-sm px-1 mx-1 break-all " +
-        " border-slate-600 bg-slate-800 "
+        " border-slate-600 bg-slate-800 " + 
+        " block "
       }
       role="button"
       draggable="true"
@@ -140,12 +143,7 @@ function DraggableListItem({
         );
       }}
     >
-      <Link
-        href={getModuleItemUrl(courseName, moduleName, type, item.name)}
-        shallow={true}
-      >
-        {item.name}
-      </Link>
-    </div>
+      {item.name}
+    </Link>
   );
 }

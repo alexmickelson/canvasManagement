@@ -26,22 +26,23 @@ export default function EditAssignment({
   useEffect(() => {
     const delay = 500;
     const handler = setTimeout(() => {
-      const updatedAssignment =
-        localAssignmentMarkdown.parseMarkdown(assignmentText);
-      if (
-        localAssignmentMarkdown.toMarkdown(assignment) !==
-        localAssignmentMarkdown.toMarkdown(updatedAssignment)
-      ) {
-        console.log("updating assignment");
-        try {
+      try {
+        const updatedAssignment =
+          localAssignmentMarkdown.parseMarkdown(assignmentText);
+        if (
+          localAssignmentMarkdown.toMarkdown(assignment) !==
+          localAssignmentMarkdown.toMarkdown(updatedAssignment)
+        ) {
+          console.log("updating assignment");
           updateAssignment.mutate({
             assignment: updatedAssignment,
             moduleName,
             assignmentName,
           });
-        } catch (e: any) {
-          setError(e.toString());
         }
+        setError("");
+      } catch (e: any) {
+        setError(e.toString());
       }
     }, delay);
 
@@ -55,7 +56,7 @@ export default function EditAssignment({
     moduleName,
     updateAssignment,
   ]);
-  
+
   return (
     <div className="h-full flex flex-col">
       <div className="columns-2 min-h-0 flex-1">
@@ -68,9 +69,7 @@ export default function EditAssignment({
         </div>
       </div>
       <div className="p-5">
-        <button>
-          Add to canvas....
-        </button>
+        <button>Add to canvas....</button>
       </div>
     </div>
   );

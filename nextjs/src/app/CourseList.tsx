@@ -8,13 +8,11 @@ export default function CourseList() {
   return (
     <div>
       {allSettings.map((settings) => (
-        <Link
-          href={getCourseUrl(settings.name)}
-          key={settings.name}
-          shallow={true}
-        >
-          {settings.name}
-        </Link>
+        <div key={settings.name}>
+          <Link href={getCourseUrl(settings.name)} shallow={true}>
+            {settings.name}
+          </Link>
+        </div>
       ))}
     </div>
   );
