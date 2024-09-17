@@ -27,7 +27,7 @@ export default function CourseCalendar() {
       className="
         h-full 
         overflow-y-scroll 
-        border-4 
+        border-4
         border-slate-600 
         rounded-xl 
         bg-slate-950
