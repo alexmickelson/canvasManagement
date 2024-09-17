@@ -12,9 +12,9 @@ const getAllTerms = async () => {
   const { data } = await axiosClient.get<
     {
       enrollment_terms: CanvasEnrollmentTermModel[];
-    }[]
+    }
   >(url);
-  const terms = data.flatMap((r) => r.enrollment_terms);
+  const terms = data.enrollment_terms;
   return terms;
 };
 

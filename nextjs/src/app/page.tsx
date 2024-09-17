@@ -8,7 +8,7 @@ export default async function Home() {
         <CourseList />
         <br />
         <br />
-          <AddNewCourse />
+        <AddNewCourse />
       </div>
     </main>
   );
