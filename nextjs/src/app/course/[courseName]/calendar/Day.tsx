@@ -10,7 +10,7 @@ import Link from "next/link";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDayOfWeek } from "@/models/local/localCourse";
-import { getModuleItemUrl } from "@/services/urlUtils";
+import { getLectureUrl, getModuleItemUrl } from "@/services/urlUtils";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
@@ -44,7 +44,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
       onDrop={(e) => itemDrop(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
-      <div className="ms-1">{dayAsDate.getDate()}</div>
+      <DayTitle day={day} dayAsDate={dayAsDate} />
       <div>
         {todaysAssignments.map(({ assignment, moduleName }) => (
           <DraggableListItem
@@ -72,6 +72,15 @@ export default function Day({ day, month }: { day: string; month: number }) {
         ))}
       </div>
     </div>
+  );
+}
+
+function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
+  const { courseName } = useCourseContext();
+  return (
+    <Link className="ms-1" href={getLectureUrl(courseName, day)}>
+      {dayAsDate.getDate()}
+    </Link>
   );
 }
 
@@ -127,7 +136,7 @@ function DraggableListItem({
       shallow={true}
       className={
         " border rounded-sm px-1 mx-1 break-all " +
-        " border-slate-600 bg-slate-800 " + 
+        " border-slate-600 bg-slate-800 " +
         " block "
       }
       role="button"

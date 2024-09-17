@@ -1,4 +1,3 @@
-
 export function getModuleItemUrl(
   courseName: string,
   moduleName: string,
@@ -12,6 +11,14 @@ export function getModuleItemUrl(
     encodeURIComponent(moduleName) +
     `/${type}/` +
     encodeURIComponent(itemName)
+  );
+}
+export function getLectureUrl(courseName: string, lectureDate: string) {
+  return (
+    "/course/" +
+    encodeURIComponent(courseName) +
+    "/lecture/" +
+    encodeURIComponent(lectureDate)
   );
 }
 
