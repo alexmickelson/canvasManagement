@@ -1,10 +1,9 @@
-import { canvasServiceUtils } from "./canvasServiceUtils";
+import { baseCanvasUrl, canvasServiceUtils } from "./canvasServiceUtils";
 import { axiosClient } from "../axiosUtils";
 import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
 
-const baseCanvasUrl = "https://snow.instructure.com/api/v1";
 
 export const canvasAssignmentGroupService = {
   async getAll(courseId: number): Promise<CanvasAssignmentGroup[]> {

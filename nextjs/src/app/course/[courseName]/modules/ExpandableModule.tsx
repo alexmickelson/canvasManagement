@@ -1,3 +1,4 @@
+"use client";
 import {
   useAssignmentNamesQuery,
   useAssignmentsQueries,
@@ -12,9 +13,15 @@ import {
 } from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Modal from "../../../../components/Modal";
 import NewItemForm from "./NewItemForm";
+import { useCanvasModulesQuery } from "@/hooks/canvas/canvasModuleHooks";
+import { Spinner } from "@/components/Spinner";
+import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
+import { isServer } from "@tanstack/react-query";
+import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
+import ClientOnly from "@/components/ClientOnly";
 
 export default function ExpandableModule({
   moduleName,
@@ -66,11 +73,14 @@ export default function ExpandableModule({
   return (
     <div className="bg-slate-800 rounded-lg p-3 border border-slate-600 mb-3">
       <div
-        className="font-bold "
+        className="font-bold flex flex-row justify-between "
         role="button"
         onClick={() => setExpanded((e) => !e)}
       >
-        {moduleName}
+        <div>{moduleName}</div>
+        <ClientOnly>
+          <ModuleCanvasStatus moduleName={moduleName} />
+        </ClientOnly>
       </div>
       <div
         className={

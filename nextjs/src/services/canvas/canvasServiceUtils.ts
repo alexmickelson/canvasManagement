@@ -3,6 +3,9 @@
 import { AxiosResponseHeaders, RawAxiosResponseHeaders } from "axios";
 import { axiosClient } from "../axiosUtils";
 
+
+export const baseCanvasUrl = "https://snow.instructure.com/api/v1";
+
 const getNextUrl = (
   headers: AxiosResponseHeaders | RawAxiosResponseHeaders
 ): string | undefined => {

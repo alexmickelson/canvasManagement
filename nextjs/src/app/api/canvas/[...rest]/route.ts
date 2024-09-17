@@ -44,7 +44,7 @@ const proxyResponseHeaders = (response: any) => {
 };
 
 export async function GET(
-  req: NextRequest,
+  _req: NextRequest,
   { params }: { params: { rest: string[] } }
 ) {
   return withErrorHandling(async () => {
@@ -58,7 +58,12 @@ export async function GET(
         url.toString()
       );
 
-      var returnData = firstData ? [firstData] : [];
+      if(!Array.isArray(firstData))
+      {
+        return NextResponse.json(firstData)
+      }
+
+      var returnData = firstData;
       var nextUrl = getNextUrl(firstHeaders);
 
       while (nextUrl) {
@@ -77,6 +82,7 @@ export async function GET(
       }
 
       return NextResponse.json(returnData);
+
     } catch (error: any) {
       return new NextResponse(
         JSON.stringify({ error: error.message || "Canvas GET request failed" }),

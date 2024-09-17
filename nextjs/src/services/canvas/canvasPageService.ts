@@ -1,11 +1,10 @@
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { canvasServiceUtils } from "./canvasServiceUtils";
+import { baseCanvasUrl, canvasServiceUtils } from "./canvasServiceUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { axiosClient } from "../axiosUtils";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
 
-const baseCanvasUrl = "https://snow.instructure.com/api/v1";
 
 export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {
