@@ -1,14 +1,13 @@
-import { baseCanvasUrl, canvasServiceUtils } from "./canvasServiceUtils";
+import { canvasApi, canvasServiceUtils } from "./canvasServiceUtils";
 import { axiosClient } from "../axiosUtils";
 import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
 
-
 export const canvasAssignmentGroupService = {
   async getAll(courseId: number): Promise<CanvasAssignmentGroup[]> {
     console.log("Requesting assignment groups");
-    const url = `${baseCanvasUrl}/courses/${courseId}/assignment_groups`;
+    const url = `${canvasApi}/courses/${courseId}/assignment_groups`;
     const assignmentGroups = await canvasServiceUtils.paginatedRequest<
       CanvasAssignmentGroup[]
     >({
@@ -22,7 +21,7 @@ export const canvasAssignmentGroupService = {
     localAssignmentGroup: LocalAssignmentGroup
   ): Promise<LocalAssignmentGroup> {
     console.log(`Creating assignment group: ${localAssignmentGroup.name}`);
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/assignment_groups`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/assignment_groups`;
     const body = {
       name: localAssignmentGroup.name,
       group_weight: localAssignmentGroup.weight,
@@ -45,7 +44,7 @@ export const canvasAssignmentGroupService = {
     if (!localAssignmentGroup.canvasId) {
       throw new Error("Cannot update assignment group if canvas ID is null");
     }
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/assignment_groups/${localAssignmentGroup.canvasId}`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/assignment_groups/${localAssignmentGroup.canvasId}`;
     const body = {
       name: localAssignmentGroup.name,
       group_weight: localAssignmentGroup.weight,
@@ -56,11 +55,11 @@ export const canvasAssignmentGroupService = {
 
   async delete(
     canvasCourseId: number,
-    canvasAssignmentGroupId: number
-    , assignmentGroupName: string
+    canvasAssignmentGroupId: number,
+    assignmentGroupName: string
   ): Promise<void> {
     console.log(`Deleting assignment group: ${assignmentGroupName}`);
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/assignment_groups/${canvasAssignmentGroupId}`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/assignment_groups/${canvasAssignmentGroupId}`;
     await rateLimitAwareDelete(url);
   },
 };

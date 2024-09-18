@@ -1,7 +1,7 @@
 import { CanvasModuleItem } from "@/models/canvas/modules/canvasModuleItems";
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { axiosClient } from "../axiosUtils";
-import { baseCanvasUrl } from "./canvasServiceUtils";
+import { canvasApi } from "./canvasServiceUtils";
 import { CanvasModule } from "@/models/canvas/modules/canvasModule";
 
 export const canvasModuleService = {
@@ -11,7 +11,7 @@ export const canvasModuleService = {
     item: CanvasModuleItem
   ) {
     console.log(`Updating module item ${item.title}`);
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/modules/${canvasModuleId}/items/${item.id}`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/modules/${canvasModuleId}/items/${item.id}`;
     const body = {
       module_item: { title: item.title, position: item.position },
     };
@@ -28,7 +28,7 @@ export const canvasModuleService = {
     contentId: number | string
   ): Promise<void> {
     console.log(`Creating new module item ${title}`);
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
     const body = { module_item: { title, type, content_id: contentId } };
     await axiosClient.post(url, body);
   },
@@ -40,7 +40,7 @@ export const canvasModuleService = {
     canvasPage: CanvasPage
   ): Promise<void> {
     console.log(`Creating new module item ${title}`);
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
     const body = {
       module_item: { title, type: "Page", page_url: canvasPage.url },
     };
@@ -48,13 +48,13 @@ export const canvasModuleService = {
   },
 
   async getCourseModules(canvasCourseId: number) {
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/modules`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/modules`;
     const response = await axiosClient.get<CanvasModule[]>(url);
     return response.data;
   },
 
   async createModule(canvasCourseId: number, moduleName: string) {
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/modules`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/modules`;
     const body = {
       module: {
         name: moduleName,

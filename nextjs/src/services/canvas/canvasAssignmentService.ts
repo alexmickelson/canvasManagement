@@ -1,5 +1,5 @@
 import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
-import { baseCanvasUrl, canvasServiceUtils } from "./canvasServiceUtils";
+import { canvasApi, canvasServiceUtils } from "./canvasServiceUtils";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { axiosClient } from "../axiosUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
@@ -8,17 +8,15 @@ import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPoin
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {
-    const url = `courses/${courseId}/assignments`;
-    const assignments = await canvasServiceUtils.paginatedRequest<
-      CanvasAssignment[]
-    >({ url });
-    return assignments.flatMap((assignments) =>
-      assignments.map((a) => ({
-        ...a,
-        due_at: a.due_at ? new Date(a.due_at).toLocaleString() : undefined, // timezones?
-        lock_at: a.lock_at ? new Date(a.lock_at).toLocaleString() : undefined, // timezones?
-      }))
+    const url = `${canvasApi}/courses/${courseId}/assignments`;
+    const { data: assignments } = await axiosClient.get<CanvasAssignment[]>(
+      url
     );
+    return assignments.map((a) => ({
+      ...a,
+      due_at: a.due_at ? new Date(a.due_at).toLocaleString() : undefined, // timezones?
+      lock_at: a.lock_at ? new Date(a.lock_at).toLocaleString() : undefined, // timezones?
+    }));
   },
 
   async create(
@@ -27,7 +25,7 @@ export const canvasAssignmentService = {
     canvasAssignmentGroupId?: number
   ): Promise<number> {
     console.log(`Creating assignment: ${localAssignment.name}`);
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/assignments`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/assignments`;
     const body = {
       assignment: {
         name: localAssignment.name,
@@ -66,7 +64,7 @@ export const canvasAssignmentService = {
     canvasAssignmentGroupId?: number
   ): Promise<void> {
     console.log(`Updating assignment: ${localAssignment.name}`);
-    const url = `${baseCanvasUrl}/courses/${courseId}/assignments/${canvasAssignmentId}`;
+    const url = `${canvasApi}/courses/${courseId}/assignments/${canvasAssignmentId}`;
     const body = {
       assignment: {
         name: localAssignment.name,
@@ -94,7 +92,7 @@ export const canvasAssignmentService = {
     assignmentName: string
   ): Promise<void> {
     console.log(`Deleting assignment from Canvas: ${assignmentName}`);
-    const url = `${baseCanvasUrl}/courses/${courseId}/assignments/${assignmentCanvasId}`;
+    const url = `${canvasApi}/courses/${courseId}/assignments/${assignmentCanvasId}`;
     const response = await axiosClient.delete(url);
 
     if (!response.status.toString().startsWith("2")) {
@@ -134,7 +132,7 @@ export const canvasAssignmentService = {
       },
     };
 
-    const rubricUrl = `${baseCanvasUrl}/courses/${courseId}/rubrics`;
+    const rubricUrl = `${canvasApi}/courses/${courseId}/rubrics`;
     const rubricResponse = await axiosClient.post<CanvasRubricCreationResponse>(
       rubricUrl,
       rubricBody
@@ -142,7 +140,7 @@ export const canvasAssignmentService = {
 
     if (!rubricResponse.data) throw new Error("Failed to create rubric");
 
-    const assignmentPointAdjustmentUrl = `${baseCanvasUrl}/courses/${courseId}/assignments/${assignmentCanvasId}`;
+    const assignmentPointAdjustmentUrl = `${canvasApi}/courses/${courseId}/assignments/${assignmentCanvasId}`;
     const assignmentPointAdjustmentBody = {
       assignment: { points_possible: assignmentPoints(localAssignment) },
     };

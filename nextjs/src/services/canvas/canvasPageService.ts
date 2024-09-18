@@ -1,15 +1,14 @@
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { baseCanvasUrl, canvasServiceUtils } from "./canvasServiceUtils";
+import { canvasApi, canvasServiceUtils } from "./canvasServiceUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { axiosClient } from "../axiosUtils";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
 
-
 export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {
     console.log("requesting pages");
-    const url = `${baseCanvasUrl}/courses/${courseId}/pages`;
+    const url = `${canvasApi}/courses/${courseId}/pages`;
     const pages = await canvasServiceUtils.paginatedRequest<CanvasPage[]>({
       url,
     });
@@ -21,7 +20,7 @@ export const canvasPageService = {
     page: LocalCoursePage
   ): Promise<CanvasPage> {
     console.log(`Creating course page: ${page.name}`);
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/pages`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/pages`;
     const body = {
       wiki_page: {
         title: page.name,
@@ -42,7 +41,7 @@ export const canvasPageService = {
     page: LocalCoursePage
   ): Promise<void> {
     console.log(`Updating course page: ${page.name}`);
-    const url = `${baseCanvasUrl}/courses/${courseId}/pages/${canvasPageId}`;
+    const url = `${canvasApi}/courses/${courseId}/pages/${canvasPageId}`;
     const body = {
       wiki_page: {
         title: page.name,
@@ -54,7 +53,7 @@ export const canvasPageService = {
 
   async delete(courseId: number, canvasPageId: number): Promise<void> {
     console.log(`Deleting page from canvas ${canvasPageId}`);
-    const url = `${baseCanvasUrl}/courses/${courseId}/pages/${canvasPageId}`;
+    const url = `${canvasApi}/courses/${courseId}/pages/${canvasPageId}`;
     await rateLimitAwareDelete(url);
   },
 };

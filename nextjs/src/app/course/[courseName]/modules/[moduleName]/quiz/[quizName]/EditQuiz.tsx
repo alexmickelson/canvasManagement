@@ -7,6 +7,14 @@ import {
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import { useEffect, useState } from "react";
 import QuizPreview from "./QuizPreview";
+import {
+  useAddQuizToCanvasMutation,
+  useCanvasQuizzesQuery,
+  useDeleteQuizFromCanvasMutation,
+} from "@/hooks/canvas/canvasQuizHooks";
+import { Spinner } from "@/components/Spinner";
+import { baseCanvasUrl, canvasApi } from "@/services/canvas/canvasServiceUtils";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
 export default function EditQuiz({
   moduleName,
@@ -59,11 +67,54 @@ export default function EditQuiz({
           <QuizPreview quiz={quiz} />
         </div>
       </div>
-      <div className="p-5">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      <QuizButtons moduleName={moduleName} quizName={quizName} />
+    </div>
+  );
+}
+
+function QuizButtons({
+  moduleName,
+  quizName,
+}: {
+  quizName: string;
+  moduleName: string;
+}) {
+  const { data: canvasQuizzes } = useCanvasQuizzesQuery();
+  const { data: quiz } = useQuizQuery(moduleName, quizName);
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const addToCanvas = useAddQuizToCanvasMutation();
+  const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
+
+  const quizInCanvas = canvasQuizzes.find((c) => c.title === quizName);
+
+  return (
+    <div className="p-5">
+      {!quizInCanvas && (
+        <button
+          disabled={addToCanvas.isPending}
+          onClick={() => addToCanvas.mutate(quiz)}
+        >
           Add to canvas....
         </button>
-      </div>
+      )}
+      {quizInCanvas && (
+        <a
+          className="btn"
+          target="_blank"
+          href={`${baseCanvasUrl}/courses/${settings.canvasId}/quizzes/${quizInCanvas.id}`}
+        >
+          View in Canvas
+        </a>
+      )}
+      {quizInCanvas && (
+        <button
+          disabled={deleteFromCanvas.isPending}
+          onClick={() => deleteFromCanvas.mutate(quizInCanvas.id)}
+        >
+          Delete from Canvas
+        </button>
+      )}
+      {(addToCanvas.isPending || deleteFromCanvas.isPending) && <Spinner />}
     </div>
   );
 }

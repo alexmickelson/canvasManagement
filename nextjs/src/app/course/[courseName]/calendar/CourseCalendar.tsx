@@ -28,7 +28,7 @@ export default function CourseCalendar() {
         h-full 
         overflow-y-scroll 
         border-4
-        border-slate-600 
+        border-gray-900
         rounded-xl 
         bg-slate-950
       "

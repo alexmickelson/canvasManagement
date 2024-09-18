@@ -1,19 +1,16 @@
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
-import { baseCanvasUrl, canvasServiceUtils } from "./canvasServiceUtils";
+import { canvasApi, canvasServiceUtils } from "./canvasServiceUtils";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasModuleItem } from "@/models/canvas/modules/canvasModuleItems";
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { CanvasEnrollmentModel } from "@/models/canvas/enrollments/canvasEnrollmentModel";
 import { axiosClient } from "../axiosUtils";
 
-
 const getAllTerms = async () => {
-  const url = `${baseCanvasUrl}/accounts/10/terms`;
-  const { data } = await axiosClient.get<
-    {
-      enrollment_terms: CanvasEnrollmentTermModel[];
-    }
-  >(url);
+  const url = `${canvasApi}/accounts/10/terms`;
+  const { data } = await axiosClient.get<{
+    enrollment_terms: CanvasEnrollmentTermModel[];
+  }>(url);
   const terms = data.enrollment_terms;
   return terms;
 };
@@ -21,7 +18,7 @@ const getAllTerms = async () => {
 export const canvasService = {
   getAllTerms,
   async getCourses(termId: number) {
-    const url = `${baseCanvasUrl}/courses`;
+    const url = `${canvasApi}/courses`;
     const response = await axiosClient.get<CanvasCourseModel[]>(url);
     const allCourses = response.data;
     const coursesInTerm = allCourses
@@ -31,7 +28,7 @@ export const canvasService = {
   },
 
   async getCourse(courseId: number): Promise<CanvasCourseModel> {
-    const url = `${baseCanvasUrl}/courses/${courseId}`;
+    const url = `${canvasApi}/courses/${courseId}`;
     const { data } = await axiosClient.get<CanvasCourseModel>(url);
     return data;
   },
@@ -56,10 +53,9 @@ export const canvasService = {
     return currentTerms;
   },
 
-
   async getEnrolledStudents(canvasCourseId: number) {
     console.log(`Getting students for course ${canvasCourseId}`);
-    const url = `${baseCanvasUrl}/courses/${canvasCourseId}/enrollments?enrollment_type=student`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/enrollments?enrollment_type=student`;
     const { data } = await axiosClient.get<CanvasEnrollmentModel[]>(url);
 
     if (!data)
