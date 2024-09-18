@@ -19,6 +19,47 @@ import { getCourseUrl } from "@/services/urlUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import Link from "next/link";
 
+const helpString = `QUESTION REFERENCE
+---
+Points: 2
+this is a question?
+*a) correct
+b) not correct
+---
+points: 1
+question goes here
+[*] correct
+[ ] not correct
+[] not correct
+---
+the points default to 1?
+*a) true
+b) false
+---
+Markdown is supported
+
+- like
+- this
+- list
+
+[*] true
+[ ] false
+---
+This is a one point essay question
+essay
+---
+points: 4
+this is a short answer question
+short_answer
+---
+points: 4
+the underscore is optional
+short answer
+---
+this is a matching question
+^ left answer - right dropdown
+^ other thing -  another option`;
+
 export default function EditQuiz({
   moduleName,
   quizName,
@@ -61,25 +102,27 @@ export default function EditQuiz({
   }, [moduleName, quiz, quizName, quizText, updateQuizMutation]);
 
   return (
-    <>
-      {showHelp && <div className="w-72"> help here</div>}
-      <div className="h-full flex flex-col">
-        <div className="columns-2 min-h-0 flex-1">
-          <div className="flex-1 h-full">
-            <MonacoEditor value={quizText} onChange={setQuizText} />
-          </div>
-          <div className="h-full">
-            <div className="text-red-300">{error && error}</div>
-            <QuizPreview quiz={quiz} />
-          </div>
+    <div className="h-full flex flex-col w-full">
+      <div className={"min-h-0 flex flex-row "}>
+        {showHelp && (
+          <pre className="flex-shrink max-w-96">
+            <code>{helpString}</code>
+          </pre>
+        )}
+        <div className="flex-1 h-full">
+          <MonacoEditor value={quizText} onChange={setQuizText} />
         </div>
-        <QuizButtons
-          moduleName={moduleName}
-          quizName={quizName}
-          toggleHelp={() => setShowHelp((h) => !h)}
-        />
+        <div className="flex-1 h-full">
+          <div className="text-red-300">{error && error}</div>
+          <QuizPreview quiz={quiz} />
+        </div>
       </div>
-    </>
+      <QuizButtons
+        moduleName={moduleName}
+        quizName={quizName}
+        toggleHelp={() => setShowHelp((h) => !h)}
+      />
+    </div>
   );
 }
 
