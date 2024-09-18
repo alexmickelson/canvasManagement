@@ -8,7 +8,8 @@ import { canvasQuizService } from "@/services/canvas/canvasQuizService";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 
 export const canvasQuizKeys = {
-  quizzes: (canvasCourseId: number) => ["canvas", canvasCourseId, "quizzes"],
+  quizzes: (canvasCourseId: number) =>
+    ["canvas", canvasCourseId, "quizzes"] as const,
 };
 
 export const useCanvasQuizzesQuery = () => {
@@ -29,16 +30,13 @@ export const useAddQuizToCanvasMutation = () => {
       const assignmentGroup = settings.assignmentGroups.find(
         (g) => g.name === quiz.localAssignmentGroupName
       );
-      console.log("starting");
       await canvasQuizService.create(
         settings.canvasId,
         quiz,
         assignmentGroup?.canvasId
       );
-      console.log("ending");
     },
     onSuccess: () => {
-      console.log("invalidating");
       queryClient.invalidateQueries({
         queryKey: canvasQuizKeys.quizzes(settings.canvasId),
       });

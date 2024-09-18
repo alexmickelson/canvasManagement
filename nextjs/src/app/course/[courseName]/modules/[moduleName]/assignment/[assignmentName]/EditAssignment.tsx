@@ -7,6 +7,17 @@ import {
 import { localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
 import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
+import { getCourseUrl } from "@/services/urlUtils";
+import Link from "next/link";
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import {
+  useAddAssignmentToCanvasMutation,
+  useCanvasAssignmentsQuery,
+  useDeleteAssignmentFromCanvasMutation,
+} from "@/hooks/canvas/canvasAssignmentHooks";
+import { Spinner } from "@/components/Spinner";
+import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 
 export default function EditAssignment({
   moduleName,
@@ -68,9 +79,71 @@ export default function EditAssignment({
           <AssignmentPreview assignment={assignment} />
         </div>
       </div>
-      <div className="p-5">
-        <button>Add to canvas....</button>
-      </div>
+      <AssignmentButtons
+        moduleName={moduleName}
+        assignmentName={assignmentName}
+      />
+    </div>
+  );
+}
+
+function AssignmentButtons({
+  moduleName,
+  assignmentName,
+}: {
+  assignmentName: string;
+  moduleName: string;
+}) {
+  const { courseName } = useCourseContext();
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const { data: canvasAssignments } = useCanvasAssignmentsQuery();
+  const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
+  const addToCanvas = useAddAssignmentToCanvasMutation();
+  const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
+
+  const assignmentInCanvas = canvasAssignments.find(
+    (a) => a.name === assignmentName
+  );
+  return (
+    <div className="p-5 flex flex-row justify-end gap-3">
+      {(addToCanvas.isPending || deleteFromCanvas.isPending) && <Spinner />}
+      {assignmentInCanvas && !assignmentInCanvas.published && (
+        <div className="text-rose-300 my-auto">Not Published</div>
+      )}
+      {!assignmentInCanvas && (
+        <button
+          disabled={addToCanvas.isPending}
+          onClick={() => addToCanvas.mutate(assignment)}
+        >
+          Add to canvas....
+        </button>
+      )}
+      {assignmentInCanvas && (
+        <a
+          className="btn"
+          target="_blank"
+          href={`${baseCanvasUrl}/courses/${settings.canvasId}/assignments/${assignmentInCanvas.id}`}
+        >
+          View in Canvas
+        </a>
+      )}
+      {assignmentInCanvas && (
+        <button
+          className="btn-danger"
+          disabled={deleteFromCanvas.isPending}
+          onClick={() =>
+            deleteFromCanvas.mutate({
+              canvasAssignmentId: assignmentInCanvas.id,
+              assignmentName: assignment.name,
+            })
+          }
+        >
+          Delete from Canvas
+        </button>
+      )}
+      <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+        Go Back
+      </Link>
     </div>
   );
 }

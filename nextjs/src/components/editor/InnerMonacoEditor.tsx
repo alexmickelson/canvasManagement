@@ -46,14 +46,6 @@ export default function InnerMonacoEditor({
     }
   }, [onChange, value]);
 
-  useEffect(() => {
-    window.addEventListener("resize", () => {
-      if (editorRef.current) {
-        editorRef.current.layout();
-      }
-    });
-  }, []);
-
   return (
     <div
       className="Editor"

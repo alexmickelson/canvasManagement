@@ -135,10 +135,10 @@ function QuizButtons({
   moduleName: string;
   toggleHelp: () => void;
 }) {
+  const { courseName } = useCourseContext();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { data: canvasQuizzes } = useCanvasQuizzesQuery();
   const { data: quiz } = useQuizQuery(moduleName, quizName);
-  const { data: settings } = useLocalCourseSettingsQuery();
-  const { courseName } = useCourseContext();
   const addToCanvas = useAddQuizToCanvasMutation();
   const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
 
