@@ -3,8 +3,8 @@ import "./spinner.css"
 
 export const Spinner = () => {
   return (
-    <div className="text-center m-3">
-      <span className="loader"></span>
+    <div className="text-center h-full">
+      <span className="loader my-auto "></span>
     </div>
   );
 };
