@@ -94,8 +94,6 @@ export const canvasAssignmentService = {
     const response = await axiosClient.post<CanvasAssignment>(url, body);
     const canvasAssignment = response.data;
 
-    if (!canvasAssignment) throw new Error("Created Canvas assignment is null");
-
     await createRubric(canvasCourseId, canvasAssignment.id, localAssignment);
 
     return canvasAssignment.id;
