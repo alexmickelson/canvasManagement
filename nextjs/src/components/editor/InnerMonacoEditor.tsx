@@ -2,9 +2,8 @@
 import React, { useRef, useEffect } from "react";
 import loader from "@monaco-editor/loader";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
-import * as monaco from 'monaco-editor';
+import * as monaco from "monaco-editor";
 loader.config({ monaco });
-
 
 export default function InnerMonacoEditor({
   value,
@@ -47,11 +46,19 @@ export default function InnerMonacoEditor({
     }
   }, [onChange, value]);
 
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      if (editorRef.current) {
+        editorRef.current.layout();
+      }
+    });
+  }, []);
+
   return (
     <div
       className="Editor"
       ref={divRef}
-      style={{ height: "100%", overflow: "hidden" }}
+      style={{ height: "100%", overflow: "hidden"}}
     ></div>
   );
 }

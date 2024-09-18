@@ -20,6 +20,7 @@
 .monaco-editor .margin {
   background-color: #18181b !important;
 }
+.monaco-editor { position: absolute !important; }
 
 h1 {
   @apply text-4xl font-bold my-1;

@@ -102,10 +102,10 @@ export default function EditQuiz({
   }, [moduleName, quiz, quizName, quizText, updateQuizMutation]);
 
   return (
-    <div className="h-full flex flex-col w-full">
-      <div className={"min-h-0 flex flex-row "}>
+    <div className="h-full flex flex-col align-middle px-1">
+      <div className={"min-h-0 flex flex-row w-full"}>
         {showHelp && (
-          <pre className="flex-shrink max-w-96">
+          <pre className=" max-w-96">
             <code>{helpString}</code>
           </pre>
         )}
