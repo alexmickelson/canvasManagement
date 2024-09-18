@@ -30,6 +30,7 @@ export default function EditQuiz({
   const updateQuizMutation = useUpdateQuizMutation();
   const [quizText, setQuizText] = useState(quizMarkdownUtils.toMarkdown(quiz));
   const [error, setError] = useState("");
+  const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     const delay = 500;
@@ -60,27 +61,36 @@ export default function EditQuiz({
   }, [moduleName, quiz, quizName, quizText, updateQuizMutation]);
 
   return (
-    <div className="h-full flex flex-col">
-      <div className="columns-2 min-h-0 flex-1">
-        <div className="flex-1 h-full">
-          <MonacoEditor value={quizText} onChange={setQuizText} />
+    <>
+      {showHelp && <div className="w-72"> help here</div>}
+      <div className="h-full flex flex-col">
+        <div className="columns-2 min-h-0 flex-1">
+          <div className="flex-1 h-full">
+            <MonacoEditor value={quizText} onChange={setQuizText} />
+          </div>
+          <div className="h-full">
+            <div className="text-red-300">{error && error}</div>
+            <QuizPreview quiz={quiz} />
+          </div>
         </div>
-        <div className="h-full">
-          <div className="text-red-300">{error && error}</div>
-          <QuizPreview quiz={quiz} />
-        </div>
+        <QuizButtons
+          moduleName={moduleName}
+          quizName={quizName}
+          toggleHelp={() => setShowHelp((h) => !h)}
+        />
       </div>
-      <QuizButtons moduleName={moduleName} quizName={quizName} />
-    </div>
+    </>
   );
 }
 
 function QuizButtons({
   moduleName,
   quizName,
+  toggleHelp,
 }: {
   quizName: string;
   moduleName: string;
+  toggleHelp: () => void;
 }) {
   const { data: canvasQuizzes } = useCanvasQuizzesQuery();
   const { data: quiz } = useQuizQuery(moduleName, quizName);
@@ -92,7 +102,11 @@ function QuizButtons({
   const quizInCanvas = canvasQuizzes.find((c) => c.title === quizName);
 
   return (
-    <div className="p-5 flex flex-row gap-3 justify-end">
+    <div className="p-5 flex flex-row justify-between">
+      <div>
+        <button onClick={toggleHelp}>Toggle Help</button>
+      </div>
+      <div className="flex flex-row gap-3 justify-end">
         {(addToCanvas.isPending || deleteFromCanvas.isPending) && <Spinner />}
         {quizInCanvas && !quizInCanvas.published && (
           <div className="text-rose-300 my-auto">Not Published</div>
@@ -127,6 +141,7 @@ function QuizButtons({
         <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
           Go Back
         </Link>
+      </div>
     </div>
   );
 }
