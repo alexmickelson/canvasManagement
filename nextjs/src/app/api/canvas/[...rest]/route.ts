@@ -112,7 +112,7 @@ export async function POST(
     } catch (error: any) {
       if (isAxiosError(error)) {
         console.log(url.toString(), body);
-        console.log("response data", JSON.stringify( error.response?.data));
+        console.log("response data", JSON.stringify(error.response?.data));
         console.log("is axios error");
       }
       return NextResponse.json(
@@ -130,16 +130,30 @@ export async function PUT(
   { params }: { params: { rest: string[] } }
 ) {
   return withErrorHandling(async () => {
+    const url = getUrl(params);
+    const body = await req.json();
     try {
-      const url = getUrl(params);
-      const body = await req.json();
       const response = await axiosClient.put(url.toString(), body);
 
       const headers = proxyResponseHeaders(response);
       return new NextResponse(JSON.stringify(response.data), { headers });
     } catch (error: any) {
-      return new NextResponse(
-        JSON.stringify({ error: error.message || "Canvas PUT request failed" }),
+      if (isAxiosError(error)) {
+        console.log(url.toString(), body);
+        console.log("response data", JSON.stringify(error.response?.data));
+        console.log("is axios error");
+
+        return NextResponse.json(
+          {
+            error: error.response?.data ?? "Canvas put failed",
+          },
+          { status: error.response?.status || 500 }
+        );
+      }
+      return NextResponse.json(
+        {
+          error: error.message || "Canvas POST request failed",
+        },
         { status: error.response?.status || 500 }
       );
     }

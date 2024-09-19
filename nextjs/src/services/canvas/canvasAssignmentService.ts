@@ -15,15 +15,23 @@ const createRubric = async (
   assignmentCanvasId: number,
   localAssignment: LocalAssignment
 ) => {
-  const criterion = localAssignment.rubric.map((rubricItem, i) => ({
-    description: rubricItem.label,
-    points: rubricItem.points,
-    ratings: [
-      { description: "Full Marks", points: rubricItem.points },
-      { description: "No Marks", points: 0 },
-    ],
-  }));
+  const criterion = localAssignment.rubric
+    .map((rubricItem) => ({
+      description: rubricItem.label,
+      points: rubricItem.points,
+      ratings: {
+        0: { description: "Full Marks", points: rubricItem.points },
+        1: { description: "No Marks", points: 0 },
+      },
+    }))
+    .reduce((acc, item, index) => {
+      return {
+        ...acc,
+        [index]: item,
+      };
+    }, {} as { [key: number]: { description: string; points: number; ratings: { [key: number]: { description: string; points: number } } } });
 
+  console.log(criterion);
   const rubricBody = {
     rubric_association_id: assignmentCanvasId,
     rubric: {
@@ -116,18 +124,22 @@ export const canvasAssignmentService = {
     console.log(`Updating assignment: ${localAssignment.name}`);
     const url = `${canvasApi}/courses/${courseId}/assignments/${canvasAssignmentId}`;
     const body = {
-      name: localAssignment.name,
-      submission_types: localAssignment.submissionTypes.map((t) =>
-        t.toString()
-      ),
-      allowed_extensions: localAssignment.allowedFileUploadExtensions.map((e) =>
-        e.toString()
-      ),
-      description: markdownToHTMLSafe(localAssignment.description),
-      due_at: localAssignment.dueAt,
-      lock_at: localAssignment.lockAt,
-      points_possible: assignmentPoints(localAssignment),
-      assignment_group_id: canvasAssignmentGroupId,
+      assignment: {
+        name: localAssignment.name,
+        submission_types: localAssignment.submissionTypes.map((t) =>
+          t.toString()
+        ),
+        allowed_extensions: localAssignment.allowedFileUploadExtensions.map(
+          (e) => e.toString()
+        ),
+        description: markdownToHTMLSafe(localAssignment.description),
+        due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
+        lock_at:
+          localAssignment.lockAt &&
+          getDateFromString(localAssignment.lockAt)?.toISOString(),
+        points_possible: assignmentPoints(localAssignment),
+        assignment_group_id: canvasAssignmentGroupId,
+      },
     };
 
     await axiosClient.put(url, body);
@@ -138,7 +150,7 @@ export const canvasAssignmentService = {
     courseId: number,
     assignmentCanvasId: number,
     assignmentName: string
-  ): Promise<void> {
+  ) {
     console.log(`Deleting assignment from Canvas: ${assignmentName}`);
     const url = `${canvasApi}/courses/${courseId}/assignments/${assignmentCanvasId}`;
     const response = await axiosClient.delete(url);
