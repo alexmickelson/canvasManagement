@@ -15,9 +15,11 @@ import {
   useAddAssignmentToCanvasMutation,
   useCanvasAssignmentsQuery,
   useDeleteAssignmentFromCanvasMutation,
+  useUpdateAssignmentInCanvasMutation,
 } from "@/hooks/canvas/canvasAssignmentHooks";
 import { Spinner } from "@/components/Spinner";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
+import ClientOnly from "@/components/ClientOnly";
 
 export default function EditAssignment({
   moduleName,
@@ -79,10 +81,12 @@ export default function EditAssignment({
           <AssignmentPreview assignment={assignment} />
         </div>
       </div>
-      <AssignmentButtons
-        moduleName={moduleName}
-        assignmentName={assignmentName}
-      />
+      <ClientOnly>
+        <AssignmentButtons
+          moduleName={moduleName}
+          assignmentName={assignmentName}
+        />
+      </ClientOnly>
     </div>
   );
 }
@@ -100,13 +104,16 @@ function AssignmentButtons({
   const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
   const addToCanvas = useAddAssignmentToCanvasMutation();
   const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
+  const updateAssignment = useUpdateAssignmentInCanvasMutation();
 
   const assignmentInCanvas = canvasAssignments.find(
     (a) => a.name === assignmentName
   );
   return (
     <div className="p-5 flex flex-row justify-end gap-3">
-      {(addToCanvas.isPending || deleteFromCanvas.isPending) && <Spinner />}
+      {(addToCanvas.isPending ||
+        deleteFromCanvas.isPending ||
+        updateAssignment.isPending) && <Spinner />}
       {assignmentInCanvas && !assignmentInCanvas.published && (
         <div className="text-rose-300 my-auto">Not Published</div>
       )}
@@ -115,7 +122,7 @@ function AssignmentButtons({
           disabled={addToCanvas.isPending}
           onClick={() => addToCanvas.mutate(assignment)}
         >
-          Add to canvas....
+          Add to canvas
         </button>
       )}
       {assignmentInCanvas && (
@@ -126,6 +133,20 @@ function AssignmentButtons({
         >
           View in Canvas
         </a>
+      )}
+      {assignmentInCanvas && (
+        <button
+          className=""
+          disabled={deleteFromCanvas.isPending}
+          onClick={() =>
+            updateAssignment.mutate({
+              canvasAssignmentId: assignmentInCanvas.id,
+              assignment,
+            })
+          }
+        >
+          Update in Canvas
+        </button>
       )}
       {assignmentInCanvas && (
         <button

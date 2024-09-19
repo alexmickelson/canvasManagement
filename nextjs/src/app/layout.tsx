@@ -5,8 +5,8 @@ import { Suspense } from "react";
 import { getQueryClient } from "./providersQueryClientUtils";
 import { hydrateCourses } from "@/hooks/hookHydration";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { ToastBar, Toaster } from "react-hot-toast";
 import { MyToaster } from "./MyToaster";
+import "katex/dist/katex.min.css";
 
 export const metadata: Metadata = {
   title: "Canvas Manager 2.0",

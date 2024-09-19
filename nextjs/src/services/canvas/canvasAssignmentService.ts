@@ -5,6 +5,10 @@ import { axiosClient } from "../axiosUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { CanvasRubricCreationResponse } from "@/models/canvas/assignments/canvasRubricCreationResponse";
 import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
+import {
+  getDateFromString,
+  getDateFromStringOrThrow,
+} from "@/models/local/timeUtils";
 
 const createRubric = async (
   courseId: number,
@@ -77,18 +81,22 @@ export const canvasAssignmentService = {
     console.log(`Creating assignment: ${localAssignment.name}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/assignments`;
     const body = {
-      name: localAssignment.name,
-      submission_types: localAssignment.submissionTypes.map((t) =>
-        t.toString()
-      ),
-      allowed_extensions: localAssignment.allowedFileUploadExtensions.map((e) =>
-        e.toString()
-      ),
-      description: markdownToHTMLSafe(localAssignment.description),
-      due_at: localAssignment.dueAt,
-      lock_at: localAssignment.lockAt,
-      points_possible: assignmentPoints(localAssignment),
-      assignment_group_id: canvasAssignmentGroupId,
+      assignment: {
+        name: localAssignment.name,
+        submission_types: localAssignment.submissionTypes.map((t) =>
+          t.toString()
+        ),
+        allowed_extensions: localAssignment.allowedFileUploadExtensions.map(
+          (e) => e.toString()
+        ),
+        description: markdownToHTMLSafe(localAssignment.description),
+        due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
+        lock_at:
+          localAssignment.lockAt &&
+          getDateFromString(localAssignment.lockAt)?.toISOString(),
+        points_possible: assignmentPoints(localAssignment),
+        assignment_group_id: canvasAssignmentGroupId,
+      },
     };
 
     const response = await axiosClient.post<CanvasAssignment>(url, body);

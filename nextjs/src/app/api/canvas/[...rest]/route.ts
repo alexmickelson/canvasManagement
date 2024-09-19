@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { axiosClient } from "@/services/axiosUtils";
 import { withErrorHandling } from "@/services/withErrorHandling";
-import { AxiosResponseHeaders, RawAxiosResponseHeaders } from "axios";
+import {
+  AxiosResponseHeaders,
+  isAxiosError,
+  RawAxiosResponseHeaders,
+} from "axios";
 
 const getUrl = (params: { rest: string[] }) => {
   const { rest } = params;
@@ -27,7 +31,9 @@ const getNextUrl = (
   const nextLink = links.find((link) => link.includes('rel="next"'));
 
   if (!nextLink) {
-    console.log("could not find next url in link header, reached end of pagination");
+    console.log(
+      "could not find next url in link header, reached end of pagination"
+    );
     return undefined;
   }
 
@@ -58,9 +64,8 @@ export async function GET(
         url.toString()
       );
 
-      if(!Array.isArray(firstData))
-      {
-        return NextResponse.json(firstData)
+      if (!Array.isArray(firstData)) {
+        return NextResponse.json(firstData);
       }
 
       var returnData = firstData;
@@ -82,7 +87,6 @@ export async function GET(
       }
 
       return NextResponse.json(returnData);
-
     } catch (error: any) {
       return new NextResponse(
         JSON.stringify({ error: error.message || "Canvas GET request failed" }),
@@ -97,18 +101,24 @@ export async function POST(
   { params }: { params: { rest: string[] } }
 ) {
   return withErrorHandling(async () => {
+    const url = getUrl(params);
+    const body = await req.json();
+    let response;
     try {
-      const url = getUrl(params);
-      const body = await req.json();
-      const response = await axiosClient.post(url.toString(), body);
+      response = await axiosClient.post(url.toString(), body);
 
       const headers = proxyResponseHeaders(response);
       return new NextResponse(JSON.stringify(response.data), { headers });
     } catch (error: any) {
-      return new NextResponse(
-        JSON.stringify({
+      if (isAxiosError(error)) {
+        console.log(url.toString(), body);
+        console.log("response data", JSON.stringify( error.response?.data));
+        console.log("is axios error");
+      }
+      return NextResponse.json(
+        {
           error: error.message || "Canvas POST request failed",
-        }),
+        },
         { status: error.response?.status || 500 }
       );
     }

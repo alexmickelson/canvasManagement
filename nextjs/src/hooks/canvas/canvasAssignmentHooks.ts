@@ -46,13 +46,43 @@ export const useAddAssignmentToCanvasMutation = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (assignmnet: LocalAssignment) => {
+    mutationFn: async (assignment: LocalAssignment) => {
       const assignmentGroup = settings.assignmentGroups.find(
-        (g) => g.name === assignmnet.localAssignmentGroupName
+        (g) => g.name === assignment.localAssignmentGroupName
       );
       await canvasAssignmentService.create(
         settings.canvasId,
-        assignmnet,
+        assignment,
+        assignmentGroup?.canvasId
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: canvasAssignmentKeys.assignments(settings.canvasId),
+      });
+    },
+  });
+};
+
+export const useUpdateAssignmentInCanvasMutation = () => {
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      assignment,
+      canvasAssignmentId,
+    }: {
+      assignment: LocalAssignment;
+      canvasAssignmentId: number;
+    }) => {
+      const assignmentGroup = settings.assignmentGroups.find(
+        (g) => g.name === assignment.localAssignmentGroupName
+      );
+      await canvasAssignmentService.update(
+        settings.canvasId,
+        canvasAssignmentId,
+        assignment,
         assignmentGroup?.canvasId
       );
     },

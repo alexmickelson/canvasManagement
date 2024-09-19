@@ -13,7 +13,6 @@ import {
   useCanvasPagesQuery,
   useCreateCanvasPageMutation,
 } from "@/hooks/canvas/canvasPageHooks";
-import { Spinner } from "@/components/Spinner";
 import EditPageButtons from "./EditPageButtons";
 
 export default function EditPage({

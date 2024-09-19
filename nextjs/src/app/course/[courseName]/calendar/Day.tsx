@@ -135,7 +135,7 @@ function DraggableListItem({
       href={getModuleItemUrl(courseName, moduleName, type, item.name)}
       shallow={true}
       className={
-        " border rounded-sm px-1 mx-1 break-all " +
+        " border rounded-sm px-1 mx-1 break-all mb-1 " +
         " border-slate-600 bg-slate-800 " +
         " block "
       }
