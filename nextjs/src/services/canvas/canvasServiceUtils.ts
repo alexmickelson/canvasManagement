@@ -25,35 +25,40 @@ const getNextUrl = (
   return nextUrl;
 };
 
-export const canvasServiceUtils = {
-  async paginatedRequest<T>(request: { url: string }): Promise<T[]> {
-    var requestCount = 1;
-    const url = new URL(request.url);
-    url.searchParams.set("per_page", "100");
+export async function paginatedRequest<T>(request: {
+  url: string;
+}): Promise<T> {
+  var requestCount = 1;
+  const url = new URL(request.url);
+  url.searchParams.set("per_page", "100");
 
-    const { data: firstData, headers: firstHeaders } = await axiosClient.get<T>(
-      url.toString()
+  const { data: firstData, headers: firstHeaders } = await axiosClient.get<T>(
+    url.toString()
+  );
+
+  if (!Array.isArray(firstData)) {
+    return firstData;
+  }
+
+
+  var returnData = firstData ? [firstData] : [];
+  var nextUrl = getNextUrl(firstHeaders);
+  console.log("got first request", nextUrl, firstHeaders);
+
+  while (nextUrl) {
+    requestCount += 1;
+    const { data, headers } = await axiosClient.get<T>(nextUrl);
+    if (data) {
+      returnData = [...returnData, data];
+    }
+    nextUrl = getNextUrl(headers);
+  }
+
+  if (requestCount > 1) {
+    console.log(
+      `Requesting ${typeof returnData} took ${requestCount} requests`
     );
+  }
 
-    var returnData: T[] = firstData ? [firstData] : [];
-    var nextUrl = getNextUrl(firstHeaders);
-    console.log("got first request", nextUrl, firstHeaders);
-
-    while (nextUrl) {
-      requestCount += 1;
-      const { data, headers } = await axiosClient.get<T>(nextUrl);
-      if (data) {
-        returnData = [...returnData, data];
-      }
-      nextUrl = getNextUrl(headers);
-    }
-
-    if (requestCount > 1) {
-      console.log(
-        `Requesting ${typeof returnData} took ${requestCount} requests`
-      );
-    }
-
-    return returnData;
-  },
-};
+  return returnData;
+}

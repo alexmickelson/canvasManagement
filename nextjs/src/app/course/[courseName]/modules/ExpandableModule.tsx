@@ -22,6 +22,7 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import { isServer } from "@tanstack/react-query";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
+import ExpandIcon from "../../../../components/icons/ExpandIcon";
 
 export default function ExpandableModule({
   moduleName,
@@ -78,9 +79,16 @@ export default function ExpandableModule({
         onClick={() => setExpanded((e) => !e)}
       >
         <div>{moduleName}</div>
-        <ClientOnly>
-          <ModuleCanvasStatus moduleName={moduleName} />
-        </ClientOnly>
+        <div className="flex flex-row">
+          <ClientOnly>
+            <ModuleCanvasStatus moduleName={moduleName} />
+          </ClientOnly>
+          <ExpandIcon
+            style={{
+              ...(expanded ? { rotate: "-90deg" } : {}),
+            }}
+          />
+        </div>
       </div>
       <div
         className={

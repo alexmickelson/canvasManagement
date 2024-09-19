@@ -1,6 +1,6 @@
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { canvasApi, canvasServiceUtils } from "./canvasServiceUtils";
+import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { axiosClient } from "../axiosUtils";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
@@ -9,7 +9,7 @@ export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {
     console.log("requesting pages");
     const url = `${canvasApi}/courses/${courseId}/pages`;
-    const pages = await canvasServiceUtils.paginatedRequest<CanvasPage[]>({
+    const pages = await paginatedRequest<CanvasPage[]>({
       url,
     });
     return pages.flatMap((pageList) => pageList);

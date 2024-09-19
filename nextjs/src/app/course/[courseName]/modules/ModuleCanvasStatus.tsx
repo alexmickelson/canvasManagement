@@ -1,4 +1,5 @@
 "use client";
+import CheckIcon from "@/components/icons/CheckIcon";
 import { Spinner } from "@/components/Spinner";
 import {
   useAddCanvasModuleMutation,
@@ -23,7 +24,11 @@ export function ModuleCanvasStatus({ moduleName }: { moduleName: string }) {
         </button>
       )}
       {canvasModule && !canvasModule.published && <div>Not Published</div>}
-      {canvasModule && canvasModule.published && <div>Published</div>}
+      {canvasModule && canvasModule.published && (
+        <div>
+          <CheckIcon />
+        </div>
+      )}
     </div>
   );
 }

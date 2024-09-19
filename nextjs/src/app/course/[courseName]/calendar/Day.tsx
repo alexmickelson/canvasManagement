@@ -15,45 +15,37 @@ import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { useCanvasAssignmentsQuery } from "@/hooks/canvas/canvasAssignmentHooks";
-import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
 import { useCanvasQuizzesQuery } from "@/hooks/canvas/canvasQuizHooks";
 import { useCanvasPagesQuery } from "@/hooks/canvas/canvasPageHooks";
-import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
-import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
     day,
     "calculating same month in day"
   );
+  const isToday =
+    getDateOnlyMarkdownString(new Date()) ===
+    getDateOnlyMarkdownString(dayAsDate);
 
   const { data: settings } = useLocalCourseSettingsQuery();
-  const { data: canvasAssignments } = useCanvasAssignmentsQuery();
-  const { data: canvasQuizzes } = useCanvasQuizzesQuery();
-  const { data: canvasPages } = useCanvasPagesQuery();
-  const itemsContext = useCalendarItemsContext();
   const { itemDrop } = useDraggingContext();
 
-  const dateKey = getDateOnlyMarkdownString(dayAsDate);
-  const todaysModules = itemsContext[dateKey];
-
-  const { todaysAssignments, todaysQuizzes, todaysPages } = getTodaysItems(
-    todaysModules,
-    canvasAssignments,
-    canvasQuizzes,
-    canvasPages
-  );
+  const { todaysAssignments, todaysQuizzes, todaysPages } = useTodaysItems(day);
 
   const isInSameMonth = dayAsDate.getMonth() + 1 == month;
 
-  const classIsToday = settings.daysOfWeek.includes(getDayOfWeek(dayAsDate));
+  const classOnThisDay = settings.daysOfWeek.includes(getDayOfWeek(dayAsDate));
 
-  const todayClass = classIsToday ? " bg-slate-900 " : " ";
-  const monthClass = isInSameMonth ? " border border-slate-600 " : " ";
+  const meetingClasses = classOnThisDay ? " bg-slate-900 " : " ";
+  const monthClass = isInSameMonth
+    ? isToday
+      ? " border border-slate-400  bg-slate-700 "
+      : " border border-slate-700 "
+    : " ";
 
   return (
     <div
-      className={" rounded-lg pb-4 m-1 " + todayClass + monthClass}
+      className={" rounded-lg pb-4 m-1 " + meetingClasses + monthClass}
       onDrop={(e) => itemDrop(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
@@ -100,18 +92,18 @@ function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   );
 }
 
-function getTodaysItems(
-  todaysModules: {
-    [moduleName: string]: {
-      assignments: LocalAssignment[];
-      quizzes: LocalQuiz[];
-      pages: LocalCoursePage[];
-    };
-  },
-  canvasAssignments: CanvasAssignment[],
-  canvasQuizzes: CanvasQuiz[],
-  canvasPages: CanvasPage[]
-) {
+function useTodaysItems(day: string) {
+  const dayAsDate = getDateFromStringOrThrow(
+    day,
+    "calculating same month in day items"
+  );
+  const itemsContext = useCalendarItemsContext();
+  const dateKey = getDateOnlyMarkdownString(dayAsDate);
+  const todaysModules = itemsContext[dateKey];
+
+  const { data: canvasAssignments } = useCanvasAssignmentsQuery();
+  const { data: canvasQuizzes } = useCanvasQuizzesQuery();
+  const { data: canvasPages } = useCanvasPagesQuery();
   const todaysAssignments: {
     moduleName: string;
     assignment: LocalAssignment;

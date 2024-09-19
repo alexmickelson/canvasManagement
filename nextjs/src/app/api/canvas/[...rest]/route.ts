@@ -2,44 +2,24 @@ import { NextRequest, NextResponse } from "next/server";
 import { axiosClient } from "@/services/axiosUtils";
 import { withErrorHandling } from "@/services/withErrorHandling";
 import {
-  AxiosResponseHeaders,
   isAxiosError,
-  RawAxiosResponseHeaders,
 } from "axios";
 
-const getUrl = (params: { rest: string[] }) => {
+
+const appendQueryParams = (url: URL, req: NextRequest) => {
+  req.nextUrl.searchParams.forEach((value, key) => {
+    url.searchParams.set(key, value);
+  });
+};
+const getUrl = (params: { rest: string[] }, req: NextRequest) => {
   const { rest } = params;
   const path = rest.join("/");
   const newUrl = `https://snow.instructure.com/api/v1/${path}`;
-  return new URL(newUrl);
-};
-
-const getNextUrl = (
-  headers: AxiosResponseHeaders | RawAxiosResponseHeaders
-): string | undefined => {
-  const linkHeader: string | undefined =
-    typeof headers.get === "function"
-      ? (headers.get("link") as string)
-      : ((headers as RawAxiosResponseHeaders)["link"] as string);
-
-  if (!linkHeader) {
-    console.log("could not find link header in the response");
-    return undefined;
-  }
-
-  const links = linkHeader.split(",").map((link) => link.trim());
-  const nextLink = links.find((link) => link.includes('rel="next"'));
-
-  if (!nextLink) {
-    console.log(
-      "could not find next url in link header, reached end of pagination"
-    );
-    return undefined;
-  }
-
-  const nextUrl = nextLink.split(";")[0].trim().slice(1, -1);
-  return nextUrl;
-};
+  const url = new URL(newUrl);
+  
+  appendQueryParams(url, req);
+  
+  return url;};
 
 const proxyResponseHeaders = (response: any) => {
   const headers = new Headers();
@@ -50,43 +30,19 @@ const proxyResponseHeaders = (response: any) => {
 };
 
 export async function GET(
-  _req: NextRequest,
+  req: NextRequest,
   { params }: { params: { rest: string[] } }
 ) {
   return withErrorHandling(async () => {
     try {
-      const url = getUrl(params);
+      const url = getUrl(params, req);
 
-      var requestCount = 1;
-      url.searchParams.set("per_page", "100");
-
-      const { data: firstData, headers: firstHeaders } = await axiosClient.get(
+      const response  = await axiosClient.get(
         url.toString()
       );
 
-      if (!Array.isArray(firstData)) {
-        return NextResponse.json(firstData);
-      }
-
-      var returnData = firstData;
-      var nextUrl = getNextUrl(firstHeaders);
-
-      while (nextUrl) {
-        requestCount += 1;
-        const { data, headers } = await axiosClient.get(nextUrl);
-        if (data) {
-          returnData = [...returnData, data];
-        }
-        nextUrl = getNextUrl(headers);
-      }
-
-      if (requestCount > 1) {
-        console.log(
-          `Requesting ${typeof returnData} took ${requestCount} requests`
-        );
-      }
-
-      return NextResponse.json(returnData);
+      const headers = proxyResponseHeaders(response);
+      return new NextResponse(JSON.stringify(response.data), { headers });
     } catch (error: any) {
       return new NextResponse(
         JSON.stringify({ error: error.message || "Canvas GET request failed" }),
@@ -101,7 +57,7 @@ export async function POST(
   { params }: { params: { rest: string[] } }
 ) {
   return withErrorHandling(async () => {
-    const url = getUrl(params);
+    const url = getUrl(params, req);
     const body = await req.json();
     let response;
     try {
@@ -130,7 +86,7 @@ export async function PUT(
   { params }: { params: { rest: string[] } }
 ) {
   return withErrorHandling(async () => {
-    const url = getUrl(params);
+    const url = getUrl(params, req);
     const body = await req.json();
     try {
       const response = await axiosClient.put(url.toString(), body);
@@ -166,7 +122,7 @@ export async function DELETE(
 ) {
   return withErrorHandling(async () => {
     try {
-      const url = getUrl(params);
+      const url = getUrl(params, req);
       const response = await axiosClient.delete(url.toString());
 
       const headers = proxyResponseHeaders(response);

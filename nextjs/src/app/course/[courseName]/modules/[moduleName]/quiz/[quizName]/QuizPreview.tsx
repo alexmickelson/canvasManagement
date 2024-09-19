@@ -1,3 +1,4 @@
+import CheckIcon from "@/components/icons/CheckIcon";
 import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
@@ -110,15 +111,7 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
             >
               <div className="w-8 flex flex-col justify-center">
                 {answer.correct ? (
-                  <svg className="h-6" viewBox="0 0 24 24" fill="none">
-                    <path
-                      d="M4 12.6111L8.92308 17.5L20 6.5"
-                      stroke="green"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  <CheckIcon />
                 ) : question.questionType === QuestionType.MULTIPLE_ANSWERS ? (
                   <span className="mx-auto">{"[ ]"}</span>
                 ) : (

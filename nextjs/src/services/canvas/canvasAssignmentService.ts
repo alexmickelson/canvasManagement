@@ -1,5 +1,9 @@
 import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
-import { canvasApi, canvasServiceUtils } from "./canvasServiceUtils";
+import {
+  canvasApi,
+  canvasServiceUtils,
+  paginatedRequest,
+} from "./canvasServiceUtils";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { axiosClient } from "../axiosUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
@@ -31,7 +35,6 @@ const createRubric = async (
       };
     }, {} as { [key: number]: { description: string; points: number; ratings: { [key: number]: { description: string; points: number } } } });
 
-  console.log(criterion);
   const rubricBody = {
     rubric_association_id: assignmentCanvasId,
     rubric: {
@@ -70,10 +73,9 @@ const createRubric = async (
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {
-    const url = `${canvasApi}/courses/${courseId}/assignments`;
-    const { data: assignments } = await axiosClient.get<CanvasAssignment[]>(
-      url
-    );
+    console.log("getting canvas assignments");
+    const url = `${canvasApi}/courses/${courseId}/assignments`; //per_page=100
+    const assignments = await paginatedRequest<CanvasAssignment[]>({ url });
     return assignments.map((a) => ({
       ...a,
       due_at: a.due_at ? new Date(a.due_at).toLocaleString() : undefined, // timezones?
