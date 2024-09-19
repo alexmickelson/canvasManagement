@@ -120,3 +120,8 @@ select {
 .collapsible.expand {
   max-height: 100vh;
 }
+
+
+.markdownQuizAnswerPreview p:last-child {
+  @apply p-0 m-0 ;
+}

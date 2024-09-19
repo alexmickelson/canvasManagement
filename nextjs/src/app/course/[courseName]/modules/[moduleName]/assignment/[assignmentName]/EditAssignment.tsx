@@ -20,6 +20,7 @@ import {
 import { Spinner } from "@/components/Spinner";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import ClientOnly from "@/components/ClientOnly";
+import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 
 export default function EditAssignment({
   moduleName,
@@ -82,10 +83,12 @@ export default function EditAssignment({
         </div>
       </div>
       <ClientOnly>
-        <AssignmentButtons
-          moduleName={moduleName}
-          assignmentName={assignmentName}
-        />
+        <SuspenseAndErrorHandling>
+          <AssignmentButtons
+            moduleName={moduleName}
+            assignmentName={assignmentName}
+          />
+        </SuspenseAndErrorHandling>
       </ClientOnly>
     </div>
   );

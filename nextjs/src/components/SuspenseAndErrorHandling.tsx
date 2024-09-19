@@ -14,7 +14,7 @@ export const SuspenseAndErrorHandling: FC<{ children: ReactNode }> = ({
         <ErrorBoundary
           onReset={reset}
           fallbackRender={(props) => {
-            toast.error(getErrorMessage(props.error))
+            toast.error(getErrorMessage(props.error));
             return (
               <div className="text-center">
                 <div className="p-3">{getErrorMessage(props.error)}</div>

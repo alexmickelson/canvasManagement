@@ -8,7 +8,7 @@ import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 export default function QuizPreview({ quiz }: { quiz: LocalQuiz }) {
   return (
-    <div  style={{ overflow: "scroll", height: "100%" }}>
+    <div style={{ overflow: "scroll", height: "100%" }}>
       <div className="columns-2">
         <div className="text-end">Name</div>
         <div>{quiz.name}</div>
@@ -41,12 +41,14 @@ export default function QuizPreview({ quiz }: { quiz: LocalQuiz }) {
         {quiz.description}
       </div>
       <hr />
-      {quiz.questions.map((question, i) => (
-        <QuizQuestionPreview
-          key={quizQuestionMarkdownUtils.toMarkdown(question)}
-          question={question}
-        />
-      ))}
+      <div className="p-3 rounded-md bg-slate-950 m-5 flex flex-col gap-3">
+        {quiz.questions.map((question, i) => (
+          <QuizQuestionPreview
+            key={quizQuestionMarkdownUtils.toMarkdown(question)}
+            question={question}
+          />
+        ))}
+      </div>
       <br />
       <br />
       <br />
@@ -62,10 +64,16 @@ export default function QuizPreview({ quiz }: { quiz: LocalQuiz }) {
 
 function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
   return (
-    <div className="rounded">
-      <div>Points: {question.points}</div>
-      <div>Type: {question.questionType}</div>
+    <div className="rounded bg-slate-900 px-2">
+      <div className="flex flex-row justify-between text-slate-400">
+        <div>{question.questionType}</div>
+        <div className="">
+          {question.points} {question.points === 1 ? " Point" : " Points"}
+        </div>
+      </div>
+
       <div
+        className="ms-4 mb-2"
         dangerouslySetInnerHTML={{ __html: markdownToHTMLSafe(question.text) }}
       ></div>
       {question.questionType === QuestionType.MATCHING && (
@@ -73,10 +81,10 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
           {question.answers.map((answer) => (
             <div
               key={JSON.stringify(answer)}
-              className="mx-3 mb-1 bg-dark px-2 rounded border flex row"
+              className="mx-3 mb-1 bg-dark rounded border border-slate-600 flex flex-row"
             >
-              <div className="col text-right my-auto p-1">{answer.text} - </div>
-              <div className="col my-auto">{answer.matchedText}</div>
+              <div className="text-right my-auto">{answer.text} - </div>
+              <div className="">{answer.matchedText}</div>
             </div>
           ))}
           {question.matchDistractors.map((distractor) => (
@@ -94,32 +102,27 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
           {question.answers.map((answer) => (
             <div
               key={JSON.stringify(answer)}
-              className="mx-3 mb-1 bg-dark px-2 rounded flex flex-row border"
+              className="mx-3 mb-1 bg-dark rounded border-slate-700 flex flex-row border"
             >
-              {answer.correct ? (
-                <svg
-                  style={{ width: "1em" }}
-                  className="me-1 my-auto"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                >
-                  <path
-                    d="M4 12.6111L8.92308 17.5L20 6.5"
-                    stroke="green"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              ) : (
-                <div className="mr-1 my-auto" style={{ width: "1em" }}>
-                  {question.questionType === QuestionType.MULTIPLE_ANSWERS && (
-                    <span>[ ]</span>
-                  )}
-                </div>
-              )}
+              <div className="w-8 flex flex-col justify-center">
+                {answer.correct ? (
+                  <svg className="h-6" viewBox="0 0 24 24" fill="none">
+                    <path
+                      d="M4 12.6111L8.92308 17.5L20 6.5"
+                      stroke="green"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : question.questionType === QuestionType.MULTIPLE_ANSWERS ? (
+                  <span className="mx-auto">{"[ ]"}</span>
+                ) : (
+                  <div></div>
+                )}
+              </div>
               <div
-                className="markdownQuizAnswerPreview p-1"
+                className="markdownQuizAnswerPreview"
                 dangerouslySetInnerHTML={{
                   __html: markdownToHTMLSafe(answer.text),
                 }}

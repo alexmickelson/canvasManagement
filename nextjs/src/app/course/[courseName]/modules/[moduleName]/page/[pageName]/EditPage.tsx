@@ -14,6 +14,7 @@ import {
   useCreateCanvasPageMutation,
 } from "@/hooks/canvas/canvasPageHooks";
 import EditPageButtons from "./EditPageButtons";
+import ClientOnly from "@/components/ClientOnly";
 
 export default function EditPage({
   moduleName,
@@ -73,11 +74,13 @@ export default function EditPage({
         </div>
       </div>
       {settings.canvasId && (
-        <EditPageButtons
-          pageName={pageName}
-          moduleName={moduleName}
-          courseCanvasId={settings.canvasId}
-        />
+        <ClientOnly>
+          <EditPageButtons
+            pageName={pageName}
+            moduleName={moduleName}
+            courseCanvasId={settings.canvasId}
+          />
+        </ClientOnly>
       )}
     </div>
   );

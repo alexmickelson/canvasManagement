@@ -1,3 +1,4 @@
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { Spinner } from "@/components/Spinner";
 import {
   useCanvasPagesQuery,
@@ -5,7 +6,11 @@ import {
   useDeleteCanvasPageMutation,
   useUpdateCanvasPageMutation,
 } from "@/hooks/canvas/canvasPageHooks";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { usePageQuery } from "@/hooks/localCourse/pageHooks";
+import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
+import { getCourseUrl } from "@/services/urlUtils";
+import Link from "next/link";
 import React from "react";
 
 export default function EditPageButtons({
@@ -17,6 +22,8 @@ export default function EditPageButtons({
   moduleName: string;
   courseCanvasId: number;
 }) {
+  const { courseName } = useCourseContext();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { data: page } = usePageQuery(moduleName, pageName);
   const { data: canvasPages } = useCanvasPagesQuery(courseCanvasId);
   const createPageInCanvas = useCreateCanvasPageMutation(courseCanvasId);
@@ -31,15 +38,8 @@ export default function EditPageButtons({
     deletePageInCanvas.isPending;
 
   return (
-    <div className="p-5 flex flex-row gap-x-3">
-      {pageInCanvas && (
-        <a
-          target="_blank"
-          href={`https://snow.instructure.com/courses/${courseCanvasId}/pages/${pageInCanvas.page_id}`}
-        >
-          View Page In Canvas
-        </a>
-      )}
+    <div className="p-5 flex justify-end flex-row gap-x-3">
+      {requestIsPending && <Spinner />}
       {!pageInCanvas && (
         <button
           onClick={() => createPageInCanvas.mutate(page)}
@@ -62,14 +62,26 @@ export default function EditPageButtons({
         </button>
       )}
       {pageInCanvas && (
+        <a
+          className="btn"
+          target="_blank"
+          href={`${baseCanvasUrl}/courses/${settings.canvasId}/pages/${pageInCanvas.url}`}
+        >
+          View in Canvas
+        </a>
+      )}
+      {pageInCanvas && (
         <button
+          className="btn-danger"
           onClick={() => deletePageInCanvas.mutate(pageInCanvas.page_id)}
           disabled={requestIsPending}
         >
           Delete from Canvas
         </button>
       )}
-      {requestIsPending && <Spinner />}
+      <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+        Go Back
+      </Link>
     </div>
   );
 }
