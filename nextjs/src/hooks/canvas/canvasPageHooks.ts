@@ -1,6 +1,7 @@
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { canvasPageService } from "@/services/canvas/canvasPageService";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 
 export const canvasPageKeys = {
   pagesInCourse: (canvasCourseId: number) => [
@@ -10,11 +11,13 @@ export const canvasPageKeys = {
   ],
 };
 
-export const useCanvasPagesQuery = (canvasCourseId: number) =>
-  useQuery({
-    queryKey: canvasPageKeys.pagesInCourse(canvasCourseId),
-    queryFn: async () => await canvasPageService.getAll(canvasCourseId),
+export const useCanvasPagesQuery = () => {
+  const { data: settings } = useLocalCourseSettingsQuery();
+  return useSuspenseQuery({
+    queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),
+    queryFn: async () => await canvasPageService.getAll(settings.canvasId),
   });
+};
 
 export const useCreateCanvasPageMutation = (canvasCourseId: number) => {
   const queryClient = useQueryClient();
