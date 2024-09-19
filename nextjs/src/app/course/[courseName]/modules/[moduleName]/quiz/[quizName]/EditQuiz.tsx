@@ -8,6 +8,8 @@ import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import { useEffect, useState } from "react";
 import QuizPreview from "./QuizPreview";
 import { QuizButtons } from "./QuizButton";
+import ClientOnly from "@/components/ClientOnly";
+import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 
 const helpString = `QUESTION REFERENCE
 ---
@@ -50,7 +52,6 @@ this is a matching question
 ^ left answer - right dropdown
 ^ other thing -  another option`;
 
-
 export default function EditQuiz({
   moduleName,
   quizName,
@@ -65,9 +66,10 @@ export default function EditQuiz({
   const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
-    const delay = 500;
+    const delay = 1000;
     const handler = setTimeout(() => {
       try {
+        console.log("checking if the same...");
         if (
           quizMarkdownUtils.toMarkdown(quiz) !==
           quizMarkdownUtils.toMarkdown(
@@ -94,7 +96,7 @@ export default function EditQuiz({
 
   return (
     <div className="h-full flex flex-col align-middle px-1">
-      <div className={"min-h-0 flex flex-row w-full"}>
+      <div className={"min-h-96 flex flex-row w-full"}>
         {showHelp && (
           <pre className=" max-w-96">
             <code>{helpString}</code>
@@ -105,14 +107,18 @@ export default function EditQuiz({
         </div>
         <div className="flex-1 h-full">
           <div className="text-red-300">{error && error}</div>
-          <QuizPreview quiz={quiz} />
+          <QuizPreview moduleName={moduleName} quizName={quizName} />
         </div>
       </div>
-      <QuizButtons
-        moduleName={moduleName}
-        quizName={quizName}
-        toggleHelp={() => setShowHelp((h) => !h)}
-      />
+      <ClientOnly>
+        <SuspenseAndErrorHandling>
+          <QuizButtons
+            moduleName={moduleName}
+            quizName={quizName}
+            toggleHelp={() => setShowHelp((h) => !h)}
+          />
+        </SuspenseAndErrorHandling>
+      </ClientOnly>
     </div>
   );
 }

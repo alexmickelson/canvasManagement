@@ -1,3 +1,4 @@
+import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   LocalQuizQuestion,
@@ -6,7 +7,14 @@ import {
 import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
-export default function QuizPreview({ quiz }: { quiz: LocalQuiz }) {
+export default function QuizPreview({
+  moduleName,
+  quizName,
+}: {
+  quizName: string;
+  moduleName: string;
+}) {
+  const { data: quiz } = useQuizQuery(moduleName, quizName);
   return (
     <div style={{ overflow: "scroll", height: "100%" }}>
       <div className="columns-2">
@@ -40,13 +48,9 @@ export default function QuizPreview({ quiz }: { quiz: LocalQuiz }) {
       <div className="p-3" style={{ whiteSpace: "pre-wrap" }}>
         {quiz.description}
       </div>
-      <hr />
       <div className="p-3 rounded-md bg-slate-950 m-5 flex flex-col gap-3">
         {quiz.questions.map((question, i) => (
-          <QuizQuestionPreview
-            key={quizQuestionMarkdownUtils.toMarkdown(question)}
-            question={question}
-          />
+          <QuizQuestionPreview key={i} question={question} />
         ))}
       </div>
       <br />
@@ -102,7 +106,7 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
           {question.answers.map((answer) => (
             <div
               key={JSON.stringify(answer)}
-              className="mx-3 mb-1 bg-dark rounded border-slate-700 flex flex-row border"
+              className="mx-3 mb-1 pt-1 border-t border-slate-700 flex flex-row"
             >
               <div className="w-8 flex flex-col justify-center">
                 {answer.correct ? (
