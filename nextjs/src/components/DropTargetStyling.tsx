@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { useDraggingContext } from "../context/draggingContext";
+import { useDraggingContext } from "../app/course/[courseName]/context/draggingContext";
 
 export default function DropTargetStyling({
   children,

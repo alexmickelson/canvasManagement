@@ -9,7 +9,7 @@ import Link from "next/link";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDayOfWeek } from "@/models/local/localCourse";
 import { getLectureUrl } from "@/services/urlUtils";
-import DropTargetStyling from "../DropTargetStyling";
+import DropTargetStyling from "../../../../../components/DropTargetStyling";
 import { DraggableListItem } from "./DraggableListItem";
 import { useTodaysItems } from "./useTodaysItems";
 

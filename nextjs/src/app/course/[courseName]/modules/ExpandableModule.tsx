@@ -24,7 +24,7 @@ import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
 import ExpandIcon from "../../../../components/icons/ExpandIcon";
 import { useDraggingContext } from "../context/draggingContext";
-import DropTargetStyling from "../calendar/DropTargetStyling";
+import DropTargetStyling from "../../../../components/DropTargetStyling";
 import Link from "next/link";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";

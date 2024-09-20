@@ -8,5 +8,6 @@ docker run -it --rm \
   -w /app \
   -v .:/app \
   -v ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/intro_to_web \
+  -v ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend \
   node \
     bash -c "npm i && npm run dev -- -H 0.0.0.0"
