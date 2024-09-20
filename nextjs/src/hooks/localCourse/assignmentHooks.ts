@@ -94,10 +94,12 @@ export const useUpdateAssignmentMutation = () => {
     mutationFn: async ({
       assignment,
       moduleName,
+      previousModuleName,
       assignmentName,
     }: {
       assignment: LocalAssignment;
       moduleName: string;
+      previousModuleName: string;
       assignmentName: string;
     }) => {
       queryClient.setQueryData(
@@ -111,7 +113,7 @@ export const useUpdateAssignmentMutation = () => {
         encodeURIComponent(moduleName) +
         "/assignments/" +
         encodeURIComponent(assignmentName);
-      await axiosClient.put(url, assignment);
+      await axiosClient.put(url, { assignment, previousModuleName });
     },
     onSuccess: (_, { moduleName, assignmentName }) => {
       queryClient.invalidateQueries({
@@ -127,7 +129,6 @@ export const useUpdateAssignmentMutation = () => {
     },
   });
 };
-
 
 export const useCreateAssignmentMutation = () => {
   const { courseName } = useCourseContext();
@@ -169,4 +170,3 @@ export const useCreateAssignmentMutation = () => {
     },
   });
 };
-

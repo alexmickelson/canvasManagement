@@ -18,3 +18,8 @@ export const directoryOrFileExists = async (directoryPath: string): Promise<bool
     return false;
   }
 };
+
+
+
+export const basePath = process.env.STORAGE_DIRECTORY ?? "./storage";
+console.log("base path", basePath);

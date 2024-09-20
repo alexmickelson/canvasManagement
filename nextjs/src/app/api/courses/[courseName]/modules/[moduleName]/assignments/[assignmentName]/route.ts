@@ -1,3 +1,4 @@
+import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { withErrorHandling } from "@/services/withErrorHandling";
 
@@ -27,13 +28,23 @@ export const PUT = async (
   }
 ) =>
   await withErrorHandling(async () => {
-    const assignment = await request.json();
-    await fileStorageService.assignments.updateOrCreateAssignment(
+    const {
+      assignment,
+      previousModuleName,
+    }: { assignment: LocalAssignment; previousModuleName?: string } =
+      await request.json();
+    await fileStorageService.assignments.updateOrCreateAssignment({
       courseName,
       moduleName,
       assignmentName,
-      assignment
-    );
+      assignment,
+    });
+
+    if(previousModuleName !== moduleName)
+    {
+      fileStorageService.assignments.
+    }
+
     return Response.json({});
   });
 
@@ -47,11 +58,11 @@ export const POST = async (
 ) =>
   await withErrorHandling(async () => {
     const assignment = await request.json();
-    await fileStorageService.assignments.updateOrCreateAssignment(
+    await fileStorageService.assignments.updateOrCreateAssignment({
       courseName,
       moduleName,
       assignmentName,
-      assignment
-    );
+      assignment,
+    });
     return Response.json({});
   });

@@ -29,7 +29,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
     getDateOnlyMarkdownString(dayAsDate);
 
   const { data: settings } = useLocalCourseSettingsQuery();
-  const { itemDrop } = useDraggingContext();
+  const { itemDropOnDay } = useDraggingContext();
 
   const { todaysAssignments, todaysQuizzes, todaysPages } = useTodaysItems(day);
 
@@ -47,7 +47,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
   return (
     <div
       className={" rounded-lg m-1 min-h-10 " + meetingClasses + monthClass}
-      onDrop={(e) => itemDrop(e, day)}
+      onDrop={(e) => itemDropOnDay(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
       <DropTargetStyling draggingClassName="bg-slate-800 shadow-2xl ">
