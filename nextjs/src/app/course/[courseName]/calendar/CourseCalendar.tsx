@@ -28,7 +28,7 @@ export default function CourseCalendar() {
         min-h-0
         border-4
         border-gray-900
-        rounded-xl 
+        rounded-lg
         bg-slate-950
         p-1
       "

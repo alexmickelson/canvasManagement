@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useCallback, DragEvent } from "react";
+import { ReactNode, useCallback, DragEvent, useState } from "react";
 import { DraggingContext } from "./draggingContext";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
@@ -22,11 +22,13 @@ export default function DraggingContextProvider({
   const updateAssignmentMutation = useUpdateAssignmentMutation();
   const updatePageMutation = useUpdatePageMutation();
   const { data: settings } = useLocalCourseSettingsQuery();
+  const [isDragging, setIsDragging] = useState(false);
+
+  const dragStart = useCallback(() => setIsDragging(true), []);
 
   const itemDrop = useCallback(
     (e: DragEvent<HTMLDivElement>, day: string | undefined) => {
       const rawData = e.dataTransfer.getData("draggableItem");
-      // console.log(rawData);
       const itemBeingDragged = JSON.parse(rawData);
 
       if (itemBeingDragged && day) {
@@ -66,6 +68,7 @@ export default function DraggingContextProvider({
           });
         }
       }
+      setIsDragging(false);
 
       function updateAssignment(dayAsDate: Date) {
         const previousAssignment = itemBeingDragged.item as LocalAssignment;
@@ -101,6 +104,8 @@ export default function DraggingContextProvider({
     <DraggingContext.Provider
       value={{
         itemDrop,
+        isDragging,
+        dragStart,
       }}
     >
       {children}

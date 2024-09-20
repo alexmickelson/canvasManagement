@@ -9,12 +9,17 @@ export interface DraggableItem {
 }
 
 export interface DraggingContextInterface {
-  itemDrop: (e:  DragEvent<HTMLDivElement>,droppedOnDay?: string) => void;
+  itemDrop: (e: DragEvent<HTMLDivElement>, droppedOnDay?: string) => void;
+  isDragging: boolean;
+  dragStart: () => void;
 }
 const defaultDraggingValue: DraggingContextInterface = {
-  itemDrop: () => { },
+  itemDrop: () => {},
+  isDragging: false,
+  dragStart: () => {},
 };
-export const DraggingContext = createContext<DraggingContextInterface>(defaultDraggingValue);
+export const DraggingContext =
+  createContext<DraggingContextInterface>(defaultDraggingValue);
 
 export function useDraggingContext() {
   return useContext(DraggingContext);

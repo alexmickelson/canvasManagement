@@ -17,6 +17,7 @@ import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { useCanvasAssignmentsQuery } from "@/hooks/canvas/canvasAssignmentHooks";
 import { useCanvasQuizzesQuery } from "@/hooks/canvas/canvasQuizHooks";
 import { useCanvasPagesQuery } from "@/hooks/canvas/canvasPageHooks";
+import DropTargetStyling from "./DropTargetStyling";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
@@ -45,40 +46,42 @@ export default function Day({ day, month }: { day: string; month: number }) {
 
   return (
     <div
-      className={" rounded-lg pb-4 m-1 " + meetingClasses + monthClass}
+      className={" rounded-lg m-1 min-h-10 " + meetingClasses + monthClass}
       onDrop={(e) => itemDrop(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
-      <DayTitle day={day} dayAsDate={dayAsDate} />
-      <div>
-        {todaysAssignments.map(({ assignment, moduleName, status }) => (
-          <DraggableListItem
-            key={assignment.name}
-            type={"assignment"}
-            moduleName={moduleName}
-            item={assignment}
-            status={status}
-          />
-        ))}
-        {todaysQuizzes.map(({ quiz, moduleName, status }) => (
-          <DraggableListItem
-            key={quiz.name}
-            type={"quiz"}
-            moduleName={moduleName}
-            item={quiz}
-            status={status}
-          />
-        ))}
-        {todaysPages.map(({ page, moduleName, status }) => (
-          <DraggableListItem
-            key={page.name}
-            type={"page"}
-            moduleName={moduleName}
-            item={page}
-            status={status}
-          />
-        ))}
-      </div>
+      <DropTargetStyling draggingClassName="bg-slate-800 shadow-2xl ">
+        <DayTitle day={day} dayAsDate={dayAsDate} />
+        <div>
+          {todaysAssignments.map(({ assignment, moduleName, status }) => (
+            <DraggableListItem
+              key={assignment.name}
+              type={"assignment"}
+              moduleName={moduleName}
+              item={assignment}
+              status={status}
+            />
+          ))}
+          {todaysQuizzes.map(({ quiz, moduleName, status }) => (
+            <DraggableListItem
+              key={quiz.name}
+              type={"quiz"}
+              moduleName={moduleName}
+              item={quiz}
+              status={status}
+            />
+          ))}
+          {todaysPages.map(({ page, moduleName, status }) => (
+            <DraggableListItem
+              key={page.name}
+              type={"page"}
+              moduleName={moduleName}
+              item={page}
+              status={status}
+            />
+          ))}
+        </div>
+      </DropTargetStyling>
     </div>
   );
 }
@@ -183,6 +186,7 @@ function DraggableListItem({
   item: IModuleItem;
 }) {
   const { courseName } = useCourseContext();
+  const { dragStart } = useDraggingContext();
   return (
     <Link
       href={getModuleItemUrl(courseName, moduleName, type, item.name)}
@@ -206,6 +210,7 @@ function DraggableListItem({
             sourceModuleName: moduleName,
           })
         );
+        dragStart();
       }}
     >
       {item.name}
