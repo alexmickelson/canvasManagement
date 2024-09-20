@@ -12,14 +12,15 @@ import {
   useQuizzesQueries,
 } from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
-import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
-import { Suspense, useEffect, useRef, useState } from "react";
+import {
+  dateToMarkdownString,
+  getDateFromString,
+  getDateFromStringOrThrow,
+  getDateOnlyMarkdownString,
+} from "@/models/local/timeUtils";
+import { Fragment, useRef, useState } from "react";
 import Modal from "../../../../components/Modal";
 import NewItemForm from "./NewItemForm";
-import { useCanvasModulesQuery } from "@/hooks/canvas/canvasModuleHooks";
-import { Spinner } from "@/components/Spinner";
-import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
-import { isServer } from "@tanstack/react-query";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
 import ExpandIcon from "../../../../components/icons/ExpandIcon";
@@ -107,9 +108,21 @@ export default function ExpandableModule({
             </div>
           )}
         </Modal>
-        {moduleItems.map(({ type, item }) => (
-          <div key={item.name}>{item.name}</div>
-        ))}
+        <div className="grid grid-cols-[auto_1fr]">
+
+        {moduleItems.map(({ type, item }) => {
+          const date = getDateFromString(item.dueAt);
+          
+          return (
+            <Fragment key={item.name + type}>
+              <div className="text-end text-slate-500 me-2">
+                {date && getDateOnlyMarkdownString(date)}
+              </div>
+              <div className="">{item.name}</div>
+            </Fragment>
+          );
+        })}
+        </div>
       </div>
     </div>
   );

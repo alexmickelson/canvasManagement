@@ -1,8 +1,6 @@
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
-import { canvasApi, canvasServiceUtils } from "./canvasServiceUtils";
+import { canvasApi } from "./canvasServiceUtils";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
-import { CanvasModuleItem } from "@/models/canvas/modules/canvasModuleItems";
-import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { CanvasEnrollmentModel } from "@/models/canvas/enrollments/canvasEnrollmentModel";
 import { axiosClient } from "../axiosUtils";
 

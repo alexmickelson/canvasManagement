@@ -4,9 +4,9 @@ import { useMutation, useQuery, useQueryClient, useSuspenseQuery } from "@tansta
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 
 export const canvasPageKeys = {
-  pagesInCourse: (canvasCourseId: number) => [
+  pagesInCourse: (courseCanvasId: number) => [
     "canvas",
-    canvasCourseId,
+    courseCanvasId,
     "pages",
   ],
 };
@@ -19,20 +19,22 @@ export const useCanvasPagesQuery = () => {
   });
 };
 
-export const useCreateCanvasPageMutation = (canvasCourseId: number) => {
+export const useCreateCanvasPageMutation = () => {
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (page: LocalCoursePage) =>
-      canvasPageService.create(canvasCourseId, page),
+      canvasPageService.create(settings.canvasId, page),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: canvasPageKeys.pagesInCourse(canvasCourseId),
+        queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),
       });
     },
   });
 };
 
-export const useUpdateCanvasPageMutation = (canvasCourseId: number) => {
+export const useUpdateCanvasPageMutation = () => {
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
@@ -41,23 +43,24 @@ export const useUpdateCanvasPageMutation = (canvasCourseId: number) => {
     }: {
       page: LocalCoursePage;
       canvasPageId: number;
-    }) => canvasPageService.update(canvasCourseId, canvasPageId, page),
+    }) => canvasPageService.update(settings.canvasId, canvasPageId, page),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: canvasPageKeys.pagesInCourse(canvasCourseId),
+        queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),
       });
     },
   });
 };
 
-export const useDeleteCanvasPageMutation = (canvasCourseId: number) => {
+export const useDeleteCanvasPageMutation = () => {
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (canvasPageId: number) =>
-      canvasPageService.delete(canvasCourseId, canvasPageId),
+      canvasPageService.delete(settings.canvasId, canvasPageId),
     onSuccess: () => {
       queryClient.invalidateQueries({
-        queryKey: canvasPageKeys.pagesInCourse(canvasCourseId),
+        queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),
       });
     },
   });

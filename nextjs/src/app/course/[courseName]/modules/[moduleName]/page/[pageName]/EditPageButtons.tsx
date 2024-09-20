@@ -16,19 +16,17 @@ import React from "react";
 export default function EditPageButtons({
   moduleName,
   pageName,
-  courseCanvasId,
 }: {
   pageName: string;
   moduleName: string;
-  courseCanvasId: number;
 }) {
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: page } = usePageQuery(moduleName, pageName);
-  const { data: canvasPages } = useCanvasPagesQuery(courseCanvasId);
-  const createPageInCanvas = useCreateCanvasPageMutation(courseCanvasId);
-  const updatePageInCanvas = useUpdateCanvasPageMutation(courseCanvasId);
-  const deletePageInCanvas = useDeleteCanvasPageMutation(courseCanvasId);
+  const { data: canvasPages } = useCanvasPagesQuery();
+  const createPageInCanvas = useCreateCanvasPageMutation();
+  const updatePageInCanvas = useUpdateCanvasPageMutation();
+  const deletePageInCanvas = useDeleteCanvasPageMutation();
 
   const pageInCanvas = canvasPages?.find((p) => p.title === pageName);
 

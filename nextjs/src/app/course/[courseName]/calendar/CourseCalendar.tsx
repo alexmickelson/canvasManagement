@@ -25,19 +25,21 @@ export default function CourseCalendar() {
   return (
     <div
       className="
-        h-full 
-        overflow-y-scroll 
+        min-h-0
         border-4
         border-gray-900
         rounded-xl 
         bg-slate-950
+        p-1
       "
     >
-      <CalendarItemsContextProvider>
-        {months.map((month) => (
-          <CalendarMonth key={month.month + "" + month.year} month={month} />
-        ))}
-      </CalendarItemsContextProvider>
+      <div className="h-full overflow-y-scroll pe-1">
+        <CalendarItemsContextProvider>
+          {months.map((month) => (
+            <CalendarMonth key={month.month + "" + month.year} month={month} />
+          ))}
+        </CalendarItemsContextProvider>
+      </div>
     </div>
   );
 }

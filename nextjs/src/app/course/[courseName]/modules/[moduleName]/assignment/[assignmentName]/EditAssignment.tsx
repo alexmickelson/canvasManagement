@@ -90,8 +90,7 @@ export default function EditAssignment({
           <div className="text-red-300">{error && error}</div>
 
           <div className="px-3 h-full">
-
-          <AssignmentPreview assignment={assignment} />
+            <AssignmentPreview assignment={assignment} />
           </div>
         </div>
       </div>

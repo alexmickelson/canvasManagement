@@ -9,10 +9,6 @@ import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
 import { useEffect, useState } from "react";
 import PagePreview from "./PagePreview";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import {
-  useCanvasPagesQuery,
-  useCreateCanvasPageMutation,
-} from "@/hooks/canvas/canvasPageHooks";
 import EditPageButtons from "./EditPageButtons";
 import ClientOnly from "@/components/ClientOnly";
 
@@ -29,7 +25,6 @@ export default function EditPage({
     localPageMarkdownUtils.toMarkdown(page)
   );
   const [error, setError] = useState("");
-
   const { data: settings } = useLocalCourseSettingsQuery();
 
   useEffect(() => {
@@ -78,7 +73,6 @@ export default function EditPage({
           <EditPageButtons
             pageName={pageName}
             moduleName={moduleName}
-            courseCanvasId={settings.canvasId}
           />
         </ClientOnly>
       )}
