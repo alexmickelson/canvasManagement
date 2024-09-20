@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { CalendarMonthModel } from "./calendarMonthUtils";
 import { DayOfWeek } from "@/models/local/localCourse";
-import Day from "./Day";
+import Day from "./day/Day";
 
 export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   const weekInMilliseconds = 604_800_000;

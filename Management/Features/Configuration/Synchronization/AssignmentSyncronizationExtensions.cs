@@ -73,6 +73,7 @@ public static partial class AssignmentSyncronizationExtensions
     var reason = localAssignment.GetUpdateReason(canvasAssignment, canvasAssignmentGroupId, quiet);
     return reason != string.Empty;
   }
+  
   public static string GetUpdateReason(
     this LocalAssignment localAssignment,
     CanvasAssignment canvasAssignment,

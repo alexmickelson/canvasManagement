@@ -1,0 +1,96 @@
+"use client";
+import { useCanvasAssignmentsQuery } from "@/hooks/canvas/canvasAssignmentHooks";
+import { useCanvasPagesQuery } from "@/hooks/canvas/canvasPageHooks";
+import { useCanvasQuizzesQuery } from "@/hooks/canvas/canvasQuizHooks";
+import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { LocalCoursePage } from "@/models/local/page/localCoursePage";
+import { LocalQuiz } from "@/models/local/quiz/localQuiz";
+import {
+  getDateFromStringOrThrow,
+  getDateOnlyMarkdownString,
+} from "@/models/local/timeUtils";
+import { ReactNode } from "react";
+import { useCalendarItemsContext } from "../../context/calendarItemsContext";
+import { getStatus } from "./getStatus";
+
+export function useTodaysItems(day: string) {
+  const dayAsDate = getDateFromStringOrThrow(
+    day,
+    "calculating same month in day items"
+  );
+  const itemsContext = useCalendarItemsContext();
+  const dateKey = getDateOnlyMarkdownString(dayAsDate);
+  const todaysModules = itemsContext[dateKey];
+
+  const { data: canvasAssignments } = useCanvasAssignmentsQuery();
+  const { data: canvasQuizzes } = useCanvasQuizzesQuery();
+  const { data: canvasPages } = useCanvasPagesQuery();
+  const todaysAssignments: {
+    moduleName: string;
+    assignment: LocalAssignment;
+    status: "localOnly" | "incomplete" | "published";
+    message: ReactNode;
+  }[] = todaysModules
+    ? Object.keys(todaysModules).flatMap((moduleName) =>
+        todaysModules[moduleName].assignments.map((assignment) => {
+          const canvasAssignment = canvasAssignments.find(
+            (c) => c.name === assignment.name
+          );
+          return {
+            moduleName,
+            assignment,
+            ...getStatus({
+              item: assignment,
+              canvasItem: canvasAssignment,
+              type: "assignment",
+            }),
+          };
+        })
+      )
+    : [];
+
+  const todaysQuizzes: {
+    moduleName: string;
+    quiz: LocalQuiz;
+    status: "localOnly" | "incomplete" | "published";
+    message: ReactNode;
+  }[] = todaysModules
+    ? Object.keys(todaysModules).flatMap((moduleName) =>
+        todaysModules[moduleName].quizzes.map((quiz) => {
+          const canvasQuiz = canvasQuizzes.find((q) => q.title === quiz.name);
+          return {
+            moduleName,
+            quiz,
+            ...getStatus({
+              item: quiz,
+              canvasItem: canvasQuiz,
+              type: "quiz",
+            }),
+          };
+        })
+      )
+    : [];
+
+  const todaysPages: {
+    moduleName: string;
+    page: LocalCoursePage;
+    status: "localOnly" | "incomplete" | "published";
+    message: ReactNode;
+  }[] = todaysModules
+    ? Object.keys(todaysModules).flatMap((moduleName) =>
+        todaysModules[moduleName].pages.map((page) => {
+          const canvasPage = canvasPages.find((p) => p.title === page.name);
+          return {
+            moduleName,
+            page,
+            ...getStatus({
+              item: page,
+              canvasItem: canvasPage,
+              type: "page",
+            }),
+          };
+        })
+      )
+    : [];
+  return { todaysAssignments, todaysQuizzes, todaysPages };
+}
