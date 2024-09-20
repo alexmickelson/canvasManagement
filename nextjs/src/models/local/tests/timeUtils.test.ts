@@ -52,4 +52,13 @@ describe("Can properly handle expected date formats", () => {
     const updatedString = dateToMarkdownString(dateObject!)
     expect(updatedString).toBe(dateString)
   });
+  it("can handle canvas time format", () => {
+    const dateString = "8/29/2024, 5:00:00 PM";
+    const dateObject = getDateFromString(dateString);
+
+    expect(dateObject).not.toBeUndefined()
+    const updatedString = dateToMarkdownString(dateObject!)
+    expect(updatedString).toBe("08/29/2024 17:00:00")
+    
+  })
 });

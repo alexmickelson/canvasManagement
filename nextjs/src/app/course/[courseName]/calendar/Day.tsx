@@ -18,6 +18,10 @@ import { useCanvasAssignmentsQuery } from "@/hooks/canvas/canvasAssignmentHooks"
 import { useCanvasQuizzesQuery } from "@/hooks/canvas/canvasQuizHooks";
 import { useCanvasPagesQuery } from "@/hooks/canvas/canvasPageHooks";
 import DropTargetStyling from "./DropTargetStyling";
+import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
+import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
+import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
+import { canvasService } from "@/services/canvas/canvasService";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
@@ -110,7 +114,7 @@ function useTodaysItems(day: string) {
   const todaysAssignments: {
     moduleName: string;
     assignment: LocalAssignment;
-    status: "localOnly" | "unPublished" | "published";
+    status: "localOnly" | "incomplete" | "published";
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].assignments.map((assignment) => {
@@ -120,11 +124,11 @@ function useTodaysItems(day: string) {
           return {
             moduleName,
             assignment,
-            status: canvasAssignment
-              ? canvasAssignment.published
-                ? "published"
-                : "unPublished"
-              : "localOnly",
+            status: getStatus({
+              item: assignment,
+              canvasItem: canvasAssignment,
+              type: "assignment",
+            }),
           };
         })
       )
@@ -133,7 +137,7 @@ function useTodaysItems(day: string) {
   const todaysQuizzes: {
     moduleName: string;
     quiz: LocalQuiz;
-    status: "localOnly" | "unPublished" | "published";
+    status: "localOnly" | "incomplete" | "published";
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].quizzes.map((quiz) => {
@@ -144,7 +148,7 @@ function useTodaysItems(day: string) {
             status: canvasQuiz
               ? canvasQuiz.published
                 ? "published"
-                : "unPublished"
+                : "incomplete"
               : "localOnly",
           };
         })
@@ -154,7 +158,7 @@ function useTodaysItems(day: string) {
   const todaysPages: {
     moduleName: string;
     page: LocalCoursePage;
-    status: "localOnly" | "unPublished" | "published";
+    status: "localOnly" | "incomplete" | "published";
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].pages.map((page) => {
@@ -165,7 +169,7 @@ function useTodaysItems(day: string) {
             status: canvasPage
               ? canvasPage.published
                 ? "published"
-                : "unPublished"
+                : "incomplete"
               : "localOnly",
           };
         })
@@ -181,7 +185,7 @@ function DraggableListItem({
   item,
 }: {
   type: "assignment" | "page" | "quiz";
-  status: "localOnly" | "unPublished" | "published";
+  status: "localOnly" | "incomplete" | "published";
   moduleName: string;
   item: IModuleItem;
 }) {
@@ -196,7 +200,7 @@ function DraggableListItem({
         " bg-slate-800 " +
         " block " +
         (status === "localOnly" && " text-slate-500 border-slate-600 ") +
-        (status === "unPublished" && " border-rose-900 ") +
+        (status === "incomplete" && " border-rose-900 ") +
         (status === "published" && " border-green-800 ")
       }
       role="button"
@@ -215,3 +219,40 @@ function DraggableListItem({
     </Link>
   );
 }
+
+const getStatus = ({
+  item,
+  canvasItem,
+  type,
+}: {
+  item: LocalQuiz | LocalAssignment | LocalCoursePage;
+  canvasItem?: CanvasQuiz | CanvasAssignment | CanvasPage;
+  type: "assignment" | "page" | "quiz";
+}): "localOnly" | "incomplete" | "published" => {
+  if (!canvasItem) return "localOnly";
+
+  if (!canvasItem.published) return "incomplete";
+
+  if (type === "assignment") {
+    const assignment = item as LocalAssignment;
+    const canvasAssignment = canvasItem as CanvasAssignment;
+    if (!canvasAssignment.due_at) return "incomplete";
+
+    if (assignment.lockAt && !canvasAssignment.lock_at) return "incomplete";
+
+    if (
+      getDateFromStringOrThrow(
+        assignment.dueAt,
+        "comparing due dates for day"
+      ).toISOString() !==
+      getDateFromStringOrThrow(
+        canvasAssignment.due_at,
+        "comparing canvas due date for day"
+      ).toISOString()
+    ) {
+      return "incomplete";
+    }
+  }
+
+  return "published";
+};

@@ -1,14 +1,14 @@
 const _getDateFromAMPM = (
   datePart: string,
-  timePartWithMeridian: string
+  timePart: string,
+  amPmPart: string
 ): Date | undefined => {
   const [month, day, year] = datePart.split("/").map(Number);
-  const [timePart, meridian] = timePartWithMeridian.split(" ");
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
 
   let adjustedHours = hours;
-  if (meridian) {
-    const upperMeridian = meridian.toUpperCase();
+  if (amPmPart) {
+    const upperMeridian = amPmPart.toUpperCase();
     if (upperMeridian === "PM" && hours < 12) {
       adjustedHours += 12;
     } else if (upperMeridian === "AM" && hours === 12) {
@@ -38,15 +38,15 @@ const _getDateFromISO = (value: string): Date | undefined => {
 
 export const getDateFromString = (value: string): Date | undefined => {
   const ampmDateRegex =
-    /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}\s{1}[APap][Mm]$/; //"M/D/YYYY h:mm:ss AM/PM"
+    /^\d{1,2}\/\d{1,2}\/\d{4},? \d{1,2}:\d{2}:\d{2}\s{1}[APap][Mm]$/; //"M/D/YYYY h:mm:ss AM/PM" or "M/D/YYYY, h:mm:ss AM/PM"
   const militaryDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}$/; //"MM/DD/YYYY HH:mm:ss"
   const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}((.\d+)|(Z))$/; //"2024-08-26T00:00:00.0000000"
 
   if (isoDateRegex.test(value)) {
     return _getDateFromISO(value);
   } else if (ampmDateRegex.test(value)) {
-    const [datePart, timePartWithMeridian] = value.split(/[\s\u202F]+/);
-    return _getDateFromAMPM(datePart, timePartWithMeridian);
+    const [datePart, timePart, amPmPart] = value.split(/,?[\s\u202F]+/);
+    return _getDateFromAMPM(datePart, timePart, amPmPart);
   } else if (militaryDateRegex.test(value)) {
     const [datePart, timePart] = value.split(" ");
     return _getDateFromMilitary(datePart, timePart);
