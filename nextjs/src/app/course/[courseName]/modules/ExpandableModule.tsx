@@ -25,6 +25,9 @@ import ClientOnly from "@/components/ClientOnly";
 import ExpandIcon from "../../../../components/icons/ExpandIcon";
 import { useDraggingContext } from "../context/draggingContext";
 import DropTargetStyling from "../calendar/DropTargetStyling";
+import Link from "next/link";
+import { getModuleItemUrl } from "@/services/urlUtils";
+import { useCourseContext } from "../context/courseContext";
 
 export default function ExpandableModule({
   moduleName,
@@ -42,6 +45,7 @@ export default function ExpandableModule({
   );
   const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
   const { data: pages } = usePagesQueries(moduleName, pageNames);
+  const { courseName } = useCourseContext();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -125,7 +129,17 @@ export default function ExpandableModule({
                     <div className="text-end text-slate-500 me-2">
                       {date && getDateOnlyMarkdownString(date)}
                     </div>
-                    <div className="">{item.name}</div>
+                    <Link
+                      href={getModuleItemUrl(
+                        courseName,
+                        moduleName,
+                        type,
+                        item.name
+                      )}
+                      className="transition-all hover:text-slate-50 hover:scale-105"
+                    >
+                      {item.name}
+                    </Link>
                   </Fragment>
                 );
               })}
