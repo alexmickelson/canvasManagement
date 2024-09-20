@@ -12,8 +12,8 @@ import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 export const canvasAssignmentKeys = {
   assignments: (canvasCourseId: number) =>
     ["canvas", canvasCourseId, "assignments"] as const,
-  assignment: (canvasCourseId: number, assignmentName: string) =>
-    ["canvas", canvasCourseId, "assignment", assignmentName] as const,
+  // assignment: (canvasCourseId: number, assignmentName: string) =>
+  //   ["canvas", canvasCourseId, "assignment", assignmentName] as const,
 };
 
 export const useCanvasAssignmentsQuery = () => {

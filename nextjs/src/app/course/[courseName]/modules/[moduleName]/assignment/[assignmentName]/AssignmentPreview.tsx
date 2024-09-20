@@ -8,7 +8,7 @@ export default function AssignmentPreview({
   assignment: LocalAssignment;
 }) {
   return (
-    <div>
+    <div className="h-full overflow-y-auto">
       <section>
         <div className="flex">
           <div className="flex-1 text-end pe-3">Due Date</div>

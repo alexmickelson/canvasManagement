@@ -14,18 +14,26 @@ const getNextUrl = (
       ? (headers.get("link") as string)
       : ((headers as RawAxiosResponseHeaders)["link"] as string);
 
-  if (!linkHeader) return undefined;
+  if (!linkHeader) {
+    console.log("could not find link header in the response");
+    return undefined;
+  }
 
   const links = linkHeader.split(",").map((link) => link.trim());
   const nextLink = links.find((link) => link.includes('rel="next"'));
 
-  if (!nextLink) return undefined;
+  if (!nextLink) {
+    // console.log(
+    //   "could not find next url in link header, reached end of pagination"
+    // );
+    return undefined;
+  }
 
   const nextUrl = nextLink.split(";")[0].trim().slice(1, -1);
   return nextUrl;
 };
 
-export async function paginatedRequest<T>(request: {
+export async function paginatedRequest<T extends any[]>(request: {
   url: string;
 }): Promise<T> {
   var requestCount = 1;
@@ -36,20 +44,19 @@ export async function paginatedRequest<T>(request: {
     url.toString()
   );
 
-  if (!Array.isArray(firstData)) {
-    return firstData;
-  }
+  // if (!Array.isArray(firstData)) {
+  //   return firstData;
+  // }
 
-
-  var returnData = firstData ? [firstData] : [];
+  var returnData = [...firstData];
   var nextUrl = getNextUrl(firstHeaders);
-  console.log("got first request", nextUrl, firstHeaders);
+  // console.log("got first request", nextUrl, firstHeaders);
 
   while (nextUrl) {
     requestCount += 1;
     const { data, headers } = await axiosClient.get<T>(nextUrl);
     if (data) {
-      returnData = [...returnData, data];
+      returnData = returnData.concat(data);
     }
     nextUrl = getNextUrl(headers);
   }
@@ -60,5 +67,5 @@ export async function paginatedRequest<T>(request: {
     );
   }
 
-  return returnData;
+  return returnData as T;
 }

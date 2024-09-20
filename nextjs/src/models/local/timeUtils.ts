@@ -37,7 +37,6 @@ const _getDateFromISO = (value: string): Date | undefined => {
 };
 
 export const getDateFromString = (value: string): Date | undefined => {
-
   const ampmDateRegex =
     /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}\s{1}[APap][Mm]$/; //"M/D/YYYY h:mm:ss AM/PM"
   const militaryDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}$/; //"MM/DD/YYYY HH:mm:ss"
@@ -52,7 +51,7 @@ export const getDateFromString = (value: string): Date | undefined => {
     const [datePart, timePart] = value.split(" ");
     return _getDateFromMilitary(datePart, timePart);
   } else {
-    console.log("invalid date format", value);
+    if (value) console.log("invalid date format", value);
     return undefined;
   }
 };
@@ -93,7 +92,6 @@ export const dateToMarkdownString = (date: Date) => {
   return `${stringMonth}/${stringDay}/${stringYear} ${stringHours}:${stringMinutes}:${stringSeconds}`;
 };
 
-
 export const getDateOnlyMarkdownString = (date: Date) => {
-  return dateToMarkdownString(date).split(" ")[0]
-}
+  return dateToMarkdownString(date).split(" ")[0];
+};

@@ -23,6 +23,10 @@
 }
 .monaco-editor { position: absolute !important; }
 
+.monaco-editor .mtk1 {
+  @apply text-slate-300;
+}
+
 h1 {
   @apply text-4xl font-bold my-1;
 }

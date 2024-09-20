@@ -1,4 +1,4 @@
-import { canvasApi, canvasServiceUtils } from "./canvasServiceUtils";
+import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { axiosClient } from "../axiosUtils";
 import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
@@ -8,7 +8,7 @@ export const canvasAssignmentGroupService = {
   async getAll(courseId: number): Promise<CanvasAssignmentGroup[]> {
     console.log("Requesting assignment groups");
     const url = `${canvasApi}/courses/${courseId}/assignment_groups`;
-    const assignmentGroups = await canvasServiceUtils.paginatedRequest<
+    const assignmentGroups = await paginatedRequest<
       CanvasAssignmentGroup[]
     >({
       url,

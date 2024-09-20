@@ -1,6 +1,5 @@
 import { canvasService } from "@/services/canvas/canvasService";
-import { QueryClient, useSuspenseQuery } from "@tanstack/react-query";
-import { canvasCourseModuleKeys } from "./canvasModuleHooks";
+import { useSuspenseQuery } from "@tanstack/react-query";
 
 export const canvasKeys = {
   allTerms: ["all canvas terms"] as const,

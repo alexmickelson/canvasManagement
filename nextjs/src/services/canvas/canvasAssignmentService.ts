@@ -1,75 +1,12 @@
 import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
-import {
-  canvasApi,
-  canvasServiceUtils,
-  paginatedRequest,
-} from "./canvasServiceUtils";
+import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { axiosClient } from "../axiosUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { CanvasRubricCreationResponse } from "@/models/canvas/assignments/canvasRubricCreationResponse";
 import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
-import {
-  getDateFromString,
-  getDateFromStringOrThrow,
-} from "@/models/local/timeUtils";
+import { getDateFromString } from "@/models/local/timeUtils";
 
-const createRubric = async (
-  courseId: number,
-  assignmentCanvasId: number,
-  localAssignment: LocalAssignment
-) => {
-  const criterion = localAssignment.rubric
-    .map((rubricItem) => ({
-      description: rubricItem.label,
-      points: rubricItem.points,
-      ratings: {
-        0: { description: "Full Marks", points: rubricItem.points },
-        1: { description: "No Marks", points: 0 },
-      },
-    }))
-    .reduce((acc, item, index) => {
-      return {
-        ...acc,
-        [index]: item,
-      };
-    }, {} as { [key: number]: { description: string; points: number; ratings: { [key: number]: { description: string; points: number } } } });
-
-  const rubricBody = {
-    rubric_association_id: assignmentCanvasId,
-    rubric: {
-      title: `Rubric for Assignment: ${localAssignment.name}`,
-      association_id: assignmentCanvasId,
-      association_type: "Assignment",
-      use_for_grading: true,
-      criteria: criterion,
-    },
-    rubric_association: {
-      association_id: assignmentCanvasId,
-      association_type: "Assignment",
-      purpose: "grading",
-      use_for_grading: true,
-    },
-  };
-
-  const rubricUrl = `${canvasApi}/courses/${courseId}/rubrics`;
-  const rubricResponse = await axiosClient.post<CanvasRubricCreationResponse>(
-    rubricUrl,
-    rubricBody
-  );
-
-  if (!rubricResponse.data) throw new Error("Failed to create rubric");
-
-  const assignmentPointAdjustmentUrl = `${canvasApi}/courses/${courseId}/assignments/${assignmentCanvasId}`;
-  const assignmentPointAdjustmentBody = {
-    assignment: { points_possible: assignmentPoints(localAssignment) },
-  };
-
-  await axiosClient.put(
-    assignmentPointAdjustmentUrl,
-    assignmentPointAdjustmentBody
-  );
-};
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {
@@ -162,4 +99,61 @@ export const canvasAssignmentService = {
       throw new Error("Failed to delete assignment");
     }
   },
+};
+
+const createRubric = async (
+  courseId: number,
+  assignmentCanvasId: number,
+  localAssignment: LocalAssignment
+) => {
+  const criterion = localAssignment.rubric
+    .map((rubricItem) => ({
+      description: rubricItem.label,
+      points: rubricItem.points,
+      ratings: {
+        0: { description: "Full Marks", points: rubricItem.points },
+        1: { description: "No Marks", points: 0 },
+      },
+    }))
+    .reduce((acc, item, index) => {
+      return {
+        ...acc,
+        [index]: item,
+      };
+    }, {} as { [key: number]: { description: string; points: number; ratings: { [key: number]: { description: string; points: number } } } });
+
+  const rubricBody = {
+    rubric_association_id: assignmentCanvasId,
+    rubric: {
+      title: `Rubric for Assignment: ${localAssignment.name}`,
+      association_id: assignmentCanvasId,
+      association_type: "Assignment",
+      use_for_grading: true,
+      criteria: criterion,
+    },
+    rubric_association: {
+      association_id: assignmentCanvasId,
+      association_type: "Assignment",
+      purpose: "grading",
+      use_for_grading: true,
+    },
+  };
+
+  const rubricUrl = `${canvasApi}/courses/${courseId}/rubrics`;
+  const rubricResponse = await axiosClient.post<CanvasRubricCreationResponse>(
+    rubricUrl,
+    rubricBody
+  );
+
+  if (!rubricResponse.data) throw new Error("Failed to create rubric");
+
+  const assignmentPointAdjustmentUrl = `${canvasApi}/courses/${courseId}/assignments/${assignmentCanvasId}`;
+  const assignmentPointAdjustmentBody = {
+    assignment: { points_possible: assignmentPoints(localAssignment) },
+  };
+
+  await axiosClient.put(
+    assignmentPointAdjustmentUrl,
+    assignmentPointAdjustmentBody
+  );
 };
