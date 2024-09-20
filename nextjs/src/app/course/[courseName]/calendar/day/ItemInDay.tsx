@@ -3,9 +3,12 @@ import { getModuleItemUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { ReactNode } from "react";
 import { useCourseContext } from "../../context/courseContext";
-import { useDraggingContext, DraggableItem } from "../../context/draggingContext";
+import {
+  useDraggingContext,
+  DraggableItem,
+} from "../../context/draggingContext";
 
-export function DraggableListItem({
+export function ItemInDay({
   type,
   moduleName,
   status,

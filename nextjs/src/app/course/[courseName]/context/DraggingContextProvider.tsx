@@ -46,6 +46,7 @@ export default function DraggingContextProvider({
     (e: DragEvent<HTMLDivElement>, dropModuleName: string) => {
       console.log("dropping on module");
       const rawData = e.dataTransfer.getData("draggableItem");
+      if (!rawData) return;
       const itemBeingDragged: DraggableItem = JSON.parse(rawData);
 
       if (itemBeingDragged) {
@@ -97,6 +98,7 @@ export default function DraggingContextProvider({
   const itemDropOnDay = useCallback(
     (e: DragEvent<HTMLDivElement>, day: string) => {
       const rawData = e.dataTransfer.getData("draggableItem");
+      if (!rawData) return;
       const itemBeingDragged: DraggableItem = JSON.parse(rawData);
 
       if (itemBeingDragged) {

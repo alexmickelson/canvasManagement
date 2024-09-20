@@ -10,7 +10,7 @@ import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHoo
 import { getDayOfWeek } from "@/models/local/localCourse";
 import { getLectureUrl } from "@/services/urlUtils";
 import DropTargetStyling from "../../../../../components/DropTargetStyling";
-import { DraggableListItem } from "./DraggableListItem";
+import { ItemInDay } from "./ItemInDay";
 import { useTodaysItems } from "./useTodaysItems";
 
 export default function Day({ day, month }: { day: string; month: number }) {
@@ -49,7 +49,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
         <div>
           {todaysAssignments.map(
             ({ assignment, moduleName, status, message }) => (
-              <DraggableListItem
+              <ItemInDay
                 key={assignment.name}
                 type={"assignment"}
                 moduleName={moduleName}
@@ -60,7 +60,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
             )
           )}
           {todaysQuizzes.map(({ quiz, moduleName, status, message }) => (
-            <DraggableListItem
+            <ItemInDay
               key={quiz.name}
               type={"quiz"}
               moduleName={moduleName}
@@ -70,7 +70,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
             />
           ))}
           {todaysPages.map(({ page, moduleName, status, message }) => (
-            <DraggableListItem
+            <ItemInDay
               key={page.name}
               type={"page"}
               moduleName={moduleName}

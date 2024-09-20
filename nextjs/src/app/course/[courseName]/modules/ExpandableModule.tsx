@@ -23,7 +23,7 @@ import NewItemForm from "./NewItemForm";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
 import ExpandIcon from "../../../../components/icons/ExpandIcon";
-import { useDraggingContext } from "../context/draggingContext";
+import { DraggableItem, useDraggingContext } from "../context/draggingContext";
 import DropTargetStyling from "../../../../components/DropTargetStyling";
 import Link from "next/link";
 import { getModuleItemUrl } from "@/services/urlUtils";
@@ -45,7 +45,6 @@ export default function ExpandableModule({
   );
   const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
   const { data: pages } = usePagesQueries(moduleName, pageNames);
-  const { courseName } = useCourseContext();
 
   const [expanded, setExpanded] = useState(false);
 
@@ -121,32 +120,58 @@ export default function ExpandableModule({
               )}
             </Modal>
             <div className="grid grid-cols-[auto_1fr]">
-              {moduleItems.map(({ type, item }) => {
-                const date = getDateFromString(item.dueAt);
-
-                return (
-                  <Fragment key={item.name + type}>
-                    <div className="text-end text-slate-500 me-2">
-                      {date && getDateOnlyMarkdownString(date)}
-                    </div>
-                    <Link
-                      href={getModuleItemUrl(
-                        courseName,
-                        moduleName,
-                        type,
-                        item.name
-                      )}
-                      className="transition-all hover:text-slate-50 hover:scale-105"
-                    >
-                      {item.name}
-                    </Link>
-                  </Fragment>
-                );
-              })}
+              {moduleItems.map(({ type, item }) => (
+                <ExpandableModuleItem
+                  type={type}
+                  item={item}
+                  moduleName={moduleName}
+                />
+              ))}
             </div>
           </div>
         </div>
       </DropTargetStyling>
     </div>
+  );
+}
+
+function ExpandableModuleItem({
+  type,
+  item,
+  moduleName,
+}: {
+  type: "assignment" | "quiz" | "page";
+  item: IModuleItem;
+  moduleName: string;
+}) {
+  const { courseName } = useCourseContext();
+  const date = getDateFromString(item.dueAt);
+  const { dragStart } = useDraggingContext();
+
+  return (
+    <Fragment key={item.name + type}>
+      <div className="text-end text-slate-500 me-2">
+        {date && getDateOnlyMarkdownString(date)}
+      </div>
+      <Link
+        href={getModuleItemUrl(courseName, moduleName, type, item.name)}
+        className="transition-all hover:text-slate-50 hover:scale-105"
+        draggable="true"
+        onDragStart={(e) => {
+          const draggableItem: DraggableItem = {
+            type,
+            item,
+            sourceModuleName: moduleName,
+          };
+          e.dataTransfer.setData(
+            "draggableItem",
+            JSON.stringify(draggableItem)
+          );
+          dragStart();
+        }}
+      >
+        {item.name}
+      </Link>
+    </Fragment>
   );
 }
