@@ -87,11 +87,31 @@ export const useUpdatePageMutation = () => {
       page,
       moduleName,
       pageName,
+      previousModuleName,
+      previousPageName,
     }: {
       page: LocalCoursePage;
       moduleName: string;
       pageName: string;
+      previousModuleName: string;
+      previousPageName: string;
     }) => {
+      if (
+        previousPageName &&
+        previousModuleName &&
+        (previousPageName !== page.name || previousModuleName !== moduleName)
+      ) {
+        queryClient.removeQueries({
+          queryKey: localCourseKeys.page(
+            courseName,
+            previousModuleName,
+            previousPageName
+          ),
+        });
+        queryClient.removeQueries({
+          queryKey: localCourseKeys.pageNames(courseName, moduleName),
+        });
+      }
       queryClient.setQueryData(
         localCourseKeys.page(courseName, moduleName, pageName),
         page
@@ -115,7 +135,6 @@ export const useUpdatePageMutation = () => {
     },
   });
 };
-
 
 export const useCreatePageMutation = () => {
   const { courseName } = useCourseContext();

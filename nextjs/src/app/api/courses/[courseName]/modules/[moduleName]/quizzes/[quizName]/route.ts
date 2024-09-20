@@ -1,3 +1,4 @@
+import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { withErrorHandling } from "@/services/withErrorHandling";
 
@@ -23,13 +24,31 @@ export const PUT = async (
   }: { params: { courseName: string; moduleName: string; quizName: string } }
 ) =>
   await withErrorHandling(async () => {
-    const quiz = await request.json();
+    const { quiz, previousModuleName, previousQuizName } =
+      (await request.json()) as {
+        quiz: LocalQuiz;
+        previousModuleName?: string;
+        previousQuizName?: string;
+      };
     await fileStorageService.quizzes.updateQuiz(
       courseName,
       moduleName,
       quizName,
       quiz
     );
+
+    if (
+      previousModuleName &&
+      previousQuizName &&
+      (quiz.name !== previousQuizName ||
+        moduleName !== previousModuleName)
+    ) {
+      fileStorageService.quizzes.delete({
+        courseName,
+        moduleName: previousModuleName,
+        quizName: previousQuizName,
+      });
+    }
     return Response.json({});
   });
 

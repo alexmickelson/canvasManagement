@@ -1,6 +1,6 @@
 "use client";
-import { ReactNode, useCallback, DragEvent, useState } from "react";
-import { DraggingContext } from "./draggingContext";
+import { ReactNode, useCallback, DragEvent, useState, useEffect } from "react";
+import { DraggableItem, DraggingContext } from "./draggingContext";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
@@ -24,12 +24,29 @@ export default function DraggingContextProvider({
   const { data: settings } = useLocalCourseSettingsQuery();
   const [isDragging, setIsDragging] = useState(false);
 
+  useEffect(() => {
+    const handleDrop = () => {
+      console.log("drop on window");
+      setIsDragging(false);
+    };
+    const preventDefault = (e: globalThis.DragEvent) => e.preventDefault();
+    if (typeof window !== "undefined") {
+      window.addEventListener("drop", handleDrop);
+      window.addEventListener("dragover", preventDefault);
+    }
+    return () => {
+      window.removeEventListener("drop", handleDrop);
+      window.addEventListener("dragover", preventDefault);
+    };
+  }, []);
+
   const dragStart = useCallback(() => setIsDragging(true), []);
 
   const itemDropOnModule = useCallback(
-    (e: DragEvent<HTMLDivElement>, moduleName: string) => {
+    (e: DragEvent<HTMLDivElement>, dropModuleName: string) => {
+      console.log("dropping on module");
       const rawData = e.dataTransfer.getData("draggableItem");
-      const itemBeingDragged = JSON.parse(rawData);
+      const itemBeingDragged: DraggableItem = JSON.parse(rawData);
 
       if (itemBeingDragged) {
         if (itemBeingDragged.type === "quiz") {
@@ -42,17 +59,45 @@ export default function DraggingContextProvider({
       }
       setIsDragging(false);
 
-      function updateQuiz() {}
-      function updateAssignment() {}
-      function updatePage() {}
+      function updateQuiz() {
+        const quiz = itemBeingDragged.item as LocalQuiz;
+
+        updateQuizMutation.mutate({
+          quiz: quiz,
+          quizName: quiz.name,
+          moduleName: dropModuleName,
+          previousModuleName: itemBeingDragged.sourceModuleName,
+          previousQuizName: quiz.name,
+        });
+      }
+      function updateAssignment() {
+        const assignment = itemBeingDragged.item as LocalAssignment;
+        updateAssignmentMutation.mutate({
+          assignment,
+          previousModuleName: itemBeingDragged.sourceModuleName,
+          moduleName: dropModuleName,
+          assignmentName: assignment.name,
+          previousAssignmentName: assignment.name,
+        });
+      }
+      function updatePage() {
+        const page = itemBeingDragged.item as LocalCoursePage;
+        updatePageMutation.mutate({
+          page,
+          moduleName: dropModuleName,
+          pageName: page.name,
+          previousPageName: page.name,
+          previousModuleName: itemBeingDragged.sourceModuleName,
+        });
+      }
     },
-    []
+    [updateAssignmentMutation, updatePageMutation, updateQuizMutation]
   );
 
   const itemDropOnDay = useCallback(
     (e: DragEvent<HTMLDivElement>, day: string) => {
       const rawData = e.dataTransfer.getData("draggableItem");
-      const itemBeingDragged = JSON.parse(rawData);
+      const itemBeingDragged: DraggableItem = JSON.parse(rawData);
 
       if (itemBeingDragged) {
         const dayAsDate = getDateWithDefaultDueTime();
@@ -85,6 +130,8 @@ export default function DraggingContextProvider({
           quiz: quiz,
           quizName: quiz.name,
           moduleName: itemBeingDragged.sourceModuleName,
+          previousModuleName: itemBeingDragged.sourceModuleName,
+          previousQuizName: quiz.name,
         });
       }
       function updatePage(dayAsDate: Date) {
@@ -97,6 +144,8 @@ export default function DraggingContextProvider({
           page,
           moduleName: itemBeingDragged.sourceModuleName,
           pageName: page.name,
+          previousPageName: page.name,
+          previousModuleName: itemBeingDragged.sourceModuleName,
         });
       }
       function updateAssignment(dayAsDate: Date) {
@@ -115,8 +164,10 @@ export default function DraggingContextProvider({
         };
         updateAssignmentMutation.mutate({
           assignment,
+          previousModuleName: itemBeingDragged.sourceModuleName,
           moduleName: itemBeingDragged.sourceModuleName,
           assignmentName: assignment.name,
+          previousAssignmentName: assignment.name,
         });
       }
     },

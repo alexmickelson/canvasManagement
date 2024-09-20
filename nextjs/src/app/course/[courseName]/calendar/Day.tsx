@@ -3,7 +3,7 @@ import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
-import { useDraggingContext } from "../context/draggingContext";
+import { DraggableItem, useDraggingContext } from "../context/draggingContext";
 import { useCalendarItemsContext } from "../context/calendarItemsContext";
 import { useCourseContext } from "../context/courseContext";
 import Link from "next/link";
@@ -40,7 +40,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const meetingClasses = classOnThisDay ? " bg-slate-900 " : " ";
   const monthClass = isInSameMonth
     ? isToday
-      ? " border border-blue-700 border-[3px] shadow-[0_0px_10px_0px] shadow-blue-500/50 "
+      ? " border border-blue-700 shadow-[0_0px_10px_0px] shadow-blue-500/50 "
       : " border border-slate-700 "
     : " ";
 
@@ -50,7 +50,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
       onDrop={(e) => itemDropOnDay(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
-      <DropTargetStyling draggingClassName="bg-slate-800 shadow-2xl ">
+      <DropTargetStyling draggingClassName="bg-slate-900 shadow-[0_0px_10px_0px] shadow-blue-800/50 ">
         <DayTitle day={day} dayAsDate={dayAsDate} />
         <div>
           {todaysAssignments.map(({ assignment, moduleName, status }) => (
@@ -192,8 +192,8 @@ function DraggableListItem({
       href={getModuleItemUrl(courseName, moduleName, type, item.name)}
       shallow={true}
       className={
-        " border rounded-sm px-1 mx-1 break-all mb-1 " +
-        "  bg-slate-800 " +
+        " border rounded-sm px-1 mx-1 break-words mb-1 " +
+        " bg-slate-800 " +
         " block " +
         (status === "localOnly" && " text-slate-500 border-slate-600 ") +
         (status === "unPublished" && " border-rose-900 ") +
@@ -202,14 +202,12 @@ function DraggableListItem({
       role="button"
       draggable="true"
       onDragStart={(e) => {
-        e.dataTransfer.setData(
-          "draggableItem",
-          JSON.stringify({
-            type,
-            item,
-            sourceModuleName: moduleName,
-          })
-        );
+        const draggableItem: DraggableItem = {
+          type,
+          item,
+          sourceModuleName: moduleName,
+        };
+        e.dataTransfer.setData("draggableItem", JSON.stringify(draggableItem));
         dragStart();
       }}
     >

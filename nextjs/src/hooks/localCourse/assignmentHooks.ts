@@ -95,13 +95,36 @@ export const useUpdateAssignmentMutation = () => {
       assignment,
       moduleName,
       previousModuleName,
+      previousAssignmentName,
       assignmentName,
     }: {
       assignment: LocalAssignment;
       moduleName: string;
       previousModuleName: string;
+      previousAssignmentName: string;
       assignmentName: string;
     }) => {
+      if (
+        previousAssignmentName &&
+        previousModuleName &&
+        (previousAssignmentName !== assignment.name ||
+          previousModuleName !== moduleName)
+      ) {
+        queryClient.removeQueries({
+          queryKey: localCourseKeys.assignment(
+            courseName,
+            previousModuleName,
+            previousAssignmentName
+          ),
+        });
+        queryClient.removeQueries({
+          queryKey: localCourseKeys.assignmentNames(
+            courseName,
+            previousModuleName
+          ),
+        });
+      }
+      
       queryClient.setQueryData(
         localCourseKeys.assignment(courseName, moduleName, assignmentName),
         assignment
@@ -113,7 +136,11 @@ export const useUpdateAssignmentMutation = () => {
         encodeURIComponent(moduleName) +
         "/assignments/" +
         encodeURIComponent(assignmentName);
-      await axiosClient.put(url, { assignment, previousModuleName });
+      await axiosClient.put(url, {
+        assignment,
+        previousModuleName,
+        previousAssignmentName,
+      });
     },
     onSuccess: (_, { moduleName, assignmentName }) => {
       queryClient.invalidateQueries({

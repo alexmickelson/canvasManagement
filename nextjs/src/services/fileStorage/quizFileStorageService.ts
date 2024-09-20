@@ -55,4 +55,23 @@ export const quizFileStorageService = {
     console.log(`Saving quiz ${filePath}`);
     await fs.writeFile(filePath, quizMarkdown);
   },
+  async delete({
+    courseName,
+    moduleName,
+    quizName,
+  }: {
+    courseName: string;
+    moduleName: string;
+    quizName: string;
+  }) {
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "quizzes",
+      quizName + ".md"
+    );
+    console.log("removing quiz", filePath);
+    await fs.unlink(filePath)
+  }
 };

@@ -28,11 +28,13 @@ export const PUT = async (
   }
 ) =>
   await withErrorHandling(async () => {
-    const {
-      assignment,
-      previousModuleName,
-    }: { assignment: LocalAssignment; previousModuleName?: string } =
-      await request.json();
+    const { assignment, previousModuleName, previousAssignmentName } =
+      (await request.json()) as {
+        assignment: LocalAssignment;
+        previousModuleName?: string;
+        previousAssignmentName?: string;
+      };
+
     await fileStorageService.assignments.updateOrCreateAssignment({
       courseName,
       moduleName,
@@ -40,9 +42,17 @@ export const PUT = async (
       assignment,
     });
 
-    if(previousModuleName !== moduleName)
-    {
-      fileStorageService.assignments.
+    if (
+      previousModuleName &&
+      previousAssignmentName &&
+      (assignment.name !== previousAssignmentName ||
+        moduleName !== previousModuleName)
+    ) {
+      fileStorageService.assignments.delete({
+        courseName,
+        moduleName: previousModuleName,
+        assignmentName: previousAssignmentName,
+      });
     }
 
     return Response.json({});

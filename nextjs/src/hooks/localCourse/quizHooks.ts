@@ -10,12 +10,15 @@ import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { axiosClient } from "@/services/axiosUtils";
 
-
-export function getQuizNamesQueryConfig(courseName: string, moduleName: string) {
+export function getQuizNamesQueryConfig(
+  courseName: string,
+  moduleName: string
+) {
   return {
     queryKey: localCourseKeys.quizNames(courseName, moduleName),
     queryFn: async (): Promise<string[]> => {
-      const url = "/api/courses/" +
+      const url =
+        "/api/courses/" +
         encodeURIComponent(courseName) +
         "/modules/" +
         encodeURIComponent(moduleName) +
@@ -77,11 +80,31 @@ export const useUpdateQuizMutation = () => {
       quiz,
       moduleName,
       quizName,
+      previousModuleName,
+      previousQuizName,
     }: {
       quiz: LocalQuiz;
       moduleName: string;
       quizName: string;
+      previousModuleName: string;
+      previousQuizName: string;
     }) => {
+      if (
+        previousQuizName &&
+        previousModuleName &&
+        (previousQuizName !== quiz.name || previousModuleName !== moduleName)
+      ) {
+        queryClient.removeQueries({
+          queryKey: localCourseKeys.quiz(
+            courseName,
+            previousModuleName,
+            previousQuizName
+          ),
+        });
+        queryClient.removeQueries({
+          queryKey: localCourseKeys.quizNames(courseName, previousModuleName),
+        });
+      }
       queryClient.setQueryData(
         localCourseKeys.quiz(courseName, moduleName, quizName),
         quiz
@@ -93,7 +116,15 @@ export const useUpdateQuizMutation = () => {
         encodeURIComponent(moduleName) +
         "/quizzes/" +
         encodeURIComponent(quizName);
-      await axiosClient.put(url, quiz);
+      await axiosClient.put(url, {
+        quiz,
+        previousModuleName,
+        previousQuizName,
+      });
+
+      // queryClient.fetchQuery(
+      //   getQuizNamesQueryConfig(courseName, previousModuleName)
+      // );
     },
     onSuccess: (_, { moduleName, quizName }) => {
       queryClient.invalidateQueries({
@@ -105,7 +136,6 @@ export const useUpdateQuizMutation = () => {
     },
   });
 };
-
 
 export const useCreateQuizMutation = () => {
   const { courseName } = useCourseContext();

@@ -65,4 +65,24 @@ export const assignmentsFileStorageService = {
     console.log(`Saving assignment ${filePath}`);
     await fs.writeFile(filePath, assignmentMarkdown);
   },
+  async delete({
+    courseName,
+    moduleName,
+    assignmentName,
+  }: {
+    courseName: string;
+    moduleName: string;
+    assignmentName: string;
+  }) {
+
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "assignments",
+      assignmentName + ".md"
+    );
+    console.log("removing assignment", filePath);
+    await fs.unlink(filePath)
+  }
 };

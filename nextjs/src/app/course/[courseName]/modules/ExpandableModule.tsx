@@ -13,7 +13,6 @@ import {
 } from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import {
-  dateToMarkdownString,
   getDateFromString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
@@ -24,6 +23,8 @@ import NewItemForm from "./NewItemForm";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
 import ExpandIcon from "../../../../components/icons/ExpandIcon";
+import { useDraggingContext } from "../context/draggingContext";
+import DropTargetStyling from "../calendar/DropTargetStyling";
 
 export default function ExpandableModule({
   moduleName,
@@ -33,6 +34,7 @@ export default function ExpandableModule({
   const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
   const { data: quizNames } = useQuizNamesQuery(moduleName);
   const { data: pageNames } = usePageNamesQuery(moduleName);
+  const { itemDropOnModule } = useDraggingContext();
 
   const { data: assignments } = useAssignmentsQueries(
     moduleName,
@@ -74,56 +76,63 @@ export default function ExpandableModule({
   const expandRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className="bg-slate-800 rounded-lg p-3 border border-slate-600 mb-3">
-      <div
-        className="font-bold flex flex-row justify-between "
-        role="button"
-        onClick={() => setExpanded((e) => !e)}
-      >
-        <div>{moduleName}</div>
-        <div className="flex flex-row">
-          <ClientOnly>
-            <ModuleCanvasStatus moduleName={moduleName} />
-          </ClientOnly>
-          <ExpandIcon
-            style={{
-              ...(expanded ? { rotate: "-90deg" } : {}),
-            }}
-          />
-        </div>
-      </div>
-      <div
-        ref={expandRef}
-        className={` overflow-hidden transition-all `}
-        style={{
-          maxHeight: expanded ? expandRef?.current?.scrollHeight : "0",
-        }}
-      >
-        <Modal buttonText="New Item">
-          {({ closeModal }) => (
-            <div>
-              <NewItemForm moduleName={moduleName} onCreate={closeModal} />
-              <br />
-              <button onClick={closeModal}>close</button>
+    <div
+      className="bg-slate-800 rounded-lg border border-slate-600 mb-3"
+      onDrop={(e) => itemDropOnModule(e, moduleName)}
+      onDragOver={(e) => e.preventDefault()}
+    >
+      <DropTargetStyling draggingClassName="shadow-[0_0px_10px_0px] shadow-blue-500/50 ">
+        <div className=" p-3 ">
+          <div
+            className="font-bold flex flex-row justify-between "
+            role="button"
+            onClick={() => setExpanded((e) => !e)}
+          >
+            <div>{moduleName}</div>
+            <div className="flex flex-row">
+              <ClientOnly>
+                <ModuleCanvasStatus moduleName={moduleName} />
+              </ClientOnly>
+              <ExpandIcon
+                style={{
+                  ...(expanded ? { rotate: "-90deg" } : {}),
+                }}
+              />
             </div>
-          )}
-        </Modal>
-        <div className="grid grid-cols-[auto_1fr]">
+          </div>
+          <div
+            ref={expandRef}
+            className={` overflow-hidden transition-all `}
+            style={{
+              maxHeight: expanded ? expandRef?.current?.scrollHeight : "0",
+            }}
+          >
+            <Modal buttonText="New Item">
+              {({ closeModal }) => (
+                <div>
+                  <NewItemForm moduleName={moduleName} onCreate={closeModal} />
+                  <br />
+                  <button onClick={closeModal}>close</button>
+                </div>
+              )}
+            </Modal>
+            <div className="grid grid-cols-[auto_1fr]">
+              {moduleItems.map(({ type, item }) => {
+                const date = getDateFromString(item.dueAt);
 
-        {moduleItems.map(({ type, item }) => {
-          const date = getDateFromString(item.dueAt);
-          
-          return (
-            <Fragment key={item.name + type}>
-              <div className="text-end text-slate-500 me-2">
-                {date && getDateOnlyMarkdownString(date)}
-              </div>
-              <div className="">{item.name}</div>
-            </Fragment>
-          );
-        })}
+                return (
+                  <Fragment key={item.name + type}>
+                    <div className="text-end text-slate-500 me-2">
+                      {date && getDateOnlyMarkdownString(date)}
+                    </div>
+                    <div className="">{item.name}</div>
+                  </Fragment>
+                );
+              })}
+            </div>
+          </div>
         </div>
-      </div>
+      </DropTargetStyling>
     </div>
   );
 }

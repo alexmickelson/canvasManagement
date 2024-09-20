@@ -1,4 +1,7 @@
-import { verifyDateOrThrow, verifyDateStringOrUndefined } from "../../timeUtils";
+import {
+  verifyDateOrThrow,
+  verifyDateStringOrUndefined,
+} from "../../timeUtils";
 import { LocalQuiz } from "../localQuiz";
 import { quizQuestionMarkdownUtils } from "./quizQuestionMarkdownUtils";
 
@@ -76,7 +79,6 @@ const getQuizWithOnlySettings = (settings: string): LocalQuiz => {
   const rawDueAt = extractLabelValue(settings, "DueAt");
   const dueAt = verifyDateOrThrow(rawDueAt, "DueAt");
 
-
   const rawLockAt = extractLabelValue(settings, "LockAt");
   const lockAt = verifyDateStringOrUndefined(rawLockAt);
 
@@ -104,6 +106,16 @@ const getQuizWithOnlySettings = (settings: string): LocalQuiz => {
 
 export const quizMarkdownUtils = {
   toMarkdown(quiz: LocalQuiz): string {
+    if (!quiz) {
+      throw Error(`quiz was undefined, cannot parse markdown`);
+    }
+    if (
+      typeof quiz.questions === "undefined" ||
+      typeof quiz.oneQuestionAtATime === "undefined"
+    ) {
+      console.log("quiz is probably not a quiz", quiz);
+      throw Error(`quiz ${quiz.name} is probably not a quiz`);
+    }
     const questionMarkdownArray = quiz.questions.map((q) =>
       quizQuestionMarkdownUtils.toMarkdown(q)
     );

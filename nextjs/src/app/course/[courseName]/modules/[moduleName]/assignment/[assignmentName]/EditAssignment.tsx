@@ -56,6 +56,8 @@ export default function EditAssignment({
             assignment: updatedAssignment,
             moduleName,
             assignmentName,
+            previousModuleName: moduleName,
+            previousAssignmentName: assignment.name,
           });
         }
         setError("");
