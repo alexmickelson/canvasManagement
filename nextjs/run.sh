@@ -2,6 +2,7 @@
 
 docker run -it --rm \
   --name canvas-manager-2 \
+  -e TZ=America/Denver \
   -u 1000:1000 \
   -p 3000:3000 \
   -w /app \

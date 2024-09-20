@@ -16,7 +16,7 @@ const getCourseSettings = async (
   const courseDirectory = path.join(basePath, courseName);
   const settingsPath = path.join(courseDirectory, "settings.yml");
   if (!(await directoryOrFileExists(settingsPath))) {
-    const errorMessage = `Error loading settings for ${courseName}, settings file ${settingsPath}`;
+    const errorMessage = `could not find settings for ${courseName}, settings file ${settingsPath}`;
     console.log(errorMessage);
     throw new Error(errorMessage);
   }

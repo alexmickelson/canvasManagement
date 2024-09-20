@@ -1,5 +1,6 @@
 "use client";
 import {
+  dateToMarkdownString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
@@ -22,6 +23,7 @@ import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
 import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { canvasService } from "@/services/canvas/canvasService";
+import { ReactNode } from "react";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
@@ -57,31 +59,36 @@ export default function Day({ day, month }: { day: string; month: number }) {
       <DropTargetStyling draggingClassName="bg-slate-900 shadow-[0_0px_10px_0px] shadow-blue-800/50 ">
         <DayTitle day={day} dayAsDate={dayAsDate} />
         <div>
-          {todaysAssignments.map(({ assignment, moduleName, status }) => (
-            <DraggableListItem
-              key={assignment.name}
-              type={"assignment"}
-              moduleName={moduleName}
-              item={assignment}
-              status={status}
-            />
-          ))}
-          {todaysQuizzes.map(({ quiz, moduleName, status }) => (
+          {todaysAssignments.map(
+            ({ assignment, moduleName, status, message }) => (
+              <DraggableListItem
+                key={assignment.name}
+                type={"assignment"}
+                moduleName={moduleName}
+                item={assignment}
+                status={status}
+                message={message}
+              />
+            )
+          )}
+          {todaysQuizzes.map(({ quiz, moduleName, status, message }) => (
             <DraggableListItem
               key={quiz.name}
               type={"quiz"}
               moduleName={moduleName}
               item={quiz}
               status={status}
+              message={message}
             />
           ))}
-          {todaysPages.map(({ page, moduleName, status }) => (
+          {todaysPages.map(({ page, moduleName, status, message }) => (
             <DraggableListItem
               key={page.name}
               type={"page"}
               moduleName={moduleName}
               item={page}
               status={status}
+              message={message}
             />
           ))}
         </div>
@@ -115,6 +122,7 @@ function useTodaysItems(day: string) {
     moduleName: string;
     assignment: LocalAssignment;
     status: "localOnly" | "incomplete" | "published";
+    message: ReactNode;
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].assignments.map((assignment) => {
@@ -124,7 +132,7 @@ function useTodaysItems(day: string) {
           return {
             moduleName,
             assignment,
-            status: getStatus({
+            ...getStatus({
               item: assignment,
               canvasItem: canvasAssignment,
               type: "assignment",
@@ -138,6 +146,7 @@ function useTodaysItems(day: string) {
     moduleName: string;
     quiz: LocalQuiz;
     status: "localOnly" | "incomplete" | "published";
+    message: string;
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].quizzes.map((quiz) => {
@@ -150,6 +159,7 @@ function useTodaysItems(day: string) {
                 ? "published"
                 : "incomplete"
               : "localOnly",
+            message: "",
           };
         })
       )
@@ -159,6 +169,7 @@ function useTodaysItems(day: string) {
     moduleName: string;
     page: LocalCoursePage;
     status: "localOnly" | "incomplete" | "published";
+    message: string;
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].pages.map((page) => {
@@ -171,6 +182,7 @@ function useTodaysItems(day: string) {
                 ? "published"
                 : "incomplete"
               : "localOnly",
+            message: "",
           };
         })
       )
@@ -183,11 +195,13 @@ function DraggableListItem({
   moduleName,
   status,
   item,
+  message,
 }: {
   type: "assignment" | "page" | "quiz";
   status: "localOnly" | "incomplete" | "published";
   moduleName: string;
   item: IModuleItem;
+  message: ReactNode;
 }) {
   const { courseName } = useCourseContext();
   const { dragStart } = useDraggingContext();
@@ -196,6 +210,7 @@ function DraggableListItem({
       href={getModuleItemUrl(courseName, moduleName, type, item.name)}
       shallow={true}
       className={
+        " relative group " +
         " border rounded-sm px-1 mx-1 break-words mb-1 " +
         " bg-slate-800 " +
         " block " +
@@ -216,6 +231,20 @@ function DraggableListItem({
       }}
     >
       {item.name}
+      {status === "incomplete" && (
+        <div
+          className={
+            " absolute opacity-0 transition-all duration-700 " +
+            " group-hover:block group-hover:opacity-100" +
+            " bg-gray-800 text-white text-sm " +
+            " rounded py-1 px-2 bottom-full mb-2 left-1/2 transform -translate-x-1/2 " +
+            " whitespace-no-wrap min-w-full max-w-96 "
+          }
+          role="tooltip"
+        >
+          {message}
+        </div>
+      )}
     </Link>
   );
 }
@@ -228,31 +257,51 @@ const getStatus = ({
   item: LocalQuiz | LocalAssignment | LocalCoursePage;
   canvasItem?: CanvasQuiz | CanvasAssignment | CanvasPage;
   type: "assignment" | "page" | "quiz";
-}): "localOnly" | "incomplete" | "published" => {
-  if (!canvasItem) return "localOnly";
+}): {
+  status: "localOnly" | "incomplete" | "published";
+  message: ReactNode;
+} => {
+  if (!canvasItem) return { status: "localOnly", message: "not in canvas" };
 
-  if (!canvasItem.published) return "incomplete";
+  if (!canvasItem.published)
+    return { status: "incomplete", message: "not published in canvas" };
 
   if (type === "assignment") {
     const assignment = item as LocalAssignment;
     const canvasAssignment = canvasItem as CanvasAssignment;
-    if (!canvasAssignment.due_at) return "incomplete";
 
-    if (assignment.lockAt && !canvasAssignment.lock_at) return "incomplete";
+    if(canvasAssignment.name === "Javascript 1")
+      console.log('js 1', canvasAssignment.due_at, canvasAssignment);
 
-    if (
-      getDateFromStringOrThrow(
-        assignment.dueAt,
-        "comparing due dates for day"
-      ).toISOString() !==
+
+    if (!canvasAssignment.due_at)
+      return { status: "incomplete", message: "due date not in canvas" };
+
+    if (assignment.lockAt && !canvasAssignment.lock_at)
+      return { status: "incomplete", message: "lock date not in canvas" };
+
+    const localDueDate = dateToMarkdownString(
+      getDateFromStringOrThrow(assignment.dueAt, "comparing due dates for day")
+    );
+    const canvasDueDate = dateToMarkdownString(
       getDateFromStringOrThrow(
         canvasAssignment.due_at,
         "comparing canvas due date for day"
-      ).toISOString()
-    ) {
-      return "incomplete";
+      )
+    );
+    if (localDueDate !== canvasDueDate) {
+      return {
+        status: "incomplete",
+        message: (
+          <div>
+            due date different
+            <div>{localDueDate}</div>
+            <div>{canvasDueDate}</div>
+          </div>
+        ),
+      };
     }
   }
 
-  return "published";
+  return { status: "published", message: "" };
 };
