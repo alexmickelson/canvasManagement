@@ -17,7 +17,7 @@ export default async function CoursePage({}: {}) {
               <CourseNavigation />
               <CourseCalendar />
             </div>
-            <div className="w-96 p-3">
+            <div className="w-96 p-3 h-full overflow-y-auto">
               <CourseSettingsLink />
               <ModuleList />
             </div>

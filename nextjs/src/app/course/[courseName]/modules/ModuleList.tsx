@@ -1,5 +1,5 @@
 "use client";
-import {  useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks";
+import { useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks";
 import ExpandableModule from "./ExpandableModule";
 import CreateModule from "./CreateModule";
 
@@ -11,6 +11,10 @@ export default function ModuleList() {
       {moduleNames.map((m) => (
         <ExpandableModule key={m} moduleName={m} />
       ))}
+      <br />
+      <br />
+      <br />
+      <br />
     </div>
   );
 }
