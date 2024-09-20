@@ -24,15 +24,15 @@ export default async function RootLayout({
     <html lang="en">
       <head></head>
       <body className="flex justify-center">
-        <div className="bg-slate-900 h-screen p-1 text-slate-300 w-full">
-          <MyToaster />
-          <Suspense>
-            <Providers>
-              <HydrationBoundary state={dehydratedState}>
-                {children}
-              </HydrationBoundary>
-            </Providers>
-          </Suspense>
+        <div className="bg-slate-900 h-screen text-slate-300 w-full p-1">
+            <MyToaster />
+            <Suspense>
+              <Providers>
+                <HydrationBoundary state={dehydratedState}>
+                  {children}
+                </HydrationBoundary>
+              </Providers>
+            </Suspense>
         </div>
       </body>
     </html>

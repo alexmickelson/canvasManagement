@@ -4,12 +4,14 @@ export default function SelectInput<T>({
   label,
   options,
   getOptionName,
+  emptyOptionText,
 }: {
   value: T | undefined;
   setValue: (newValue: T | undefined) => void;
   label: string;
   options: T[];
   getOptionName: (item: T) => string;
+  emptyOptionText?: string;
 }) {
   return (
     <label className="block">
@@ -25,6 +27,7 @@ export default function SelectInput<T>({
         }}
       >
         <option></option>
+        {emptyOptionText && <option>{emptyOptionText}</option>}
         {options.map((o) => (
           <option key={getOptionName(o)}>{getOptionName(o)}</option>
         ))}

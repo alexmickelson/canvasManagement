@@ -155,6 +155,7 @@ function OtherSettings({
         label={"Storage Folder"}
         options={emptyDirectories}
         getOptionName={(d) => d}
+        emptyOptionText="--- add a new folder to your docker compose to add more folders ---"
       />
       <div>
         New folders will not be created automatically, you are expected to mount

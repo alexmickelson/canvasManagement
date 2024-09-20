@@ -1,4 +1,5 @@
 import { promises as fs } from "fs";
+import path from "path";
 
 export const hasFileSystemEntries = async (
   directoryPath: string
@@ -18,6 +19,32 @@ export const directoryOrFileExists = async (directoryPath: string): Promise<bool
     return false;
   }
 };
+
+export async function getCourseNames() {
+  console.log("loading course ids");
+  const courseDirectories = await fs.readdir(basePath, {
+    withFileTypes: true,
+  });
+  const coursePromises = await Promise.all(
+    courseDirectories
+      .filter((dirent) => dirent.isDirectory())
+      .map(async (dirent) => {
+        const coursePath = path.join(basePath, dirent.name);
+        const settingsPath = path.join(coursePath, "settings.yml");
+        const hasSettings = await directoryOrFileExists(settingsPath);
+        return {
+          dirent,
+          hasSettings,
+        };
+      })
+  );
+
+  const courseNamesFromDirectories = coursePromises
+    .filter(({ hasSettings }) => hasSettings)
+    .map(({ dirent }) => dirent.name);
+
+  return courseNamesFromDirectories;
+}
 
 
 

@@ -1,24 +1,25 @@
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
-import { canvasApi } from "./canvasServiceUtils";
+import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasEnrollmentModel } from "@/models/canvas/enrollments/canvasEnrollmentModel";
 import { axiosClient } from "../axiosUtils";
 
 const getAllTerms = async () => {
-  const url = `${canvasApi}/accounts/10/terms`;
-  const { data } = await axiosClient.get<{
-    enrollment_terms: CanvasEnrollmentTermModel[];
-  }>(url);
-  const terms = data.enrollment_terms;
+  const url = `${canvasApi}/accounts/10/terms?per_page=100`;
+  const data = await paginatedRequest<
+    {
+      enrollment_terms: CanvasEnrollmentTermModel[];
+    }[]
+  >({ url });
+  const terms = data.flatMap((t) => t.enrollment_terms);
   return terms;
 };
 
 export const canvasService = {
   getAllTerms,
   async getCourses(termId: number) {
-    const url = `${canvasApi}/courses`;
-    const response = await axiosClient.get<CanvasCourseModel[]>(url);
-    const allCourses = response.data;
+    const url = `${canvasApi}/courses?per_page=100`;
+    const allCourses = await paginatedRequest<CanvasCourseModel[]>({ url });
     const coursesInTerm = allCourses
       .flatMap((l) => l)
       .filter((c) => c.enrollment_term_id === termId);

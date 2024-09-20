@@ -44,19 +44,14 @@ export async function paginatedRequest<T extends any[]>(request: {
     url.toString()
   );
 
-  // if (!Array.isArray(firstData)) {
-  //   return firstData;
-  // }
-
-  var returnData = [...firstData];
+  var returnData = Array.isArray(firstData) ? [...firstData] : [firstData]; // terms come across as nested objects {enrolmentTerms: terms[]}
   var nextUrl = getNextUrl(firstHeaders);
-  // console.log("got first request", nextUrl, firstHeaders);
 
   while (nextUrl) {
     requestCount += 1;
     const { data, headers } = await axiosClient.get<T>(nextUrl);
     if (data) {
-      returnData = returnData.concat(data);
+      returnData = returnData.concat(Array.isArray(data) ? [...data] : [data]);
     }
     nextUrl = getNextUrl(headers);
   }

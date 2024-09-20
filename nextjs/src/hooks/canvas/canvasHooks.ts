@@ -17,13 +17,14 @@ export const useCanvasTermsQuery = (queryDate: Date) => {
   return useSuspenseQuery({
     queryKey: canvasKeys.allAroundDate(queryDate),
     queryFn: () => {
-      const currentTerms = terms
-        .filter((t) => {
-          if (!t.end_at) return false;
+      const finiteTerms = terms.filter((t) => {
+        if (!t.end_at) return false;
 
-          const endDate = new Date(t.end_at);
-          return endDate > queryDate;
-        })
+        const endDate = new Date(t.end_at);
+        return endDate > queryDate;
+      });
+      console.log("finite terms", finiteTerms, terms);
+      const currentTerms = finiteTerms
         .sort(
           (a, b) =>
             new Date(a.start_at ?? "").getTime() -
