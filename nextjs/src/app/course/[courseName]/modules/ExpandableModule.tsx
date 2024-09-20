@@ -13,7 +13,7 @@ import {
 } from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Modal from "../../../../components/Modal";
 import NewItemForm from "./NewItemForm";
 import { useCanvasModulesQuery } from "@/hooks/canvas/canvasModuleHooks";
@@ -70,6 +70,7 @@ export default function ExpandableModule({
           "item due date in expandable module"
         ).getTime()
     );
+  const expandRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div className="bg-slate-800 rounded-lg p-3 border border-slate-600 mb-3">
@@ -91,11 +92,10 @@ export default function ExpandableModule({
         </div>
       </div>
       <div
-        className={
-          ` overflow-hidden ` + (expanded ? " max-h-[30vh]" : " max-h-0")
-        }
+        ref={expandRef}
+        className={` overflow-hidden transition-all `}
         style={{
-          transition: "max-height 1s cubic-bezier(0, 1, 0, 1)",
+          maxHeight: expanded ? expandRef?.current?.scrollHeight : "0",
         }}
       >
         <Modal buttonText="New Item">
