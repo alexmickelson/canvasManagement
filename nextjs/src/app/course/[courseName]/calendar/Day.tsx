@@ -40,7 +40,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const meetingClasses = classOnThisDay ? " bg-slate-900 " : " ";
   const monthClass = isInSameMonth
     ? isToday
-      ? " border border-slate-400  bg-slate-700 "
+      ? " border border-blue-700 border-[3px] shadow-[0_0px_10px_0px] shadow-blue-500/50 "
       : " border border-slate-700 "
     : " ";
 
