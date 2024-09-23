@@ -140,3 +140,17 @@ Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 ###
 GET https://snow.instructure.com/api/v1/courses/871954
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+
+###
+POST https://snow.instructure.com/api/v1/courses/960410/modules
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+Content-Type: application/json
+
+{
+  "module": {
+    "name": "test module"
+  }
+}
+
+

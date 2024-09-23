@@ -6,6 +6,8 @@ import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { CanvasRubricCreationResponse } from "@/models/canvas/assignments/canvasRubricCreationResponse";
 import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
 import { getDateFromString } from "@/models/local/timeUtils";
+import { canvasModuleService } from "./canvasModuleService";
+import { CanvasModule } from "@/models/canvas/modules/canvasModule";
 
 
 export const canvasAssignmentService = {
@@ -23,7 +25,7 @@ export const canvasAssignmentService = {
   async create(
     canvasCourseId: number,
     localAssignment: LocalAssignment,
-    canvasAssignmentGroupId?: number
+    canvasAssignmentGroupId?: number,
   ) {
     console.log(`Creating assignment: ${localAssignment.name}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/assignments`;

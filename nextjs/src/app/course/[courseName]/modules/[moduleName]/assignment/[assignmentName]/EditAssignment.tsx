@@ -179,7 +179,7 @@ function AssignmentButtons({
     canvasIsRefetching ||
     deleteFromCanvas.isPending ||
     updateAssignment.isPending;
-    
+
   return (
     <div className="p-5 flex flex-row justify-between gap-3">
       <div>
@@ -193,7 +193,7 @@ function AssignmentButtons({
         {!assignmentInCanvas && (
           <button
             disabled={addToCanvas.isPending}
-            onClick={() => addToCanvas.mutate(assignment)}
+            onClick={() => addToCanvas.mutate({ assignment, moduleName })}
           >
             Add to canvas
           </button>

@@ -24,9 +24,9 @@ export const canvasModuleService = {
     canvasCourseId: number,
     canvasModuleId: number,
     title: string,
-    type: string,
+    type: "Assignment" | "Quiz",
     contentId: number | string
-  ): Promise<void> {
+  ) {
     console.log(`Creating new module item ${title}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
     const body = { module_item: { title, type, content_id: contentId } };
@@ -38,7 +38,7 @@ export const canvasModuleService = {
     canvasModuleId: number,
     title: string,
     canvasPage: CanvasPage
-  ): Promise<void> {
+  ) {
     console.log(`Creating new module item ${title}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
     const body = {
@@ -60,6 +60,7 @@ export const canvasModuleService = {
         name: moduleName,
       },
     };
-    await axiosClient.post(url, body);
+    const response = await axiosClient.post<CanvasModule>(url, body);
+    return response.data.id;
   },
 };

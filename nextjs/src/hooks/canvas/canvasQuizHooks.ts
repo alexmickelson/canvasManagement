@@ -6,6 +6,8 @@ import {
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 import { canvasQuizService } from "@/services/canvas/canvasQuizService";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
+import { useAddCanvasModuleMutation, useCanvasModulesQuery } from "./canvasModuleHooks";
+import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 
 export const canvasQuizKeys = {
   quizzes: (canvasCourseId: number) =>
@@ -24,16 +26,37 @@ export const useCanvasQuizzesQuery = () => {
 export const useAddQuizToCanvasMutation = () => {
   const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
+  const { data: canvasModules } = useCanvasModulesQuery();
+  const addModule = useAddCanvasModuleMutation();
 
   return useMutation({
-    mutationFn: async (quiz: LocalQuiz) => {
+    mutationFn: async ({
+      quiz,
+      moduleName,
+    }: {
+      quiz: LocalQuiz;
+      moduleName: string;
+    }) => {
       const assignmentGroup = settings.assignmentGroups.find(
         (g) => g.name === quiz.localAssignmentGroupName
       );
-      await canvasQuizService.create(
+      const canvasQuizId = await canvasQuizService.create(
         settings.canvasId,
         quiz,
         assignmentGroup?.canvasId
+      );
+
+      const canvasModule = canvasModules.find((c) => c.name === moduleName);
+      const moduleId = canvasModule
+        ? canvasModule.id
+        : await addModule.mutateAsync(moduleName);
+
+      await canvasModuleService.createModuleItem(
+        settings.canvasId,
+        moduleId,
+        quiz.name,
+        "Quiz",
+        canvasQuizId
       );
     },
     onSuccess: () => {

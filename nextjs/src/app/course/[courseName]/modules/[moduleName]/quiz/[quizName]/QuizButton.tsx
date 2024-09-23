@@ -1,6 +1,10 @@
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { Spinner } from "@/components/Spinner";
-import { useCanvasQuizzesQuery, useAddQuizToCanvasMutation, useDeleteQuizFromCanvasMutation } from "@/hooks/canvas/canvasQuizHooks";
+import {
+  useCanvasQuizzesQuery,
+  useAddQuizToCanvasMutation,
+  useDeleteQuizFromCanvasMutation,
+} from "@/hooks/canvas/canvasQuizHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
@@ -38,9 +42,9 @@ export function QuizButtons({
         {!quizInCanvas && (
           <button
             disabled={addToCanvas.isPending}
-            onClick={() => addToCanvas.mutate(quiz)}
+            onClick={() => addToCanvas.mutate({ quiz, moduleName })}
           >
-            Add to canvas....
+            Add to canvas
           </button>
         )}
         {quizInCanvas && (

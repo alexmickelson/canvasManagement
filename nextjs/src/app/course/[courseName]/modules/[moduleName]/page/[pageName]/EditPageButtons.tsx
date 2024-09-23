@@ -40,7 +40,7 @@ export default function EditPageButtons({
       {requestIsPending && <Spinner />}
       {!pageInCanvas && (
         <button
-          onClick={() => createPageInCanvas.mutate(page)}
+          onClick={() => createPageInCanvas.mutate({ page, moduleName })}
           disabled={requestIsPending}
         >
           Add to Canvas

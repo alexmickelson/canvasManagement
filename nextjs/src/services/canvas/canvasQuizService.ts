@@ -127,7 +127,7 @@ export const canvasQuizService = {
     canvasCourseId: number,
     localQuiz: LocalQuiz,
     canvasAssignmentGroupId?: number
-  ): Promise<number> {
+  ) {
     console.log("Creating quiz", localQuiz);
 
     const url = `${canvasApi}/courses/${canvasCourseId}/quizzes`;
@@ -158,8 +158,6 @@ export const canvasQuizService = {
     };
 
     const { data: canvasQuiz } = await axiosClient.post<CanvasQuiz>(url, body);
-    if (!canvasQuiz) throw new Error("Created quiz is null");
-
     await createQuizQuestions(canvasCourseId, canvasQuiz.id, localQuiz);
     return canvasQuiz.id;
   },

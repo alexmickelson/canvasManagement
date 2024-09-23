@@ -8,6 +8,11 @@ import {
 } from "@tanstack/react-query";
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { canvasModuleService } from "@/services/canvas/canvasModuleService";
+import {
+  useAddCanvasModuleMutation,
+  useCanvasModulesQuery,
+} from "./canvasModuleHooks";
 
 export const canvasAssignmentKeys = {
   assignments: (canvasCourseId: number) =>
@@ -43,17 +48,37 @@ export const useCanvasAssignmentsQuery = () => {
 
 export const useAddAssignmentToCanvasMutation = () => {
   const { data: settings } = useLocalCourseSettingsQuery();
+  const { data: canvasModules } = useCanvasModulesQuery();
+  const addModule = useAddCanvasModuleMutation();
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (assignment: LocalAssignment) => {
+    mutationFn: async ({
+      assignment,
+      moduleName,
+    }: {
+      assignment: LocalAssignment;
+      moduleName: string;
+    }) => {
       const assignmentGroup = settings.assignmentGroups.find(
         (g) => g.name === assignment.localAssignmentGroupName
       );
-      await canvasAssignmentService.create(
+      const canvasAssignmentId = await canvasAssignmentService.create(
         settings.canvasId,
         assignment,
         assignmentGroup?.canvasId
+      );
+      const canvasModule = canvasModules.find((c) => c.name === moduleName);
+      const moduleId = canvasModule
+        ? canvasModule.id
+        : await addModule.mutateAsync(moduleName);
+
+      await canvasModuleService.createModuleItem(
+        settings.canvasId,
+        moduleId,
+        assignment.name,
+        "Assignment",
+        canvasAssignmentId
       );
     },
     onSuccess: () => {
