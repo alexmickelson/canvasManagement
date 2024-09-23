@@ -52,7 +52,7 @@ export default function EditPage({
             })
             .then(() => {
               if (updatedPage.name !== pageName)
-                router.push(
+                router.replace(
                   getModuleItemUrl(
                     courseName,
                     moduleName,
@@ -71,7 +71,7 @@ export default function EditPage({
     return () => {
       clearTimeout(handler);
     };
-  }, [moduleName, page, pageName, pageText, updatePage]);
+  }, [courseName, moduleName, page, pageName, pageText, router, updatePage]);
 
   return (
     <div className="h-full flex flex-col">

@@ -105,10 +105,8 @@ export const useUpdateAssignmentMutation = () => {
       assignmentName: string;
     }) => {
       if (
-        previousAssignmentName &&
-        previousModuleName &&
-        (previousAssignmentName !== assignment.name ||
-          previousModuleName !== moduleName)
+        previousAssignmentName !== assignment.name ||
+        previousModuleName !== moduleName
       ) {
         queryClient.removeQueries({
           queryKey: localCourseKeys.assignment(
@@ -124,7 +122,7 @@ export const useUpdateAssignmentMutation = () => {
           ),
         });
       }
-      
+
       queryClient.setQueryData(
         localCourseKeys.assignment(courseName, moduleName, assignmentName),
         assignment

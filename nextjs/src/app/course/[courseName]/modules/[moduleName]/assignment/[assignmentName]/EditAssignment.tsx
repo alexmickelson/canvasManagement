@@ -7,7 +7,7 @@ import {
 import { localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
 import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
-import { getCourseUrl } from "@/services/urlUtils";
+import { getCourseUrl, getModuleItemUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
@@ -23,6 +23,7 @@ import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
 import { LocalCourseSettings } from "@/models/local/localCourse";
+import { useRouter } from "next/navigation";
 
 export default function EditAssignment({
   moduleName,
@@ -31,6 +32,8 @@ export default function EditAssignment({
   assignmentName: string;
   moduleName: string;
 }) {
+  const router = useRouter();
+  const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
@@ -52,13 +55,25 @@ export default function EditAssignment({
           localAssignmentMarkdown.toMarkdown(updatedAssignment)
         ) {
           console.log("updating assignment");
-          updateAssignment.mutate({
-            assignment: updatedAssignment,
-            moduleName,
-            assignmentName,
-            previousModuleName: moduleName,
-            previousAssignmentName: assignment.name,
-          });
+          updateAssignment
+            .mutateAsync({
+              assignment: updatedAssignment,
+              moduleName,
+              assignmentName: updatedAssignment.name,
+              previousModuleName: moduleName,
+              previousAssignmentName: assignmentName,
+            })
+            .then(() => {
+              if (updatedAssignment.name !== assignmentName)
+                router.replace(
+                  getModuleItemUrl(
+                    courseName,
+                    moduleName,
+                    "assignment",
+                    updatedAssignment.name
+                  )
+                );
+            });
         }
         setError("");
       } catch (e: any) {
@@ -73,7 +88,9 @@ export default function EditAssignment({
     assignment,
     assignmentName,
     assignmentText,
+    courseName,
     moduleName,
+    router,
     updateAssignment,
   ]);
 

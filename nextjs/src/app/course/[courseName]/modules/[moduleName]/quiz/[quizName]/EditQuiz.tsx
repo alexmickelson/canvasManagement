@@ -92,7 +92,7 @@ export default function EditQuiz({
             })
             .then(() => {
               if (updatedQuiz.name !== quizName)
-                router.push(
+                router.replace(
                   getModuleItemUrl(
                     courseName,
                     moduleName,

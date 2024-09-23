@@ -31,8 +31,8 @@ export const PUT = async (
     const { assignment, previousModuleName, previousAssignmentName } =
       (await request.json()) as {
         assignment: LocalAssignment;
-        previousModuleName?: string;
-        previousAssignmentName?: string;
+        previousModuleName: string;
+        previousAssignmentName: string;
       };
 
     await fileStorageService.assignments.updateOrCreateAssignment({
@@ -43,10 +43,8 @@ export const PUT = async (
     });
 
     if (
-      previousModuleName &&
-      previousAssignmentName &&
-      (assignment.name !== previousAssignmentName ||
-        moduleName !== previousModuleName)
+      assignment.name !== previousAssignmentName ||
+      moduleName !== previousModuleName
     ) {
       fileStorageService.assignments.delete({
         courseName,
