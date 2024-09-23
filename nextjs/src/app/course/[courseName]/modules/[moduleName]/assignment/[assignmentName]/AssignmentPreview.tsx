@@ -48,6 +48,7 @@ export default function AssignmentPreview({
       <br />
       <section>
         <div
+          className="markdownPreview"
           dangerouslySetInnerHTML={{
             __html: markdownToHTMLSafe(assignment.description),
           }}

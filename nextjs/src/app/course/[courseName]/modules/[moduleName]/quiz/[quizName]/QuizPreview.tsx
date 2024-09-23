@@ -78,7 +78,7 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
       </div>
 
       <div
-        className="ms-4 mb-2"
+        className="ms-4 mb-2 markdownPreview"
         dangerouslySetInnerHTML={{ __html: markdownToHTMLSafe(question.text) }}
       ></div>
       {question.questionType === QuestionType.MATCHING && (
