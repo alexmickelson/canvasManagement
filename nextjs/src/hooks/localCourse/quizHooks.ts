@@ -173,3 +173,37 @@ export const useCreateQuizMutation = () => {
     },
   });
 };
+
+export const useDeleteQuizMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      moduleName,
+      quizName,
+    }: {
+      moduleName: string;
+      quizName: string;
+    }) => {
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/quizzes/" +
+        encodeURIComponent(quizName);
+      await axiosClient.delete(url);
+      queryClient.removeQueries({
+        queryKey: localCourseKeys.quizNames(courseName, moduleName),
+      });
+    },
+    onSuccess: async (_, { moduleName, quizName }) => {
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.quizNames(courseName, moduleName),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
+      });
+    },
+  });
+};

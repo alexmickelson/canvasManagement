@@ -1,30 +1,55 @@
 "use client";
 import ButtonSelect from "@/components/ButtonSelect";
+import SelectInput from "@/components/form/SelectInput";
 import TextInput from "@/components/form/TextInput";
 import { Spinner } from "@/components/Spinner";
 import { useCreateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
+import { useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useCreatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { useCreateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
-import { dateToMarkdownString } from "@/models/local/timeUtils";
+import {
+  dateToMarkdownString,
+  getDateFromString,
+} from "@/models/local/timeUtils";
 import React, { useState } from "react";
 
 export default function NewItemForm({
-  moduleName,
+  moduleName: defaultModuleName,
   onCreate = () => {},
+  creationDate,
 }: {
-  moduleName: string;
+  moduleName?: string;
+  creationDate?: string;
   onCreate?: () => void;
 }) {
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const { data: modules } = useModuleNamesQuery();
   const [type, setType] = useState<"Assignment" | "Quiz" | "Page">(
     "Assignment"
   );
+
+  const [moduleName, setModuleName] = useState<string | undefined>(
+    defaultModuleName
+  );
+
   const [name, setName] = useState("");
+
+  const defaultDate = getDateFromString(
+    creationDate ? creationDate : dateToMarkdownString(new Date())
+  );
+  defaultDate?.setMinutes(settings.defaultDueTime.minute);
+  defaultDate?.setHours(settings.defaultDueTime.hour);
+  defaultDate?.setSeconds(0);
+
+  const [dueDate, setDueDate] = useState(
+    dateToMarkdownString(defaultDate ?? new Date())
+  );
   const [assignmentGroup, setAssignmentGroup] =
     useState<LocalAssignmentGroup>();
-  const { data: settings } = useLocalCourseSettingsQuery();
+
   const createAssignment = useCreateAssignmentMutation();
   const createPage = useCreatePageMutation();
   const createQuiz = useCreateQuizMutation();
@@ -37,8 +62,15 @@ export default function NewItemForm({
       className="flex flex-col gap-3"
       onSubmit={(e) => {
         e.preventDefault();
-        const dueAt = dateToMarkdownString(new Date());
+        const dueAt =
+          dueDate === ""
+            ? dueDate
+            : dateToMarkdownString(defaultDate ?? new Date());
+
         console.log("submitting");
+        if (!moduleName) {
+          return;
+        }
         if (type === "Assignment") {
           createAssignment.mutate({
             assignment: {
@@ -84,6 +116,22 @@ export default function NewItemForm({
         onCreate();
       }}
     >
+      <div>
+        <TextInput
+          label={type + " due date"}
+          value={dueDate ?? ""}
+          setValue={setDueDate}
+        />
+      </div>
+      <div>
+        <SelectInput
+          value={moduleName}
+          setValue={(m) => setModuleName(m)}
+          label={"Module"}
+          options={modules}
+          getOptionName={(m) => m}
+        />
+      </div>
       <div>
         <ButtonSelect<"Assignment" | "Quiz" | "Page">
           options={["Assignment", "Quiz", "Page"]}

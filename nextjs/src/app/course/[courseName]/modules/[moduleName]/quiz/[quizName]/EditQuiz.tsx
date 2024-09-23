@@ -115,7 +115,7 @@ export default function EditQuiz({
 
   return (
     <div className="h-full flex flex-col align-middle px-1">
-      <div className={"min-h-96 flex flex-row w-full"}>
+      <div className={"min-h-96 h-full flex flex-row w-full"}>
         {showHelp && (
           <pre className=" max-w-96">
             <code>{helpString}</code>

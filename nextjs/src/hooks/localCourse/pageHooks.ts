@@ -133,9 +133,9 @@ export const useUpdatePageMutation = () => {
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.page(courseName, moduleName, pageName),
       });
-      // queryClient.invalidateQueries({
-      //   queryKey: localCourseKeys.pageNames(courseName, moduleName),
-      // });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+      });
     },
   });
 };
@@ -172,6 +172,44 @@ export const useCreatePageMutation = () => {
       });
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.pageNames(courseName, moduleName),
+      });
+    },
+  });
+};
+
+export const useDeletePageMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      moduleName,
+      pageName,
+    }: {
+      moduleName: string;
+      pageName: string;
+    }) => {
+      queryClient.removeQueries({
+        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
+      });
+      queryClient.removeQueries({
+        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+      });
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/pages/" +
+        encodeURIComponent(pageName);
+      await axiosClient.delete(url);
+
+    },
+    onSuccess: (_, { moduleName, pageName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+      });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
       });
     },
   });

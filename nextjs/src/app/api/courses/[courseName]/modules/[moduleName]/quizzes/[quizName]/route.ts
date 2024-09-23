@@ -40,8 +40,7 @@ export const PUT = async (
     if (
       previousModuleName &&
       previousQuizName &&
-      (quiz.name !== previousQuizName ||
-        moduleName !== previousModuleName)
+      (quiz.name !== previousQuizName || moduleName !== previousModuleName)
     ) {
       fileStorageService.quizzes.delete({
         courseName,
@@ -66,5 +65,20 @@ export const POST = async (
       quizName,
       quiz
     );
+    return Response.json({});
+  });
+export const DELETE = async (
+  _request: Request,
+  {
+    params: { courseName, moduleName, quizName },
+  }: { params: { courseName: string; moduleName: string; quizName: string } }
+) =>
+  await withErrorHandling(async () => {
+    fileStorageService.quizzes.delete({
+      courseName,
+      moduleName,
+      quizName,
+    });
+
     return Response.json({});
   });

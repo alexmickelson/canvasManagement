@@ -61,3 +61,18 @@ export const POST = async (
     );
     return Response.json({});
   });
+  
+export const DELETE = async (
+  _request: Request,
+  {
+    params: { courseName, moduleName, pageName },
+  }: { params: { courseName: string; moduleName: string; pageName: string } }
+) =>
+  await withErrorHandling(async () => {
+    fileStorageService.pages.delete({
+      courseName,
+      moduleName,
+      pageName,
+    });
+    return Response.json({});
+  });

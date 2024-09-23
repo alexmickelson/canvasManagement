@@ -74,3 +74,21 @@ export const POST = async (
     });
     return Response.json({});
   });
+
+export const DELETE = async (
+  _request: Request,
+  {
+    params: { courseName, moduleName, assignmentName },
+  }: {
+    params: { courseName: string; moduleName: string; assignmentName: string };
+  }
+) =>
+  await withErrorHandling(async () => {
+    fileStorageService.assignments.delete({
+      courseName,
+      moduleName,
+      assignmentName,
+    });
+
+    return Response.json({});
+  });

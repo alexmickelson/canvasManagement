@@ -5,10 +5,12 @@ export default function Modal({
   children,
   buttonText,
   buttonClass = "",
+  modalWidth = "w-1/3",
 }: {
   children: (props: { closeModal: () => void }) => ReactNode;
   buttonText: string;
   buttonClass?: string;
+  modalWidth?: string;
 }) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -35,7 +37,8 @@ export default function Modal({
             e.stopPropagation();
           }}
           className={
-            ` bg-slate-800 p-6 rounded-lg shadow-lg w-1/3  ` +
+            ` bg-slate-800 p-6 rounded-lg shadow-lg ` +
+            modalWidth +
             ` transition-all duration-400 ` +
             ` ${isOpen ? "opacity-100" : "opacity-0"}`
           }

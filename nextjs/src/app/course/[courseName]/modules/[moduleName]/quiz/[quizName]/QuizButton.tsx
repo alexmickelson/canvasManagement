@@ -1,4 +1,5 @@
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import Modal from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import {
   useCanvasQuizzesQuery,
@@ -6,10 +7,14 @@ import {
   useDeleteQuizFromCanvasMutation,
 } from "@/hooks/canvas/canvasQuizHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
+import {
+  useDeleteQuizMutation,
+  useQuizQuery,
+} from "@/hooks/localCourse/quizHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export function QuizButtons({
   moduleName,
@@ -20,12 +25,14 @@ export function QuizButtons({
   moduleName: string;
   toggleHelp: () => void;
 }) {
+  const router = useRouter();
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: canvasQuizzes } = useCanvasQuizzesQuery();
   const { data: quiz } = useQuizQuery(moduleName, quizName);
   const addToCanvas = useAddQuizToCanvasMutation();
   const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
+  const deleteLocal = useDeleteQuizMutation();
 
   const quizInCanvas = canvasQuizzes.find((c) => c.title === quizName);
 
@@ -64,6 +71,35 @@ export function QuizButtons({
           >
             Delete from Canvas
           </button>
+        )}
+        {!quizInCanvas && (
+          <Modal
+            buttonText="Delete Localy"
+            buttonClass="btn-danger"
+            modalWidth="w-1/5"
+          >
+            {({ closeModal }) => (
+              <div>
+                <div className="text-center">
+                  Are you sure you want to delete this quiz locally?
+                </div>
+                <br />
+                <div className="flex justify-around gap-3">
+                  <button
+                    onClick={async () => {
+                      deleteLocal
+                        .mutateAsync({ moduleName, quizName })
+                        .then(() => router.push(getCourseUrl(courseName)));
+                    }}
+                    className="btn-danger"
+                  >
+                    Yes
+                  </button>
+                  <button onClick={closeModal}>No</button>
+                </div>
+              </div>
+            )}
+          </Modal>
         )}
 
         <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>

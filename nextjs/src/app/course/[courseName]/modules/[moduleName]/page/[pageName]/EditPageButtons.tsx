@@ -1,4 +1,5 @@
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import Modal from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import {
   useCanvasPagesQuery,
@@ -7,10 +8,14 @@ import {
   useUpdateCanvasPageMutation,
 } from "@/hooks/canvas/canvasPageHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { usePageQuery } from "@/hooks/localCourse/pageHooks";
+import {
+  useDeletePageMutation,
+  usePageQuery,
+} from "@/hooks/localCourse/pageHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 
 export default function EditPageButtons({
@@ -20,6 +25,7 @@ export default function EditPageButtons({
   pageName: string;
   moduleName: string;
 }) {
+  const router = useRouter();
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: page } = usePageQuery(moduleName, pageName);
@@ -27,6 +33,7 @@ export default function EditPageButtons({
   const createPageInCanvas = useCreateCanvasPageMutation();
   const updatePageInCanvas = useUpdateCanvasPageMutation();
   const deletePageInCanvas = useDeleteCanvasPageMutation();
+  const deletePageLocal = useDeletePageMutation();
 
   const pageInCanvas = canvasPages?.find((p) => p.title === pageName);
 
@@ -76,6 +83,36 @@ export default function EditPageButtons({
         >
           Delete from Canvas
         </button>
+      )}
+
+      {!pageInCanvas && (
+        <Modal
+          buttonText="Delete Localy"
+          buttonClass="btn-danger"
+          modalWidth="w-1/5"
+        >
+          {({ closeModal }) => (
+            <div>
+              <div className="text-center">
+                Are you sure you want to delete this page locally?
+              </div>
+              <br />
+              <div className="flex justify-around gap-3">
+                <button
+                  onClick={async () => {
+                    deletePageLocal
+                      .mutateAsync({ moduleName, pageName })
+                      .then(() => router.push(getCourseUrl(courseName)));
+                  }}
+                  className="btn-danger"
+                >
+                  Yes
+                </button>
+                <button onClick={closeModal}>No</button>
+              </div>
+            </div>
+          )}
+        </Modal>
       )}
       <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
         Go Back
