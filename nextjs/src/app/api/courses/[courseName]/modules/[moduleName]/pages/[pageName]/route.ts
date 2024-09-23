@@ -16,27 +16,48 @@ export const GET = async (
     return Response.json(settings);
   });
 
-  export const PUT = async (
-    request: Request,
-    {
-      params: { courseName, moduleName, pageName },
-    }: { params: { courseName: string; moduleName: string; pageName: string } }
-  ) =>
-    await withErrorHandling(async () => {
-      const page = await request.json();
-      await fileStorageService.pages.updatePage(courseName, moduleName, pageName, page);
-      return Response.json({});
-    });
+export const PUT = async (
+  request: Request,
+  {
+    params: { courseName, moduleName, pageName },
+  }: { params: { courseName: string; moduleName: string; pageName: string } }
+) =>
+  await withErrorHandling(async () => {
+    const { page, previousModuleName, previousPageName } = await request.json();
+    await fileStorageService.pages.updatePage(
+      courseName,
+      moduleName,
+      pageName,
+      page
+    );
 
-    export const POST = async (
-      request: Request,
-      {
-        params: { courseName, moduleName, pageName },
-      }: { params: { courseName: string; moduleName: string; pageName: string } }
-    ) =>
-      await withErrorHandling(async () => {
-        const page = await request.json();
-        await fileStorageService.pages.updatePage(courseName, moduleName, pageName, page);
-        return Response.json({});
+    if (
+      previousModuleName &&
+      previousPageName &&
+      (page.name !== previousPageName || moduleName !== previousModuleName)
+    ) {
+      fileStorageService.pages.delete({
+        courseName,
+        moduleName: previousModuleName,
+        pageName: previousPageName,
       });
-      
+    }
+    return Response.json({});
+  });
+
+export const POST = async (
+  request: Request,
+  {
+    params: { courseName, moduleName, pageName },
+  }: { params: { courseName: string; moduleName: string; pageName: string } }
+) =>
+  await withErrorHandling(async () => {
+    const page = await request.json();
+    await fileStorageService.pages.updatePage(
+      courseName,
+      moduleName,
+      pageName,
+      page
+    );
+    return Response.json({});
+  });

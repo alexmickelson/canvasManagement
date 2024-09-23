@@ -123,15 +123,19 @@ export const useUpdatePageMutation = () => {
         encodeURIComponent(moduleName) +
         "/pages/" +
         encodeURIComponent(pageName);
-      await axiosClient.put(url, page);
+      await axiosClient.put(url, {
+        page,
+        previousModuleName,
+        previousPageName,
+      });
     },
     onSuccess: (_, { moduleName, pageName }) => {
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.page(courseName, moduleName, pageName),
       });
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.pageNames(courseName, moduleName),
-      });
+      // queryClient.invalidateQueries({
+      //   queryKey: localCourseKeys.pageNames(courseName, moduleName),
+      // });
     },
   });
 };

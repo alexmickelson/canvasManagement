@@ -122,6 +122,7 @@ export default function ExpandableModule({
             <div className="grid grid-cols-[auto_1fr]">
               {moduleItems.map(({ type, item }) => (
                 <ExpandableModuleItem
+                  key={item.name + type}
                   type={type}
                   item={item}
                   moduleName={moduleName}

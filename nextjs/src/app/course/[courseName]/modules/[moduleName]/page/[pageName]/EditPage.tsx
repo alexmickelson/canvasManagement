@@ -11,6 +11,9 @@ import PagePreview from "./PagePreview";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import EditPageButtons from "./EditPageButtons";
 import ClientOnly from "@/components/ClientOnly";
+import { getModuleItemUrl } from "@/services/urlUtils";
+import { useRouter } from "next/navigation";
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
 export default function EditPage({
   moduleName,
@@ -19,6 +22,8 @@ export default function EditPage({
   pageName: string;
   moduleName: string;
 }) {
+  const router = useRouter();
+  const { courseName } = useCourseContext();
   const { data: page } = usePageQuery(moduleName, pageName);
   const updatePage = useUpdatePageMutation();
   const [pageText, setPageText] = useState(
@@ -37,11 +42,25 @@ export default function EditPage({
           localPageMarkdownUtils.toMarkdown(updatedPage)
         ) {
           console.log("updating page");
-          updatePage.mutate({
-            page: updatedPage,
-            moduleName,
-            pageName,
-          });
+          updatePage
+            .mutateAsync({
+              page: updatedPage,
+              moduleName,
+              pageName: updatedPage.name,
+              previousModuleName: moduleName,
+              previousPageName: pageName,
+            })
+            .then(() => {
+              if (updatedPage.name !== pageName)
+                router.push(
+                  getModuleItemUrl(
+                    courseName,
+                    moduleName,
+                    "page",
+                    updatedPage.name
+                  )
+                );
+            });
         }
         setError("");
       } catch (e: any) {
@@ -70,10 +89,7 @@ export default function EditPage({
       </div>
       {settings.canvasId && (
         <ClientOnly>
-          <EditPageButtons
-            pageName={pageName}
-            moduleName={moduleName}
-          />
+          <EditPageButtons pageName={pageName} moduleName={moduleName} />
         </ClientOnly>
       )}
     </div>

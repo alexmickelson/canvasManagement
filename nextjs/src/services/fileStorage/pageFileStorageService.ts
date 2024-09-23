@@ -65,4 +65,23 @@ export const pageFileStorageService = {
       await fs.unlink(oldFilePath);
     }
   },
+  async delete({
+    courseName,
+    moduleName,
+    pageName,
+  }: {
+    courseName: string;
+    moduleName: string;
+    pageName: string;
+  }) {
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      "pages",
+      pageName + ".md"
+    );
+    console.log("removing page", filePath);
+    await fs.unlink(filePath)
+  }
 };

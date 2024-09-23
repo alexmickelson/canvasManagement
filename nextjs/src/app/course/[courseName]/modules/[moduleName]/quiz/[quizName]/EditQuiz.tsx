@@ -10,6 +10,9 @@ import QuizPreview from "./QuizPreview";
 import { QuizButtons } from "./QuizButton";
 import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
+import { useRouter } from "next/navigation";
+import { getModuleItemUrl } from "@/services/urlUtils";
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
 const helpString = `QUESTION REFERENCE
 ---
@@ -59,6 +62,8 @@ export default function EditQuiz({
   quizName: string;
   moduleName: string;
 }) {
+  const router = useRouter();
+  const { courseName } = useCourseContext();
   const { data: quiz } = useQuizQuery(moduleName, quizName);
   const updateQuizMutation = useUpdateQuizMutation();
   const [quizText, setQuizText] = useState(quizMarkdownUtils.toMarkdown(quiz));
@@ -67,7 +72,7 @@ export default function EditQuiz({
 
   useEffect(() => {
     const delay = 1000;
-    const handler = setTimeout(() => {
+    const handler = setTimeout(async () => {
       try {
         console.log("checking if the same...");
         if (
@@ -77,11 +82,25 @@ export default function EditQuiz({
           )
         ) {
           const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
-          updateQuizMutation.mutate({
-            quiz: updatedQuiz,
-            moduleName,
-            quizName,
-          });
+          updateQuizMutation
+            .mutateAsync({
+              quiz: updatedQuiz,
+              moduleName,
+              quizName: updatedQuiz.name,
+              previousModuleName: moduleName,
+              previousQuizName: quizName,
+            })
+            .then(() => {
+              if (updatedQuiz.name !== quizName)
+                router.push(
+                  getModuleItemUrl(
+                    courseName,
+                    moduleName,
+                    "quiz",
+                    updatedQuiz.name
+                  )
+                );
+            });
         }
         setError("");
       } catch (e: any) {
@@ -92,7 +111,7 @@ export default function EditQuiz({
     return () => {
       clearTimeout(handler);
     };
-  }, [moduleName, quiz, quizName, quizText, updateQuizMutation]);
+  }, [courseName, moduleName, quiz, quizName, quizText, router, updateQuizMutation]);
 
   return (
     <div className="h-full flex flex-col align-middle px-1">
