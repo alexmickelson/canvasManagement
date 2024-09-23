@@ -153,8 +153,16 @@ function AssignmentButtons({
 }) {
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
-  const { data: canvasAssignments } = useCanvasAssignmentsQuery();
-  const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
+  const {
+    data: canvasAssignments,
+    isPending: canvasIsPending,
+    isRefetching: canvasIsRefetching,
+  } = useCanvasAssignmentsQuery();
+  const {
+    data: assignment,
+    isPending: assignmentIsPending,
+    isRefetching,
+  } = useAssignmentQuery(moduleName, assignmentName);
   const addToCanvas = useAddAssignmentToCanvasMutation();
   const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
   const updateAssignment = useUpdateAssignmentInCanvasMutation();
@@ -162,15 +170,23 @@ function AssignmentButtons({
   const assignmentInCanvas = canvasAssignments.find(
     (a) => a.name === assignmentName
   );
+
+  const anythingIsLoading =
+    addToCanvas.isPending ||
+    canvasIsPending ||
+    assignmentIsPending ||
+    isRefetching ||
+    canvasIsRefetching ||
+    deleteFromCanvas.isPending ||
+    updateAssignment.isPending;
+    
   return (
     <div className="p-5 flex flex-row justify-between gap-3">
       <div>
         <button onClick={toggleHelp}>Toggle Help</button>
       </div>
       <div className="flex flex-row gap-3 justify-end">
-        {(addToCanvas.isPending ||
-          deleteFromCanvas.isPending ||
-          updateAssignment.isPending) && <Spinner />}
+        {anythingIsLoading && <Spinner />}
         {assignmentInCanvas && !assignmentInCanvas.published && (
           <div className="text-rose-300 my-auto">Not Published</div>
         )}
