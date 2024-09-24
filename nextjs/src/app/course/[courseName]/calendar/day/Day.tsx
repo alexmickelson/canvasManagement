@@ -12,7 +12,6 @@ import { getLectureUrl } from "@/services/urlUtils";
 import DropTargetStyling from "../../../../../components/DropTargetStyling";
 import { ItemInDay } from "./ItemInDay";
 import { useTodaysItems } from "./useTodaysItems";
-import { useState } from "react";
 import Modal from "@/components/Modal";
 import NewItemForm from "../../modules/NewItemForm";
 
@@ -27,14 +26,9 @@ export default function Day({ day, month }: { day: string; month: number }) {
 
   const { data: settings } = useLocalCourseSettingsQuery();
   const { itemDropOnDay } = useDraggingContext();
-  const [contextCoordinates, setContextCoordinates] = useState<
-    { x: number; y: number } | undefined
-  >();
 
   const { todaysAssignments, todaysQuizzes, todaysPages } = useTodaysItems(day);
-
   const isInSameMonth = dayAsDate.getMonth() + 1 == month;
-
   const classOnThisDay = settings.daysOfWeek.includes(getDayOfWeek(dayAsDate));
 
   const meetingClasses = classOnThisDay ? " bg-slate-900 " : " ";
@@ -49,18 +43,8 @@ export default function Day({ day, month }: { day: string; month: number }) {
       className={" rounded-lg m-1 min-h-10 " + meetingClasses + monthClass}
       onDrop={(e) => itemDropOnDay(e, day)}
       onDragOver={(e) => e.preventDefault()}
-      onContextMenu={(e) => {
-        e.preventDefault();
-        setContextCoordinates({ x: e.pageX, y: e.pageY });
-      }}
     >
       <DropTargetStyling draggingClassName="bg-slate-900 shadow-[0_0px_10px_0px] shadow-blue-800/50 ">
-        {/* <DayContextMenu
-          day={day}
-          coordinates={contextCoordinates}
-          hideContextMenu={() => setContextCoordinates(undefined)}
-        /> */}
-
         <DayTitle day={day} dayAsDate={dayAsDate} />
         <div>
           {todaysAssignments.map(

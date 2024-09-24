@@ -76,7 +76,6 @@ const Tooltip: React.FC<{
   targetRef: React.RefObject<HTMLElement>;
   visible: boolean;
 }> = ({ message, targetRef, visible }) => {
-
   const rect = targetRef.current?.getBoundingClientRect();
 
   return createPortal(

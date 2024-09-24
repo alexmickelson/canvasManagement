@@ -137,7 +137,3 @@ select {
 .markdownPreview a {
   @apply text-blue-500 hover:text-blue-600 font-bold underline;
 }
-
-/* .isDragging .dayDropTarget {
-  @apply bg-slate-900 shadow-[0_0px_10px_0px] shadow-blue-800/50;
-} */
