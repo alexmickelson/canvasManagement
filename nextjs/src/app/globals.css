@@ -21,7 +21,9 @@
   background-color: #020617 !important;
   /* background-color: #18181b !important; */
 }
-.monaco-editor { position: absolute !important; }
+.monaco-editor {
+  position: absolute !important;
+}
 
 .monaco-editor .mtk1 {
   @apply text-slate-300;
@@ -69,13 +71,13 @@ table {
 }
 
 thead {
-  @apply text-lg ;
+  @apply text-lg;
 }
 
-th, td {
+th,
+td {
   @apply px-2 py-1 border border-gray-700;
 }
-
 
 hr {
   @apply border-t border-gray-500 my-4;
@@ -93,10 +95,12 @@ p {
   @apply mb-3;
 }
 
-button,
-.btn {
-  @apply bg-blue-900 hover:bg-blue-700 text-blue-50;
+button, .btn {
   @apply font-bold py-1 px-3 rounded transition-all duration-200;
+}
+
+button:not(.unstyled), .btn:not(.unstyled) {
+  @apply bg-blue-900 hover:bg-blue-700 text-blue-50;
 }
 
 .btn-danger {
@@ -114,20 +118,18 @@ select {
   @apply bg-slate-800;
 }
 
-
 .collapsible {
   max-height: 0;
   overflow: hidden;
-  transition: max-height .5s ease-out;
+  transition: max-height 0.5s ease-out;
 }
 
 .collapsible.expand {
   max-height: 100vh;
 }
 
-
 .markdownQuizAnswerPreview p:last-child {
-  @apply p-0 m-0 ;
+  @apply p-0 m-0;
 }
 
 .markdownPreview a {

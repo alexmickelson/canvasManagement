@@ -12,13 +12,13 @@ export default function ButtonSelect<T>({
   selectedOption: T | undefined;
 }) {
   return (
-    <div className="flex flex-row gap-3 w-min">
+    <div className="flex flex-row gap-3">
       {options.map((o) => (
         <button
           type="button"
           key={getName(o)}
           className={
-            getName(o) === getName(selectedOption) ? "" : "btn-outline"
+            getName(o) === getName(selectedOption) ? "  " : "unstyled btn-outline"
           }
           onClick={() => setSelectedOption(o)}
         >

@@ -13,7 +13,8 @@ import DropTargetStyling from "../../../../../components/DropTargetStyling";
 import { ItemInDay } from "./ItemInDay";
 import { useTodaysItems } from "./useTodaysItems";
 import { useState } from "react";
-import { DayContextMenu } from "./DayContextMenu";
+import Modal from "@/components/Modal";
+import NewItemForm from "../../modules/NewItemForm";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
@@ -54,11 +55,12 @@ export default function Day({ day, month }: { day: string; month: number }) {
       }}
     >
       <DropTargetStyling draggingClassName="bg-slate-900 shadow-[0_0px_10px_0px] shadow-blue-800/50 ">
-        <DayContextMenu
+        {/* <DayContextMenu
           day={day}
           coordinates={contextCoordinates}
           hideContextMenu={() => setContextCoordinates(undefined)}
-        />
+        /> */}
+
         <DayTitle day={day} dayAsDate={dayAsDate} />
         <div>
           {todaysAssignments.map(
@@ -102,8 +104,30 @@ export default function Day({ day, month }: { day: string; month: number }) {
 function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { courseName } = useCourseContext();
   return (
-    <Link className="ms-1" href={getLectureUrl(courseName, day)}>
-      {dayAsDate.getDate()}
-    </Link>
+    <div className="flex justify-between">
+      <Link className="ms-1" href={getLectureUrl(courseName, day)}>
+        {dayAsDate.getDate()}
+      </Link>
+      <Modal buttonText="+" buttonClass="unstyled hover:font-bold px-1 mb-auto mt-0 pt-0">
+        {({ closeModal }) => (
+          <div>
+            <NewItemForm
+              creationDate={day}
+              onCreate={() => {
+                closeModal();
+              }}
+            />
+            <br />
+            <button
+              onClick={() => {
+                closeModal();
+              }}
+            >
+              close
+            </button>
+          </div>
+        )}
+      </Modal>
+    </div>
   );
 }
