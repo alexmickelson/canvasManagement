@@ -8,7 +8,7 @@ import {
 } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourseKeys";
 import {
-  getAssignmentNamesQueryConfig,
+  getAllAssignmentsQueryConfig,
   getAssignmentQueryConfig,
 } from "./assignmentHooks";
 import { getPageNamesQueryConfig, getPageQueryConfig } from "./pageHooks";
@@ -77,34 +77,34 @@ export const useAllCourseDataQuery = () => {
   const { courseName } = useCourseContext();
   const { data: moduleNames } = useModuleNamesQuery();
 
-  const { data: assignmentNamesAndModules } = useSuspenseQueries({
+  const { data: assignmentsAndModules } = useSuspenseQueries({
     queries: moduleNames.map((moduleName) =>
-      getAssignmentNamesQueryConfig(courseName, moduleName)
+      getAllAssignmentsQueryConfig(courseName, moduleName)
     ),
     combine: (results) => ({
       data: results.flatMap((r, i) =>
-        r.data.map((assignmentName) => ({
+        r.data.map((assignment) => ({
           moduleName: moduleNames[i],
-          assignmentName,
+          assignment,
         }))
       ),
       pending: results.some((r) => r.isPending),
     }),
   });
 
-  const { data: assignmentsAndModules } = useSuspenseQueries({
-    queries: assignmentNamesAndModules.map(
-      ({ moduleName, assignmentName }, i) =>
-        getAssignmentQueryConfig(courseName, moduleName, assignmentName)
-    ),
-    combine: (results) => ({
-      data: results.flatMap((r, i) => ({
-        moduleName: assignmentNamesAndModules[i].moduleName,
-        assignment: r.data,
-      })),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
+  // const { data: assignmentsAndModules } = useSuspenseQueries({
+  //   queries: assignmentsAndModules.map(
+  //     ({ moduleName, assignment }, i) =>
+  //       getAssignmentQueryConfig(courseName, moduleName, assignment)
+  //   ),
+  //   combine: (results) => ({
+  //     data: results.flatMap((r, i) => ({
+  //       moduleName: assignmentsAndModules[i].moduleName,
+  //       assignment: r.data,
+  //     })),
+  //     pending: results.some((r) => r.isPending),
+  //   }),
+  // });
 
   const { data: quizNamesAndModules } = useSuspenseQueries({
     queries: moduleNames.map((moduleName) =>

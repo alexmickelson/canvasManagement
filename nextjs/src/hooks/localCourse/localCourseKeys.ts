@@ -10,14 +10,14 @@ export const localCourseKeys = {
       "modules",
       { type: "names" } as const,
     ] as const,
-  assignmentNames: (courseName: string, moduleName: string) =>
+  allAssignments: (courseName: string, moduleName: string) =>
     [
       "course details",
       courseName,
       "modules",
       moduleName,
       "assignments",
-      { type: "names" },
+      { type: "all assignments" },
     ] as const,
   quizNames: (courseName: string, moduleName: string) =>
     [

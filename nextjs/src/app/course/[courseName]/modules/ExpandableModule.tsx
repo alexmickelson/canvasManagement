@@ -1,6 +1,5 @@
 "use client";
 import {
-  useAssignmentNamesQuery,
   useAssignmentsQueries,
 } from "@/hooks/localCourse/assignmentHooks";
 import {

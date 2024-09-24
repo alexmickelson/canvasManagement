@@ -92,23 +92,15 @@ function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
       <Link className="ms-1" href={getLectureUrl(courseName, day)}>
         {dayAsDate.getDate()}
       </Link>
-      <Modal buttonText="+" buttonClass="unstyled hover:font-bold px-1 mb-auto mt-0 pt-0">
+      <Modal
+        buttonText="+"
+        buttonClass="unstyled hover:font-bold px-1 mb-auto mt-0 pt-0"
+      >
         {({ closeModal }) => (
           <div>
-            <NewItemForm
-              creationDate={day}
-              onCreate={() => {
-                closeModal();
-              }}
-            />
+            <NewItemForm creationDate={day} onCreate={closeModal} />
             <br />
-            <button
-              onClick={() => {
-                closeModal();
-              }}
-            >
-              close
-            </button>
+            <button onClick={closeModal}>close</button>
           </div>
         )}
       </Modal>

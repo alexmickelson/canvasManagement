@@ -84,14 +84,18 @@ const loadAllModuleData = async (courseName: string, moduleName: string) => {
 
   const [assignments, quizzes, pages] = await Promise.all([
     await Promise.all(
-      assignmentNames.map(
-        async (assignmentName) =>
-          await fileStorageService.assignments.getAssignment(
+      assignmentNames.map(async (assignmentName) => {
+        try {
+          return await fileStorageService.assignments.getAssignment(
             courseName,
             moduleName,
             assignmentName
-          )
-      )
+          );
+        } catch (error) {
+          console.error(`Error fetching assignment: ${assignmentName}`, error);
+          return null; // or any other placeholder value
+        }
+      })
     ),
     await Promise.all(
       quizNames.map(
@@ -115,12 +119,12 @@ const loadAllModuleData = async (courseName: string, moduleName: string) => {
     ),
   ]);
 
+  const assignmentsLoaded = assignments.filter(a => a !== null);
   return {
     moduleName,
-    assignmentNames,
     pageNames,
     quizNames,
-    assignments,
+    assignments: assignmentsLoaded,
     quizzes,
     pages,
   };
@@ -129,7 +133,6 @@ const loadAllModuleData = async (courseName: string, moduleName: string) => {
 const hydrateModuleData = async (
   {
     moduleName,
-    assignmentNames,
     pageNames,
     quizNames,
     assignments,
@@ -137,7 +140,6 @@ const hydrateModuleData = async (
     pages,
   }: {
     moduleName: string;
-    assignmentNames: string[];
     pageNames: string[];
     quizNames: string[];
     assignments: LocalAssignment[];
@@ -148,8 +150,8 @@ const hydrateModuleData = async (
   queryClient: QueryClient
 ) => {
   await queryClient.prefetchQuery({
-    queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
-    queryFn: () => assignmentNames,
+    queryKey: localCourseKeys.allAssignments(courseName, moduleName),
+    queryFn: () => assignments,
   });
   await Promise.all(
     assignments.map(

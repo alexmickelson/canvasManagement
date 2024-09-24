@@ -11,12 +11,12 @@ export const GET = async (
   }
 ) =>
   await withErrorHandling(async () => {
-    const settings = await fileStorageService.assignments.getAssignment(
+    const assignment = await fileStorageService.assignments.getAssignment(
       courseName,
       moduleName,
       assignmentName
     );
-    return Response.json(settings);
+    return Response.json(assignment);
   });
 
 export const PUT = async (

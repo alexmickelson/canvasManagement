@@ -1,4 +1,4 @@
-import { isServer, QueryClient } from "@tanstack/react-query";
+import { isServer, QueryCache, QueryClient } from "@tanstack/react-query";
 
 export function makeQueryClient() {
   return new QueryClient({
@@ -13,6 +13,9 @@ export function makeQueryClient() {
         refetchOnMount: false,
       },
     },
+    queryCache: new QueryCache({
+      onError: (e) => console.log("error in query client", e),
+    }),
   });
 }
 
