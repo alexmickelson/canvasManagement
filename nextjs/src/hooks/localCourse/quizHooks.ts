@@ -126,12 +126,12 @@ export const useUpdateQuizMutation = () => {
       //   getQuizNamesQueryConfig(courseName, previousModuleName)
       // );
     },
-    onSuccess: (_, { moduleName, quizName }) => {
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
-      });
-      queryClient.invalidateQueries({
+    onSuccess: async (_, { moduleName, quizName }) => {
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.quizNames(courseName, moduleName),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
       });
     },
   });
@@ -163,12 +163,12 @@ export const useCreateQuizMutation = () => {
         encodeURIComponent(quizName);
       await axiosClient.post(url, quiz);
     },
-    onSuccess: (_, { moduleName, quizName }) => {
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
-      });
-      queryClient.invalidateQueries({
+    onSuccess: async (_, { moduleName, quizName }) => {
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.quizNames(courseName, moduleName),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
       });
     },
   });

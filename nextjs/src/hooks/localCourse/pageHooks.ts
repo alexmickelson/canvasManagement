@@ -129,12 +129,12 @@ export const useUpdatePageMutation = () => {
         previousPageName,
       });
     },
-    onSuccess: (_, { moduleName, pageName }) => {
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
-      });
-      queryClient.invalidateQueries({
+    onSuccess: async (_, { moduleName, pageName }) => {
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.pageNames(courseName, moduleName),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
       });
     },
   });
@@ -204,11 +204,11 @@ export const useDeletePageMutation = () => {
       await axiosClient.delete(url);
 
     },
-    onSuccess: (_, { moduleName, pageName }) => {
-      queryClient.invalidateQueries({
+    onSuccess: async (_, { moduleName, pageName }) => {
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.pageNames(courseName, moduleName),
       });
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.page(courseName, moduleName, pageName),
       });
     },

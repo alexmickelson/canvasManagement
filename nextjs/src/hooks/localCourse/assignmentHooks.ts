@@ -140,16 +140,16 @@ export const useUpdateAssignmentMutation = () => {
         previousAssignmentName,
       });
     },
-    onSuccess: (_, { moduleName, assignmentName }) => {
-      queryClient.invalidateQueries({
+    onSuccess: async (_, { moduleName, assignmentName }) => {
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
+      });
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.assignment(
           courseName,
           moduleName,
           assignmentName
         ),
-      });
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
       });
     },
   });
@@ -181,16 +181,16 @@ export const useCreateAssignmentMutation = () => {
         encodeURIComponent(assignmentName);
       await axiosClient.post(url, assignment);
     },
-    onSuccess: (_, { moduleName, assignmentName }) => {
-      queryClient.invalidateQueries({
+    onSuccess: async (_, { moduleName, assignmentName }) => {
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
+      });
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.assignment(
           courseName,
           moduleName,
           assignmentName
         ),
-      });
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
       });
     },
   });

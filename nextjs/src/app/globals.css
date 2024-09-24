@@ -99,7 +99,7 @@ button, .btn {
   @apply font-bold py-1 px-3 rounded transition-all duration-200;
 }
 
-button:not(.unstyled), .btn:not(.unstyled) {
+button:not(.unstyled):not(.btn-danger), .btn:not(.unstyled):not(.btn-danger) {
   @apply bg-blue-900 hover:bg-blue-700 text-blue-50;
 }
 
