@@ -17,14 +17,16 @@ if (!isServer) {
 } else {
   const token = process.env.CANVAS_TOKEN;
   if (!token) {
-    throw new Error("CANVAS_TOKEN not in environment");
+    console.error("CANVAS_TOKEN not in environment")
+    // throw new Error("CANVAS_TOKEN not in environment");
+  } else {
+    axiosClient.interceptors.request.use((config) => {
+      if (config.url && config.url.startsWith(canvasBaseUrl)) {
+        config.headers.set("Authorization", `Bearer ${token}`);
+      }
+      return config;
+    });
   }
-  axiosClient.interceptors.request.use((config) => {
-    if (config.url && config.url.startsWith(canvasBaseUrl)) {
-      config.headers.set("Authorization", `Bearer ${token}`);
-    }
-    return config;
-  });
 }
 
 axiosClient.interceptors.response.use(

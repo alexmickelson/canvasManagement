@@ -6,6 +6,7 @@ import { getQueryClient } from "./providersQueryClientUtils";
 import { hydrateCourses } from "@/hooks/hookHydration";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { MyToaster } from "./MyToaster";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Canvas Manager 2.0",
@@ -19,6 +20,7 @@ export default async function RootLayout({
   const queryClient = getQueryClient();
   await hydrateCourses(queryClient);
   const dehydratedState = dehydrate(queryClient);
+  cookies() // disables static page generation at build time
 
   return (
     <html lang="en">

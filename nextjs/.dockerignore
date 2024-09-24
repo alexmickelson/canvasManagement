@@ -1,0 +1,10 @@
+.next/
+node_modules/
+storage/
+temp/
+.env
+build.sh
+run.sh
+README.md
+
+
