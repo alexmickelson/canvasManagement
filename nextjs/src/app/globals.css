@@ -95,11 +95,13 @@ p {
   @apply mb-3;
 }
 
-button, .btn {
+button,
+.btn {
   @apply font-bold py-1 px-3 rounded transition-all duration-200;
 }
 
-button:not(.unstyled):not(.btn-danger), .btn:not(.unstyled):not(.btn-danger) {
+button:not(.unstyled):not(.btn-danger),
+.btn:not(.unstyled):not(.btn-danger) {
   @apply bg-blue-900 hover:bg-blue-700 text-blue-50;
 }
 
@@ -135,3 +137,7 @@ select {
 .markdownPreview a {
   @apply text-blue-500 hover:text-blue-600 font-bold underline;
 }
+
+/* .isDragging .dayDropTarget {
+  @apply bg-slate-900 shadow-[0_0px_10px_0px] shadow-blue-800/50;
+} */

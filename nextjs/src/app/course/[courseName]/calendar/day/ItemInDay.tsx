@@ -8,6 +8,7 @@ import {
   DraggableItem,
 } from "../../context/draggingContext";
 import { createPortal } from "react-dom";
+import ClientOnly from "@/components/ClientOnly";
 
 export function ItemInDay({
   type,
@@ -59,11 +60,13 @@ export function ItemInDay({
       >
         {item.name}
       </Link>
-      <Tooltip
-        message={message}
-        targetRef={linkRef}
-        visible={tooltipVisible && status === "incomplete"}
-      />
+      <ClientOnly>
+        <Tooltip
+          message={message}
+          targetRef={linkRef}
+          visible={tooltipVisible && status === "incomplete"}
+        />
+      </ClientOnly>
     </div>
   );
 }
@@ -73,24 +76,14 @@ const Tooltip: React.FC<{
   targetRef: React.RefObject<HTMLElement>;
   visible: boolean;
 }> = ({ message, targetRef, visible }) => {
-  const [position, setPosition] = useState({ top: 0, left: 0 });
 
-  useEffect(() => {
-    if (targetRef.current) {
-      const rect = targetRef.current.getBoundingClientRect();
-      setPosition({
-        top: rect.bottom + window.scrollY + 10, 
-        left: rect.left + window.scrollX + rect.width / 2, 
-      });
-    }
-  }, [targetRef]);
-
+  const rect = targetRef.current?.getBoundingClientRect();
 
   return createPortal(
     <div
       style={{
-        top: position.top,
-        left: position.left,
+        top: (rect?.bottom ?? 0) + window.scrollY + 10,
+        left: (rect?.left ?? 0) + window.scrollX + (rect?.width ?? 0) / 2,
       }}
       className={
         " absolute -translate-x-1/2 " +
@@ -98,7 +91,7 @@ const Tooltip: React.FC<{
         " rounded py-1 px-2 " +
         " transition-all duration-400 " +
         " border border-slate-700 shadow-[0_0px_10px_0px] shadow-slate-500/50 " +
-        (visible ? " opacity-100 " : " opacity-0 -z-50 ")
+        (visible ? "  " : " hidden -z-50 ")
       }
       role="tooltip"
     >

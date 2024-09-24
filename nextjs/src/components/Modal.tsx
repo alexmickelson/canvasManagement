@@ -25,7 +25,7 @@ export default function Modal({
 
       <div
         className={
-          "fixed inset-0 flex items-center justify-center transition-all duration-400 " +
+          " fixed inset-0 flex items-center justify-center transition-all duration-400 h-screen " +
           " bg-black" +
           (isOpen ? " bg-opacity-50  z-50  " : " bg-opacity-0  -z-50  ")
         }
