@@ -46,7 +46,7 @@ export const getAssignmentQueryConfig = (
       moduleName,
       assignmentName
     ),
-    queryFn: async (): Promise<LocalAssignment> => {
+    queryFn: async () => {
       const url =
         "/api/courses/" +
         encodeURIComponent(courseName) +
@@ -54,7 +54,7 @@ export const getAssignmentQueryConfig = (
         encodeURIComponent(moduleName) +
         "/assignments/" +
         encodeURIComponent(assignmentName);
-      const response = await axiosClient.get(url);
+      const response = await axiosClient.get<LocalAssignment>(url);
       return response.data;
     },
   };
@@ -71,10 +71,8 @@ export const useAssignmentQuery = (
   );
 };
 
-export const useAssignmentsQueries = (
-  moduleName: string,
-  assignmentNames: string[]
-) => {
+export const useAssignmentsQueries = (moduleName: string) => {
+  const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
   const { courseName } = useCourseContext();
   return useSuspenseQueries({
     queries: assignmentNames.map((name) =>
@@ -191,6 +189,48 @@ export const useCreateAssignmentMutation = () => {
           moduleName,
           assignmentName
         ),
+      });
+    },
+  });
+};
+
+export const useDeleteAssignmentMutation = () => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      moduleName,
+      assignmentName,
+    }: {
+      moduleName: string;
+      assignmentName: string;
+    }) => {
+
+      queryClient.removeQueries({
+        queryKey: localCourseKeys.assignment(
+          courseName,
+          moduleName,
+          assignmentName
+        ),
+      });
+      queryClient.removeQueries({
+        queryKey: localCourseKeys.assignmentNames(
+          courseName,
+          moduleName
+        ),
+      });
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/assignments/" +
+        encodeURIComponent(assignmentName);
+      await axiosClient.delete(url);
+    },
+    onSuccess: async (_, { moduleName, assignmentName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.assignmentNames(courseName, moduleName),
       });
     },
   });

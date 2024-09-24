@@ -24,6 +24,7 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
 import { LocalCourseSettings } from "@/models/local/localCourse";
 import { useRouter } from "next/navigation";
+import { AssignmentButtons } from "./AssignmentButtons";
 
 export default function EditAssignment({
   moduleName,
@@ -140,105 +141,4 @@ AllowedFileUploadExtensions:
 Assignment Group Names:
 - ${groupNames}`;
   return helpString;
-}
-
-function AssignmentButtons({
-  moduleName,
-  assignmentName,
-  toggleHelp,
-}: {
-  assignmentName: string;
-  moduleName: string;
-  toggleHelp: () => void;
-}) {
-  const { courseName } = useCourseContext();
-  const { data: settings } = useLocalCourseSettingsQuery();
-  const {
-    data: canvasAssignments,
-    isPending: canvasIsPending,
-    isRefetching: canvasIsRefetching,
-  } = useCanvasAssignmentsQuery();
-  const {
-    data: assignment,
-    isPending: assignmentIsPending,
-    isRefetching,
-  } = useAssignmentQuery(moduleName, assignmentName);
-  const addToCanvas = useAddAssignmentToCanvasMutation();
-  const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
-  const updateAssignment = useUpdateAssignmentInCanvasMutation();
-
-  const assignmentInCanvas = canvasAssignments.find(
-    (a) => a.name === assignmentName
-  );
-
-  const anythingIsLoading =
-    addToCanvas.isPending ||
-    canvasIsPending ||
-    assignmentIsPending ||
-    isRefetching ||
-    canvasIsRefetching ||
-    deleteFromCanvas.isPending ||
-    updateAssignment.isPending;
-
-  return (
-    <div className="p-5 flex flex-row justify-between gap-3">
-      <div>
-        <button onClick={toggleHelp}>Toggle Help</button>
-      </div>
-      <div className="flex flex-row gap-3 justify-end">
-        {anythingIsLoading && <Spinner />}
-        {assignmentInCanvas && !assignmentInCanvas.published && (
-          <div className="text-rose-300 my-auto">Not Published</div>
-        )}
-        {!assignmentInCanvas && (
-          <button
-            disabled={addToCanvas.isPending}
-            onClick={() => addToCanvas.mutate({ assignment, moduleName })}
-          >
-            Add to canvas
-          </button>
-        )}
-        {assignmentInCanvas && (
-          <a
-            className="btn"
-            target="_blank"
-            href={`${baseCanvasUrl}/courses/${settings.canvasId}/assignments/${assignmentInCanvas.id}`}
-          >
-            View in Canvas
-          </a>
-        )}
-        {assignmentInCanvas && (
-          <button
-            className=""
-            disabled={deleteFromCanvas.isPending}
-            onClick={() =>
-              updateAssignment.mutate({
-                canvasAssignmentId: assignmentInCanvas.id,
-                assignment,
-              })
-            }
-          >
-            Update in Canvas
-          </button>
-        )}
-        {assignmentInCanvas && (
-          <button
-            className="btn-danger"
-            disabled={deleteFromCanvas.isPending}
-            onClick={() =>
-              deleteFromCanvas.mutate({
-                canvasAssignmentId: assignmentInCanvas.id,
-                assignmentName: assignment.name,
-              })
-            }
-          >
-            Delete from Canvas
-          </button>
-        )}
-        <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
-          Go Back
-        </Link>
-      </div>
-    </div>
-  );
 }

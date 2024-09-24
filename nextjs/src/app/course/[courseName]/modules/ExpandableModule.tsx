@@ -34,14 +34,12 @@ export default function ExpandableModule({
 }: {
   moduleName: string;
 }) {
-  const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
   const { data: quizNames } = useQuizNamesQuery(moduleName);
   const { data: pageNames } = usePageNamesQuery(moduleName);
   const { itemDropOnModule } = useDraggingContext();
 
   const { data: assignments } = useAssignmentsQueries(
     moduleName,
-    assignmentNames
   );
   const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
   const { data: pages } = usePagesQueries(moduleName, pageNames);
