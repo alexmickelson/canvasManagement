@@ -64,21 +64,6 @@ export function ItemInDay({
         targetRef={linkRef}
         visible={tooltipVisible && status === "incomplete"}
       />
-      {/* {status === "incomplete" && (
-        <div
-          className={
-            " absolute opacity-0 transition-all duration-700 " +
-            " hidden group-hover:block group-hover:opacity-100" +
-            " bg-gray-800 text-white text-sm " +
-            " rounded py-1 px-2 " +
-            " top-full mt-2 transform left-1/2 -translate-x-1/2 " +
-            " whitespace-no-wrap min-w-full max-w-96 overflow-visible "
-          }
-          role="tooltip"
-        >
-          {message}
-        </div>
-      )} */}
     </div>
   );
 }
@@ -91,17 +76,15 @@ const Tooltip: React.FC<{
   const [position, setPosition] = useState({ top: 0, left: 0 });
 
   useEffect(() => {
-    if (targetRef.current && visible) {
+    if (targetRef.current) {
       const rect = targetRef.current.getBoundingClientRect();
-      // Calculate tooltip position relative to the target
       setPosition({
-        top: rect.bottom + window.scrollY + 10, // Adjust based on your needs
-        left: rect.left + window.scrollX + rect.width / 2, // Center tooltip
+        top: rect.bottom + window.scrollY + 10, 
+        left: rect.left + window.scrollX + rect.width / 2, 
       });
     }
-  }, [targetRef, visible]);
+  }, [targetRef]);
 
-  // if (!visible) return null;
 
   return createPortal(
     <div
@@ -113,18 +96,14 @@ const Tooltip: React.FC<{
         " absolute -translate-x-1/2 " +
         " bg-gray-800 text-white text-sm " +
         " rounded py-1 px-2 " +
-        " transition-all duration-700 " +
+        " transition-all duration-400 " +
+        " border border-slate-700 shadow-[0_0px_10px_0px] shadow-slate-500/50 " +
         (visible ? " opacity-100 " : " opacity-0 -z-50 ")
-        // " hidden group-hover:block group-hover:opacity-100" +
-        // " bg-gray-800 text-white text-sm " +
-        // " rounded py-1 px-2 " +
-        // " top-full mt-2 transform left-1/2  " +
-        // " whitespace-no-wrap min-w-full max-w-96 overflow-visible "
       }
       role="tooltip"
     >
       {message}
     </div>,
-    document.body // Render outside of overflow-hidden parent
+    document.body
   );
 };
