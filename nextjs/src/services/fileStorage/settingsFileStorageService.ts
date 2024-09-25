@@ -54,3 +54,4 @@ export const settingsFileStorageService = {
     await fs.writeFile(settingsPath, settingsMarkdown);
   },
 };
+
