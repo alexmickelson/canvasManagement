@@ -1,6 +1,6 @@
 "use client";
 import { marked } from "marked";
-import markedKatex from "marked-katex-extension";
+// import markedKatex from "marked-katex-extension";
 import * as DOMPurify from "isomorphic-dompurify";
 
 export function markdownToHTMLSafe(markdownString: string) {

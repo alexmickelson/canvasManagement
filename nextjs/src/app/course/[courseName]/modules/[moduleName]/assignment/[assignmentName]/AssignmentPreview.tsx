@@ -1,6 +1,7 @@
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { rubricItemIsExtraCredit } from "@/models/local/assignment/rubricItem";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
-import React from "react";
+import React, { Fragment } from "react";
 
 export default function AssignmentPreview({
   assignment,
@@ -53,6 +54,22 @@ export default function AssignmentPreview({
             __html: markdownToHTMLSafe(assignment.description),
           }}
         ></div>
+      </section>
+      <hr />
+      <section>
+        <h2 className="text-center">Rubric</h2>
+        <div className="grid grid-cols-3">
+          {assignment.rubric.map((rubricItem, i) => (
+            <Fragment key={rubricItem.label + i}>
+              <div className="text-end pe-3 col-span-2">{rubricItem.label}</div>
+              <div>
+                {rubricItem.points}
+
+                {rubricItemIsExtraCredit(rubricItem) ? " - Extra Credit" : ""}
+              </div>
+            </Fragment>
+          ))}
+        </div>
       </section>
     </div>
   );

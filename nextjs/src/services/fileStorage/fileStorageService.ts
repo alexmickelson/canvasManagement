@@ -47,4 +47,9 @@ export const fileStorageService = {
 
     await fs.mkdir(courseDirectory, { recursive: true });
   },
+  async createModuleFolderForTesting(courseName: string, moduleName: string) {
+    const courseDirectory = path.join(basePath, courseName);
+
+    await fs.mkdir(courseDirectory, { recursive: true });
+  },
 };
