@@ -8,6 +8,14 @@ export default function AssignmentPreview({
 }: {
   assignment: LocalAssignment;
 }) {
+  const totalPoints = assignment.rubric.reduce(
+    (sum, cur) => (rubricItemIsExtraCredit(cur) ? sum : sum + cur.points),
+    0
+  );
+  const extraPoints = assignment.rubric.reduce(
+    (sum, cur) => (rubricItemIsExtraCredit(cur) ? sum + cur.points : sum),
+    0
+  );
   return (
     <div className="h-full overflow-y-auto">
       <section>
@@ -57,7 +65,10 @@ export default function AssignmentPreview({
       </section>
       <hr />
       <section>
-        <h2 className="text-center">Rubric</h2>
+        <h2 className="text-center">Rubric - {totalPoints} Points</h2>
+        {extraPoints !== 0 && (
+          <h5 className="text-center">{extraPoints} Extra Credit Points</h5>
+        )}
         <div className="grid grid-cols-3">
           {assignment.rubric.map((rubricItem, i) => (
             <Fragment key={rubricItem.label + i}>
