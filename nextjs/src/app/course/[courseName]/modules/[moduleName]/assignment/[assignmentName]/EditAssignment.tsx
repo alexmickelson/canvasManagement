@@ -58,11 +58,11 @@ export default function EditAssignment({
           console.log("updating assignment");
           updateAssignment
             .mutateAsync({
-              assignment: updatedAssignment,
+              item: updatedAssignment,
               moduleName,
-              assignmentName: updatedAssignment.name,
+              itemName: updatedAssignment.name,
               previousModuleName: moduleName,
-              previousAssignmentName: assignmentName,
+              previousItemName: assignmentName,
             })
             .then(() => {
               if (updatedAssignment.name !== assignmentName)

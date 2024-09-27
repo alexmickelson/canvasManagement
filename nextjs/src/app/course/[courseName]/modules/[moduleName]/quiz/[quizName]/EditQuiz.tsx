@@ -84,11 +84,11 @@ export default function EditQuiz({
           const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
           updateQuizMutation
             .mutateAsync({
-              quiz: updatedQuiz,
+              item: updatedQuiz,
               moduleName,
-              quizName: updatedQuiz.name,
+              itemName: updatedQuiz.name,
               previousModuleName: moduleName,
-              previousQuizName: quizName,
+              previousItemName: quizName,
             })
             .then(() => {
               if (updatedQuiz.name !== quizName)

@@ -32,8 +32,6 @@ export default function ExpandableModule({
   const { data: quizzes } = useQuizzesQueries(moduleName);
   const { data: pages } = usePagesQueries(moduleName);
 
-  // const [expanded, setExpanded] = useState(false);
-
   const moduleItems: {
     type: "assignment" | "quiz" | "page";
     item: IModuleItem;
@@ -62,7 +60,6 @@ export default function ExpandableModule({
           "item due date in expandable module"
         ).getTime()
     );
-  // const expandRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div

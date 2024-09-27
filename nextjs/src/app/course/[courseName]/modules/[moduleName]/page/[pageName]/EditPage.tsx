@@ -44,11 +44,11 @@ export default function EditPage({
           console.log("updating page");
           updatePage
             .mutateAsync({
-              page: updatedPage,
+              item: updatedPage,
               moduleName,
-              pageName: updatedPage.name,
+              itemName: updatedPage.name,
               previousModuleName: moduleName,
-              previousPageName: pageName,
+              previousItemName: pageName,
             })
             .then(() => {
               if (updatedPage.name !== pageName)

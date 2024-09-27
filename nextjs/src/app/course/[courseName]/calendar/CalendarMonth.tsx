@@ -20,7 +20,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
     <>
       <Expandable
         defaultExpanded={!isInPast}
-        ExpandableElement={({ setIsExpanded, isExpanded }) => (
+        ExpandableElement={({ setIsExpanded }) => (
           <div className="flex justify-center">
             <h3
               className={

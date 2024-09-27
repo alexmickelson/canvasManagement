@@ -64,30 +64,30 @@ export default function DraggingContextProvider({
         const quiz = itemBeingDragged.item as LocalQuiz;
 
         updateQuizMutation.mutate({
-          quiz: quiz,
-          quizName: quiz.name,
+          item: quiz,
+          itemName: quiz.name,
           moduleName: dropModuleName,
           previousModuleName: itemBeingDragged.sourceModuleName,
-          previousQuizName: quiz.name,
+          previousItemName: quiz.name,
         });
       }
       function updateAssignment() {
         const assignment = itemBeingDragged.item as LocalAssignment;
         updateAssignmentMutation.mutate({
-          assignment,
+          item: assignment,
           previousModuleName: itemBeingDragged.sourceModuleName,
           moduleName: dropModuleName,
-          assignmentName: assignment.name,
-          previousAssignmentName: assignment.name,
+          itemName: assignment.name,
+          previousItemName: assignment.name,
         });
       }
       function updatePage() {
         const page = itemBeingDragged.item as LocalCoursePage;
         updatePageMutation.mutate({
-          page,
+          item: page,
           moduleName: dropModuleName,
-          pageName: page.name,
-          previousPageName: page.name,
+          itemName: page.name,
+          previousItemName: page.name,
           previousModuleName: itemBeingDragged.sourceModuleName,
         });
       }
@@ -129,11 +129,11 @@ export default function DraggingContextProvider({
           lockAt: getLaterDate(previousQuiz.lockAt, dayAsDate),
         };
         updateQuizMutation.mutate({
-          quiz: quiz,
-          quizName: quiz.name,
+          item: quiz,
+          itemName: quiz.name,
           moduleName: itemBeingDragged.sourceModuleName,
           previousModuleName: itemBeingDragged.sourceModuleName,
-          previousQuizName: quiz.name,
+          previousItemName: quiz.name,
         });
       }
       function updatePage(dayAsDate: Date) {
@@ -143,10 +143,10 @@ export default function DraggingContextProvider({
           dueAt: dateToMarkdownString(dayAsDate),
         };
         updatePageMutation.mutate({
-          page,
+          item: page,
           moduleName: itemBeingDragged.sourceModuleName,
-          pageName: page.name,
-          previousPageName: page.name,
+          itemName: page.name,
+          previousItemName: page.name,
           previousModuleName: itemBeingDragged.sourceModuleName,
         });
       }
@@ -165,11 +165,11 @@ export default function DraggingContextProvider({
               : dateToMarkdownString(dayAsDate)),
         };
         updateAssignmentMutation.mutate({
-          assignment,
+          item: assignment,
           previousModuleName: itemBeingDragged.sourceModuleName,
           moduleName: itemBeingDragged.sourceModuleName,
-          assignmentName: assignment.name,
-          previousAssignmentName: assignment.name,
+          itemName: assignment.name,
+          previousItemName: assignment.name,
         });
       }
     },

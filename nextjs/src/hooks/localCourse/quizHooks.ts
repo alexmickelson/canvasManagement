@@ -12,6 +12,7 @@ import {
   getItemQueryConfig,
   useItemQuery,
   useItemsQueries,
+  useUpdateItemMutation,
 } from "./courseItemHooks";
 
 export function getAllQuizzesQueryConfig(
@@ -35,84 +36,7 @@ export const useQuizQuery = (moduleName: string, quizName: string) =>
 export const useQuizzesQueries = (moduleName: string) =>
   useItemsQueries(moduleName, "Quiz");
 
-export const useUpdateQuizMutation = () => {
-  const { courseName } = useCourseContext();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({
-      quiz,
-      moduleName,
-      quizName,
-      previousModuleName,
-      previousQuizName,
-    }: {
-      quiz: LocalQuiz;
-      moduleName: string;
-      quizName: string;
-      previousModuleName: string;
-      previousQuizName: string;
-    }) => {
-      if (
-        previousQuizName &&
-        previousModuleName &&
-        (previousQuizName !== quiz.name || previousModuleName !== moduleName)
-      ) {
-        queryClient.removeQueries({
-          queryKey: localCourseKeys.itemOfType(
-            courseName,
-            previousModuleName,
-            previousQuizName,
-            "Quiz"
-          ),
-        });
-        queryClient.removeQueries({
-          queryKey: localCourseKeys.allItemsOfType(
-            courseName,
-            previousModuleName,
-            "Quiz"
-          ),
-        });
-      }
-      queryClient.setQueryData(
-        localCourseKeys.itemOfType(courseName, moduleName, quizName, "Quiz"),
-        quiz
-      );
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/quizzes/" +
-        encodeURIComponent(quizName);
-      await axiosClient.put(url, {
-        quiz,
-        previousModuleName,
-        previousQuizName,
-      });
-
-      // queryClient.fetchQuery(
-      //   getQuizNamesQueryConfig(courseName, previousModuleName)
-      // );
-    },
-    onSuccess: async (_, { moduleName, quizName }) => {
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(
-          courseName,
-          moduleName,
-          "Quiz"
-        ),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          quizName,
-          "Quiz"
-        ),
-      });
-    },
-  });
-};
+export const useUpdateQuizMutation = () => useUpdateItemMutation("Quiz")
 
 export const useCreateQuizMutation = () => {
   const { courseName } = useCourseContext();
