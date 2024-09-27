@@ -9,6 +9,7 @@ import {
 } from "../../context/draggingContext";
 import { createPortal } from "react-dom";
 import ClientOnly from "@/components/ClientOnly";
+import { useDragStyleContext } from "../../context/dragStyleContext";
 
 export function ItemInDay({
   type,
@@ -24,7 +25,7 @@ export function ItemInDay({
   message: ReactNode;
 }) {
   const { courseName } = useCourseContext();
-  const { dragStart } = useDraggingContext();
+  const { setIsDragging } = useDragStyleContext();
   const linkRef = useRef<HTMLAnchorElement>(null);
   const [tooltipVisible, setTooltipVisible] = useState(false);
   return (
@@ -52,7 +53,8 @@ export function ItemInDay({
             "draggableItem",
             JSON.stringify(draggableItem)
           );
-          dragStart();
+          setIsDragging(true)
+          
         }}
         onMouseEnter={() => setTooltipVisible(true)}
         onMouseLeave={() => setTooltipVisible(false)}

@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useCallback, DragEvent, useState, useEffect } from "react";
+import { ReactNode, useCallback, DragEvent, useEffect } from "react";
 import { DraggableItem, DraggingContext } from "./draggingContext";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
@@ -12,17 +12,18 @@ import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { useUpdateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
 import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
+import { useDragStyleContext } from "./dragStyleContext";
 
 export default function DraggingContextProvider({
   children,
 }: {
   children: ReactNode;
 }) {
+  const { setIsDragging } = useDragStyleContext();
   const updateQuizMutation = useUpdateQuizMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();
   const updatePageMutation = useUpdatePageMutation();
   const { data: settings } = useLocalCourseSettingsQuery();
-  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     const handleDrop = () => {
@@ -38,9 +39,7 @@ export default function DraggingContextProvider({
       window.removeEventListener("drop", handleDrop);
       window.addEventListener("dragover", preventDefault);
     };
-  }, []);
-
-  const dragStart = useCallback(() => setIsDragging(true), []);
+  }, [setIsDragging]);
 
   const itemDropOnModule = useCallback(
     (e: DragEvent<HTMLDivElement>, dropModuleName: string) => {
@@ -92,7 +91,12 @@ export default function DraggingContextProvider({
         });
       }
     },
-    [updateAssignmentMutation, updatePageMutation, updateQuizMutation]
+    [
+      setIsDragging,
+      updateAssignmentMutation,
+      updatePageMutation,
+      updateQuizMutation,
+    ]
   );
 
   const itemDropOnDay = useCallback(
@@ -174,6 +178,7 @@ export default function DraggingContextProvider({
       }
     },
     [
+      setIsDragging,
       settings.defaultDueTime.hour,
       settings.defaultDueTime.minute,
       updateAssignmentMutation,
@@ -181,14 +186,13 @@ export default function DraggingContextProvider({
       updateQuizMutation,
     ]
   );
+  console.log("rerender");
 
   return (
     <DraggingContext.Provider
       value={{
         itemDropOnDay,
         itemDropOnModule,
-        isDragging,
-        dragStart,
       }}
     >
       {children}

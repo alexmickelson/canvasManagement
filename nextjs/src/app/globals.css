@@ -137,3 +137,19 @@ select {
 .markdownPreview a {
   @apply text-blue-500 hover:text-blue-600 font-bold underline;
 }
+
+.draggingDay {
+  @apply h-full transition-all duration-500;
+}
+
+.dragging .draggingDay {
+  @apply bg-slate-900 shadow-[0_0px_10px_0px] shadow-blue-800/50;
+}
+
+.draggingModule {
+  @apply h-full transition-all duration-500;
+}
+
+.dragging .draggingModule {
+  @apply shadow-[0_0px_10px_0px] shadow-blue-500/50;
+}

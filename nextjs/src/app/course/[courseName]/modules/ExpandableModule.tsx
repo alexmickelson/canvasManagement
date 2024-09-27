@@ -15,11 +15,11 @@ import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
 import ExpandIcon from "../../../../components/icons/ExpandIcon";
 import { DraggableItem, useDraggingContext } from "../context/draggingContext";
-import DropTargetStyling from "../../../../components/DropTargetStyling";
 import Link from "next/link";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
+import { useDragStyleContext } from "../context/dragStyleContext";
 
 export default function ExpandableModule({
   moduleName,
@@ -67,7 +67,7 @@ export default function ExpandableModule({
       onDrop={(e) => itemDropOnModule(e, moduleName)}
       onDragOver={(e) => e.preventDefault()}
     >
-      <DropTargetStyling draggingClassName="shadow-[0_0px_10px_0px] shadow-blue-500/50 ">
+      <div className="draggingModule ">
         <div className=" p-3 ">
           <Expandable
             ExpandableElement={({ setIsExpanded, isExpanded }) => (
@@ -116,7 +116,7 @@ export default function ExpandableModule({
             </>
           </Expandable>
         </div>
-      </DropTargetStyling>
+      </div>
     </div>
   );
 }
@@ -132,7 +132,7 @@ function ExpandableModuleItem({
 }) {
   const { courseName } = useCourseContext();
   const date = getDateFromString(item.dueAt);
-  const { dragStart } = useDraggingContext();
+  const { setIsDragging } = useDragStyleContext();
 
   return (
     <Fragment key={item.name + type}>
@@ -153,7 +153,7 @@ function ExpandableModuleItem({
             "draggableItem",
             JSON.stringify(draggableItem)
           );
-          dragStart();
+          setIsDragging(true);
         }}
       >
         {item.name}

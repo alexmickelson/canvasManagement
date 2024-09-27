@@ -1,6 +1,5 @@
 "use client";
 import {
-  getDateFromString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
@@ -10,7 +9,6 @@ import Link from "next/link";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDayOfWeek } from "@/models/local/localCourse";
 import { getLectureUrl } from "@/services/urlUtils";
-import DropTargetStyling from "../../../../../components/DropTargetStyling";
 import { ItemInDay } from "./ItemInDay";
 import { useTodaysItems } from "./useTodaysItems";
 import Modal from "@/components/Modal";
@@ -41,7 +39,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
     "comparing end date in day"
   );
 
-  const isInSemester = semesterStart < dayAsDate&& semesterEnd > dayAsDate;
+  const isInSemester = semesterStart < dayAsDate && semesterEnd > dayAsDate;
 
   const meetingClasses =
     classOnThisDay && isInSemester ? " bg-slate-900 " : " ";
@@ -57,7 +55,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
       onDrop={(e) => itemDropOnDay(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
-      <DropTargetStyling draggingClassName="bg-slate-900 shadow-[0_0px_10px_0px] shadow-blue-800/50 ">
+      <div className="draggingDay">
         <DayTitle day={day} dayAsDate={dayAsDate} />
         <div>
           {todaysAssignments.map(
@@ -93,7 +91,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
             />
           ))}
         </div>
-      </DropTargetStyling>
+      </div>
     </div>
   );
 }
