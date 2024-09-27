@@ -186,7 +186,6 @@ export default function DraggingContextProvider({
       updateQuizMutation,
     ]
   );
-  console.log("rerender");
 
   return (
     <DraggingContext.Provider
