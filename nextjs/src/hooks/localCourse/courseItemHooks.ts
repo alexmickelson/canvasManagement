@@ -175,3 +175,47 @@ export const useUpdateItemMutation = <T extends CourseItemType>(type: T) => {
     },
   });
 };
+
+export const useCreateItemMutation = <T extends CourseItemType>(type: T) => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      item,
+      moduleName,
+      itemName,
+    }: {
+      item: CourseItemReturnType<T>;
+      moduleName: string;
+      itemName: string;
+    }) => {
+      queryClient.setQueryData(
+        localCourseKeys.itemOfType(courseName, moduleName, itemName, type),
+        item
+      );
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/" +
+        typeToFolder[type] +
+        "/" +
+        encodeURIComponent(itemName);
+      await axiosClient.post(url, item);
+    },
+    onSuccess: async (_, { moduleName, itemName: assignmentName }) => {
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          assignmentName,
+          type
+        ),
+      });
+    },
+  });
+};

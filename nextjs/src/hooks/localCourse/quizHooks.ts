@@ -1,5 +1,4 @@
 "use client";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   useMutation,
   useQueryClient,
@@ -10,6 +9,7 @@ import { axiosClient } from "@/services/axiosUtils";
 import {
   getAllItemsQueryConfig,
   getItemQueryConfig,
+  useCreateItemMutation,
   useItemQuery,
   useItemsQueries,
   useUpdateItemMutation,
@@ -38,51 +38,7 @@ export const useQuizzesQueries = (moduleName: string) =>
 
 export const useUpdateQuizMutation = () => useUpdateItemMutation("Quiz")
 
-export const useCreateQuizMutation = () => {
-  const { courseName } = useCourseContext();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({
-      quiz,
-      moduleName,
-      quizName,
-    }: {
-      quiz: LocalQuiz;
-      moduleName: string;
-      quizName: string;
-    }) => {
-      queryClient.setQueryData(
-        localCourseKeys.itemOfType(courseName, moduleName, quizName, "Quiz"),
-        quiz
-      );
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/quizzes/" +
-        encodeURIComponent(quizName);
-      await axiosClient.post(url, quiz);
-    },
-    onSuccess: async (_, { moduleName, quizName }) => {
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(
-          courseName,
-          moduleName,
-          "Quiz"
-        ),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          quizName,
-          "Quiz"
-        ),
-      });
-    },
-  });
-};
+export const useCreateQuizMutation = () => useCreateItemMutation("Quiz")
 
 export const useDeleteQuizMutation = () => {
   const { courseName } = useCourseContext();

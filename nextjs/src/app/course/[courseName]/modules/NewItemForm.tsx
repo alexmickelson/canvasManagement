@@ -73,7 +73,7 @@ export default function NewItemForm({
         }
         if (type === "Assignment") {
           createAssignment.mutate({
-            assignment: {
+            item: {
               name,
               description: "",
               dueAt,
@@ -85,11 +85,11 @@ export default function NewItemForm({
               rubric: [],
             },
             moduleName: moduleName,
-            assignmentName: name,
+            itemName: name,
           });
         } else if (type === "Quiz") {
           createQuiz.mutate({
-            quiz: {
+            item: {
               name,
               description: "",
               dueAt,
@@ -100,17 +100,17 @@ export default function NewItemForm({
               questions: [],
             },
             moduleName: moduleName,
-            quizName: name,
+            itemName: name,
           });
         } else if (type === "Page") {
           createPage.mutate({
-            page: {
+            item: {
               name,
               text: "",
               dueAt,
             },
             moduleName: moduleName,
-            pageName: name,
+            itemName: name,
           });
         }
         onCreate();

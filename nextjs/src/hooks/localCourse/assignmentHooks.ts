@@ -12,6 +12,7 @@ import { axiosClient } from "@/services/axiosUtils";
 import {
   getAllItemsQueryConfig,
   getItemQueryConfig,
+  useCreateItemMutation,
   useItemQuery,
   useItemsQueries,
   useUpdateItemMutation,
@@ -39,56 +40,8 @@ export const useAssignmentsQueries = (moduleName: string) =>
 export const useUpdateAssignmentMutation = () =>
   useUpdateItemMutation("Assignment");
 
-export const useCreateAssignmentMutation = () => {
-  const { courseName } = useCourseContext();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({
-      assignment,
-      moduleName,
-      assignmentName,
-    }: {
-      assignment: LocalAssignment;
-      moduleName: string;
-      assignmentName: string;
-    }) => {
-      queryClient.setQueryData(
-        localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          assignmentName,
-          "Assignment"
-        ),
-        assignment
-      );
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/assignments/" +
-        encodeURIComponent(assignmentName);
-      await axiosClient.post(url, assignment);
-    },
-    onSuccess: async (_, { moduleName, assignmentName }) => {
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(
-          courseName,
-          moduleName,
-          "Assignment"
-        ),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          assignmentName,
-          "Assignment"
-        ),
-      });
-    },
-  });
-};
+export const useCreateAssignmentMutation = () =>
+  useCreateItemMutation("Assignment");
 
 export const useDeleteAssignmentMutation = () => {
   const { courseName } = useCourseContext();

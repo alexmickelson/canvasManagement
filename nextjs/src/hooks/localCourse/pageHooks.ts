@@ -7,6 +7,7 @@ import { axiosClient } from "@/services/axiosUtils";
 import {
   getAllItemsQueryConfig,
   getItemQueryConfig,
+  useCreateItemMutation,
   useItemQuery,
   useItemsQueries,
   useUpdateItemMutation,
@@ -32,52 +33,7 @@ export const usePagesQueries = (moduleName: string) =>
 
 export const useUpdatePageMutation = () => useUpdateItemMutation("Page");
 
-export const useCreatePageMutation = () => {
-  const { courseName } = useCourseContext();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({
-      page,
-      moduleName,
-      pageName,
-    }: {
-      page: LocalCoursePage;
-      moduleName: string;
-      pageName: string;
-    }) => {
-      queryClient.setQueryData(
-        localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
-        page
-      );
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/pages/" +
-        encodeURIComponent(pageName);
-      await axiosClient.post(url, page);
-    },
-    onSuccess: (_, { moduleName, pageName }) => {
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          pageName,
-          "Page"
-        ),
-      });
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          pageName,
-          "Page"
-        ),
-      });
-    },
-  });
-};
+export const useCreatePageMutation = () => useCreateItemMutation("Page");
 
 export const useDeletePageMutation = () => {
   const { courseName } = useCourseContext();
