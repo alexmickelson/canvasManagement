@@ -6,37 +6,44 @@ import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/as
 import path from "path";
 import { basePath, directoryOrFileExists } from "./utils/fileSystemUtils";
 import { promises as fs } from "fs";
+import { courseItemFileStorageService } from "./courseItemFileStorageService";
 
+const getAssignmentNames = async (courseName: string, moduleName: string) => {
+  const filePath = path.join(basePath, courseName, moduleName, "assignments");
+  if (!(await directoryOrFileExists(filePath))) {
+    console.log(
+      `Error loading course by name, assignments folder does not exist in ${filePath}`
+    );
+    await fs.mkdir(filePath);
+  }
+
+  const assignmentFiles = await fs.readdir(filePath);
+  return assignmentFiles.map((f) => f.replace(/\.md$/, ""));
+};
+const getAssignment = async (
+  courseName: string,
+  moduleName: string,
+  assignmentName: string
+) => {
+  const filePath = path.join(
+    basePath,
+    courseName,
+    moduleName,
+    "assignments",
+    assignmentName + ".md"
+  );
+  const rawFile = (await fs.readFile(filePath, "utf-8")).replace(/\r\n/g, "\n");
+  return localAssignmentMarkdown.parseMarkdown(rawFile);
+};
 export const assignmentsFileStorageService = {
-  async getAssignmentNames(courseName: string, moduleName: string) {
-    const filePath = path.join(basePath, courseName, moduleName, "assignments");
-    if (!(await directoryOrFileExists(filePath))) {
-      console.log(
-        `Error loading course by name, assignments folder does not exist in ${filePath}`
-      );
-      await fs.mkdir(filePath);
-    }
-
-    const assignmentFiles = await fs.readdir(filePath);
-    return assignmentFiles.map((f) => f.replace(/\.md$/, ""));
-  },
-  async getAssignment(
-    courseName: string,
-    moduleName: string,
-    assignmentName: string
-  ) {
-    const filePath = path.join(
-      basePath,
+  getAssignmentNames,
+  getAssignment,
+  async getAssignments(courseName: string, moduleName: string) {
+    return await courseItemFileStorageService.getItems(
       courseName,
       moduleName,
-      "assignments",
-      assignmentName + ".md"
+      "Assignment"
     );
-    const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
-      /\r\n/g,
-      "\n"
-    );
-    return localAssignmentMarkdown.parseMarkdown(rawFile);
   },
   async updateOrCreateAssignment({
     courseName,
@@ -74,7 +81,6 @@ export const assignmentsFileStorageService = {
     moduleName: string;
     assignmentName: string;
   }) {
-
     const filePath = path.join(
       basePath,
       courseName,
@@ -83,6 +89,6 @@ export const assignmentsFileStorageService = {
       assignmentName + ".md"
     );
     console.log("removing assignment", filePath);
-    await fs.unlink(filePath)
-  }
+    await fs.unlink(filePath);
+  },
 };

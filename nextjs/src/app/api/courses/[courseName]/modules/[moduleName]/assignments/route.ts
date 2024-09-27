@@ -8,25 +8,10 @@ export const GET = async (
   }: { params: { courseName: string; moduleName: string } }
 ) =>
   await withErrorHandling(async () => {
-    const names = await fileStorageService.assignments.getAssignmentNames(
+    const assignments = await fileStorageService.assignments.getAssignments(
       courseName,
       moduleName
     );
-    const assignments = (
-      await Promise.all(
-        names.map(async (name) => {
-          try {
-            return await fileStorageService.assignments.getAssignment(
-              courseName,
-              moduleName,
-              name
-            );
-          } catch {
-            return null;
-          }
-        })
-      )
-    ).filter((a) => a !== null);
-    
+
     return Response.json(assignments);
   });

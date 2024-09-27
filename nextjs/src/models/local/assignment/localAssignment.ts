@@ -15,6 +15,7 @@ export interface LocalAssignment extends IModuleItem {
   rubric: RubricItem[];
 }
 
+
 export const localAssignmentMarkdown = {
   parseMarkdown: assignmentMarkdownParser.parseMarkdown,
   toMarkdown: assignmentMarkdownSerializer.toMarkdown,

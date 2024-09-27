@@ -1,36 +1,23 @@
-import { localPageMarkdownUtils, LocalCoursePage } from "@/models/local/page/localCoursePage";
+import {
+  localPageMarkdownUtils,
+  LocalCoursePage,
+} from "@/models/local/page/localCoursePage";
 import { promises as fs } from "fs";
 import path from "path";
-import { basePath, directoryOrFileExists } from "./utils/fileSystemUtils";
+import { basePath } from "./utils/fileSystemUtils";
+import { courseItemFileStorageService } from "./courseItemFileStorageService";
 
 export const pageFileStorageService = {
-  async getPageNames(courseName: string, moduleName: string) {
-    const filePath = path.join(basePath, courseName, moduleName, "pages");
-    if (!(await directoryOrFileExists(filePath))) {
-      console.log(
-        `Error loading course by name, pages folder does not exist in ${filePath}`
-      );
-      await fs.mkdir(filePath);
-    }
-
-    const files = await fs.readdir(filePath);
-    return files.map((f) => f.replace(/\.md$/, ""));
-  },
-
-  async getPage(courseName: string, moduleName: string, pageName: string) {
-    const filePath = path.join(
-      basePath,
+  getPage: async (courseName: string, moduleName: string, name: string) =>
+    await courseItemFileStorageService.getItem(
       courseName,
       moduleName,
-      "pages",
-      pageName + ".md"
-    );
-    const rawFile = (await fs.readFile(filePath, "utf-8")).replace(
-      /\r\n/g,
-      "\n"
-    );
-    return localPageMarkdownUtils.parseMarkdown(rawFile);
-  },
+      name,
+      "Page"
+    ),
+  getPages: async (courseName: string, moduleName: string) =>
+    await courseItemFileStorageService.getItems(courseName, moduleName, "Page"),
+
   async updatePage(
     courseName: string,
     moduleName: string,
@@ -82,6 +69,6 @@ export const pageFileStorageService = {
       pageName + ".md"
     );
     console.log("removing page", filePath);
-    await fs.unlink(filePath)
-  }
+    await fs.unlink(filePath);
+  },
 };
