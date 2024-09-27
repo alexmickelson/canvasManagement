@@ -15,7 +15,7 @@ export const getAllAssignmentsQueryConfig = (
   courseName: string,
   moduleName: string
 ) => ({
-  queryKey: localCourseKeys.allAssignments(courseName, moduleName),
+  queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
   queryFn: async (): Promise<LocalAssignment[]> => {
     const url =
       "/api/courses/" +
@@ -39,10 +39,11 @@ export const getAssignmentQueryConfig = (
   assignmentName: string
 ) => {
   return {
-    queryKey: localCourseKeys.assignment(
+    queryKey: localCourseKeys.itemOfType(
       courseName,
       moduleName,
-      assignmentName
+      assignmentName,
+      "Assignment"
     ),
     queryFn: async () => {
       const url =
@@ -105,22 +106,29 @@ export const useUpdateAssignmentMutation = () => {
         previousModuleName !== moduleName
       ) {
         queryClient.removeQueries({
-          queryKey: localCourseKeys.assignment(
+          queryKey: localCourseKeys.itemOfType(
             courseName,
             previousModuleName,
-            previousAssignmentName
+            previousAssignmentName,
+            "Assignment"
           ),
         });
         queryClient.removeQueries({
-          queryKey: localCourseKeys.allAssignments(
+          queryKey:  localCourseKeys.allItemsOfType(
             courseName,
-            previousModuleName
+            previousModuleName,
+            "Assignment"
           ),
         });
       }
 
       queryClient.setQueryData(
-        localCourseKeys.assignment(courseName, moduleName, assignmentName),
+       localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          assignmentName,
+          "Assignment"
+        ),
         assignment
       );
       const url =
@@ -138,13 +146,14 @@ export const useUpdateAssignmentMutation = () => {
     },
     onSuccess: async (_, { moduleName, assignmentName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allAssignments(courseName, moduleName),
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.assignment(
+        queryKey: localCourseKeys.itemOfType(
           courseName,
           moduleName,
-          assignmentName
+          assignmentName,
+          "Assignment"
         ),
       });
     },
@@ -165,7 +174,12 @@ export const useCreateAssignmentMutation = () => {
       assignmentName: string;
     }) => {
       queryClient.setQueryData(
-        localCourseKeys.assignment(courseName, moduleName, assignmentName),
+        localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          assignmentName,
+          "Assignment"
+        ),
         assignment
       );
       const url =
@@ -179,13 +193,14 @@ export const useCreateAssignmentMutation = () => {
     },
     onSuccess: async (_, { moduleName, assignmentName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allAssignments(courseName, moduleName),
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.assignment(
+        queryKey: localCourseKeys.itemOfType(
           courseName,
           moduleName,
-          assignmentName
+          assignmentName,
+          "Assignment"
         ),
       });
     },
@@ -204,14 +219,15 @@ export const useDeleteAssignmentMutation = () => {
       assignmentName: string;
     }) => {
       queryClient.removeQueries({
-        queryKey: localCourseKeys.assignment(
+        queryKey: localCourseKeys.itemOfType(
           courseName,
           moduleName,
-          assignmentName
+          assignmentName,
+          "Assignment"
         ),
       });
       queryClient.removeQueries({
-        queryKey: localCourseKeys.allAssignments(courseName, moduleName),
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
       });
       const url =
         "/api/courses/" +
@@ -224,7 +240,7 @@ export const useDeleteAssignmentMutation = () => {
     },
     onSuccess: async (_, { moduleName, assignmentName }) => {
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allAssignments(courseName, moduleName),
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
       });
     },
   });

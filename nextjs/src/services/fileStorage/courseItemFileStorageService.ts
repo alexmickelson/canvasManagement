@@ -15,14 +15,11 @@ import {
 } from "@/models/local/page/localCoursePage";
 import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
-
-const typeToFolder = {
-  Assignment: "assignments",
-  Quiz: "quizzes",
-  Page: "pages",
-} as const;
-
-export type CourseItemType = "Assignment" | "Quiz" | "Page";
+import {
+  CourseItemReturnType,
+  CourseItemType,
+  typeToFolder,
+} from "@/models/local/courseItemTypes";
 
 const getItemFileNames = async (
   courseName: string,
@@ -41,11 +38,6 @@ const getItemFileNames = async (
   const itemFiles = await fs.readdir(filePath);
   return itemFiles.map((f) => f.replace(/\.md$/, ""));
 };
-type CourseItemReturnType<T extends CourseItemType> = T extends "Assignment"
-  ? LocalAssignment
-  : T extends "Quiz"
-  ? LocalQuiz
-  : LocalCoursePage;
 
 const getItem = async <T extends CourseItemType>(
   courseName: string,
@@ -129,7 +121,8 @@ export const courseItemFileStorageService = {
     const markdownDictionary: {
       [key in CourseItemType]: () => string;
     } = {
-      Assignment: () => assignmentMarkdownSerializer.toMarkdown(item as LocalAssignment),
+      Assignment: () =>
+        assignmentMarkdownSerializer.toMarkdown(item as LocalAssignment),
       Quiz: () => quizMarkdownUtils.toMarkdown(item as LocalQuiz),
       Page: () => localPageMarkdownUtils.toMarkdown(item as LocalCoursePage),
     };

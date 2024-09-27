@@ -124,7 +124,11 @@ const hydrateModuleData = async (
   queryClient: QueryClient
 ) => {
   await queryClient.prefetchQuery({
-    queryKey: localCourseKeys.allAssignments(courseName, moduleName),
+    queryKey: localCourseKeys.allItemsOfType(
+      courseName,
+      moduleName,
+      "Assignment"
+    ),
     queryFn: () => assignments,
   });
   await queryClient.prefetchQuery({
@@ -139,10 +143,11 @@ const hydrateModuleData = async (
     assignments.map(
       async (assignment) =>
         await queryClient.prefetchQuery({
-          queryKey: localCourseKeys.assignment(
+          queryKey: localCourseKeys.itemOfType(
             courseName,
             moduleName,
-            assignment.name
+            assignment.name,
+            "Assignment"
           ),
           queryFn: () => assignment,
         })

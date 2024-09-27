@@ -1,3 +1,5 @@
+import { CourseItemType, typeToFolder } from "@/models/local/courseItemTypes";
+
 export const localCourseKeys = {
   allCoursesSettings: ["all courses settings"] as const,
   allCoursesNames: ["all courses names"] as const,
@@ -10,14 +12,32 @@ export const localCourseKeys = {
       "modules",
       { type: "names" } as const,
     ] as const,
-  allAssignments: (courseName: string, moduleName: string) =>
+  allItemsOfType: (
+    courseName: string,
+    moduleName: string,
+    type: CourseItemType
+  ) =>
     [
       "course details",
       courseName,
       "modules",
       moduleName,
-      "assignments",
-      { type: "all assignments" },
+      typeToFolder[type],
+      { type: "all" },
+    ] as const,
+  itemOfType: (
+    courseName: string,
+    moduleName: string,
+    name: string,
+    type: CourseItemType
+  ) =>
+    [
+      "course details",
+      courseName,
+      "modules",
+      moduleName,
+      typeToFolder[type],
+      name,
     ] as const,
   allQuizzes: (courseName: string, moduleName: string) =>
     [
@@ -26,7 +46,7 @@ export const localCourseKeys = {
       "modules",
       moduleName,
       "quizzes",
-      { type: "all quizzes" },
+      { type: "all" },
     ] as const,
   allPages: (courseName: string, moduleName: string) =>
     [
@@ -35,20 +55,7 @@ export const localCourseKeys = {
       "modules",
       moduleName,
       "pages",
-      { type: "all pages" },
-    ] as const,
-  assignment: (
-    courseName: string,
-    moduleName: string,
-    assignmentName: string
-  ) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "assignments",
-      assignmentName,
+      { type: "all" },
     ] as const,
   quiz: (courseName: string, moduleName: string, quizName: string) =>
     [
