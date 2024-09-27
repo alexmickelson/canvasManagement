@@ -22,28 +22,20 @@ matching questions
 - different delimiter (-n in answer messes things up)
 - add distractors
 
-
 on calendar month, displays days that are on the same week as a month change (if month ends on monday, still show tues-sat)
 
 file uploads
 - image compression?
 - scrape html, when image embedded, upload to canvas and add img tag to canvas asset in html before sending image
-
-add grade percentage support in page
-
-wait until week two before colapsing previous month?
-
-better ux around course settings (assignment groups, term for start/end)
-
-display queue of canvas requests
+- put all images in an image repo in a /course/semester/filename format. upload the image to canvas, replace the url before sending it over with the canvas version.
+    - store canvas image ids in settings?
 
 allow multiple courses to be edited concurrently in different browser tabs
 
 have lock date mimic an offset after drag and drop changes due date
 
-make the ux easier to change course pages
-
 schedule planning view? just outline concepts? (maybe some non-canvas scheduled thing that only shows up in planner? like a note, could be de-emphasized in webpage)
+- probably have a notes section for each module. Have a toggle to expand notes in module
 
 holiday schedule
 
@@ -51,6 +43,7 @@ multi-seciton support for due dates/times
 
 better error handling when files are unparseable
 
-## monaco PR?
-
-<https://github.com/serdarciplak/BlazorMonaco/pull/137>
+new settings
+- default submission types
+- default file types
+- default lockAt offset

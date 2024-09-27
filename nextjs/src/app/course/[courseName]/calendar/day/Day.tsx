@@ -1,5 +1,6 @@
 "use client";
 import {
+  getDateFromString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
@@ -31,7 +32,19 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const isInSameMonth = dayAsDate.getMonth() + 1 == month;
   const classOnThisDay = settings.daysOfWeek.includes(getDayOfWeek(dayAsDate));
 
-  const meetingClasses = classOnThisDay ? " bg-slate-900 " : " ";
+  const semesterStart = getDateFromStringOrThrow(
+    settings.startDate,
+    "comparing start date in day"
+  );
+  const semesterEnd = getDateFromStringOrThrow(
+    settings.endDate,
+    "comparing end date in day"
+  );
+
+  const isInSemester = semesterStart < dayAsDate&& semesterEnd > dayAsDate;
+
+  const meetingClasses =
+    classOnThisDay && isInSemester ? " bg-slate-900 " : " ";
   const monthClass = isInSameMonth
     ? isToday
       ? " border border-blue-700 shadow-[0_0px_10px_0px] shadow-blue-500/50 "
