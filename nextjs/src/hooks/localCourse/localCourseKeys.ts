@@ -39,40 +39,4 @@ export const localCourseKeys = {
       typeToFolder[type],
       name,
     ] as const,
-  allQuizzes: (courseName: string, moduleName: string) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "quizzes",
-      { type: "all" },
-    ] as const,
-  allPages: (courseName: string, moduleName: string) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "pages",
-      { type: "all" },
-    ] as const,
-  quiz: (courseName: string, moduleName: string, quizName: string) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "quizzes",
-      quizName,
-    ] as const,
-  page: (courseName: string, moduleName: string, pageName: string) =>
-    [
-      "course details",
-      courseName,
-      "modules",
-      moduleName,
-      "pages",
-      pageName,
-    ] as const,
 };

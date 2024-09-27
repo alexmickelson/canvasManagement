@@ -12,7 +12,7 @@ import { axiosClient } from "@/services/axiosUtils";
 
 export function getAllPagesQueryConfig(courseName: string, moduleName: string) {
   return {
-    queryKey: localCourseKeys.allPages(courseName, moduleName),
+    queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Page"),
     queryFn: async (): Promise<LocalCoursePage[]> => {
       const url =
         "/api/courses/" +
@@ -32,7 +32,7 @@ export function getPageQueryConfig(
   pageName: string
 ) {
   return {
-    queryKey: localCourseKeys.page(courseName, moduleName, pageName),
+    queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
     queryFn: async (): Promise<LocalCoursePage> => {
       const url =
         "/api/courses/" +
@@ -100,18 +100,19 @@ export const useUpdatePageMutation = () => {
         (previousPageName !== page.name || previousModuleName !== moduleName)
       ) {
         queryClient.removeQueries({
-          queryKey: localCourseKeys.page(
+          queryKey: localCourseKeys.itemOfType(
             courseName,
             previousModuleName,
-            previousPageName
+            previousPageName,
+            "Page"
           ),
         });
         queryClient.removeQueries({
-          queryKey: localCourseKeys.allPages(courseName, moduleName),
+          queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
         });
       }
       queryClient.setQueryData(
-        localCourseKeys.page(courseName, moduleName, pageName),
+        localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
         page
       );
       const url =
@@ -129,10 +130,10 @@ export const useUpdatePageMutation = () => {
     },
     onSuccess: async (_, { moduleName, pageName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allPages(courseName, moduleName),
+        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
+        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
       });
     },
   });
@@ -152,7 +153,7 @@ export const useCreatePageMutation = () => {
       pageName: string;
     }) => {
       queryClient.setQueryData(
-        localCourseKeys.page(courseName, moduleName, pageName),
+        localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
         page
       );
       const url =
@@ -166,10 +167,10 @@ export const useCreatePageMutation = () => {
     },
     onSuccess: (_, { moduleName, pageName }) => {
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
+        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
       });
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allPages(courseName, moduleName),
+        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
       });
     },
   });
@@ -187,10 +188,10 @@ export const useDeletePageMutation = () => {
       pageName: string;
     }) => {
       queryClient.removeQueries({
-        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
+        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
       });
       queryClient.removeQueries({
-        queryKey: localCourseKeys.allPages(courseName, moduleName),
+        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
       });
       const url =
         "/api/courses/" +
@@ -203,10 +204,10 @@ export const useDeletePageMutation = () => {
     },
     onSuccess: async (_, { moduleName, pageName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allPages(courseName, moduleName),
+        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.page(courseName, moduleName, pageName),
+        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
       });
     },
   });

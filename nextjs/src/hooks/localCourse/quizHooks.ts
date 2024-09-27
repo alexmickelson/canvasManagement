@@ -15,7 +15,7 @@ export function getAllQuizzesQueryConfig(
   moduleName: string
 ) {
   return {
-    queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
+    queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Quiz"),
     queryFn: async (): Promise<LocalQuiz[]> => {
       const url =
         "/api/courses/" +
@@ -59,7 +59,12 @@ export function getQuizQueryConfig(
   quizName: string
 ) {
   return {
-    queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
+    queryKey: localCourseKeys.itemOfType(
+      courseName,
+      moduleName,
+      quizName,
+      "Quiz"
+    ),
     queryFn: async (): Promise<LocalQuiz> => {
       const url =
         "/api/courses/" +
@@ -97,18 +102,23 @@ export const useUpdateQuizMutation = () => {
         (previousQuizName !== quiz.name || previousModuleName !== moduleName)
       ) {
         queryClient.removeQueries({
-          queryKey: localCourseKeys.quiz(
+          queryKey: localCourseKeys.itemOfType(
             courseName,
             previousModuleName,
-            previousQuizName
+            previousQuizName,
+            "Quiz"
           ),
         });
         queryClient.removeQueries({
-          queryKey: localCourseKeys.allQuizzes(courseName, previousModuleName),
+          queryKey: localCourseKeys.allItemsOfType(
+            courseName,
+            previousModuleName,
+            "Quiz"
+          ),
         });
       }
       queryClient.setQueryData(
-        localCourseKeys.quiz(courseName, moduleName, quizName),
+        localCourseKeys.itemOfType(courseName, moduleName, quizName, "Quiz"),
         quiz
       );
       const url =
@@ -130,10 +140,19 @@ export const useUpdateQuizMutation = () => {
     },
     onSuccess: async (_, { moduleName, quizName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
+        queryKey: localCourseKeys.allItemsOfType(
+          courseName,
+          moduleName,
+          "Quiz"
+        ),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          quizName,
+          "Quiz"
+        ),
       });
     },
   });
@@ -153,7 +172,7 @@ export const useCreateQuizMutation = () => {
       quizName: string;
     }) => {
       queryClient.setQueryData(
-        localCourseKeys.quiz(courseName, moduleName, quizName),
+        localCourseKeys.itemOfType(courseName, moduleName, quizName, "Quiz"),
         quiz
       );
       const url =
@@ -167,10 +186,19 @@ export const useCreateQuizMutation = () => {
     },
     onSuccess: async (_, { moduleName, quizName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
+        queryKey: localCourseKeys.allItemsOfType(
+          courseName,
+          moduleName,
+          "Quiz"
+        ),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          quizName,
+          "Quiz"
+        ),
       });
     },
   });
@@ -196,15 +224,28 @@ export const useDeleteQuizMutation = () => {
         encodeURIComponent(quizName);
       await axiosClient.delete(url);
       queryClient.removeQueries({
-        queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
+        queryKey: localCourseKeys.allItemsOfType(
+          courseName,
+          moduleName,
+          "Quiz"
+        ),
       });
     },
     onSuccess: async (_, { moduleName, quizName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
+        queryKey: localCourseKeys.allItemsOfType(
+          courseName,
+          moduleName,
+          "Quiz"
+        ),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          quizName,
+          "Quiz"
+        ),
       });
     },
   });

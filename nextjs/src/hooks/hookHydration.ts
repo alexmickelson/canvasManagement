@@ -11,6 +11,7 @@ import { canvasQuizService } from "@/services/canvas/canvasQuizService";
 import { canvasPageService } from "@/services/canvas/canvasPageService";
 import { canvasQuizKeys } from "./canvas/canvasQuizHooks";
 import { canvasPageKeys } from "./canvas/canvasPageHooks";
+
 // https://tanstack.com/query/latest/docs/framework/react/guides/ssr
 export const hydrateCourses = async (queryClient: QueryClient) => {
   const allSettings = await fileStorageService.settings.getAllCoursesSettings();
@@ -132,11 +133,11 @@ const hydrateModuleData = async (
     queryFn: () => assignments,
   });
   await queryClient.prefetchQuery({
-    queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
+    queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Quiz"),
     queryFn: () => quizzes,
   });
   await queryClient.prefetchQuery({
-    queryKey: localCourseKeys.allPages(courseName, moduleName),
+    queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Page"),
     queryFn: () => pages,
   });
   await Promise.all(
@@ -157,7 +158,12 @@ const hydrateModuleData = async (
     quizzes.map(
       async (quiz) =>
         await queryClient.prefetchQuery({
-          queryKey: localCourseKeys.quiz(courseName, moduleName, quiz.name),
+          queryKey: localCourseKeys.itemOfType(
+            courseName,
+            moduleName,
+            quiz.name,
+            "Quiz"
+          ),
           queryFn: () => quiz,
         })
     )
@@ -166,7 +172,12 @@ const hydrateModuleData = async (
     pages.map(
       async (page) =>
         await queryClient.prefetchQuery({
-          queryKey: localCourseKeys.page(courseName, moduleName, page.name),
+          queryKey: localCourseKeys.itemOfType(
+            courseName,
+            moduleName,
+            page.name,
+            "Page"
+          ),
           queryFn: () => page,
         })
     )
