@@ -1,5 +1,4 @@
 "use client";
-import axios from "axios";
 import { localCourseKeys } from "./localCourseKeys";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import {
@@ -10,79 +9,31 @@ import {
 } from "@tanstack/react-query";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { axiosClient } from "@/services/axiosUtils";
+import {
+  getAllItemsQueryConfig,
+  getItemQueryConfig,
+  useItemQuery,
+  useItemsQueries,
+} from "./courseItemHooks";
 
 export const getAllAssignmentsQueryConfig = (
   courseName: string,
   moduleName: string
-) => ({
-  queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
-  queryFn: async (): Promise<LocalAssignment[]> => {
-    const url =
-      "/api/courses/" +
-      encodeURIComponent(courseName) +
-      "/modules/" +
-      encodeURIComponent(moduleName) +
-      "/assignments";
-    const response = await axiosClient.get(url);
-    return response.data;
-  },
-});
-
-const useAllAssignmentsQuery = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getAllAssignmentsQueryConfig(courseName, moduleName));
-};
+) => getAllItemsQueryConfig(courseName, moduleName, "Assignment");
 
 export const getAssignmentQueryConfig = (
   courseName: string,
   moduleName: string,
   assignmentName: string
-) => {
-  return {
-    queryKey: localCourseKeys.itemOfType(
-      courseName,
-      moduleName,
-      assignmentName,
-      "Assignment"
-    ),
-    queryFn: async () => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/assignments/" +
-        encodeURIComponent(assignmentName);
-      const response = await axiosClient.get<LocalAssignment>(url);
-      return response.data;
-    },
-  };
-};
+) => getItemQueryConfig(courseName, moduleName, assignmentName, "Assignment");
 
 export const useAssignmentQuery = (
   moduleName: string,
   assignmentName: string
-) => {
-  const { courseName } = useCourseContext();
+) => useItemQuery(moduleName, assignmentName, "Assignment");
 
-  return useSuspenseQuery(
-    getAssignmentQueryConfig(courseName, moduleName, assignmentName)
-  );
-};
-
-export const useAssignmentsQueries = (moduleName: string) => {
-  const { data: allAssignments } = useAllAssignmentsQuery(moduleName);
-  const { courseName } = useCourseContext();
-  return useSuspenseQueries({
-    queries: allAssignments.map((assignment) =>
-      getAssignmentQueryConfig(courseName, moduleName, assignment.name)
-    ),
-    combine: (results) => ({
-      data: results.map((r) => r.data),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
-};
+export const useAssignmentsQueries = (moduleName: string) =>
+  useItemsQueries(moduleName, "Assignment");
 
 export const useUpdateAssignmentMutation = () => {
   const { courseName } = useCourseContext();
@@ -114,7 +65,7 @@ export const useUpdateAssignmentMutation = () => {
           ),
         });
         queryClient.removeQueries({
-          queryKey:  localCourseKeys.allItemsOfType(
+          queryKey: localCourseKeys.allItemsOfType(
             courseName,
             previousModuleName,
             "Assignment"
@@ -123,7 +74,7 @@ export const useUpdateAssignmentMutation = () => {
       }
 
       queryClient.setQueryData(
-       localCourseKeys.itemOfType(
+        localCourseKeys.itemOfType(
           courseName,
           moduleName,
           assignmentName,
@@ -146,7 +97,11 @@ export const useUpdateAssignmentMutation = () => {
     },
     onSuccess: async (_, { moduleName, assignmentName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
+        queryKey: localCourseKeys.allItemsOfType(
+          courseName,
+          moduleName,
+          "Assignment"
+        ),
       });
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.itemOfType(
@@ -193,7 +148,11 @@ export const useCreateAssignmentMutation = () => {
     },
     onSuccess: async (_, { moduleName, assignmentName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
+        queryKey: localCourseKeys.allItemsOfType(
+          courseName,
+          moduleName,
+          "Assignment"
+        ),
       });
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.itemOfType(
@@ -227,7 +186,11 @@ export const useDeleteAssignmentMutation = () => {
         ),
       });
       queryClient.removeQueries({
-        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
+        queryKey: localCourseKeys.allItemsOfType(
+          courseName,
+          moduleName,
+          "Assignment"
+        ),
       });
       const url =
         "/api/courses/" +
@@ -240,7 +203,11 @@ export const useDeleteAssignmentMutation = () => {
     },
     onSuccess: async (_, { moduleName, assignmentName }) => {
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Assignment"),
+        queryKey: localCourseKeys.allItemsOfType(
+          courseName,
+          moduleName,
+          "Assignment"
+        ),
       });
     },
   });

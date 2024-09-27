@@ -3,27 +3,19 @@ import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import {
   useMutation,
   useQueryClient,
-  useSuspenseQueries,
-  useSuspenseQuery,
 } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { axiosClient } from "@/services/axiosUtils";
+import {
+  getAllItemsQueryConfig,
+  getItemQueryConfig,
+  useItemQuery,
+  useItemsQueries,
+} from "./courseItemHooks";
 
 export function getAllPagesQueryConfig(courseName: string, moduleName: string) {
-  return {
-    queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Page"),
-    queryFn: async (): Promise<LocalCoursePage[]> => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/pages";
-      const response = await axiosClient.get(url);
-      return response.data;
-    },
-  };
+  return getAllItemsQueryConfig(courseName, moduleName, "Page");
 }
 
 export function getPageQueryConfig(
@@ -31,51 +23,14 @@ export function getPageQueryConfig(
   moduleName: string,
   pageName: string
 ) {
-  return {
-    queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
-    queryFn: async (): Promise<LocalCoursePage> => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/pages/" +
-        encodeURIComponent(pageName);
-      try {
-        const response = await axiosClient.get(url);
-        return response.data;
-      } catch (e) {
-        console.log("error getting page", e, url);
-        throw e;
-      }
-    },
-  };
+  return getItemQueryConfig(courseName, moduleName, pageName, "Page");
 }
 
-export const usePageQuery = (moduleName: string, pageName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getPageQueryConfig(courseName, moduleName, pageName));
-};
+export const usePageQuery = (moduleName: string, pageName: string) =>
+  useItemQuery(moduleName, pageName, "Page");
 
-const useAllPagesQuery = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getAllPagesQueryConfig(courseName, moduleName));
-};
-
-export const usePagesQueries = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  const { data: allPages } = useAllPagesQuery(moduleName);
-  return useSuspenseQueries({
-    queries: allPages.map((page) => ({
-      ...getPageQueryConfig(courseName, moduleName, page.name),
-      queryFn: () => page,
-    })),
-    combine: (results) => ({
-      data: results.map((r) => r.data),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
-};
+export const usePagesQueries = (moduleName: string) =>
+  useItemsQueries(moduleName, "Page");
 
 export const useUpdatePageMutation = () => {
   const { courseName } = useCourseContext();
@@ -108,7 +63,12 @@ export const useUpdatePageMutation = () => {
           ),
         });
         queryClient.removeQueries({
-          queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+          queryKey: localCourseKeys.itemOfType(
+            courseName,
+            moduleName,
+            pageName,
+            "Page"
+          ),
         });
       }
       queryClient.setQueryData(
@@ -130,10 +90,20 @@ export const useUpdatePageMutation = () => {
     },
     onSuccess: async (_, { moduleName, pageName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          pageName,
+          "Page"
+        ),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          pageName,
+          "Page"
+        ),
       });
     },
   });
@@ -167,10 +137,20 @@ export const useCreatePageMutation = () => {
     },
     onSuccess: (_, { moduleName, pageName }) => {
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          pageName,
+          "Page"
+        ),
       });
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          pageName,
+          "Page"
+        ),
       });
     },
   });
@@ -188,10 +168,20 @@ export const useDeletePageMutation = () => {
       pageName: string;
     }) => {
       queryClient.removeQueries({
-        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          pageName,
+          "Page"
+        ),
       });
       queryClient.removeQueries({
-        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          pageName,
+          "Page"
+        ),
       });
       const url =
         "/api/courses/" +
@@ -204,10 +194,20 @@ export const useDeletePageMutation = () => {
     },
     onSuccess: async (_, { moduleName, pageName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          pageName,
+          "Page"
+        ),
       });
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(courseName, moduleName, pageName, "Page"),
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          pageName,
+          "Page"
+        ),
       });
     },
   });

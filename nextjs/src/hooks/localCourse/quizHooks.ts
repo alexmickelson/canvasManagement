@@ -3,81 +3,37 @@ import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   useMutation,
   useQueryClient,
-  useSuspenseQueries,
-  useSuspenseQuery,
 } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { axiosClient } from "@/services/axiosUtils";
+import {
+  getAllItemsQueryConfig,
+  getItemQueryConfig,
+  useItemQuery,
+  useItemsQueries,
+} from "./courseItemHooks";
 
 export function getAllQuizzesQueryConfig(
   courseName: string,
   moduleName: string
 ) {
-  return {
-    queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Quiz"),
-    queryFn: async (): Promise<LocalQuiz[]> => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/quizzes";
-      const response = await axiosClient.get(url);
-      return response.data;
-    },
-  };
+  return getAllItemsQueryConfig(courseName, moduleName, "Quiz");
 }
-
-export const useQuizQuery = (moduleName: string, quizName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getQuizQueryConfig(courseName, moduleName, quizName));
-};
-
-const useAllQuizzesQuery = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getAllQuizzesQueryConfig(courseName, moduleName));
-};
-export const useQuizzesQueries = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  const { data: allQuizzes } = useAllQuizzesQuery(moduleName);
-  return useSuspenseQueries({
-    queries: allQuizzes.map((quiz) => ({
-      ...getQuizQueryConfig(courseName, moduleName, quiz.name),
-      queryFn: () => quiz,
-    })),
-    combine: (results) => ({
-      data: results.map((r) => r.data),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
-};
 
 export function getQuizQueryConfig(
   courseName: string,
   moduleName: string,
   quizName: string
 ) {
-  return {
-    queryKey: localCourseKeys.itemOfType(
-      courseName,
-      moduleName,
-      quizName,
-      "Quiz"
-    ),
-    queryFn: async (): Promise<LocalQuiz> => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/quizzes/" +
-        encodeURIComponent(quizName);
-      const response = await axiosClient.get(url);
-      return response.data;
-    },
-  };
+  return getItemQueryConfig(courseName, moduleName, quizName, "Quiz");
 }
+
+export const useQuizQuery = (moduleName: string, quizName: string) =>
+  useItemQuery(moduleName, quizName, "Quiz");
+
+export const useQuizzesQueries = (moduleName: string) =>
+  useItemsQueries(moduleName, "Quiz");
 
 export const useUpdateQuizMutation = () => {
   const { courseName } = useCourseContext();
