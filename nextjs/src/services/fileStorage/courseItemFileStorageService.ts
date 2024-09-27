@@ -13,6 +13,8 @@ import {
   LocalCoursePage,
   localPageMarkdownUtils,
 } from "@/models/local/page/localCoursePage";
+import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
+import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 
 const typeToFolder = {
   Assignment: "assignments",
@@ -98,5 +100,42 @@ export const courseItemFileStorageService = {
       )
     ).filter((a) => a !== null);
     return items;
+  },
+  async updateOrCreateAssignment({
+    courseName,
+    moduleName,
+    name,
+    item,
+    type,
+  }: {
+    courseName: string;
+    moduleName: string;
+    name: string;
+    item: LocalAssignment | LocalQuiz | LocalCoursePage;
+    type: CourseItemType;
+  }) {
+    const typeFolder = typeToFolder[type];
+    const folder = path.join(basePath, courseName, moduleName, typeFolder);
+    await fs.mkdir(folder, { recursive: true });
+
+    const filePath = path.join(
+      basePath,
+      courseName,
+      moduleName,
+      typeFolder,
+      name + ".md"
+    );
+
+    const markdownDictionary: {
+      [key in CourseItemType]: () => string;
+    } = {
+      Assignment: () => assignmentMarkdownSerializer.toMarkdown(item as LocalAssignment),
+      Quiz: () => quizMarkdownUtils.toMarkdown(item as LocalQuiz),
+      Page: () => localPageMarkdownUtils.toMarkdown(item as LocalCoursePage),
+    };
+    const itemMarkdown = markdownDictionary[type]();
+
+    console.log(`Saving ${type} ${filePath}`);
+    await fs.writeFile(filePath, itemMarkdown);
   },
 };

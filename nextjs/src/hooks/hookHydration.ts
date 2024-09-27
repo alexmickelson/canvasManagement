@@ -73,16 +73,16 @@ export const hydrateCanvasCourse = async (
 };
 
 const loadAllModuleData = async (courseName: string, moduleName: string) => {
-  const [assignmentNames, pageNames, quizNames] = await Promise.all([
+  const [assignmentNames, pages, quizzes] = await Promise.all([
     await fileStorageService.assignments.getAssignmentNames(
       courseName,
       moduleName
     ),
-    await fileStorageService.pages.getPageNames(courseName, moduleName),
-    await fileStorageService.quizzes.getQuizNames(courseName, moduleName),
+    await fileStorageService.pages.getPages(courseName, moduleName),
+    await fileStorageService.quizzes.getQuizzes(courseName, moduleName),
   ]);
 
-  const [assignments, quizzes, pages] = await Promise.all([
+  const [assignments] = await Promise.all([
     await Promise.all(
       assignmentNames.map(async (assignmentName) => {
         try {
@@ -97,33 +97,11 @@ const loadAllModuleData = async (courseName: string, moduleName: string) => {
         }
       })
     ),
-    await Promise.all(
-      quizNames.map(
-        async (quizName) =>
-          await fileStorageService.quizzes.getQuiz(
-            courseName,
-            moduleName,
-            quizName
-          )
-      )
-    ),
-    await Promise.all(
-      pageNames.map(
-        async (pageName) =>
-          await fileStorageService.pages.getPage(
-            courseName,
-            moduleName,
-            pageName
-          )
-      )
-    ),
   ]);
 
-  const assignmentsLoaded = assignments.filter(a => a !== null);
+  const assignmentsLoaded = assignments.filter((a) => a !== null);
   return {
     moduleName,
-    pageNames,
-    quizNames,
     assignments: assignmentsLoaded,
     quizzes,
     pages,
@@ -133,15 +111,11 @@ const loadAllModuleData = async (courseName: string, moduleName: string) => {
 const hydrateModuleData = async (
   {
     moduleName,
-    pageNames,
-    quizNames,
     assignments,
     quizzes,
     pages,
   }: {
     moduleName: string;
-    pageNames: string[];
-    quizNames: string[];
     assignments: LocalAssignment[];
     quizzes: LocalQuiz[];
     pages: LocalCoursePage[];
@@ -152,6 +126,14 @@ const hydrateModuleData = async (
   await queryClient.prefetchQuery({
     queryKey: localCourseKeys.allAssignments(courseName, moduleName),
     queryFn: () => assignments,
+  });
+  await queryClient.prefetchQuery({
+    queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
+    queryFn: () => quizzes,
+  });
+  await queryClient.prefetchQuery({
+    queryKey: localCourseKeys.allPages(courseName, moduleName),
+    queryFn: () => pages,
   });
   await Promise.all(
     assignments.map(
@@ -166,10 +148,6 @@ const hydrateModuleData = async (
         })
     )
   );
-  await queryClient.prefetchQuery({
-    queryKey: localCourseKeys.quizNames(courseName, moduleName),
-    queryFn: () => quizNames,
-  });
   await Promise.all(
     quizzes.map(
       async (quiz) =>
@@ -179,10 +157,6 @@ const hydrateModuleData = async (
         })
     )
   );
-  await queryClient.prefetchQuery({
-    queryKey: localCourseKeys.pageNames(courseName, moduleName),
-    queryFn: () => pageNames,
-  });
   await Promise.all(
     pages.map(
       async (page) =>

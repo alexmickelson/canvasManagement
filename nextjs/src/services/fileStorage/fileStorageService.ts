@@ -13,7 +13,6 @@ export const fileStorageService = {
   assignments: assignmentsFileStorageService,
   quizzes: quizFileStorageService,
   pages: pageFileStorageService,
-  
 
   async getEmptyDirectories(): Promise<string[]> {
     if (!(await directoryOrFileExists(basePath))) {
@@ -48,7 +47,7 @@ export const fileStorageService = {
     await fs.mkdir(courseDirectory, { recursive: true });
   },
   async createModuleFolderForTesting(courseName: string, moduleName: string) {
-    const courseDirectory = path.join(basePath, courseName);
+    const courseDirectory = path.join(basePath, courseName, moduleName);
 
     await fs.mkdir(courseDirectory, { recursive: true });
   },

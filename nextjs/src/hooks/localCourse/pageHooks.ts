@@ -10,13 +10,10 @@ import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { axiosClient } from "@/services/axiosUtils";
 
-export function getPageNamesQueryConfig(
-  courseName: string,
-  moduleName: string
-) {
+export function getAllPagesQueryConfig(courseName: string, moduleName: string) {
   return {
-    queryKey: localCourseKeys.pageNames(courseName, moduleName),
-    queryFn: async (): Promise<string[]> => {
+    queryKey: localCourseKeys.allPages(courseName, moduleName),
+    queryFn: async (): Promise<LocalCoursePage[]> => {
       const url =
         "/api/courses/" +
         encodeURIComponent(courseName) +
@@ -28,29 +25,6 @@ export function getPageNamesQueryConfig(
     },
   };
 }
-
-export const usePageNamesQuery = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getPageNamesQueryConfig(courseName, moduleName));
-};
-
-export const usePageQuery = (moduleName: string, pageName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getPageQueryConfig(courseName, moduleName, pageName));
-};
-
-export const usePagesQueries = (moduleName: string, pageNames: string[]) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQueries({
-    queries: pageNames.map((name) =>
-      getPageQueryConfig(courseName, moduleName, name)
-    ),
-    combine: (results) => ({
-      data: results.map((r) => r.data),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
-};
 
 export function getPageQueryConfig(
   courseName: string,
@@ -72,12 +46,36 @@ export function getPageQueryConfig(
         return response.data;
       } catch (e) {
         console.log("error getting page", e, url);
-        debugger;
         throw e;
       }
     },
   };
 }
+
+export const usePageQuery = (moduleName: string, pageName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery(getPageQueryConfig(courseName, moduleName, pageName));
+};
+
+const useAllPagesQuery = (moduleName: string) => {
+  const { courseName } = useCourseContext();
+  return useSuspenseQuery(getAllPagesQueryConfig(courseName, moduleName));
+};
+
+export const usePagesQueries = (moduleName: string) => {
+  const { courseName } = useCourseContext();
+  const { data: allPages } = useAllPagesQuery(moduleName);
+  return useSuspenseQueries({
+    queries: allPages.map((page) => ({
+      ...getPageQueryConfig(courseName, moduleName, page.name),
+      queryFn: () => page,
+    })),
+    combine: (results) => ({
+      data: results.map((r) => r.data),
+      pending: results.some((r) => r.isPending),
+    }),
+  });
+};
 
 export const useUpdatePageMutation = () => {
   const { courseName } = useCourseContext();
@@ -109,7 +107,7 @@ export const useUpdatePageMutation = () => {
           ),
         });
         queryClient.removeQueries({
-          queryKey: localCourseKeys.pageNames(courseName, moduleName),
+          queryKey: localCourseKeys.allPages(courseName, moduleName),
         });
       }
       queryClient.setQueryData(
@@ -131,7 +129,7 @@ export const useUpdatePageMutation = () => {
     },
     onSuccess: async (_, { moduleName, pageName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+        queryKey: localCourseKeys.allPages(courseName, moduleName),
       });
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.page(courseName, moduleName, pageName),
@@ -171,7 +169,7 @@ export const useCreatePageMutation = () => {
         queryKey: localCourseKeys.page(courseName, moduleName, pageName),
       });
       queryClient.invalidateQueries({
-        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+        queryKey: localCourseKeys.allPages(courseName, moduleName),
       });
     },
   });
@@ -192,7 +190,7 @@ export const useDeletePageMutation = () => {
         queryKey: localCourseKeys.page(courseName, moduleName, pageName),
       });
       queryClient.removeQueries({
-        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+        queryKey: localCourseKeys.allPages(courseName, moduleName),
       });
       const url =
         "/api/courses/" +
@@ -202,11 +200,10 @@ export const useDeletePageMutation = () => {
         "/pages/" +
         encodeURIComponent(pageName);
       await axiosClient.delete(url);
-
     },
     onSuccess: async (_, { moduleName, pageName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.pageNames(courseName, moduleName),
+        queryKey: localCourseKeys.allPages(courseName, moduleName),
       });
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.page(courseName, moduleName, pageName),

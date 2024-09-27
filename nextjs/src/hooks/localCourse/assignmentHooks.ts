@@ -28,7 +28,7 @@ export const getAllAssignmentsQueryConfig = (
   },
 });
 
-export const useAllAssignmentNamesQuery = (moduleName: string) => {
+const useAllAssignmentsQuery = (moduleName: string) => {
   const { courseName } = useCourseContext();
   return useSuspenseQuery(getAllAssignmentsQueryConfig(courseName, moduleName));
 };
@@ -70,7 +70,7 @@ export const useAssignmentQuery = (
 };
 
 export const useAssignmentsQueries = (moduleName: string) => {
-  const { data: allAssignments } = useAllAssignmentNamesQuery(moduleName);
+  const { data: allAssignments } = useAllAssignmentsQuery(moduleName);
   const { courseName } = useCourseContext();
   return useSuspenseQueries({
     queries: allAssignments.map((assignment) =>

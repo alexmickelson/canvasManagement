@@ -1,13 +1,9 @@
 "use client";
+import { useAssignmentsQueries } from "@/hooks/localCourse/assignmentHooks";
 import {
-  useAssignmentsQueries,
-} from "@/hooks/localCourse/assignmentHooks";
-import {
-  usePageNamesQuery,
   usePagesQueries,
 } from "@/hooks/localCourse/pageHooks";
 import {
-  useQuizNamesQuery,
   useQuizzesQueries,
 } from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
@@ -33,15 +29,11 @@ export default function ExpandableModule({
 }: {
   moduleName: string;
 }) {
-  const { data: quizNames } = useQuizNamesQuery(moduleName);
-  const { data: pageNames } = usePageNamesQuery(moduleName);
   const { itemDropOnModule } = useDraggingContext();
 
-  const { data: assignments } = useAssignmentsQueries(
-    moduleName,
-  );
-  const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
-  const { data: pages } = usePagesQueries(moduleName, pageNames);
+  const { data: assignments } = useAssignmentsQueries(moduleName);
+  const { data: quizzes } = useQuizzesQueries(moduleName);
+  const { data: pages } = usePagesQueries(moduleName);
 
   const [expanded, setExpanded] = useState(false);
 

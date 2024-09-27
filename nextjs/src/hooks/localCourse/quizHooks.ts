@@ -10,13 +10,13 @@ import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { axiosClient } from "@/services/axiosUtils";
 
-export function getQuizNamesQueryConfig(
+export function getAllQuizzesQueryConfig(
   courseName: string,
   moduleName: string
 ) {
   return {
-    queryKey: localCourseKeys.quizNames(courseName, moduleName),
-    queryFn: async (): Promise<string[]> => {
+    queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
+    queryFn: async (): Promise<LocalQuiz[]> => {
       const url =
         "/api/courses/" +
         encodeURIComponent(courseName) +
@@ -28,22 +28,24 @@ export function getQuizNamesQueryConfig(
     },
   };
 }
-export const useQuizNamesQuery = (moduleName: string) => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getQuizNamesQueryConfig(courseName, moduleName));
-};
 
 export const useQuizQuery = (moduleName: string, quizName: string) => {
   const { courseName } = useCourseContext();
   return useSuspenseQuery(getQuizQueryConfig(courseName, moduleName, quizName));
 };
 
-export const useQuizzesQueries = (moduleName: string, quizNames: string[]) => {
+const useAllQuizzesQuery = (moduleName: string) => {
   const { courseName } = useCourseContext();
+  return useSuspenseQuery(getAllQuizzesQueryConfig(courseName, moduleName));
+};
+export const useQuizzesQueries = (moduleName: string) => {
+  const { courseName } = useCourseContext();
+  const { data: allQuizzes } = useAllQuizzesQuery(moduleName);
   return useSuspenseQueries({
-    queries: quizNames.map((name) =>
-      getQuizQueryConfig(courseName, moduleName, name)
-    ),
+    queries: allQuizzes.map((quiz) => ({
+      ...getQuizQueryConfig(courseName, moduleName, quiz.name),
+      queryFn: () => quiz,
+    })),
     combine: (results) => ({
       data: results.map((r) => r.data),
       pending: results.some((r) => r.isPending),
@@ -102,7 +104,7 @@ export const useUpdateQuizMutation = () => {
           ),
         });
         queryClient.removeQueries({
-          queryKey: localCourseKeys.quizNames(courseName, previousModuleName),
+          queryKey: localCourseKeys.allQuizzes(courseName, previousModuleName),
         });
       }
       queryClient.setQueryData(
@@ -128,7 +130,7 @@ export const useUpdateQuizMutation = () => {
     },
     onSuccess: async (_, { moduleName, quizName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quizNames(courseName, moduleName),
+        queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
       });
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
@@ -165,7 +167,7 @@ export const useCreateQuizMutation = () => {
     },
     onSuccess: async (_, { moduleName, quizName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quizNames(courseName, moduleName),
+        queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
       });
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),
@@ -194,12 +196,12 @@ export const useDeleteQuizMutation = () => {
         encodeURIComponent(quizName);
       await axiosClient.delete(url);
       queryClient.removeQueries({
-        queryKey: localCourseKeys.quizNames(courseName, moduleName),
+        queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
       });
     },
     onSuccess: async (_, { moduleName, quizName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.quizNames(courseName, moduleName),
+        queryKey: localCourseKeys.allQuizzes(courseName, moduleName),
       });
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.quiz(courseName, moduleName, quizName),

@@ -8,9 +8,9 @@ export const GET = async (
   }: { params: { courseName: string; moduleName: string } }
 ) =>
   await withErrorHandling(async () => {
-    const settings = await fileStorageService.pages.getPageNames(
+    const pages = await fileStorageService.pages.getPages(
       courseName,
       moduleName
     );
-    return Response.json(settings);
+    return Response.json(pages);
   });

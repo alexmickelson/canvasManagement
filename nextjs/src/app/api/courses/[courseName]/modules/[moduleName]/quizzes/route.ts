@@ -8,9 +8,9 @@ export const GET = async (
   }: { params: { courseName: string; moduleName: string } }
 ) =>
   await withErrorHandling(async () => {
-    const settings = await fileStorageService.quizzes.getQuizNames(
+    const quizzes = await fileStorageService.quizzes.getQuizzes(
       courseName,
       moduleName
     );
-    return Response.json(settings);
+    return Response.json(quizzes);
   });

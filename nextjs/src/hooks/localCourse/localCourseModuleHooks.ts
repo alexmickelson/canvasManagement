@@ -11,8 +11,8 @@ import {
   getAllAssignmentsQueryConfig,
   getAssignmentQueryConfig,
 } from "./assignmentHooks";
-import { getPageNamesQueryConfig, getPageQueryConfig } from "./pageHooks";
-import { getQuizNamesQueryConfig, getQuizQueryConfig } from "./quizHooks";
+import { getAllPagesQueryConfig, getPageQueryConfig } from "./pageHooks";
+import { getAllQuizzesQueryConfig, getQuizQueryConfig } from "./quizHooks";
 
 export const useModuleNamesQuery = () => {
   const { courseName } = useCourseContext();
@@ -92,57 +92,15 @@ export const useAllCourseDataQuery = () => {
     }),
   });
 
-  // const { data: assignmentsAndModules } = useSuspenseQueries({
-  //   queries: assignmentsAndModules.map(
-  //     ({ moduleName, assignment }, i) =>
-  //       getAssignmentQueryConfig(courseName, moduleName, assignment)
-  //   ),
-  //   combine: (results) => ({
-  //     data: results.flatMap((r, i) => ({
-  //       moduleName: assignmentsAndModules[i].moduleName,
-  //       assignment: r.data,
-  //     })),
-  //     pending: results.some((r) => r.isPending),
-  //   }),
-  // });
-
-  const { data: quizNamesAndModules } = useSuspenseQueries({
-    queries: moduleNames.map((moduleName) =>
-      getQuizNamesQueryConfig(courseName, moduleName)
-    ),
-    combine: (results) => ({
-      data: results.flatMap((r, i) =>
-        r.data.map((quizName) => ({
-          moduleName: moduleNames[i],
-          quizName: quizName,
-        }))
-      ),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
-
   const { data: quizzesAndModules } = useSuspenseQueries({
-    queries: quizNamesAndModules.map(({ moduleName, quizName }, i) =>
-      getQuizQueryConfig(courseName, moduleName, quizName)
-    ),
-    combine: (results) => ({
-      data: results.flatMap((r, i) => ({
-        moduleName: quizNamesAndModules[i].moduleName,
-        quiz: r.data,
-      })),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
-
-  const { data: pageNamesAndModules } = useSuspenseQueries({
     queries: moduleNames.map((moduleName) =>
-      getPageNamesQueryConfig(courseName, moduleName)
+      getAllQuizzesQueryConfig(courseName, moduleName)
     ),
     combine: (results) => ({
       data: results.flatMap((r, i) =>
-        r.data.map((pageName) => ({
+        r.data.map((quiz) => ({
           moduleName: moduleNames[i],
-          pageName,
+          quiz,
         }))
       ),
       pending: results.some((r) => r.isPending),
@@ -150,14 +108,16 @@ export const useAllCourseDataQuery = () => {
   });
 
   const { data: pagesAndModules } = useSuspenseQueries({
-    queries: pageNamesAndModules.map(({ moduleName, pageName }, i) =>
-      getPageQueryConfig(courseName, moduleName, pageName)
+    queries: moduleNames.map((moduleName) =>
+      getAllPagesQueryConfig(courseName, moduleName)
     ),
     combine: (results) => ({
-      data: results.flatMap((r, i) => ({
-        moduleName: pageNamesAndModules[i].moduleName,
-        page: r.data,
-      })),
+      data: results.flatMap((r, i) =>
+        r.data.map((page) => ({
+          moduleName: moduleNames[i],
+          page,
+        }))
+      ),
       pending: results.some((r) => r.isPending),
     }),
   });
