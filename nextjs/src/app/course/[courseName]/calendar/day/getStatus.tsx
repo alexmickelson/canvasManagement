@@ -9,6 +9,8 @@ import {
   dateToMarkdownString,
   getDateFromStringOrThrow,
 } from "@/models/local/timeUtils";
+import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
+import { htmlIsCloseEnough } from "@/services/utils/htmlIsCloseEnough";
 import { ReactNode } from "react";
 
 export const getStatus = ({
@@ -37,8 +39,7 @@ export const getStatus = ({
     return { status: "published", message: "" };
   } else if (type === "quiz") {
     const quiz = item as LocalQuiz;
-    const canvasQuiz = canvasItem as CanvasQuiz
-
+    const canvasQuiz = canvasItem as CanvasQuiz;
 
     if (!canvasQuiz.due_at)
       return { status: "incomplete", message: "due date not in canvas" };
@@ -49,7 +50,7 @@ export const getStatus = ({
     const localDueDate = dateToMarkdownString(
       getDateFromStringOrThrow(quiz.dueAt, "comparing due dates for day")
     );
-    
+
     const canvasDueDate = dateToMarkdownString(
       getDateFromStringOrThrow(
         canvasQuiz.due_at,
@@ -68,7 +69,6 @@ export const getStatus = ({
         ),
       };
     }
-    
   } else if (type === "assignment") {
     const assignment = item as LocalAssignment;
     const canvasAssignment = canvasItem as CanvasAssignment;
@@ -88,7 +88,8 @@ export const getStatus = ({
         "comparing canvas due date for day"
       )
     );
-    if (localDueDate !== canvasDueDate) {
+
+    if (localDueDate !== canvasDueDate)
       return {
         status: "incomplete",
         message: (
@@ -99,7 +100,16 @@ export const getStatus = ({
           </div>
         ),
       };
-    }
+
+    const htmlIsSame = htmlIsCloseEnough(
+      markdownToHTMLSafe(assignment.description),
+      canvasAssignment.description
+    );
+    if (!htmlIsSame)
+      return {
+        status: "incomplete",
+        message: "Canvas description is different",
+      };
   }
 
   return { status: "published", message: "" };
