@@ -47,7 +47,7 @@ export default function InnerMonacoEditor({
           const properties: editor.IStandaloneEditorConstructionOptions = {
             value: value,
             language: "markdown",
-            tabSize: 2,
+            tabSize: 3,
             theme: "vs-dark",
             minimap: {
               enabled: false,

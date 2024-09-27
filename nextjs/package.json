@@ -10,13 +10,13 @@
     "test": "vitest"
   },
   "dependencies": {
-    "axios": "^1.7.5",
     "next": "^14.2.7",
     "react": "^18",
-    "react-dom": "^18",
-    "yaml": "^2.5.0"
+    "react-dom": "^18"
   },
   "devDependencies": {
+    "yaml": "^2.5.0",
+    "axios": "^1.7.5",
     "marked": "^14.1.2",
     "@monaco-editor/react": "^4.6.0",
     "@tanstack/react-query": "^5.54.1",
