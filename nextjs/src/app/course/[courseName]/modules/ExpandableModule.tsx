@@ -1,18 +1,14 @@
 "use client";
 import { useAssignmentsQueries } from "@/hooks/localCourse/assignmentHooks";
-import {
-  usePagesQueries,
-} from "@/hooks/localCourse/pageHooks";
-import {
-  useQuizzesQueries,
-} from "@/hooks/localCourse/quizHooks";
+import { usePagesQueries } from "@/hooks/localCourse/pageHooks";
+import { useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import {
   getDateFromString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
-import { Fragment, useRef, useState } from "react";
+import { Fragment } from "react";
 import Modal from "../../../../components/Modal";
 import NewItemForm from "./NewItemForm";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
@@ -23,6 +19,7 @@ import DropTargetStyling from "../../../../components/DropTargetStyling";
 import Link from "next/link";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
+import { Expandable } from "../../../../components/Expandable";
 
 export default function ExpandableModule({
   moduleName,
@@ -35,7 +32,7 @@ export default function ExpandableModule({
   const { data: quizzes } = useQuizzesQueries(moduleName);
   const { data: pages } = usePagesQueries(moduleName);
 
-  const [expanded, setExpanded] = useState(false);
+  // const [expanded, setExpanded] = useState(false);
 
   const moduleItems: {
     type: "assignment" | "quiz" | "page";
@@ -65,7 +62,7 @@ export default function ExpandableModule({
           "item due date in expandable module"
         ).getTime()
     );
-  const expandRef = useRef<HTMLDivElement | null>(null);
+  // const expandRef = useRef<HTMLDivElement | null>(null);
 
   return (
     <div
@@ -75,50 +72,52 @@ export default function ExpandableModule({
     >
       <DropTargetStyling draggingClassName="shadow-[0_0px_10px_0px] shadow-blue-500/50 ">
         <div className=" p-3 ">
-          <div
-            className="font-bold flex flex-row justify-between "
-            role="button"
-            onClick={() => setExpanded((e) => !e)}
-          >
-            <div>{moduleName}</div>
-            <div className="flex flex-row">
-              <ClientOnly>
-                <ModuleCanvasStatus moduleName={moduleName} />
-              </ClientOnly>
-              <ExpandIcon
-                style={{
-                  ...(expanded ? { rotate: "-90deg" } : {}),
-                }}
-              />
-            </div>
-          </div>
-          <div
-            ref={expandRef}
-            className={` overflow-hidden transition-all `}
-            style={{
-              maxHeight: expanded ? expandRef?.current?.scrollHeight : "0",
-            }}
-          >
-            <Modal buttonText="New Item">
-              {({ closeModal }) => (
-                <div>
-                  <NewItemForm moduleName={moduleName} onCreate={closeModal} />
-                  <br />
-                  <button onClick={closeModal}>close</button>
+          <Expandable
+            ExpandableElement={({ setIsExpanded, isExpanded }) => (
+              <div
+                className="font-bold flex flex-row justify-between "
+                role="button"
+                onClick={() => setIsExpanded((e) => !e)}
+              >
+                <div>{moduleName}</div>
+                <div className="flex flex-row">
+                  <ClientOnly>
+                    <ModuleCanvasStatus moduleName={moduleName} />
+                  </ClientOnly>
+                  <ExpandIcon
+                    style={{
+                      ...(isExpanded ? { rotate: "-90deg" } : {}),
+                    }}
+                  />
                 </div>
-              )}
-            </Modal>
-            <div className="grid grid-cols-[auto_1fr]">
-              {moduleItems.map(({ type, item }) => (
-                <ExpandableModuleItem
-                  key={item.name + type}
-                  type={type}
-                  item={item}
-                  moduleName={moduleName}
-                />
-              ))}
-            </div>
-          </div>
+              </div>
+            )}
+          >
+            <>
+              <Modal buttonText="New Item">
+                {({ closeModal }) => (
+                  <div>
+                    <NewItemForm
+                      moduleName={moduleName}
+                      onCreate={closeModal}
+                    />
+                    <br />
+                    <button onClick={closeModal}>close</button>
+                  </div>
+                )}
+              </Modal>
+              <div className="grid grid-cols-[auto_1fr]">
+                {moduleItems.map(({ type, item }) => (
+                  <ExpandableModuleItem
+                    key={item.name + type}
+                    type={type}
+                    item={item}
+                    moduleName={moduleName}
+                  />
+                ))}
+              </div>
+            </>
+          </Expandable>
         </div>
       </DropTargetStyling>
     </div>
