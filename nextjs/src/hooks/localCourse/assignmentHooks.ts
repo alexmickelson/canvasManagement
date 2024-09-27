@@ -1,18 +1,9 @@
 "use client";
-import { localCourseKeys } from "./localCourseKeys";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
-import {
-  useSuspenseQuery,
-  useSuspenseQueries,
-  useQueryClient,
-  useMutation,
-} from "@tanstack/react-query";
-import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import { axiosClient } from "@/services/axiosUtils";
 import {
   getAllItemsQueryConfig,
   getItemQueryConfig,
   useCreateItemMutation,
+  useDeleteItemMutation,
   useItemQuery,
   useItemsQueries,
   useUpdateItemMutation,
@@ -43,49 +34,5 @@ export const useUpdateAssignmentMutation = () =>
 export const useCreateAssignmentMutation = () =>
   useCreateItemMutation("Assignment");
 
-export const useDeleteAssignmentMutation = () => {
-  const { courseName } = useCourseContext();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({
-      moduleName,
-      assignmentName,
-    }: {
-      moduleName: string;
-      assignmentName: string;
-    }) => {
-      queryClient.removeQueries({
-        queryKey: localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          assignmentName,
-          "Assignment"
-        ),
-      });
-      queryClient.removeQueries({
-        queryKey: localCourseKeys.allItemsOfType(
-          courseName,
-          moduleName,
-          "Assignment"
-        ),
-      });
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/assignments/" +
-        encodeURIComponent(assignmentName);
-      await axiosClient.delete(url);
-    },
-    onSuccess: async (_, { moduleName, assignmentName }) => {
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(
-          courseName,
-          moduleName,
-          "Assignment"
-        ),
-      });
-    },
-  });
-};
+export const useDeleteAssignmentMutation = () =>
+  useDeleteItemMutation("Assignment");

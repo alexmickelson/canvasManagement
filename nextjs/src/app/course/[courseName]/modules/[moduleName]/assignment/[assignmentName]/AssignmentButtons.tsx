@@ -128,7 +128,7 @@ export function AssignmentButtons({
                   <button
                     onClick={() => {
                       deleteLocal
-                        .mutateAsync({ moduleName, assignmentName })
+                        .mutateAsync({ moduleName, itemName: assignmentName })
                         .then(() => {
                           router.push(getCourseUrl(courseName));
                         });

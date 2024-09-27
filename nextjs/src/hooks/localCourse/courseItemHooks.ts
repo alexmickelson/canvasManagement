@@ -219,3 +219,44 @@ export const useCreateItemMutation = <T extends CourseItemType>(type: T) => {
     },
   });
 };
+
+export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
+  const { courseName } = useCourseContext();
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({
+      moduleName,
+      itemName,
+    }: {
+      moduleName: string;
+      itemName: string;
+    }) => {
+      queryClient.removeQueries({
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          itemName,
+          type
+        ),
+      });
+      queryClient.removeQueries({
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
+      });
+      const url =
+        "/api/courses/" +
+        encodeURIComponent(courseName) +
+        "/modules/" +
+        encodeURIComponent(moduleName) +
+        "/" +
+        typeToFolder[type] +
+        "/" +
+        encodeURIComponent(itemName);
+      await axiosClient.delete(url);
+    },
+    onSuccess: async (_, { moduleName, itemName }) => {
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
+      });
+    },
+  });
+};

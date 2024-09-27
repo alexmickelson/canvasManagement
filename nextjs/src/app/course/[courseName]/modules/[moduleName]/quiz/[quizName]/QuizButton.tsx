@@ -88,7 +88,7 @@ export function QuizButtons({
                   <button
                     onClick={async () => {
                       deleteLocal
-                        .mutateAsync({ moduleName, quizName })
+                        .mutateAsync({ moduleName, itemName: quizName })
                         .then(() => router.push(getCourseUrl(courseName)));
                     }}
                     className="btn-danger"

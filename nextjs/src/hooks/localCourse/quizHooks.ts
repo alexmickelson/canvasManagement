@@ -1,15 +1,9 @@
 "use client";
 import {
-  useMutation,
-  useQueryClient,
-} from "@tanstack/react-query";
-import { localCourseKeys } from "./localCourseKeys";
-import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import { axiosClient } from "@/services/axiosUtils";
-import {
   getAllItemsQueryConfig,
   getItemQueryConfig,
   useCreateItemMutation,
+  useDeleteItemMutation,
   useItemQuery,
   useItemsQueries,
   useUpdateItemMutation,
@@ -40,49 +34,5 @@ export const useUpdateQuizMutation = () => useUpdateItemMutation("Quiz")
 
 export const useCreateQuizMutation = () => useCreateItemMutation("Quiz")
 
-export const useDeleteQuizMutation = () => {
-  const { courseName } = useCourseContext();
-  const queryClient = useQueryClient();
-  return useMutation({
-    mutationFn: async ({
-      moduleName,
-      quizName,
-    }: {
-      moduleName: string;
-      quizName: string;
-    }) => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/quizzes/" +
-        encodeURIComponent(quizName);
-      await axiosClient.delete(url);
-      queryClient.removeQueries({
-        queryKey: localCourseKeys.allItemsOfType(
-          courseName,
-          moduleName,
-          "Quiz"
-        ),
-      });
-    },
-    onSuccess: async (_, { moduleName, quizName }) => {
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(
-          courseName,
-          moduleName,
-          "Quiz"
-        ),
-      });
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          quizName,
-          "Quiz"
-        ),
-      });
-    },
-  });
-};
+export const useDeleteQuizMutation = () =>
+  useDeleteItemMutation("Quiz");

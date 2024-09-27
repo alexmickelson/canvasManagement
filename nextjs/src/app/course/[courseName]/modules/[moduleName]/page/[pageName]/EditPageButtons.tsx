@@ -101,7 +101,7 @@ export default function EditPageButtons({
                 <button
                   onClick={async () => {
                     deletePageLocal
-                      .mutateAsync({ moduleName, pageName })
+                      .mutateAsync({ moduleName, itemName: pageName })
                       .then(() => router.push(getCourseUrl(courseName)));
                   }}
                   className="btn-danger"
