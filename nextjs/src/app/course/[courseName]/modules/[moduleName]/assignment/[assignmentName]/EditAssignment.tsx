@@ -28,12 +28,12 @@ export default function EditAssignment({
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
-  console.log("due date on edit page", assignment.dueAt);
   const updateAssignment = useUpdateAssignmentMutation();
 
   const [assignmentText, setAssignmentText] = useState(
     localAssignmentMarkdown.toMarkdown(assignment)
   );
+  console.log("assignment text render");
 
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);

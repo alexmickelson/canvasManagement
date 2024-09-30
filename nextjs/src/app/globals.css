@@ -15,20 +15,6 @@
   @apply text-lg;
 }
 
-/* monaco editor */
-.monaco-editor-background,
-.monaco-editor .margin {
-  background-color: #020617 !important;
-  /* background-color: #18181b !important; */
-}
-.monaco-editor {
-  position: absolute !important;
-}
-
-.monaco-editor .mtk1 {
-  @apply text-slate-300;
-}
-
 h1 {
   @apply text-4xl font-bold my-1;
 }

@@ -2,7 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import loader from "@monaco-editor/loader";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
-import * as monaco from "monaco-editor";
+// import * as monaco from "monaco-editor";
 
 // import * as editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
 // import * as jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
@@ -28,7 +28,7 @@ import * as monaco from "monaco-editor";
 //   },
 // };
 
-loader.config({ monaco });
+// loader.config({ monaco });
 
 export default function InnerMonacoEditor({
   value,
@@ -43,6 +43,7 @@ export default function InnerMonacoEditor({
   useEffect(() => {
     if (divRef.current && !editorRef.current) {
       loader.init().then((monaco) => {
+        console.log("in init", monaco, divRef.current, editorRef.current);
         if (divRef.current && !editorRef.current) {
           const properties: editor.IStandaloneEditorConstructionOptions = {
             value: value,
@@ -64,10 +65,14 @@ export default function InnerMonacoEditor({
 
           editorRef.current = monaco.editor.create(divRef.current, properties);
           editorRef.current.onDidChangeModelContent((e) => {
+            console.log("in on change", onChange);
             onChange(editorRef.current?.getModel()?.getValue() ?? "");
           });
+        } else {
+          console.log("second render of init");
         }
       });
+    } else if (!divRef.current) {
     }
   }, [onChange, value]);
 
@@ -75,7 +80,7 @@ export default function InnerMonacoEditor({
     <div
       className="Editor"
       ref={divRef}
-      style={{ height: "100%", overflow: "hidden"}}
+      style={{ height: "100%", overflow: "hidden" }}
     ></div>
   );
 }
