@@ -1,5 +1,6 @@
 import React from "react";
 import EditAssignment from "./EditAssignment";
+import ClientOnly from "@/components/ClientOnly";
 
 export default function Page({
   params: { moduleName, assignmentName },

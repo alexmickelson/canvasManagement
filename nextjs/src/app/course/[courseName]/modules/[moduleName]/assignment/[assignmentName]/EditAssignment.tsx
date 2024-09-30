@@ -7,18 +7,9 @@ import {
 import { localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
 import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
-import { getCourseUrl, getModuleItemUrl } from "@/services/urlUtils";
-import Link from "next/link";
+import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import {
-  useAddAssignmentToCanvasMutation,
-  useCanvasAssignmentsQuery,
-  useDeleteAssignmentFromCanvasMutation,
-  useUpdateAssignmentInCanvasMutation,
-} from "@/hooks/canvas/canvasAssignmentHooks";
-import { Spinner } from "@/components/Spinner";
-import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
@@ -37,11 +28,13 @@ export default function EditAssignment({
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
+  console.log("due date on edit page", assignment.dueAt);
   const updateAssignment = useUpdateAssignmentMutation();
 
   const [assignmentText, setAssignmentText] = useState(
     localAssignmentMarkdown.toMarkdown(assignment)
   );
+
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);
 

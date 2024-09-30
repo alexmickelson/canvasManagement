@@ -84,7 +84,6 @@ export const useItemsQueries = <T extends CourseItemType>(
   return useSuspenseQueries({
     queries: allItems.map((item) => ({
       ...getItemQueryConfig(courseName, moduleName, item.name, type),
-      queryFn: () => item,
     })),
     combine: (results) => ({
       data: results.map((r) => r.data),
@@ -162,15 +161,15 @@ export const useUpdateItemMutation = <T extends CourseItemType>(type: T) => {
     },
     onSuccess: async (_, { moduleName, itemName }) => {
       await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
-      });
-      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.itemOfType(
           courseName,
           moduleName,
           itemName,
           type
         ),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
       });
     },
   });
@@ -204,17 +203,17 @@ export const useCreateItemMutation = <T extends CourseItemType>(type: T) => {
         encodeURIComponent(itemName);
       await axiosClient.post(url, item);
     },
-    onSuccess: async (_, { moduleName, itemName: assignmentName }) => {
-      await queryClient.invalidateQueries({
-        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
-      });
+    onSuccess: async (_, { moduleName, itemName }) => {
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.itemOfType(
           courseName,
           moduleName,
-          assignmentName,
+          itemName,
           type
         ),
+      });
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
       });
     },
   });
