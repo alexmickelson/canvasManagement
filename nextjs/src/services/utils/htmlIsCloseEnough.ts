@@ -18,7 +18,6 @@ export const removeHtmlDetails = (html: string) => {
     .replaceAll(/\\"/g, '"')
     .replaceAll(/\s/g, "")
     .replaceAll(/<hr\s*\/?>/g, "<hr>")
-    .replaceAll(/<hr\s*\/?>/g, "<hr>")
     .replaceAll(/<br\s*\/?>/g, "<br>")
     .replaceAll(/&gt;/g, "")
     .replaceAll(/&lt;/g, "")

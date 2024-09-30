@@ -47,3 +47,16 @@ new settings
 - default submission types
 - default file types
 - default lockAt offset
+
+websocket server to watch file system for changes, notify frontend it should invalidate cache
+
+lectures
+- create 1 lecture for a given day
+- have a way of running a lecture from an unauthenticated computer? maybe just view lecture notes?
+
+
+tighter integration with git
+- regularly make git commits
+- handle merging?
+- maybe a different storage backend?
+- user motivated restore?

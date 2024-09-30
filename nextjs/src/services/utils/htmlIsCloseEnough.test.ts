@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { htmlIsCloseEnough, removeHtmlDetails } from "./htmlIsCloseEnough";
+import { removeHtmlDetails } from "./htmlIsCloseEnough";
 
 describe("html can be close enough", () => {
   it("scenario 1", () => {
