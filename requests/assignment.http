@@ -157,5 +157,15 @@ Content-Type: application/json
     "name": "test module"
   }
 }
+###
+POST https://snow.instructure.com/api/v1/courses/courses/960410/rubrics/1961869
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+Content-Type: application/json
+
+{
+  "module": {
+    "name": "test module"
+  }
+}
 
 

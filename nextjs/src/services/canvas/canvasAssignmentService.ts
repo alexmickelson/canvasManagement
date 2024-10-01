@@ -8,7 +8,7 @@ import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPoin
 import { getDateFromString } from "@/models/local/timeUtils";
 import { canvasModuleService } from "./canvasModuleService";
 import { CanvasModule } from "@/models/canvas/modules/canvasModule";
-
+import { getRubricCriterion } from "./canvasRubricUtils";
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {
@@ -25,7 +25,7 @@ export const canvasAssignmentService = {
   async create(
     canvasCourseId: number,
     localAssignment: LocalAssignment,
-    canvasAssignmentGroupId?: number,
+    canvasAssignmentGroupId?: number
   ) {
     console.log(`Creating assignment: ${localAssignment.name}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/assignments`;
@@ -108,22 +108,8 @@ const createRubric = async (
   assignmentCanvasId: number,
   localAssignment: LocalAssignment
 ) => {
-  const criterion = localAssignment.rubric
-    .map((rubricItem) => ({
-      description: rubricItem.label,
-      points: rubricItem.points,
-      ratings: {
-        0: { description: "Full Marks", points: rubricItem.points },
-        1: { description: "No Marks", points: 0 },
-      },
-    }))
-    .reduce((acc, item, index) => {
-      return {
-        ...acc,
-        [index]: item,
-      };
-    }, {} as { [key: number]: { description: string; points: number; ratings: { [key: number]: { description: string; points: number } } } });
-
+  const criterion = getRubricCriterion(localAssignment.rubric);
+  
   const rubricBody = {
     rubric_association_id: assignmentCanvasId,
     rubric: {
