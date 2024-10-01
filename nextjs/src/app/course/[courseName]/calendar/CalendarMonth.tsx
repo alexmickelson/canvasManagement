@@ -1,8 +1,10 @@
 "use client";
-import { CalendarMonthModel } from "./calendarMonthUtils";
+import { CalendarMonthModel, getWeekNumber } from "./calendarMonthUtils";
 import { DayOfWeek } from "@/models/local/localCourse";
 import Day from "./day/Day";
 import { Expandable } from "@/components/Expandable";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 
 export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   const weekInMilliseconds = 604_800_000;
@@ -35,7 +37,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
           </div>
         )}
       >
-        <div className="grid grid-cols-7 text-center fw-bold">
+        <div className="grid grid-cols-7 text-center fw-bold ms-3">
           {weekDaysList.map((day) => (
             <div key={day} className={""}>
               {day}
@@ -58,11 +60,26 @@ function CalendarWeek({
   week: string[]; //date strings
   monthNumber: number;
 }) {
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const startDate = getDateFromStringOrThrow(
+    settings.startDate,
+    "week calculation start date"
+  );
+  const firstDateString = getDateFromStringOrThrow(
+    week[0],
+    "week calculation first day of week"
+  );
+  const weekNumber = getWeekNumber(startDate, firstDateString);
   return (
-    <div className="grid grid-cols-7">
-      {week.map((day, dayIndex) => (
-        <Day key={dayIndex} day={day} month={monthNumber} />
-      ))}
+    <div className="flex flex-row">
+      <div className="my-auto text-gray-400">
+        {weekNumber.toString().padStart(2, "0")}
+      </div>
+      <div className="grid grid-cols-7 grow">
+        {week.map((day, dayIndex) => (
+          <Day key={dayIndex} day={day} month={monthNumber} />
+        ))}
+      </div>
     </div>
   );
 }

@@ -37,7 +37,9 @@ function createCalendarMonth(year: number, month: number): CalendarMonthModel {
           new Date(year, month - 1, dayIndex - firstDayOfMonth + 1, 12, 0, 0)
         );
       } else if (currentDay <= daysInMonth) {
-        return dateToMarkdownString(new Date(year, month - 1, currentDay++, 12, 0, 0));
+        return dateToMarkdownString(
+          new Date(year, month - 1, currentDay++, 12, 0, 0)
+        );
       } else {
         currentDay++;
         return dateToMarkdownString(
@@ -74,3 +76,27 @@ export function getMonthsBetweenDates(
     return createCalendarMonth(year, month);
   });
 }
+
+export const getWeekNumber = (startDate: Date, currentDate: Date) => {
+  const sundayBeforeStartDate = getPreviousSunday(startDate);
+  const daysBetween = daysBetweenDates(sundayBeforeStartDate, currentDate);
+  const weeksDiff = Math.floor(daysBetween / 7);
+
+  if (weeksDiff >= 0) return weeksDiff + 1;
+  return weeksDiff;
+};
+
+const daysBetweenDates = (startDate: Date, endDate: Date) => {
+  const diffInTime = endDate.getTime() - startDate.getTime();
+  const diffInDays = diffInTime / (1000 * 3600 * 24);
+  return Math.floor(diffInDays);
+};
+
+const getPreviousSunday = (date: Date) => {
+  const result = new Date(date);
+  const dayOfWeek = result.getDay();
+
+  result.setDate(result.getDate() - dayOfWeek);
+
+  return result;
+};
