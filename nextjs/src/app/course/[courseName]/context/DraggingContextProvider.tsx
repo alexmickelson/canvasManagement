@@ -130,7 +130,11 @@ export default function DraggingContextProvider({
         const quiz: LocalQuiz = {
           ...previousQuiz,
           dueAt: dateToMarkdownString(dayAsDate),
-          lockAt: getLaterDate(previousQuiz.lockAt, dayAsDate),
+          lockAt: getNewLockDate(
+            previousQuiz.dueAt,
+            previousQuiz.lockAt,
+            dayAsDate
+          ),
         };
         updateQuizMutation.mutate({
           item: quiz,
@@ -198,14 +202,27 @@ export default function DraggingContextProvider({
     </DraggingContext.Provider>
   );
 }
-function getLaterDate(
-  firstDate: string | undefined,
+function getNewLockDate(
+  originalDueDate: string,
+  originalLockDate: string | undefined,
   dayAsDate: Date
 ): string | undefined {
-  return (
-    firstDate &&
-    (getDateFromStringOrThrow(firstDate, "lockAt date") > dayAsDate
-      ? firstDate
-      : dateToMarkdownString(dayAsDate))
-  );
+  // todo: preserve previous due date / lock date offset
+  const dueDate = getDateFromStringOrThrow(originalDueDate, "dueat date");
+  const lockDate =
+    originalLockDate === undefined
+      ? undefined
+      : getDateFromStringOrThrow(originalLockDate, "lockAt date");
+
+  const originalOffset =
+    lockDate === undefined ? undefined : lockDate.getTime() - dueDate.getTime();
+
+  const newLockDate =
+    originalOffset === undefined
+      ? undefined
+      : new Date(dayAsDate.getTime() + originalOffset);
+
+  return newLockDate === undefined
+    ? undefined
+    : dateToMarkdownString(newLockDate);
 }
