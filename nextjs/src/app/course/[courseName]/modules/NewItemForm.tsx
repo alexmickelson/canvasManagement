@@ -13,6 +13,7 @@ import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentG
 import {
   dateToMarkdownString,
   getDateFromString,
+  getDateFromStringOrThrow,
 } from "@/models/local/timeUtils";
 import React, { useState } from "react";
 
@@ -66,6 +67,18 @@ export default function NewItemForm({
           dueDate === ""
             ? dueDate
             : dateToMarkdownString(defaultDate ?? new Date());
+        const lockAt =
+          settings.defaultLockHoursOffset === undefined
+            ? undefined
+            : dateToMarkdownString(
+                addHoursToDate(
+                  getDateFromStringOrThrow(
+                    dueDate,
+                    "getting default lock time"
+                  ),
+                  settings.defaultLockHoursOffset
+                )
+              );
 
         console.log("submitting");
         if (!moduleName) {
@@ -77,6 +90,7 @@ export default function NewItemForm({
               name,
               description: "",
               dueAt,
+              lockAt,
               submissionTypes: settings.defaultAssignmentSubmissionTypes,
               allowedFileUploadExtensions: settings.defaultFileUploadTypes,
               rubric: [],
@@ -90,6 +104,7 @@ export default function NewItemForm({
               name,
               description: "",
               dueAt,
+              lockAt,
               shuffleAnswers: true,
               showCorrectAnswers: true,
               oneQuestionAtATime: true,
@@ -159,4 +174,10 @@ export default function NewItemForm({
       {isPending && <Spinner />}
     </form>
   );
+}
+
+function addHoursToDate(date: Date, hours: number): Date {
+  const newDate = new Date(date.getTime());
+  newDate.setHours(newDate.getHours() + hours);
+  return newDate;
 }

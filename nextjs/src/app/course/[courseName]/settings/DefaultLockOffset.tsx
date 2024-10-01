@@ -18,7 +18,10 @@ export default function DefaultLockOffset() {
     const id = setTimeout(() => {
       try {
         const hoursNumber = parseInt(hoursOffset);
-        if (hoursNumber && hoursNumber !== settings.defaultLockHoursOffset) {
+        if (
+          !Number.isNaN(hoursNumber) &&
+          hoursNumber !== settings.defaultLockHoursOffset
+        ) {
           updateSettings.mutate({
             ...settings,
             defaultLockHoursOffset: hoursNumber,
