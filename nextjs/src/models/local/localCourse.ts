@@ -21,6 +21,7 @@ export interface LocalCourseSettings {
   startDate: string;
   endDate: string;
   defaultDueTime: SimpleTimeOnly;
+  defaultLockHoursOffset?: number;
   defaultAssignmentSubmissionTypes: AssignmentSubmissionType[];
   defaultFileUploadTypes: string[];
 }
