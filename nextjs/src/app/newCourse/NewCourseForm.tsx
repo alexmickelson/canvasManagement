@@ -94,6 +94,7 @@ export default function NewCourseForm() {
                       AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
                       AssignmentSubmissionType.ONLINE_UPLOAD,
                     ],
+                    defaultFileUploadTypes: ["pdf", "png", "jpg", "jpeg"],
                   },
                 })
                 .then(() => {

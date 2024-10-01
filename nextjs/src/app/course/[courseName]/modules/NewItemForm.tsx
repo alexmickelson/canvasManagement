@@ -77,11 +77,8 @@ export default function NewItemForm({
               name,
               description: "",
               dueAt,
-              submissionTypes: [
-                AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
-                AssignmentSubmissionType.ONLINE_UPLOAD,
-              ],
-              allowedFileUploadExtensions: ["pdf"],
+              submissionTypes: settings.defaultAssignmentSubmissionTypes,
+              allowedFileUploadExtensions: settings.defaultFileUploadTypes,
               rubric: [],
             },
             moduleName: moduleName,
