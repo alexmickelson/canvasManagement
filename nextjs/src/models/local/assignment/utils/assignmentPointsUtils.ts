@@ -1,7 +1,7 @@
-import { LocalAssignment } from "../localAssignment";
+import { RubricItem } from "../rubricItem";
 
-export const assignmentPoints = (assignment: LocalAssignment) => {
-  const basePoints = assignment.rubric
+export const assignmentPoints = (rubric: RubricItem[]) => {
+  const basePoints = rubric
     .map((r) =>
       r.label.toLowerCase().includes("(extra credit)") ? 0 : r.points
     )

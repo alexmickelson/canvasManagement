@@ -1,6 +1,7 @@
 import { RubricItem } from "@/models/local/assignment/rubricItem";
 import { describe, expect, it } from "vitest";
 import { getRubricCriterion } from "./canvasRubricUtils";
+import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
 
 describe("can prepare rubric for canvas", () =>{
   it("can parse normal rubric into criterion", () =>{
@@ -68,5 +69,25 @@ describe("can prepare rubric for canvas", () =>{
         }
       }
     })
+  })
+
+
+  it("negative rubric items do not contribute to the total", () =>{
+    const rubric: RubricItem[] = [
+      {
+        label: "first",
+        points: 1
+      },
+      {
+        label: "second",
+        points: -2
+      },
+      {
+        label: "second",
+        points: 3
+      },
+    ]
+    const points = assignmentPoints(rubric)
+    expect(points).toBe(4)
   })
 })

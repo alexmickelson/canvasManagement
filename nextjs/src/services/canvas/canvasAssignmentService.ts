@@ -43,7 +43,7 @@ export const canvasAssignmentService = {
         lock_at:
           localAssignment.lockAt &&
           getDateFromString(localAssignment.lockAt)?.toISOString(),
-        points_possible: assignmentPoints(localAssignment),
+        points_possible: assignmentPoints(localAssignment.rubric),
         assignment_group_id: canvasAssignmentGroupId,
       },
     };
@@ -78,7 +78,7 @@ export const canvasAssignmentService = {
         lock_at:
           localAssignment.lockAt &&
           getDateFromString(localAssignment.lockAt)?.toISOString(),
-        points_possible: assignmentPoints(localAssignment),
+        points_possible: assignmentPoints(localAssignment.rubric),
         assignment_group_id: canvasAssignmentGroupId,
       },
     };
@@ -109,7 +109,7 @@ const createRubric = async (
   localAssignment: LocalAssignment
 ) => {
   const criterion = getRubricCriterion(localAssignment.rubric);
-  
+
   const rubricBody = {
     rubric_association_id: assignmentCanvasId,
     rubric: {
@@ -137,7 +137,7 @@ const createRubric = async (
 
   const assignmentPointAdjustmentUrl = `${canvasApi}/courses/${courseId}/assignments/${assignmentCanvasId}`;
   const assignmentPointAdjustmentBody = {
-    assignment: { points_possible: assignmentPoints(localAssignment) },
+    assignment: { points_possible: assignmentPoints(localAssignment.rubric) },
   };
 
   await axiosClient.put(
