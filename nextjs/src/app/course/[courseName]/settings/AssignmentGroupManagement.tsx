@@ -70,7 +70,7 @@ export default function AssignmentGroupManagement() {
         <button
           className="btn-danger"
           onClick={() => {
-            setAssignmentGroups((oldGroups) => oldGroups.slice(1));
+            setAssignmentGroups((oldGroups) => oldGroups.slice(0, -1));
           }}
         >
           Remove Assignment Group

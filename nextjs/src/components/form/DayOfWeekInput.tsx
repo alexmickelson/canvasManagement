@@ -17,8 +17,8 @@ export function DayOfWeekInput({
             key={day}
             className={
               hasDay
-                ? "bg-blue-300 text-blue-950 border-blue-500 border"
-                : "bg-slate-900 border-blue-900 border "
+                ? ""
+                : "unstyled btn-outline "
             }
             onClick={() => updateSettings(day)}
           >

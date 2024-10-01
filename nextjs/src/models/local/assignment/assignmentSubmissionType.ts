@@ -6,3 +6,12 @@ export enum AssignmentSubmissionType {
   ONLINE_URL = "online_url",
   NONE = "none",
 }
+
+export const AssignmentSubmissionTypeList: AssignmentSubmissionType[] = [
+  AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
+  AssignmentSubmissionType.ONLINE_UPLOAD,
+  AssignmentSubmissionType.ONLINE_QUIZ,
+  AssignmentSubmissionType.DISCUSSION_TOPIC,
+  AssignmentSubmissionType.ONLINE_URL,
+  AssignmentSubmissionType.NONE,
+] as const;

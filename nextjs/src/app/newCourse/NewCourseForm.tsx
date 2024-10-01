@@ -12,6 +12,7 @@ import {
 import { useEmptyDirectoriesQuery } from "@/hooks/localCourse/storageDirectoryHooks";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
+import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
 import { DayOfWeek } from "@/models/local/localCourse";
 import { getCourseUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
@@ -89,6 +90,10 @@ export default function NewCourseForm() {
                     startDate: selectedTerm.start_at ?? "",
                     endDate: selectedTerm.end_at ?? "",
                     defaultDueTime: { hour: 23, minute: 59 },
+                    defaultAssignmentSubmissionTypes: [
+                      AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
+                      AssignmentSubmissionType.ONLINE_UPLOAD,
+                    ],
                   },
                 })
                 .then(() => {

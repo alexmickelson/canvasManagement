@@ -5,6 +5,8 @@ import SettingsHeader from "./SettingsHeader";
 import DefaultDueTime from "./DefaultDueTime";
 import DaysOfWeekSettings from "./DaysOfWeekSettings";
 import AssignmentGroupManagement from "./AssignmentGroupManagement";
+import SubmissionDefaults from "./SubmissionDefaults";
+import DefaultFileUploadTypes from "./DefaultFileUploadTypes";
 
 export default function page() {
   return (
@@ -13,6 +15,8 @@ export default function page() {
         <SettingsHeader />
         <DaysOfWeekSettings />
         <StartAndEndDate />
+        <SubmissionDefaults />
+        <DefaultFileUploadTypes />
         <DefaultDueTime />
         <AssignmentGroupManagement />
       </div>

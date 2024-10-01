@@ -9,6 +9,7 @@ import {
   directoryOrFileExists,
   getCourseNames,
 } from "./utils/fileSystemUtils";
+import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
 
 const getCourseSettings = async (
   courseName: string
@@ -22,7 +23,24 @@ const getCourseSettings = async (
   }
 
   const settingsString = await fs.readFile(settingsPath, "utf-8");
-  const settings = localCourseYamlUtils.parseSettingYaml(settingsString);
+
+  const settingsFromFile =
+    localCourseYamlUtils.parseSettingYaml(settingsString);
+
+  const defaultSubmissionType = [
+    AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
+    AssignmentSubmissionType.ONLINE_UPLOAD,
+  ];
+  const defaultFileUploadTypes = ["pdf", "jpg", "jpeg", "pdf"];
+
+  const settings: LocalCourseSettings = {
+    ...settingsFromFile,
+    defaultAssignmentSubmissionTypes:
+      settingsFromFile.defaultAssignmentSubmissionTypes ||
+      defaultSubmissionType,
+    defaultFileUploadTypes:
+      settingsFromFile.defaultFileUploadTypes || defaultFileUploadTypes,
+  };
 
   const folderName = path.basename(courseDirectory);
   return { ...settings, name: folderName };
@@ -54,4 +72,3 @@ export const settingsFileStorageService = {
     await fs.writeFile(settingsPath, settingsMarkdown);
   },
 };
-

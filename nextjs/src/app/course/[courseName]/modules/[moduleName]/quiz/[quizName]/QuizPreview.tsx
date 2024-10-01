@@ -23,6 +23,12 @@ export default function QuizPreview({
         <div>{quiz.name}</div>
       </div>
       <div className="columns-2">
+        <div className="text-end">Points</div>
+        <div>
+          {quiz.questions.reduce((sum, question) => sum + question.points, 0)}
+        </div>
+      </div>
+      <div className="columns-2">
         <div className="text-end">Due Date</div>
         <div>{quiz.dueAt}</div>
       </div>
@@ -46,9 +52,12 @@ export default function QuizPreview({
         <div className="text-end">Assignment Group Name</div>
         <div>{quiz.localAssignmentGroupName}</div>
       </div>
-      <div className="p-3" style={{ whiteSpace: "pre-wrap" }}>
-        {quiz.description}
-      </div>
+      <div
+        className="p-3 markdownPreview"
+        dangerouslySetInnerHTML={{
+          __html: markdownToHTMLSafe(quiz.description),
+        }}
+      ></div>
       <div className="p-3 rounded-md bg-slate-950 m-5 flex flex-col gap-3">
         {quiz.questions.map((question, i) => (
           <QuizQuestionPreview key={i} question={question} />

@@ -33,7 +33,6 @@ export default function EditAssignment({
   const [assignmentText, setAssignmentText] = useState(
     localAssignmentMarkdown.toMarkdown(assignment)
   );
-  console.log("assignment text render");
 
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);

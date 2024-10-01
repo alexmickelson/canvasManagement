@@ -1,3 +1,4 @@
+import { AssignmentSubmissionType } from "./assignment/assignmentSubmissionType";
 import { LocalAssignmentGroup } from "./assignment/localAssignmentGroup";
 import { LocalModule } from "./localModules";
 import { parse, stringify } from "yaml";
@@ -20,6 +21,8 @@ export interface LocalCourseSettings {
   startDate: string;
   endDate: string;
   defaultDueTime: SimpleTimeOnly;
+  defaultAssignmentSubmissionTypes: AssignmentSubmissionType[];
+  defaultFileUploadTypes: string[];
 }
 
 export enum DayOfWeek {

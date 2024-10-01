@@ -30,24 +30,32 @@ function createCalendarMonth(year: number, month: number): CalendarMonthModel {
   let currentDay = 1;
   const firstDayOfMonth = new Date(year, month - 1, 1).getDay();
 
-  const daysByWeek = Array.from({ length: weeksNumber }).map((_, weekIndex) =>
-    Array.from({ length: 7 }).map((_, dayIndex) => {
-      if (weekIndex === 0 && dayIndex < firstDayOfMonth) {
-        return dateToMarkdownString(
-          new Date(year, month - 1, dayIndex - firstDayOfMonth + 1, 12, 0, 0)
-        );
-      } else if (currentDay <= daysInMonth) {
-        return dateToMarkdownString(
-          new Date(year, month - 1, currentDay++, 12, 0, 0)
-        );
-      } else {
-        currentDay++;
-        return dateToMarkdownString(
-          new Date(year, month, currentDay - daysInMonth - 1, 12, 0, 0)
-        );
-      }
-    })
-  );
+  const daysByWeek = Array.from({ length: weeksNumber })
+    .map((_, weekIndex) =>
+      Array.from({ length: 7 }).map((_, dayIndex) => {
+        if (weekIndex === 0 && dayIndex < firstDayOfMonth) {
+          return dateToMarkdownString(
+            new Date(year, month - 1, dayIndex - firstDayOfMonth + 1, 12, 0, 0)
+          );
+        } else if (currentDay <= daysInMonth) {
+          return dateToMarkdownString(
+            new Date(year, month - 1, currentDay++, 12, 0, 0)
+          );
+        } else {
+          currentDay++;
+          return dateToMarkdownString(
+            new Date(year, month, currentDay - daysInMonth - 1, 12, 0, 0)
+          );
+        }
+      })
+    )
+    .filter((week) => {
+      const lastDate = getDateFromStringOrThrow(
+        week.at(-1)!,
+        "filtering out last week of month"
+      );
+      return lastDate.getMonth() <= month - 1;
+    });
 
   const weeks = daysByWeek.map((week) =>
     week.map((day) =>
