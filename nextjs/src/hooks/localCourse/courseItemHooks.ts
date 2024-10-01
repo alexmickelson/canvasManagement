@@ -230,17 +230,6 @@ export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
       moduleName: string;
       itemName: string;
     }) => {
-      queryClient.removeQueries({
-        queryKey: localCourseKeys.itemOfType(
-          courseName,
-          moduleName,
-          itemName,
-          type
-        ),
-      });
-      queryClient.removeQueries({
-        queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
-      });
       const url =
         "/api/courses/" +
         encodeURIComponent(courseName) +
@@ -253,8 +242,19 @@ export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
       await axiosClient.delete(url);
     },
     onSuccess: async (_, { moduleName, itemName }) => {
+
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
+        refetchType: "all"
+      });
+      queryClient.invalidateQueries({
+        queryKey: localCourseKeys.itemOfType(
+          courseName,
+          moduleName,
+          itemName,
+          type
+        ),
+        refetchType: "none"
       });
     },
   });

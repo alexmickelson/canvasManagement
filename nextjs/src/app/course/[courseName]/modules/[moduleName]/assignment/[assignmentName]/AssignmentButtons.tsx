@@ -127,11 +127,11 @@ export function AssignmentButtons({
                 <div className="flex justify-around gap-3">
                   <button
                     onClick={() => {
-                      deleteLocal
-                        .mutateAsync({ moduleName, itemName: assignmentName })
-                        .then(() => {
-                          router.push(getCourseUrl(courseName));
-                        });
+                      router.push(getCourseUrl(courseName));
+                      deleteLocal.mutate({
+                        moduleName,
+                        itemName: assignmentName,
+                      });
                     }}
                     className="btn-danger"
                   >

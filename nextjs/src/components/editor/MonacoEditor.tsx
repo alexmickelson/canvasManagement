@@ -13,7 +13,6 @@ export const MonacoEditor: React.FC<{
 }> = ({ value, onChange }) => {
   const [salt, setSalt] = useState(Date.now());
   useEffect(() => {
-    console.log("onchange changed");
     setSalt(Date.now());
   }, [onChange]);
   return <InnerMonacoEditor key={salt} value={value} onChange={onChange} />;

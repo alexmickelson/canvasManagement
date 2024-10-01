@@ -14,6 +14,7 @@ import {
 } from "@/hooks/localCourse/pageHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
+import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -99,10 +100,12 @@ export default function EditPageButtons({
               <br />
               <div className="flex justify-around gap-3">
                 <button
-                  onClick={async () => {
-                    deletePageLocal
-                      .mutateAsync({ moduleName, itemName: pageName })
-                      .then(() => router.push(getCourseUrl(courseName)));
+                  onClick={() => {
+                    router.push(getCourseUrl(courseName));
+                    deletePageLocal.mutate({
+                      moduleName,
+                      itemName: pageName,
+                    });
                   }}
                   className="btn-danger"
                 >

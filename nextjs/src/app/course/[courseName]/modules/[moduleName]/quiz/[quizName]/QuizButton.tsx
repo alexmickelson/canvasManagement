@@ -87,9 +87,8 @@ export function QuizButtons({
                 <div className="flex justify-around gap-3">
                   <button
                     onClick={async () => {
-                      deleteLocal
-                        .mutateAsync({ moduleName, itemName: quizName })
-                        .then(() => router.push(getCourseUrl(courseName)));
+                      router.push(getCourseUrl(courseName));
+                      deleteLocal.mutate({ moduleName, itemName: quizName });
                     }}
                     className="btn-danger"
                   >

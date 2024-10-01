@@ -7,12 +7,9 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourseKeys";
-import {
-  getAllAssignmentsQueryConfig,
-  getAssignmentQueryConfig,
-} from "./assignmentHooks";
-import { getAllPagesQueryConfig, getPageQueryConfig } from "./pageHooks";
-import { getAllQuizzesQueryConfig, getQuizQueryConfig } from "./quizHooks";
+import { getAllAssignmentsQueryConfig } from "./assignmentHooks";
+import { getAllQuizzesQueryConfig } from "./quizHooks";
+import { getAllItemsQueryConfig } from "./courseItemHooks";
 
 export const useModuleNamesQuery = () => {
   const { courseName } = useCourseContext();
@@ -109,7 +106,7 @@ export const useAllCourseDataQuery = () => {
 
   const { data: pagesAndModules } = useSuspenseQueries({
     queries: moduleNames.map((moduleName) =>
-      getAllPagesQueryConfig(courseName, moduleName)
+      getAllItemsQueryConfig(courseName, moduleName, "Page")
     ),
     combine: (results) => ({
       data: results.flatMap((r, i) =>
