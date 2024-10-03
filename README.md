@@ -55,3 +55,6 @@ tighter integration with git
 - handle merging?
 - maybe a different storage backend?
 - user motivated restore?
+
+display days settings
+- hide all sundays (horizontal space)

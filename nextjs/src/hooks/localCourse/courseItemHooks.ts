@@ -167,9 +167,11 @@ export const useUpdateItemMutation = <T extends CourseItemType>(type: T) => {
           itemName,
           type
         ),
+        refetchType: "all",
       });
       await queryClient.invalidateQueries({
         queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
+        refetchType: "all",
       });
     },
   });
@@ -242,10 +244,9 @@ export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
       await axiosClient.delete(url);
     },
     onSuccess: async (_, { moduleName, itemName }) => {
-
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
-        refetchType: "all"
+        refetchType: "all",
       });
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.itemOfType(
@@ -254,7 +255,7 @@ export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
           itemName,
           type
         ),
-        refetchType: "none"
+        refetchType: "none",
       });
     },
   });

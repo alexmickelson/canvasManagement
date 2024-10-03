@@ -163,14 +163,11 @@ export default function DraggingContextProvider({
         const assignment: LocalAssignment = {
           ...previousAssignment,
           dueAt: dateToMarkdownString(dayAsDate),
-          lockAt:
-            previousAssignment.lockAt &&
-            (getDateFromStringOrThrow(
-              previousAssignment.lockAt,
-              "lockAt date"
-            ) > dayAsDate
-              ? previousAssignment.lockAt
-              : dateToMarkdownString(dayAsDate)),
+          lockAt: getNewLockDate(
+            previousAssignment.dueAt,
+            previousAssignment.lockAt,
+            dayAsDate
+          ),
         };
         updateAssignmentMutation.mutate({
           item: assignment,
@@ -208,7 +205,7 @@ function getNewLockDate(
   dayAsDate: Date
 ): string | undefined {
   // todo: preserve previous due date / lock date offset
-  const dueDate = getDateFromStringOrThrow(originalDueDate, "dueat date");
+  const dueDate = getDateFromStringOrThrow(originalDueDate, "dueAt date");
   const lockDate =
     originalLockDate === undefined
       ? undefined
