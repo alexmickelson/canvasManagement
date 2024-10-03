@@ -89,6 +89,7 @@ export default function NewItemForm({
             item: {
               name,
               description: "",
+              localAssignmentGroupName: assignmentGroup?.name ?? "",
               dueAt,
               lockAt,
               submissionTypes: settings.defaultAssignmentSubmissionTypes,
@@ -103,6 +104,7 @@ export default function NewItemForm({
             item: {
               name,
               description: "",
+              localAssignmentGroupName: assignmentGroup?.name ?? "",
               dueAt,
               lockAt,
               shuffleAnswers: true,

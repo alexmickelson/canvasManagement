@@ -39,14 +39,9 @@ schedule planning view? just outline concepts? (maybe some non-canvas scheduled 
 
 holiday schedule
 
-multi-seciton support for due dates/times
+multi-section support for due dates/times
 
 better error handling when files are unparseable
-
-new settings
-- default submission types
-- default file types
-- default lockAt offset
 
 websocket server to watch file system for changes, notify frontend it should invalidate cache
 

@@ -75,6 +75,7 @@ blockquote {
 
 code {
   @apply font-mono text-sm bg-gray-800 px-2 py-1 rounded-md leading-tight inline-block;
+  @apply text-wrap;
 }
 
 p {
