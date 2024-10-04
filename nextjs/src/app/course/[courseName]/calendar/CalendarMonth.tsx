@@ -8,9 +8,10 @@ import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 
 export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   const weekInMilliseconds = 604_800_000;
+  const four_days_in_milliseconds  = 345_600_000
   const isInPast =
     new Date(month.year, month.month, 1) <
-    new Date(Date.now() - weekInMilliseconds);
+    new Date(Date.now() - four_days_in_milliseconds);
 
   const monthName = new Date(month.year, month.month - 1, 1).toLocaleString(
     "default",

@@ -32,8 +32,6 @@ file uploads
 
 allow multiple courses to be edited concurrently in different browser tabs
 
-have lock date mimic an offset after drag and drop changes due date
-
 schedule planning view? just outline concepts? (maybe some non-canvas scheduled thing that only shows up in planner? like a note, could be de-emphasized in webpage)
 - probably have a notes section for each module. Have a toggle to expand notes in module
 
