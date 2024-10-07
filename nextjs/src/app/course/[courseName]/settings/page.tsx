@@ -10,8 +10,8 @@ import DefaultFileUploadTypes from "./DefaultFileUploadTypes";
 
 export default function page() {
   return (
-    <div className="flex justify-center">
-      <div className=" w-fit mt-5">
+    <div className="flex justify-center h-full overflow-auto pt-5  ">
+      <div className=" w-fit ">
         <SettingsHeader />
         <DaysOfWeekSettings />
         <StartAndEndDate />
@@ -19,6 +19,9 @@ export default function page() {
         <DefaultFileUploadTypes />
         <DefaultDueTime />
         <AssignmentGroupManagement />
+        <br />
+        <br />
+        <br />
       </div>
     </div>
   );

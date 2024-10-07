@@ -26,6 +26,7 @@ export default function CourseCalendar() {
     <div
       className="
         min-h-0
+        flex-grow
         border-4
         border-gray-900
         rounded-lg

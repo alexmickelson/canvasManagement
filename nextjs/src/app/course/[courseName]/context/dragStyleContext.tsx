@@ -30,7 +30,7 @@ export function DragStyleContextProvider({
   return (
     <DragStyleContext.Provider value={{ setIsDragging }}>
       <div
-        className={"min-h-0 flex flex-col " + (isDragging ? " dragging " : "")}
+        className={"h-full flex flex-col " + (isDragging ? " dragging " : "")}
       >
         {children}
       </div>
