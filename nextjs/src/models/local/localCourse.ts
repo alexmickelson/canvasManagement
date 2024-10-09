@@ -24,6 +24,9 @@ export interface LocalCourseSettings {
   defaultLockHoursOffset?: number;
   defaultAssignmentSubmissionTypes: AssignmentSubmissionType[];
   defaultFileUploadTypes: string[];
+  holidays: {
+    [key: string]: string[]; // e.g. "spring break": ["datestring", "datestring", "datestring", "datestring"]
+  };
 }
 
 export enum DayOfWeek {

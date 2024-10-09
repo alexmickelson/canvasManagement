@@ -27,6 +27,13 @@ const getCourseSettings = async (
   const settingsFromFile =
     localCourseYamlUtils.parseSettingYaml(settingsString);
 
+  const settings: LocalCourseSettings = populateDefaultValues(settingsFromFile);
+
+  const folderName = path.basename(courseDirectory);
+  return { ...settings, name: folderName };
+};
+
+const populateDefaultValues = (settingsFromFile: LocalCourseSettings) => {
   const defaultSubmissionType = [
     AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
     AssignmentSubmissionType.ONLINE_UPLOAD,
@@ -40,10 +47,9 @@ const getCourseSettings = async (
       defaultSubmissionType,
     defaultFileUploadTypes:
       settingsFromFile.defaultFileUploadTypes || defaultFileUploadTypes,
+    holidays: !!settingsFromFile.holidays ? settingsFromFile.holidays : {},
   };
-
-  const folderName = path.basename(courseDirectory);
-  return { ...settings, name: folderName };
+  return settings;
 };
 
 export const settingsFileStorageService = {

@@ -10,20 +10,14 @@
     "test": "vitest"
   },
   "dependencies": {
+    "jsdom": "^25.0.0",
     "next": "^14.2.7",
     "react": "^18",
-    "jsdom": "^25.0.0",
     "react-dom": "^18"
   },
   "devDependencies": {
-    "yaml": "^2.5.0",
-    "axios": "^1.7.5",
-    "marked": "^14.1.2",
     "@monaco-editor/react": "^4.6.0",
     "@tanstack/react-query": "^5.54.1",
-    "isomorphic-dompurify": "^2.15.0",
-    "react-error-boundary": "^4.0.13",
-    "react-hot-toast": "^2.4.1",
     "@tanstack/react-query-devtools": "^5.54.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/react": "^16.0.0",
@@ -31,10 +25,16 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@vitejs/plugin-react": "^4.3.1",
+    "axios": "^1.7.5",
     "eslint-config-next": "^14.2.7",
+    "isomorphic-dompurify": "^2.15.0",
+    "marked": "^14.1.2",
     "postcss": "^8",
+    "react-error-boundary": "^4.0.13",
+    "react-hot-toast": "^2.4.1",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
-    "vitest": "^2.0.5"
+    "vitest": "^2.0.5",
+    "yaml": "^2.5.0"
   }
 }

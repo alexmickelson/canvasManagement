@@ -28,6 +28,9 @@ describe("FileStorageTests", () => {
       endDate: "07/09/2024 23:59:00",
       defaultDueTime: { hour: 1, minute: 59 },
       canvasId: 0,
+      defaultAssignmentSubmissionTypes: [],
+      defaultFileUploadTypes: [],
+      holidays: {}
     };
 
     await fileStorageService.settings.updateCourseSettings(name, settings);

@@ -3,7 +3,7 @@ import { LocalQuizQuestion, QuestionType } from "../localQuizQuestion";
 import { LocalQuizQuestionAnswer } from "../localQuizQuestionAnswer";
 import { quizQuestionAnswerMarkdownUtils } from "./quizQuestionAnswerMarkdownUtils";
 
-const _validFirstAnswerDelimiters = ["*a)", "a)", "*)", ")", "[ ]", "[*]", "^"];
+const _validFirstAnswerDelimiters = ["*a)", "a)", "*)", ")", "[ ]", "[]", "[*]", "^"];
 
 const getAnswerStringsWithMultilineSupport = (
   linesWithoutPoints: string[],
@@ -70,7 +70,7 @@ const getQuestionType = (
 
   if (isMultipleChoice) return QuestionType.MULTIPLE_CHOICE;
 
-  const isMultipleAnswer = ["[ ]", "[*]"].some((prefix) =>
+  const isMultipleAnswer = ["[ ]", "[*]", "[]"].some((prefix) =>
     firstAnswerLine.startsWith(prefix)
   );
   if (isMultipleAnswer) return QuestionType.MULTIPLE_ANSWERS;
@@ -96,6 +96,7 @@ const getAnswers = (
   );
   return answers;
 };
+
 const getAnswerMarkdown = (
   question: LocalQuizQuestion,
   answer: LocalQuizQuestionAnswer,

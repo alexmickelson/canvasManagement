@@ -1,17 +1,20 @@
+import { Expandable } from "@/components/Expandable";
 import TextInput from "@/components/form/TextInput";
 import { useCreateModuleMutation } from "@/hooks/localCourse/localCourseModuleHooks";
 import React, { useState } from "react";
 
 export default function CreateModule() {
   const createModule = useCreateModuleMutation();
-  const [showForm, setShowForm] = useState(false);
   const [moduleName, setModuleName] = useState("");
   return (
     <>
-      <button onClick={() => setShowForm((v) => !v)}>
-        {showForm ? "Hide Form" : "Create Module"}
-      </button>
-      <div className={"collapsible " + (showForm ? "expand" : "")}>
+      <Expandable
+        ExpandableElement={({ setIsExpanded, isExpanded }) => (
+          <button onClick={() => setIsExpanded((v) => !v)}>
+            {isExpanded ? "Hide Form" : "Create Module"}
+          </button>
+        )}
+      >
         <form
           onSubmit={async (e) => {
             e.preventDefault();
@@ -30,7 +33,7 @@ export default function CreateModule() {
           />
           <button className="mt-auto">Add</button>
         </form>
-      </div>
+      </Expandable>
     </>
   );
 }

@@ -78,6 +78,61 @@ Which events are triggered when the user clicks on an input field?
     expect(firstQuestion.answers[3].text).toBe("submit");
   });
 
+  it("can parse question with multiple answers without a space in false answers", () => {
+    const rawMarkdownQuiz = `
+Name: Test Quiz
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the
+multi line
+description
+---
+Which events are triggered when the user clicks on an input field?
+[*] click
+[] submit
+`;
+
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const firstQuestion = quiz.questions[0];
+
+    expect(firstQuestion.answers.length).toBe(2);
+    expect(firstQuestion.answers[0].correct).toBe(true);
+    expect(firstQuestion.answers[1].correct).toBe(false);
+  });  
+  
+  it("can parse question with multiple answers without a space in false answers other example", () => {
+    const rawMarkdownQuiz = `
+Name: Test Quiz
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the
+multi line
+description
+---
+Points: 1
+Which tool(s) will let you: create a database migration or reverse-engineer an existing database
+[] swagger
+[] a .http file
+[*] dotnet ef command line interface
+`;
+
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const firstQuestion = quiz.questions[0];
+
+    expect(firstQuestion.answers.length).toBe(3);
+    expect(firstQuestion.answers[0].correct).toBe(false);
+    expect(firstQuestion.answers[1].correct).toBe(false);
+    expect(firstQuestion.answers[2].correct).toBe(true);
+  });
+
   it("can use braces in answer for multiple answer", () => {
     const rawMarkdownQuestion = `
 Which events are triggered when the user clicks on an input field?

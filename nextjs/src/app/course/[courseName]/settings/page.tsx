@@ -7,6 +7,7 @@ import DaysOfWeekSettings from "./DaysOfWeekSettings";
 import AssignmentGroupManagement from "./AssignmentGroupManagement";
 import SubmissionDefaults from "./SubmissionDefaults";
 import DefaultFileUploadTypes from "./DefaultFileUploadTypes";
+import HolidayConfig from "./HolidayConfig";
 
 export default function page() {
   return (
@@ -19,6 +20,7 @@ export default function page() {
         <DefaultFileUploadTypes />
         <DefaultDueTime />
         <AssignmentGroupManagement />
+        <HolidayConfig />
         <br />
         <br />
         <br />
