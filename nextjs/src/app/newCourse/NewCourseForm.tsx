@@ -95,7 +95,8 @@ export default function NewCourseForm() {
                       AssignmentSubmissionType.ONLINE_UPLOAD,
                     ],
                     defaultFileUploadTypes: ["pdf", "png", "jpg", "jpeg"],
-                    defaultLockHoursOffset: 0
+                    defaultLockHoursOffset: 0,
+                    holidays: {}
                   },
                 })
                 .then(() => {
