@@ -1,4 +1,5 @@
 import { LocalAssignment } from "./assignment/localAssignment";
+import { LocalCoursePage } from "./page/localCoursePage";
 import { LocalQuiz } from "./quiz/localQuiz";
 import {
   dateToMarkdownString,
@@ -32,7 +33,6 @@ export const prepAssignmentForNewSemester = (
   };
 };
 
-
 export const prepQuizForNewSemester = (
   quiz: LocalQuiz,
   oldSemesterStartDate: string,
@@ -45,11 +45,8 @@ export const prepQuizForNewSemester = (
     ...quiz,
     description: descriptionWithoutGithubClassroom,
     dueAt:
-      newDateOffset(
-        quiz.dueAt,
-        oldSemesterStartDate,
-        newSemesterStartDate
-      ) ?? quiz.dueAt,
+      newDateOffset(quiz.dueAt, oldSemesterStartDate, newSemesterStartDate) ??
+      quiz.dueAt,
     lockAt: newDateOffset(
       quiz.lockAt,
       oldSemesterStartDate,
@@ -58,7 +55,20 @@ export const prepQuizForNewSemester = (
   };
 };
 
-
+export const prepPageForNewSemester = (
+  page: LocalCoursePage,
+  oldSemesterStartDate: string,
+  newSemesterStartDate: string
+): LocalCoursePage => {
+  const updatedText = replaceClassroomUrl(page.text);
+  return {
+    ...page,
+    text: updatedText,
+    dueAt:
+      newDateOffset(page.dueAt, oldSemesterStartDate, newSemesterStartDate) ??
+      page.dueAt,
+  };
+};
 
 const replaceClassroomUrl = (value: string) => {
   const classroomPattern =

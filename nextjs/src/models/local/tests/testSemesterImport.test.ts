@@ -1,7 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { LocalAssignment } from "../assignment/localAssignment";
-import { prepAssignmentForNewSemester, prepQuizForNewSemester } from "../semesterTransferUtils";
+import { prepAssignmentForNewSemester, prepPageForNewSemester, prepQuizForNewSemester } from "../semesterTransferUtils";
 import { LocalQuiz } from "../quiz/localQuiz";
+import { LocalCoursePage } from "../page/localCoursePage";
 
 describe("can take an assignment and template it for a new semester", () => {
   it("can sanitize assignment github classroom repo url", () => {
@@ -142,7 +143,7 @@ describe("can offset date based on new semester start", () => {
 });
 
 describe("can prep quizzes", () => {
-  it("assignment with new semester start, no lock date", () => {
+  it("quiz gets new lock and due dates", () => {
     const quiz: LocalQuiz = {
       name: "Test Quiz",
       description: `
@@ -169,5 +170,26 @@ describe("can prep quizzes", () => {
 
     expect(sanitizedQuiz.dueAt).toEqual("01/11/2024 23:59:00");
     expect(sanitizedQuiz.lockAt).toEqual("01/12/2024 23:59:00");
+  });
+});
+
+describe("can prep pages", () => {
+  it("page gets new due date and github url changes", () => {
+    const page: LocalCoursePage = {
+      name: "test title",
+      text: "test text content",
+      dueAt: "08/30/2023 23:59:00",
+    };
+
+    const oldSemesterStartDate = "08/26/2023 23:59:00";
+    const newSemesterStartDate = "01/08/2024 23:59:00";
+
+    const sanitizedPage = prepPageForNewSemester(
+      page,
+      oldSemesterStartDate,
+      newSemesterStartDate
+    );
+
+    expect(sanitizedPage.dueAt).toEqual("01/12/2024 23:59:00");
   });
 });
