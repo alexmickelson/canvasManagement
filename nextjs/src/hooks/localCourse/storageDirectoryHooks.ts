@@ -8,9 +8,10 @@ export const directoryKeys = {
 export const useEmptyDirectoriesQuery = () =>
   useSuspenseQuery({
     queryKey: directoryKeys.emptyFolders,
-    queryFn: async () => {
-      const url = "/api/directories/empty";
-      const { data } = await axiosClient.get<string[]>(url);
-      return data;
-    },
+    queryFn: getEmptyDirectories
+    // async () => {
+    //   const url = "/api/directories/empty";
+    //   const { data } = await axiosClient.get<string[]>(url);
+    //   return data;
+    // },
   });
