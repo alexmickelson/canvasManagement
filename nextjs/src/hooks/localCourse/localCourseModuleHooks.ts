@@ -1,5 +1,4 @@
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import { axiosClient } from "@/services/axiosUtils";
 import {
   useMutation,
   useQueryClient,
@@ -10,15 +9,20 @@ import { localCourseKeys } from "./localCourseKeys";
 import { getAllAssignmentsQueryConfig } from "./assignmentHooks";
 import { getAllQuizzesQueryConfig } from "./quizHooks";
 import { getAllItemsQueryConfig } from "./courseItemHooks";
+import {
+  createModuleOnServer,
+  getModuleNamesFromServer,
+} from "./localCourseModuleServerActions";
 
 export const useModuleNamesQuery = () => {
   const { courseName } = useCourseContext();
   return useSuspenseQuery({
     queryKey: localCourseKeys.moduleNames(courseName),
     queryFn: async (): Promise<string[]> => {
-      const url = `/api/courses/${courseName}/modules`;
-      const response = await axiosClient.get(url);
-      return response.data;
+      // const url = `/api/courses/${courseName}/modules`;
+      // const response = await axiosClient.get(url);
+      // return response.data;
+      return await getModuleNamesFromServer({ courseName });
     },
   });
 };
@@ -28,9 +32,10 @@ export const useCreateModuleMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (moduleName: string) => {
-      const url = `/api/courses/${courseName}/modules`;
-      const response = await axiosClient.post(url, { moduleName });
-      return response.data;
+      // const url = `/api/courses/${courseName}/modules`;
+      // const response = await axiosClient.post(url, { moduleName });
+      // return response.data;
+      await createModuleOnServer({ courseName, moduleName });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

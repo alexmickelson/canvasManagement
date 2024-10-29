@@ -8,14 +8,21 @@ import {
 import { localCourseKeys } from "./localCourseKeys";
 import { axiosClient } from "@/services/axiosUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import {
+  createCourseOnServer,
+  getAllCoursesSettingsFromServer,
+  getCourseSettingsFromServer,
+  updateCourseSettingsOnServer,
+} from "./localCoursesServerActions";
 
 export const useLocalCoursesSettingsQuery = () =>
   useSuspenseQuery({
     queryKey: localCourseKeys.allCoursesSettings,
     queryFn: async () => {
-      const url = `/api/courses/settings`;
-      const response = await axiosClient.get<LocalCourseSettings[]>(url);
-      return response.data;
+      // const url = `/api/courses/settings`;
+      // const response = await axiosClient.get<LocalCourseSettings[]>(url);
+      // return response.data;
+      return await getAllCoursesSettingsFromServer();
     },
   });
 
@@ -39,8 +46,9 @@ export const useCreateLocalCourseMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (newCourse: LocalCourse) => {
-      const url = `/api/courses`;
-      await axiosClient.post(url, newCourse);
+      // const url = `/api/courses`;
+      // await axiosClient.post(url, newCourse);
+      await createCourseOnServer({ course: newCourse });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -59,8 +67,9 @@ export const useUpdateLocalCourseSettingsMutation = () => {
         localCourseKeys.settings(courseName),
         updatedSettings
       );
-      const url = `/api/courses/${courseName}/settings`;
-      await axiosClient.put(url, updatedSettings);
+      // const url = `/api/courses/${courseName}/settings`;
+      // await axiosClient.put(url, updatedSettings);
+      await updateCourseSettingsOnServer({ courseName, settings: updatedSettings });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

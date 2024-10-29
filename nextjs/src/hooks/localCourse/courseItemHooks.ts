@@ -13,8 +13,11 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import {
+  createItemOnServer,
+  deleteItemOnServer,
   getAllItemsFromServer,
   getItemFromServer,
+  updateItemOnServer,
 } from "./courseItemServerActions";
 import { useRouter } from "next/navigation";
 
@@ -25,20 +28,20 @@ export const getAllItemsQueryConfig = <T extends CourseItemType>(
 ) => ({
   queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
   queryFn: async (): Promise<CourseItemReturnType<T>[]> => {
-    const url =
-      "/api/courses/" +
-      encodeURIComponent(courseName) +
-      "/modules/" +
-      encodeURIComponent(moduleName) +
-      "/" +
-      typeToFolder[type];
-    const response = await axiosClient.get(url);
-    return response.data;
-    // return await getAllItemsFromServer({
-    //   courseName,
-    //   moduleName,
-    //   type,
-    // });
+    // const url =
+    //   "/api/courses/" +
+    //   encodeURIComponent(courseName) +
+    //   "/modules/" +
+    //   encodeURIComponent(moduleName) +
+    //   "/" +
+    //   typeToFolder[type];
+    // const response = await axiosClient.get(url);
+    // return response.data;
+    return await getAllItemsFromServer({
+      courseName,
+      moduleName,
+      type,
+    });
   },
 });
 
@@ -51,23 +54,23 @@ export const getItemQueryConfig = <T extends CourseItemType>(
   return {
     queryKey: localCourseKeys.itemOfType(courseName, moduleName, name, type),
     queryFn: async () => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/" +
-        typeToFolder[type] +
-        "/" +
-        encodeURIComponent(name);
-      const response = await axiosClient.get<CourseItemReturnType<T>>(url);
-      return response.data;
-      // return await getItemFromServer({
-      //   moduleName,
-      //   courseName,
-      //   itemName: name,
-      //   type,
-      // });
+      // const url =
+      //   "/api/courses/" +
+      //   encodeURIComponent(courseName) +
+      //   "/modules/" +
+      //   encodeURIComponent(moduleName) +
+      //   "/" +
+      //   typeToFolder[type] +
+      //   "/" +
+      //   encodeURIComponent(name);
+      // const response = await axiosClient.get<CourseItemReturnType<T>>(url);
+      // return response.data;
+      return await getItemFromServer({
+        moduleName,
+        courseName,
+        itemName: name,
+        type,
+      });
     },
   };
 };
@@ -147,33 +150,42 @@ export const useUpdateItemMutation = <T extends CourseItemType>(type: T) => {
         localCourseKeys.itemOfType(courseName, moduleName, itemName, type),
         item
       );
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/" +
-        typeToFolder[type] +
-        "/" +
-        encodeURIComponent(itemName);
-      if (type === "Assignment")
-        await axiosClient.put(url, {
-          assignment: item,
-          previousModuleName,
-          previousAssignmentName: previousItemName,
-        });
-      if (type === "Quiz")
-        await axiosClient.put(url, {
-          quiz: item,
-          previousModuleName,
-          previousQuizName: previousItemName,
-        });
-      if (type === "Page")
-        await axiosClient.put(url, {
-          page: item,
-          previousModuleName,
-          previousPageName: previousItemName,
-        });
+      await updateItemOnServer({
+        courseName,
+        moduleName,
+        item,
+        type,
+        previousItemName,
+        previousModuleName,
+        itemName,
+      });
+      // const url =
+      //   "/api/courses/" +
+      //   encodeURIComponent(courseName) +
+      //   "/modules/" +
+      //   encodeURIComponent(moduleName) +
+      //   "/" +
+      //   typeToFolder[type] +
+      //   "/" +
+      //   encodeURIComponent(itemName);
+      // if (type === "Assignment")
+      //   await axiosClient.put(url, {
+      //     assignment: item,
+      //     previousModuleName,
+      //     previousAssignmentName: previousItemName,
+      //   });
+      // if (type === "Quiz")
+      //   await axiosClient.put(url, {
+      //     quiz: item,
+      //     previousModuleName,
+      //     previousQuizName: previousItemName,
+      //   });
+      // if (type === "Page")
+      //   await axiosClient.put(url, {
+      //     page: item,
+      //     previousModuleName,
+      //     previousPageName: previousItemName,
+      //   });
     },
     onSuccess: async (_, { moduleName, itemName }) => {
       await queryClient.invalidateQueries({
@@ -210,16 +222,23 @@ export const useCreateItemMutation = <T extends CourseItemType>(type: T) => {
         localCourseKeys.itemOfType(courseName, moduleName, itemName, type),
         item
       );
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/" +
-        typeToFolder[type] +
-        "/" +
-        encodeURIComponent(itemName);
-      await axiosClient.post(url, item);
+      // const url =
+      //   "/api/courses/" +
+      //   encodeURIComponent(courseName) +
+      //   "/modules/" +
+      //   encodeURIComponent(moduleName) +
+      //   "/" +
+      //   typeToFolder[type] +
+      //   "/" +
+      //   encodeURIComponent(itemName);
+      // await axiosClient.post(url, item);
+      await createItemOnServer({
+        courseName,
+        moduleName,
+        item,
+        type,
+        itemName,
+      });
     },
     onSuccess: async (_, { moduleName, itemName }) => {
       await queryClient.invalidateQueries({
@@ -239,7 +258,6 @@ export const useCreateItemMutation = <T extends CourseItemType>(type: T) => {
 
 export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
   const { courseName } = useCourseContext();
-  const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
@@ -249,16 +267,22 @@ export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
       moduleName: string;
       itemName: string;
     }) => {
-      const url =
-        "/api/courses/" +
-        encodeURIComponent(courseName) +
-        "/modules/" +
-        encodeURIComponent(moduleName) +
-        "/" +
-        typeToFolder[type] +
-        "/" +
-        encodeURIComponent(itemName);
-      await axiosClient.delete(url);
+      // const url =
+      //   "/api/courses/" +
+      //   encodeURIComponent(courseName) +
+      //   "/modules/" +
+      //   encodeURIComponent(moduleName) +
+      //   "/" +
+      //   typeToFolder[type] +
+      //   "/" +
+      //   encodeURIComponent(itemName);
+      // await axiosClient.delete(url);
+      await deleteItemOnServer({
+        courseName,
+        itemName,
+        moduleName,
+        type,
+      });
     },
     onSuccess: async (_, { moduleName, itemName }) => {
       await queryClient.invalidateQueries({
