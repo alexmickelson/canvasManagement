@@ -19,9 +19,6 @@ export const useModuleNamesQuery = () => {
   return useSuspenseQuery({
     queryKey: localCourseKeys.moduleNames(courseName),
     queryFn: async (): Promise<string[]> => {
-      // const url = `/api/courses/${courseName}/modules`;
-      // const response = await axiosClient.get(url);
-      // return response.data;
       return await getModuleNamesFromServer({ courseName });
     },
   });
@@ -32,9 +29,6 @@ export const useCreateModuleMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (moduleName: string) => {
-      // const url = `/api/courses/${courseName}/modules`;
-      // const response = await axiosClient.post(url, { moduleName });
-      // return response.data;
       await createModuleOnServer({ courseName, moduleName });
     },
     onSuccess: () => {
