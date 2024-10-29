@@ -36,11 +36,18 @@ const _getDateFromISO = (value: string): Date | undefined => {
   return isNaN(date.getTime()) ? undefined : date;
 };
 
+const _getDateFromDateOnly = (datePart: string): Date | undefined => {
+  const [month, day, year] = datePart.split("/").map(Number);
+  const date = new Date(year, month - 1, day);
+  return isNaN(date.getTime()) ? undefined : date;
+};
+
 export const getDateFromString = (value: string): Date | undefined => {
   const ampmDateRegex =
     /^\d{1,2}\/\d{1,2}\/\d{4},? \d{1,2}:\d{2}:\d{2}\s{1}[APap][Mm]$/; //"M/D/YYYY h:mm:ss AM/PM" or "M/D/YYYY, h:mm:ss AM/PM"
   const militaryDateRegex = /^\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{2}:\d{2}$/; //"MM/DD/YYYY HH:mm:ss"
   const isoDateRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}((.\d+)|(Z))$/; //"2024-08-26T00:00:00.0000000"
+  const dateOnlyRegex = /^\d{1,2}\/\d{1,2}\/\d{4}$/; // "M/D/YYYY" or "MM/DD/YYYY"
 
   if (isoDateRegex.test(value)) {
     return _getDateFromISO(value);
@@ -50,6 +57,8 @@ export const getDateFromString = (value: string): Date | undefined => {
   } else if (militaryDateRegex.test(value)) {
     const [datePart, timePart] = value.split(" ");
     return _getDateFromMilitary(datePart, timePart);
+  } if (dateOnlyRegex.test(value)) {
+    return _getDateFromDateOnly(value);
   } else {
     if (value) console.log("invalid date format", value);
     return undefined;

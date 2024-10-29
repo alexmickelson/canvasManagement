@@ -61,4 +61,12 @@ describe("Can properly handle expected date formats", () => {
     expect(updatedString).toBe("08/29/2024 17:00:00")
     
   })
+  it("can handle date without time", () => {
+    const dateString = "8/29/2024";
+    const dateObject = getDateFromString(dateString);
+
+    expect(dateObject).not.toBeUndefined()
+    const updatedString = dateToMarkdownString(dateObject!)
+    expect(updatedString).toBe("08/29/2024 00:00:00")
+  })
 });
