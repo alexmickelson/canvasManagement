@@ -161,7 +161,7 @@ function OtherSettings({
         value={selectedDirectory}
         setValue={setSelectedDirectory}
         label={"Storage Folder"}
-        options={emptyDirectories}
+        options={emptyDirectories ?? []}
         getOptionName={(d) => d}
         emptyOptionText="--- add a new folder to your docker compose to add more folders ---"
       />

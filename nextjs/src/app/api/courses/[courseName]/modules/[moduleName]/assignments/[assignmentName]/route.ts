@@ -1,6 +1,7 @@
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { withErrorHandling } from "@/services/withErrorHandling";
+import { revalidatePath } from "next/cache";
 
 export const GET = async (
   _request: Request,

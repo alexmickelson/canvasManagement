@@ -3,7 +3,7 @@ import AddNewCourse from "./newCourse/AddNewCourse";
 
 export default async function Home() {
   return (
-    <main className="min-h-0 flex justify-center">
+    <main className="h-full flex justify-center overflow-auto">
       <div>
         <CourseList />
         <br />

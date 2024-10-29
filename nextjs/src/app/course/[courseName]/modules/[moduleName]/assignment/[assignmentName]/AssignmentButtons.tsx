@@ -16,6 +16,7 @@ import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export function AssignmentButtons({
   moduleName,
@@ -43,6 +44,7 @@ export function AssignmentButtons({
   const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
   const updateAssignment = useUpdateAssignmentInCanvasMutation();
   const deleteLocal = useDeleteAssignmentMutation();
+  const [isLoading, setIsLoading] = useState(false);
 
   const assignmentInCanvas = canvasAssignments.find(
     (a) => a.name === assignmentName
@@ -126,12 +128,16 @@ export function AssignmentButtons({
                 <br />
                 <div className="flex justify-around gap-3">
                   <button
-                    onClick={() => {
+                    onClick={async () => {
+                      setIsLoading(true);
                       router.push(getCourseUrl(courseName));
-                      deleteLocal.mutate({
+                      await deleteLocal.mutateAsync({
                         moduleName,
                         itemName: assignmentName,
                       });
+
+                      router.refresh();
+                      setIsLoading(false);
                     }}
                     className="btn-danger"
                   >
@@ -139,6 +145,7 @@ export function AssignmentButtons({
                   </button>
                   <button onClick={closeModal}>No</button>
                 </div>
+                {(deleteLocal.isPending || isLoading) && <Spinner />}
               </div>
             )}
           </Modal>

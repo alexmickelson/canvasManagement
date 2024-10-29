@@ -12,6 +12,11 @@ import {
   useSuspenseQueries,
   useSuspenseQuery,
 } from "@tanstack/react-query";
+import {
+  getAllItemsFromServer,
+  getItemFromServer,
+} from "./courseItemServerActions";
+import { useRouter } from "next/navigation";
 
 export const getAllItemsQueryConfig = <T extends CourseItemType>(
   courseName: string,
@@ -29,6 +34,11 @@ export const getAllItemsQueryConfig = <T extends CourseItemType>(
       typeToFolder[type];
     const response = await axiosClient.get(url);
     return response.data;
+    // return await getAllItemsFromServer({
+    //   courseName,
+    //   moduleName,
+    //   type,
+    // });
   },
 });
 
@@ -52,6 +62,12 @@ export const getItemQueryConfig = <T extends CourseItemType>(
         encodeURIComponent(name);
       const response = await axiosClient.get<CourseItemReturnType<T>>(url);
       return response.data;
+      // return await getItemFromServer({
+      //   moduleName,
+      //   courseName,
+      //   itemName: name,
+      //   type,
+      // });
     },
   };
 };
@@ -223,6 +239,7 @@ export const useCreateItemMutation = <T extends CourseItemType>(type: T) => {
 
 export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
   const { courseName } = useCourseContext();
+  const router = useRouter();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
@@ -246,7 +263,7 @@ export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
     onSuccess: async (_, { moduleName, itemName }) => {
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
-        refetchType: "all",
+        // refetchType: "all",
       });
       queryClient.invalidateQueries({
         queryKey: localCourseKeys.itemOfType(

@@ -1,14 +1,16 @@
 import { axiosClient } from "@/services/axiosUtils";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
+import { getEmptyDirectories } from "./storageDirectoryServerActions";
 
 export const directoryKeys = {
   emptyFolders: ["empty folders"] as const,
 };
 
 export const useEmptyDirectoriesQuery = () =>
-  useSuspenseQuery({
+  useQuery({
     queryKey: directoryKeys.emptyFolders,
-    queryFn: getEmptyDirectories
+    queryFn: async () => await getEmptyDirectories(),
+    // queryFn: getEmptyDirectories,
     // async () => {
     //   const url = "/api/directories/empty";
     //   const { data } = await axiosClient.get<string[]>(url);
