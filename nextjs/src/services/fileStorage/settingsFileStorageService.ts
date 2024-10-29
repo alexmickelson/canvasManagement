@@ -38,7 +38,7 @@ const populateDefaultValues = (settingsFromFile: LocalCourseSettings) => {
     AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
     AssignmentSubmissionType.ONLINE_UPLOAD,
   ];
-  const defaultFileUploadTypes = ["pdf", "jpg", "jpeg", "pdf"];
+  const defaultFileUploadTypes = ["pdf", "jpg", "jpeg"];
 
   const settings: LocalCourseSettings = {
     ...settingsFromFile,

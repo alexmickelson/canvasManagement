@@ -261,11 +261,11 @@ export const useDeleteItemMutation = <T extends CourseItemType>(type: T) => {
       await axiosClient.delete(url);
     },
     onSuccess: async (_, { moduleName, itemName }) => {
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, type),
         // refetchType: "all",
       });
-      queryClient.invalidateQueries({
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.itemOfType(
           courseName,
           moduleName,

@@ -135,15 +135,20 @@ export function AssignmentButtons({
                         moduleName,
                         itemName: assignmentName,
                       });
-
                       router.refresh();
-                      setIsLoading(false);
+                      // setIsLoading(false); //refreshing the router will make spinner go away
                     }}
+                    disabled={deleteLocal.isPending || isLoading}
                     className="btn-danger"
                   >
                     Yes
                   </button>
-                  <button onClick={closeModal}>No</button>
+                  <button
+                    onClick={closeModal}
+                    disabled={deleteLocal.isPending || isLoading}
+                  >
+                    No
+                  </button>
                 </div>
                 {(deleteLocal.isPending || isLoading) && <Spinner />}
               </div>
