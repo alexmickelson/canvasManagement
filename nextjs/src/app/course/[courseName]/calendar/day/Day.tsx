@@ -43,15 +43,17 @@ export default function Day({ day, month }: { day: string; month: number }) {
 
   const meetingClasses =
     classOnThisDay && isInSemester ? " bg-slate-900 " : " ";
-  const monthClass = isInSameMonth
-    ? isToday
-      ? " border border-blue-700 shadow-[0_0px_10px_0px] shadow-blue-500/50 "
-      : " border border-slate-700 "
+
+  const todayClasses = isToday
+    ? " border  border-blue-700 shadow-[0_0px_10px_0px] shadow-blue-500/50 "
     : " ";
+
+  const monthClass =
+    isInSameMonth && !isToday ? " border border-slate-700 " : " ";
 
   return (
     <div
-      className={" rounded-lg m-1 min-h-10 " + meetingClasses + monthClass}
+      className={" rounded-lg m-1 min-h-10 " + meetingClasses + monthClass + todayClasses}
       onDrop={(e) => itemDropOnDay(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
