@@ -7,7 +7,7 @@ describe("can parse holiday string", () => {
 springBreak:
 `;
     const output = parseHolidays(testString);
-    expect(output).toEqual({ springBreak: [] });
+    expect(output).toEqual([{ name: "springBreak", days: [] }]);
   });
   it("can parse list with date", () => {
     const testString = `
@@ -15,7 +15,7 @@ springBreak:
 - 10/12/2024
 `;
     const output = parseHolidays(testString);
-    expect(output).toEqual({ springBreak: ["10/12/2024"] });
+    expect(output).toEqual([{ name: "springBreak", days: ["10/12/2024"] }]);
   });
   it("can parse list with two dates", () => {
     const testString = `
@@ -24,6 +24,8 @@ springBreak:
 - 10/13/2024
 `;
     const output = parseHolidays(testString);
-    expect(output).toEqual({ springBreak: ["10/12/2024", "10/13/2024"] });
+    expect(output).toEqual([
+      { name: "springBreak", days: ["10/12/2024", "10/13/2024"] },
+    ]);
   });
 });
