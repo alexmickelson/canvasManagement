@@ -123,7 +123,7 @@ export function AssignmentButtons({
             {({ closeModal }) => (
               <div>
                 <div className="text-center">
-                  Are you sure you want to delete this quiz locally?
+                  Are you sure you want to delete this assignment locally?
                 </div>
                 <br />
                 <div className="flex justify-around gap-3">

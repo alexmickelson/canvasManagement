@@ -96,7 +96,7 @@ export default function NewCourseForm() {
                     ],
                     defaultFileUploadTypes: ["pdf", "png", "jpg", "jpeg"],
                     defaultLockHoursOffset: 0,
-                    holidays: {}
+                    holidays: []
                   },
                 })
                 .then(() => {
