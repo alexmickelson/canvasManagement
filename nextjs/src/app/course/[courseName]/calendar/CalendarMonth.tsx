@@ -26,7 +26,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
             <h3
               className={
                 "text-2xl transition-all duration-500 " +
-                "hover:text-slate-50 underline hover:scale-105 `"
+                "hover:text-slate-50 underline hover:scale-105 "
               }
               onClick={() => setIsExpanded((e) => !e)}
               role="button"

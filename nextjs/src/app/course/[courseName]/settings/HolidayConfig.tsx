@@ -6,12 +6,7 @@ import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
 } from "@/hooks/localCourse/localCoursesHooks";
-import {
-  dateToMarkdownString,
-  getDateFromString,
-  getDateFromStringOrThrow,
-  getDateOnlyMarkdownString,
-} from "@/models/local/timeUtils";
+import { getDateFromString } from "@/models/local/timeUtils";
 import { useEffect, useState } from "react";
 import {
   holidaysToString,
@@ -26,27 +21,33 @@ laborDay:
 - 9/1/2024`;
 
 export const holidaysAreEqual = (
-  obj1: { [key: string]: string[] },
-  obj2: { [key: string]: string[] }
+  obj1: {
+    name: string;
+    days: string[];
+  }[],
+  obj2: {
+    name: string;
+    days: string[];
+  }[]
 ): boolean => {
-  const keys1 = Object.keys(obj1);
-  const keys2 = Object.keys(obj2);
+  if (obj1.length !== obj2.length) return false;
 
-  if (keys1.length !== keys2.length) return false;
+  const sortedObj1 = [...obj1].sort((a, b) => a.name.localeCompare(b.name));
+  const sortedObj2 = [...obj2].sort((a, b) => a.name.localeCompare(b.name));
 
-  for (const key of keys1) {
-    if (!obj2.hasOwnProperty(key)) return false;
+  for (let i = 0; i < sortedObj1.length; i++) {
+    const holiday1 = sortedObj1[i];
+    const holiday2 = sortedObj2[i];
 
-    const arr1 = obj1[key];
-    const arr2 = obj2[key];
+    if (holiday1.name !== holiday2.name) return false;
 
-    if (arr1.length !== arr2.length) return false;
+    const sortedDays1 = [...holiday1.days].sort();
+    const sortedDays2 = [...holiday2.days].sort();
 
-    const sortedArr1 = [...arr1].sort();
-    const sortedArr2 = [...arr2].sort();
+    if (sortedDays1.length !== sortedDays2.length) return false;
 
-    for (let i = 0; i < sortedArr1.length; i++) {
-      if (sortedArr1[i] !== sortedArr2[i]) return false;
+    for (let j = 0; j < sortedDays1.length; j++) {
+      if (sortedDays1[j] !== sortedDays2[j]) return false;
     }
   }
 
@@ -62,6 +63,7 @@ export default function HolidayConfig() {
 }
 function InnerHolidayConfig() {
   const { data: settings } = useLocalCourseSettingsQuery();
+  console.log(settings.holidays);
   const updateSettings = useUpdateLocalCourseSettingsMutation();
 
   const [rawText, setRawText] = useState(holidaysToString(settings.holidays));
@@ -71,15 +73,17 @@ function InnerHolidayConfig() {
       try {
         const parsed = parseHolidays(rawText);
 
-        if (!holidaysAreEqual(settings.holidays, parsed))
+        if (!holidaysAreEqual(settings.holidays, parsed)) {
+          console.log("different holiday configs", settings.holidays, parsed);
           updateSettings.mutate({
             ...settings,
             holidays: parsed,
           });
+        }
       } catch (error: any) {}
     }, 500);
     return () => clearTimeout(id);
-  }, [rawText, settings, updateSettings]);
+  }, [rawText, settings.holidays, settings, updateSettings]);
 
   return (
     <div className=" border w-fit p-3 m-3 rounded-md">
@@ -107,9 +111,12 @@ function InnerHolidayConfig() {
 }
 
 function ParsedHolidaysDisplay({ value }: { value: string }) {
-  const [parsedHolidays, setParsedHolidays] = useState<{
-    [holidayName: string]: string[];
-  }>({});
+  const [parsedHolidays, setParsedHolidays] = useState<
+    {
+      name: string;
+      days: string[];
+    }[]
+  >([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -125,11 +132,11 @@ function ParsedHolidaysDisplay({ value }: { value: string }) {
   return (
     <div>
       <div className="text-rose-500">{error}</div>
-      {Object.keys(parsedHolidays).map((k) => (
-        <div key={k}>
-          <div>{k}</div>
+      {parsedHolidays.map((holiday) => (
+        <div key={holiday.name}>
+          <div>{holiday.name}</div>
           <div>
-            {parsedHolidays[k].map((day) => {
+            {holiday.days.map((day) => {
               const date = getDateFromString(day);
               return (
                 <div key={day}>

@@ -7,6 +7,7 @@ import { hydrateCourses } from "@/hooks/hookHydration";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { MyToaster } from "./MyToaster";
 import { cookies } from "next/headers";
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: "Canvas Manager 2.0",

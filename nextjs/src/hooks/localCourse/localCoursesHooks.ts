@@ -23,10 +23,11 @@ export const useLocalCoursesSettingsQuery = () =>
 
 export const useLocalCourseSettingsQuery = () => {
   const { courseName } = useCourseContext();
-  const { data: settingsList } = useLocalCoursesSettingsQuery();
+  // const { data: settingsList } = useLocalCoursesSettingsQuery();
   return useSuspenseQuery({
     queryKey: localCourseKeys.settings(courseName),
-    queryFn: () => {
+    queryFn: async () => {
+      const settingsList = await getAllCoursesSettingsFromServer();
       const s = settingsList.find((s) => s.name === courseName);
       if (!s) {
         console.log(courseName, settingsList);
@@ -56,18 +57,21 @@ export const useUpdateLocalCourseSettingsMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (updatedSettings: LocalCourseSettings) => {
-      queryClient.setQueryData(
-        localCourseKeys.settings(courseName),
-        updatedSettings
-      );
-      await updateCourseSettingsOnServer({ courseName, settings: updatedSettings });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: localCourseKeys.settings(courseName),
+      // queryClient.setQueryData(
+      //   localCourseKeys.settings(courseName),
+      //   updatedSettings
+      // );
+      await updateCourseSettingsOnServer({
+        courseName,
+        settings: updatedSettings,
       });
-      queryClient.invalidateQueries({
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({
         queryKey: localCourseKeys.allCoursesSettings,
+      });
+      await queryClient.invalidateQueries({
+        queryKey: localCourseKeys.settings(courseName),
       });
     },
   });

@@ -47,7 +47,7 @@ const populateDefaultValues = (settingsFromFile: LocalCourseSettings) => {
       defaultSubmissionType,
     defaultFileUploadTypes:
       settingsFromFile.defaultFileUploadTypes || defaultFileUploadTypes,
-    holidays: !!settingsFromFile.holidays ? settingsFromFile.holidays : {},
+    holidays: !!settingsFromFile.holidays ? settingsFromFile.holidays : [],
   };
   return settings;
 };

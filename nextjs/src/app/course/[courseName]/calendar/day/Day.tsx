@@ -1,5 +1,6 @@
 "use client";
 import {
+  dateToMarkdownString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
@@ -30,6 +31,23 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const isInSameMonth = dayAsDate.getMonth() + 1 == month;
   const classOnThisDay = settings.daysOfWeek.includes(getDayOfWeek(dayAsDate));
 
+  // maybe this is slow?
+  const holidayNameToday = settings.holidays.reduce(
+    (holidaysHappeningToday, holiday) => {
+      const holidayDates = holiday.days.map((d) =>
+        getDateOnlyMarkdownString(
+          getDateFromStringOrThrow(d, "holiday date in day component")
+        )
+      );
+      const today = getDateOnlyMarkdownString(dayAsDate);
+
+      if (holidayDates.includes(today))
+        return [...holidaysHappeningToday, holiday.name];
+      return holidaysHappeningToday;
+    },
+    [] as string[]
+  );
+
   const semesterStart = getDateFromStringOrThrow(
     settings.startDate,
     "comparing start date in day"
@@ -42,7 +60,9 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const isInSemester = semesterStart < dayAsDate && semesterEnd > dayAsDate;
 
   const meetingClasses =
-    classOnThisDay && isInSemester ? " bg-slate-900 " : " ";
+    classOnThisDay && isInSemester && holidayNameToday.length === 0
+      ? " bg-slate-900 "
+      : " ";
 
   const todayClasses = isToday
     ? " border  border-blue-700 shadow-[0_0px_10px_0px] shadow-blue-500/50 "
@@ -53,13 +73,15 @@ export default function Day({ day, month }: { day: string; month: number }) {
 
   return (
     <div
-      className={" rounded-lg m-1 min-h-10 " + meetingClasses + monthClass + todayClasses}
+      className={
+        " rounded-lg m-1 min-h-10 " + meetingClasses + monthClass + todayClasses
+      }
       onDrop={(e) => itemDropOnDay(e, day)}
       onDragOver={(e) => e.preventDefault()}
     >
-      <div className="draggingDay">
+      <div className="draggingDay flex flex-col">
         <DayTitle day={day} dayAsDate={dayAsDate} />
-        <div>
+        <div className="flex-grow">
           {todaysAssignments.map(
             ({ assignment, moduleName, status, message }) => (
               <ItemInDay
@@ -91,6 +113,13 @@ export default function Day({ day, month }: { day: string; month: number }) {
               status={status}
               message={message}
             />
+          ))}
+        </div>
+        <div>
+          {holidayNameToday.map((n) => (
+            <div key={n} className="font-extrabold text-blue-100 text-center">
+              {n}
+            </div>
           ))}
         </div>
       </div>

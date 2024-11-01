@@ -25,8 +25,9 @@ export interface LocalCourseSettings {
   defaultAssignmentSubmissionTypes: AssignmentSubmissionType[];
   defaultFileUploadTypes: string[];
   holidays: {
-    [key: string]: string[]; // e.g. "spring break": ["datestring", "datestring", "datestring", "datestring"]
-  };
+    name: string;
+    days: string[];
+  }[];
 }
 
 export enum DayOfWeek {
@@ -46,7 +47,7 @@ export function getDayOfWeek(date: Date): DayOfWeek {
 
 export const localCourseYamlUtils = {
   parseSettingYaml: (settingsString: string): LocalCourseSettings => {
-    const settings = parse(settingsString);
+    const settings = parse(settingsString, {});
     return lowercaseFirstLetter(settings);
   },
   settingsToYaml: (settings: Omit<LocalCourseSettings, "name">) => {
