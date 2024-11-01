@@ -14,7 +14,8 @@ const getAssignmentNames = async (courseName: string, moduleName: string) => {
     console.log(
       `Error loading course by name, assignments folder does not exist in ${filePath}`
     );
-    await fs.mkdir(filePath);
+    // await fs.mkdir(filePath);
+    return [];
   }
 
   const assignmentFiles = await fs.readdir(filePath);

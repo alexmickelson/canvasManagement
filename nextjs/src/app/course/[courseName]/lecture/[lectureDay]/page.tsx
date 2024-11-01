@@ -1,5 +1,6 @@
 import React from "react";
 import EditLecture from "./EditLecture";
+import { getDateFromStringOrThrow, getDateOnlyMarkdownString } from "@/models/local/timeUtils";
 
 export default function page({
   params: { lectureDay },
@@ -8,5 +9,7 @@ export default function page({
 }) {
   const decodedLectureDay = decodeURIComponent(lectureDay);
   console.log(decodedLectureDay);
-  return <EditLecture lectureDay={decodedLectureDay} />;
+  const lectureDate = getDateFromStringOrThrow(decodedLectureDay, "lecture day in lecture page")
+  const lectureDayOnly = getDateOnlyMarkdownString(lectureDate)
+  return <EditLecture lectureDay={lectureDayOnly} />;
 }

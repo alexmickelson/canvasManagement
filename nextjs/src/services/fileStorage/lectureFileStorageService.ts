@@ -2,12 +2,18 @@
 import path from "path";
 import { basePath } from "./utils/fileSystemUtils";
 import fs from "fs/promises";
+import {
+  lectureFolderName,
+  lectureToString,
+  parseLecture,
+} from "./utils/lectureUtils";
 import { Lecture } from "@/models/local/lecture";
-import { extractLabelValue } from "@/models/local/assignment/utils/markdownUtils";
-import { getDateOnlyMarkdownString } from "@/models/local/timeUtils";
+import { getDayOfWeek, LocalCourseSettings } from "@/models/local/localCourse";
+import { getWeekNumber } from "@/app/course/[courseName]/calendar/calendarMonthUtils";
+import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 
 export async function getLectures(courseName: string) {
-  const courseLectureRoot = path.join(basePath, courseName, "lectures");
+  const courseLectureRoot = path.join(basePath, courseName, lectureFolderName);
   if (!(await directoryExists(courseLectureRoot))) {
     return [];
   }
@@ -39,30 +45,36 @@ export async function getLectures(courseName: string) {
   return lecturesByWeek;
 }
 
-export function parseLecture(fileContent: string): Lecture {
-  try {
-    const settings = fileContent.split("---\n")[0];
-    const name = extractLabelValue(settings, "Name");
-    const date = extractLabelValue(settings, "Date");
+export async function updateLecture(
+  courseName: string,
+  courseSettings: LocalCourseSettings,
+  lecture: Lecture
+) {
+  const courseLectureRoot = path.join(basePath, courseName, lectureFolderName);
+  const startDate = getDateFromStringOrThrow(
+    courseSettings.startDate,
+    "semester start date in update lecture"
+  );
+  const lectureDate = getDateFromStringOrThrow(
+    lecture.date,
+    "lecture start date in update lecture"
+  );
+  const weekNumber = getWeekNumber(startDate, lectureDate)
+    .toString()
+    .padStart(2, "0");
 
-    const content = fileContent.split("---\n")[1].trim();
-
-    return {
-      name,
-      date,
-      content,
-    };
-  } catch (error) {
-    console.error("Error parsing lecture", fileContent);
-    throw error;
+  const weekFolderName = `week-${weekNumber}`;
+  const weekPath = path.join(courseLectureRoot, weekFolderName);
+  if (!(await directoryExists(weekPath))) {
+    await fs.mkdir(weekPath, { recursive: true });
   }
-}
 
-export function lectureToString(lecture: Lecture) {
-  return `Name: ${lecture.name}
-Date: ${lecture.date}
----
-${lecture.content}`;
+  const lecturePath = path.join(
+    weekPath,
+    `${lectureDate.getDay()}-${getDayOfWeek(lectureDate)}.md`
+  );
+  const lectureContents = lectureToString(lecture);
+  await fs.writeFile(lecturePath, lectureContents);
 }
 
 const directoryExists = async (path: string): Promise<boolean> => {
