@@ -11,6 +11,7 @@ import { canvasQuizService } from "@/services/canvas/canvasQuizService";
 import { canvasPageService } from "@/services/canvas/canvasPageService";
 import { canvasQuizKeys } from "./canvas/canvasQuizHooks";
 import { canvasPageKeys } from "./canvas/canvasPageHooks";
+import { getLecturesQueryConfig } from "./localCourse/lectureHooks";
 
 // https://tanstack.com/query/latest/docs/framework/react/guides/ssr
 export const hydrateCourses = async (queryClient: QueryClient) => {
@@ -38,6 +39,8 @@ export const hydrateCourse = async (
   const modulesData = await Promise.all(
     moduleNames.map((moduleName) => loadAllModuleData(courseName, moduleName))
   );
+
+  await queryClient.prefetchQuery(getLecturesQueryConfig(courseName));
 
   await queryClient.prefetchQuery({
     queryKey: localCourseKeys.settings(courseName),

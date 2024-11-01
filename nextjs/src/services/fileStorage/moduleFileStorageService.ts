@@ -14,7 +14,9 @@ export const moduleFileStorageService = {
       .map((dirent) => dirent.name);
 
     const modules = await Promise.all(modulePromises);
-    return modules.sort((a, b) => a.localeCompare(b));
+    return modules
+      .filter((m) => m !== "lectures")
+      .sort((a, b) => a.localeCompare(b));
   },
   async createModule(courseName: string, moduleName: string) {
     const courseDirectory = path.join(basePath, courseName);
