@@ -6,10 +6,10 @@ import { useCourseContext } from "../../context/courseContext";
 import {
   useDraggingContext,
   DraggableItem,
-} from "../../context/draggingContext";
+} from "../../context/drag/draggingContext";
 import { createPortal } from "react-dom";
 import ClientOnly from "@/components/ClientOnly";
-import { useDragStyleContext } from "../../context/dragStyleContext";
+import { useDragStyleContext } from "../../context/drag/dragStyleContext";
 
 export function ItemInDay({
   type,

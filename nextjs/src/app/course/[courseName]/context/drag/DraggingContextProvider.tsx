@@ -3,8 +3,9 @@ import { ReactNode, useEffect, useState } from "react";
 import { DraggingContext } from "./draggingContext";
 import { useDragStyleContext } from "./dragStyleContext";
 import { useModal } from "@/components/Modal";
-import { LectureReplaceModal } from "./LectureReplaceModal";
-import { useItemDropOnDay, useItemDropOnModule } from "./draggingContextUtils";
+import { LectureReplaceModal } from "../LectureReplaceModal";
+import { useItemDropOnModule } from "./useItemDropOnModule";
+import { useItemDropOnDay } from "./useItemDropOnDay";
 
 export default function DraggingContextProvider({
   children,

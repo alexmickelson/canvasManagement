@@ -1,10 +1,7 @@
 "use client";
-
 import { useUpdateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
-import {
-  useLecturesByWeekQuery,
-  useLectureUpdateMutation,
-} from "@/hooks/localCourse/lectureHooks";
+import { useLecturesByWeekQuery, useLectureUpdateMutation } from "@/hooks/localCourse/lectureHooks";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
@@ -12,27 +9,20 @@ import { Lecture } from "@/models/local/lecture";
 import { getLectureForDay } from "@/models/local/lectureUtils";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
-import {
-  getDateFromStringOrThrow,
-  getDateOnlyMarkdownString,
-  dateToMarkdownString,
-} from "@/models/local/timeUtils";
+import { getDateFromStringOrThrow, getDateOnlyMarkdownString, dateToMarkdownString } from "@/models/local/timeUtils";
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { getNewLockDate } from "./getNewLockDate";
+
 
 export function useItemDropOnDay({
-  setIsDragging,
-  setModalText,
-  setModalCallback,
-  setIsLoading,
-  modal,
+  setIsDragging, setModalText, setModalCallback, setIsLoading, modal,
 }: {
   setIsDragging: Dispatch<SetStateAction<boolean>>;
   setModalText: Dispatch<SetStateAction<string>>;
   setModalCallback: Dispatch<SetStateAction<() => void>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  modal: { isOpen: boolean; openModal: () => void; closeModal: () => void };
+  modal: { isOpen: boolean; openModal: () => void; closeModal: () => void; };
 }) {
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: weeks } = useLecturesByWeekQuery();
@@ -91,7 +81,7 @@ export function useItemDropOnDay({
               },
             });
             setModalText("");
-            setModalCallback(() => {});
+            setModalCallback(() => { });
             modal.closeModal();
             setIsLoading(false);
           });
@@ -194,117 +184,4 @@ export function useItemDropOnDay({
       weeks,
     ]
   );
-}
-export function useItemDropOnModule({
-  setIsDragging,
-}: {
-  setIsDragging: Dispatch<SetStateAction<boolean>>;
-}) {
-  const updateQuizMutation = useUpdateQuizMutation();
-  const updateAssignmentMutation = useUpdateAssignmentMutation();
-  const updatePageMutation = useUpdatePageMutation();
-
-  return useCallback(
-    (e: DragEvent, dropModuleName: string) => {
-      console.log("dropping on module");
-      const rawData = e.dataTransfer.getData("draggableItem");
-      if (!rawData) return;
-      const itemBeingDragged: DraggableItem = JSON.parse(rawData);
-
-      if (itemBeingDragged) {
-        if (itemBeingDragged.type === "quiz") {
-          updateQuiz();
-        } else if (itemBeingDragged.type === "assignment") {
-          updateAssignment();
-        } else if (itemBeingDragged.type === "page") {
-          updatePage();
-        } else if (itemBeingDragged.type === "lecture") {
-          console.log("cannot drop lecture on module, only on days");
-        }
-      }
-      setIsDragging(false);
-
-      function updateQuiz() {
-        const quiz = itemBeingDragged.item as LocalQuiz;
-        if (itemBeingDragged.sourceModuleName) {
-          updateQuizMutation.mutate({
-            item: quiz,
-            itemName: quiz.name,
-            moduleName: dropModuleName,
-            previousModuleName: itemBeingDragged.sourceModuleName,
-            previousItemName: quiz.name,
-          });
-        } else {
-          console.error(
-            `error dropping quiz, sourceModuleName is undefined `,
-            quiz
-          );
-        }
-      }
-      function updateAssignment() {
-        const assignment = itemBeingDragged.item as LocalAssignment;
-        if (itemBeingDragged.sourceModuleName) {
-          updateAssignmentMutation.mutate({
-            item: assignment,
-            previousModuleName: itemBeingDragged.sourceModuleName,
-            moduleName: dropModuleName,
-            itemName: assignment.name,
-            previousItemName: assignment.name,
-          });
-        } else {
-          console.error(
-            `error dropping assignment, sourceModuleName is undefined `,
-            assignment
-          );
-        }
-      }
-      function updatePage() {
-        const page = itemBeingDragged.item as LocalCoursePage;
-        if (itemBeingDragged.sourceModuleName) {
-          updatePageMutation.mutate({
-            item: page,
-            moduleName: dropModuleName,
-            itemName: page.name,
-            previousItemName: page.name,
-            previousModuleName: itemBeingDragged.sourceModuleName,
-          });
-        } else {
-          console.error(
-            `error dropping page, sourceModuleName is undefined `,
-            page
-          );
-        }
-      }
-    },
-    [
-      setIsDragging,
-      updateAssignmentMutation,
-      updatePageMutation,
-      updateQuizMutation,
-    ]
-  );
-}
-export function getNewLockDate(
-  originalDueDate: string,
-  originalLockDate: string | undefined,
-  dayAsDate: Date
-): string | undefined {
-  // todo: preserve previous due date / lock date offset
-  const dueDate = getDateFromStringOrThrow(originalDueDate, "dueAt date");
-  const lockDate =
-    originalLockDate === undefined
-      ? undefined
-      : getDateFromStringOrThrow(originalLockDate, "lockAt date");
-
-  const originalOffset =
-    lockDate === undefined ? undefined : lockDate.getTime() - dueDate.getTime();
-
-  const newLockDate =
-    originalOffset === undefined
-      ? undefined
-      : new Date(dayAsDate.getTime() + originalOffset);
-
-  return newLockDate === undefined
-    ? undefined
-    : dateToMarkdownString(newLockDate);
 }

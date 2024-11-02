@@ -4,8 +4,8 @@ import { getLectureUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useCourseContext } from "../../context/courseContext";
 import NewItemForm from "../../modules/NewItemForm";
-import { DraggableItem } from "../../context/draggingContext";
-import { useDragStyleContext } from "../../context/dragStyleContext";
+import { DraggableItem } from "../../context/drag/draggingContext";
+import { useDragStyleContext } from "../../context/drag/dragStyleContext";
 import { getLectureForDay } from "@/models/local/lectureUtils";
 
 export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {

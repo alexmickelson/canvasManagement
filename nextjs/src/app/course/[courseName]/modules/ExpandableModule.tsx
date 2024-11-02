@@ -14,12 +14,12 @@ import NewItemForm from "./NewItemForm";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
 import ExpandIcon from "../../../../components/icons/ExpandIcon";
-import { DraggableItem, useDraggingContext } from "../context/draggingContext";
+import { DraggableItem, useDraggingContext } from "../context/drag/draggingContext";
 import Link from "next/link";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
-import { useDragStyleContext } from "../context/dragStyleContext";
+import { useDragStyleContext } from "../context/drag/dragStyleContext";
 
 export default function ExpandableModule({
   moduleName,
