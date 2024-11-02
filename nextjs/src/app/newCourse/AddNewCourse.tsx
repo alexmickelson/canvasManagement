@@ -9,7 +9,11 @@ export default function AddNewCourse() {
 
   return (
     <div>
-      <button onClick={() => setShowForm(true)}>Add New Course</button>
+      <div className="flex justify-center">
+        <button className="" onClick={() => setShowForm(true)}>
+          Add New Course
+        </button>
+      </div>
 
       <div className={" collapsible " + (showForm && "expand")}>
         <div className="border rounded-md p-3 m-3">

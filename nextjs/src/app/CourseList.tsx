@@ -9,7 +9,14 @@ export default function CourseList() {
     <div>
       {allSettings.map((settings) => (
         <div key={settings.name}>
-          <Link href={getCourseUrl(settings.name)} shallow={true}>
+          <Link
+            href={getCourseUrl(settings.name)}
+            shallow={true}
+            className="
+              font-bold text-xl block
+              transition-all hover:scale-105 hover:underline
+            "
+          >
             {settings.name}
           </Link>
         </div>
