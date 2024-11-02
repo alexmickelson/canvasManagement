@@ -38,7 +38,7 @@ Date: ${lectureDay}
         const parsed = parseLecture(text);
         if (!lecture || lectureToString(parsed) !== lectureToString(lecture)) {
           console.log("updating lecture");
-          updateLecture.mutate(parsed);
+          updateLecture.mutate({ lecture: parsed });
         }
         setError("");
       } catch (e: any) {

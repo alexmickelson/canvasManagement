@@ -4,8 +4,8 @@ import { createContext, useContext, DragEvent } from "react";
 
 export interface DraggableItem {
   item: IModuleItem;
-  sourceModuleName: string;
-  type: "quiz" | "assignment" | "page";
+  sourceModuleName: string | undefined; // undefined for lectures
+  type: "quiz" | "assignment" | "page" | "lecture";
 }
 
 export interface DraggingContextInterface {

@@ -7,12 +7,19 @@ import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   getDateFromStringOrThrow,
   dateToMarkdownString,
+  getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { useUpdateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
 import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { useDragStyleContext } from "./dragStyleContext";
+import { Lecture } from "@/models/local/lecture";
+import {
+  useLecturesByWeekQuery,
+  useLectureUpdateMutation,
+} from "@/hooks/localCourse/lectureHooks";
+import { getLectureForDay } from "@/models/local/lectureUtils";
 
 export default function DraggingContextProvider({
   children,
@@ -21,9 +28,11 @@ export default function DraggingContextProvider({
 }) {
   const { setIsDragging } = useDragStyleContext();
   const updateQuizMutation = useUpdateQuizMutation();
+  const updateLectureMutation = useLectureUpdateMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();
   const updatePageMutation = useUpdatePageMutation();
   const { data: settings } = useLocalCourseSettingsQuery();
+  const { data: weeks } = useLecturesByWeekQuery();
 
   useEffect(() => {
     const handleDrop = () => {
@@ -55,40 +64,63 @@ export default function DraggingContextProvider({
           updateAssignment();
         } else if (itemBeingDragged.type === "page") {
           updatePage();
+        } else if (itemBeingDragged.type === "lecture") {
+          // const lecture = itemBeingDragged.item as Lecture & { dueAt: string };
+          console.log("cannot drop lecture on module, only on days");
         }
       }
       setIsDragging(false);
 
       function updateQuiz() {
         const quiz = itemBeingDragged.item as LocalQuiz;
-
-        updateQuizMutation.mutate({
-          item: quiz,
-          itemName: quiz.name,
-          moduleName: dropModuleName,
-          previousModuleName: itemBeingDragged.sourceModuleName,
-          previousItemName: quiz.name,
-        });
+        if (itemBeingDragged.sourceModuleName) {
+          updateQuizMutation.mutate({
+            item: quiz,
+            itemName: quiz.name,
+            moduleName: dropModuleName,
+            previousModuleName: itemBeingDragged.sourceModuleName,
+            previousItemName: quiz.name,
+          });
+        } else {
+          console.error(
+            `error dropping quiz, sourceModuleName is undefined `,
+            quiz
+          );
+        }
       }
       function updateAssignment() {
         const assignment = itemBeingDragged.item as LocalAssignment;
-        updateAssignmentMutation.mutate({
-          item: assignment,
-          previousModuleName: itemBeingDragged.sourceModuleName,
-          moduleName: dropModuleName,
-          itemName: assignment.name,
-          previousItemName: assignment.name,
-        });
+        if (itemBeingDragged.sourceModuleName) {
+          updateAssignmentMutation.mutate({
+            item: assignment,
+            previousModuleName: itemBeingDragged.sourceModuleName,
+            moduleName: dropModuleName,
+            itemName: assignment.name,
+            previousItemName: assignment.name,
+          });
+        } else {
+          console.error(
+            `error dropping assignment, sourceModuleName is undefined `,
+            assignment
+          );
+        }
       }
       function updatePage() {
         const page = itemBeingDragged.item as LocalCoursePage;
-        updatePageMutation.mutate({
-          item: page,
-          moduleName: dropModuleName,
-          itemName: page.name,
-          previousItemName: page.name,
-          previousModuleName: itemBeingDragged.sourceModuleName,
-        });
+        if (itemBeingDragged.sourceModuleName) {
+          updatePageMutation.mutate({
+            item: page,
+            moduleName: dropModuleName,
+            itemName: page.name,
+            previousItemName: page.name,
+            previousModuleName: itemBeingDragged.sourceModuleName,
+          });
+        } else {
+          console.error(
+            `error dropping page, sourceModuleName is undefined `,
+            page
+          );
+        }
       }
     },
     [
@@ -113,6 +145,8 @@ export default function DraggingContextProvider({
           updateAssignment(dayAsDate);
         } else if (itemBeingDragged.type === "page") {
           updatePage(dayAsDate);
+        } else if (itemBeingDragged.type === "lecture") {
+          updateLecture(dayAsDate);
         }
       }
       setIsDragging(false);
@@ -124,8 +158,32 @@ export default function DraggingContextProvider({
         dayAsDate.setSeconds(0);
         return dayAsDate;
       }
+      function updateLecture(dayAsDate: Date) {
+        const { dueAt, ...lecture } = itemBeingDragged.item as Lecture & {
+          dueAt: string;
+        };
+        console.log("dropped lecture on day");
+        const existingLecture = getLectureForDay(weeks, dayAsDate);
+        if (existingLecture) {
+          console.log("attempting to drop on existing lecture");
+        } else {
+          updateLectureMutation.mutate({
+            previousDay: lecture.date,
+            lecture: {
+              ...lecture,
+              date: getDateOnlyMarkdownString(dayAsDate),
+            },
+          });
+        }
+      }
       function updateQuiz(dayAsDate: Date) {
         const previousQuiz = itemBeingDragged.item as LocalQuiz;
+        if (!itemBeingDragged.sourceModuleName) {
+          console.error(
+            "error dropping quiz on day, sourceModuleName is undefined"
+          );
+          return;
+        }
 
         const quiz: LocalQuiz = {
           ...previousQuiz,
@@ -146,6 +204,12 @@ export default function DraggingContextProvider({
       }
       function updatePage(dayAsDate: Date) {
         const previousPage = itemBeingDragged.item as LocalCoursePage;
+        if (!itemBeingDragged.sourceModuleName) {
+          console.error(
+            "error dropping page on day, sourceModuleName is undefined"
+          );
+          return;
+        }
         const page: LocalCoursePage = {
           ...previousPage,
           dueAt: dateToMarkdownString(dayAsDate),
@@ -159,6 +223,12 @@ export default function DraggingContextProvider({
         });
       }
       function updateAssignment(dayAsDate: Date) {
+        if (!itemBeingDragged.sourceModuleName) {
+          console.error(
+            "error dropping assignment on day, sourceModuleName is undefined"
+          );
+          return;
+        }
         const previousAssignment = itemBeingDragged.item as LocalAssignment;
         const assignment: LocalAssignment = {
           ...previousAssignment,
@@ -199,6 +269,7 @@ export default function DraggingContextProvider({
     </DraggingContext.Provider>
   );
 }
+
 function getNewLockDate(
   originalDueDate: string,
   originalLockDate: string | undefined,

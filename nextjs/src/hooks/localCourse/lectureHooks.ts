@@ -6,6 +6,7 @@ import {
 import { lectureKeys } from "./lectureKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import {
+  deleteLecture,
   getLectures,
   updateLecture,
 } from "@/services/fileStorage/lectureFileStorageService";
@@ -28,8 +29,18 @@ export const useLectureUpdateMutation = () => {
   const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (lecture: Lecture) => {
+    mutationFn: async ({
+      lecture,
+      previousDay,
+    }: {
+      lecture: Lecture;
+      previousDay?: string;
+    }) => {
       await updateLecture(courseName, settings, lecture);
+
+      if (previousDay && previousDay !== lecture.date) {
+        await deleteLecture(courseName, settings, previousDay);
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({

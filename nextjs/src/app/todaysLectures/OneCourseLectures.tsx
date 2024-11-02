@@ -5,6 +5,7 @@ import { getDateOnlyMarkdownString } from "@/models/local/timeUtils";
 import { getLecturePreviewUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useCourseContext } from "../course/[courseName]/context/courseContext";
+import { getLectureForDay } from "@/models/local/lectureUtils";
 
 export default function OneCourseLectures() {
   const { courseName } = useCourseContext();
@@ -12,9 +13,7 @@ export default function OneCourseLectures() {
 
   const dayAsDate = new Date();
   const dayAsString = getDateOnlyMarkdownString(dayAsDate);
-  const todaysLecture = weeks
-    .flatMap((w) => w.lectures)
-    .find((l) => l.date == dayAsString);
+  const todaysLecture = getLectureForDay(weeks, dayAsDate);
   if (!todaysLecture) return <></>;
   return (
     <Link

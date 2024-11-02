@@ -57,7 +57,10 @@ export async function updateLecture(
     "lecture start date in update lecture"
   );
 
-  const weekFolderName = getLectureWeekName(courseSettings.startDate, lecture.date);
+  const weekFolderName = getLectureWeekName(
+    courseSettings.startDate,
+    lecture.date
+  );
   const weekPath = path.join(courseLectureRoot, weekFolderName);
   if (!(await directoryExists(weekPath))) {
     await fs.mkdir(weekPath, { recursive: true });
@@ -69,6 +72,41 @@ export async function updateLecture(
   );
   const lectureContents = lectureToString(lecture);
   await fs.writeFile(lecturePath, lectureContents);
+}
+
+export async function deleteLecture(
+  courseName: string,
+  courseSettings: LocalCourseSettings,
+  dayAsString: string
+) {
+  console.log("deleting lecture", courseName, dayAsString);
+  const lectureDate = getDateFromStringOrThrow(
+    dayAsString,
+    "lecture start date in update lecture"
+  );
+
+  const weekFolderName = getLectureWeekName(
+    courseSettings.startDate,
+    dayAsString
+  );
+
+  const courseLectureRoot = path.join(basePath, courseName, lectureFolderName);
+  const weekPath = path.join(courseLectureRoot, weekFolderName);
+  const lecturePath = path.join(
+    weekPath,
+    `${lectureDate.getDay()}-${getDayOfWeek(lectureDate)}.md`
+  );
+  try {
+    await fs.access(lecturePath); // throws error if no file
+    await fs.unlink(lecturePath);
+    console.log(`File deleted: ${lecturePath}`);
+  } catch (error: any) {
+    if (error?.code === "ENOENT") {
+      console.log(`Cannot delete lecture, file does not exist: ${lecturePath}`);
+    } else {
+      throw error;
+    }
+  }
 }
 
 const directoryExists = async (path: string): Promise<boolean> => {
