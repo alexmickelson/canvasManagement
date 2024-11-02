@@ -3,16 +3,10 @@ import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 export default function LecturePreview({ lecture }: { lecture: Lecture }) {
   return (
-    <div>
-      <section>
-        <div className="flex">
-          <div className="flex-1 text-end pe-3">Name</div>
-          <div className="flex-1">{lecture.name}</div>
-        </div>
-        <div className="flex">
-          <div className="flex-1 text-end pe-3">Date</div>
-          <div className="flex-1">{lecture.date}</div>
-        </div>
+    <>
+      <section className="border-b-slate-700 border-b-4">
+        <div className="text-center font-extrabold">{lecture.name}</div>
+        <div className="text-center font-bold text-slate-400">{lecture.date}</div>
       </section>
       <section>
         <div
@@ -22,6 +16,6 @@ export default function LecturePreview({ lecture }: { lecture: Lecture }) {
           }}
         ></div>
       </section>
-    </div>
+    </>
   );
 }

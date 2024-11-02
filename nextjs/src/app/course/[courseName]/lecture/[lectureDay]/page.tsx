@@ -1,4 +1,3 @@
-import React from "react";
 import EditLecture from "./EditLecture";
 import { getDateFromStringOrThrow, getDateOnlyMarkdownString } from "@/models/local/timeUtils";
 

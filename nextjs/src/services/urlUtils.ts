@@ -21,6 +21,9 @@ export function getLectureUrl(courseName: string, lectureDate: string) {
     encodeURIComponent(lectureDate)
   );
 }
+export function getLecturePreviewUrl(courseName: string, lectureDate: string) {
+  return getLectureUrl(courseName, lectureDate) + "/preview";
+}
 
 export function getCourseUrl(courseName: string) {
   return "/course/" + encodeURIComponent(courseName);

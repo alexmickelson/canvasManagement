@@ -5,22 +5,25 @@ import {
   useLecturesByWeekQuery,
   useLectureUpdateMutation,
 } from "@/hooks/localCourse/lectureHooks";
-import { Lecture } from "@/models/local/lecture";
 import {
   lectureToString,
   parseLecture,
 } from "@/services/fileStorage/utils/lectureUtils";
 import { useEffect, useState } from "react";
 import LecturePreview from "./LecturePreview";
+import EditLectureTitle from "./EditLectureTitle";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   const { data: weeks } = useLecturesByWeekQuery();
   const updateLecture = useLectureUpdateMutation();
+
   const lecture = weeks
     .flatMap(({ lectures }) => lectures.map((lecture) => lecture))
     .find((l) => l.date === lectureDay);
 
-  const startingText = lecture ? lectureToString(lecture) : `Name: Name Here
+  const startingText = lecture
+    ? lectureToString(lecture)
+    : `Name: 
 Date: ${lectureDay}
 ---
 `;
@@ -50,6 +53,7 @@ Date: ${lectureDay}
 
   return (
     <div className="h-full flex flex-col">
+      <EditLectureTitle lectureDay={lectureDay} />
       <div className="columns-2 min-h-0 flex-1">
         <div className="flex-1 h-full">
           <MonacoEditor value={text} onChange={setText} />

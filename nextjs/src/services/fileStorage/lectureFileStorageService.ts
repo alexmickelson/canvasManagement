@@ -3,6 +3,7 @@ import path from "path";
 import { basePath } from "./utils/fileSystemUtils";
 import fs from "fs/promises";
 import {
+  getLectureWeekName,
   lectureFolderName,
   lectureToString,
   parseLecture,
@@ -51,19 +52,12 @@ export async function updateLecture(
   lecture: Lecture
 ) {
   const courseLectureRoot = path.join(basePath, courseName, lectureFolderName);
-  const startDate = getDateFromStringOrThrow(
-    courseSettings.startDate,
-    "semester start date in update lecture"
-  );
   const lectureDate = getDateFromStringOrThrow(
     lecture.date,
     "lecture start date in update lecture"
   );
-  const weekNumber = getWeekNumber(startDate, lectureDate)
-    .toString()
-    .padStart(2, "0");
 
-  const weekFolderName = `week-${weekNumber}`;
+  const weekFolderName = getLectureWeekName(courseSettings.startDate, lecture.date);
   const weekPath = path.join(courseLectureRoot, weekFolderName);
   if (!(await directoryExists(weekPath))) {
     await fs.mkdir(weekPath, { recursive: true });
