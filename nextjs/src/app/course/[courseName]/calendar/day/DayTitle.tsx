@@ -15,6 +15,8 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const todaysLecture = getLectureForDay(weeks, dayAsDate);
   const modal = useModal();
 
+  const lectureName = todaysLecture && (todaysLecture.name || "lecture");
+
   return (
     <div className="flex justify-between">
       <Link
@@ -36,7 +38,7 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
           }
         }}
       >
-        {dayAsDate.getDate()} {todaysLecture?.name}
+        {dayAsDate.getDate()} {lectureName}
       </Link>
       <Modal
         modalControl={modal}

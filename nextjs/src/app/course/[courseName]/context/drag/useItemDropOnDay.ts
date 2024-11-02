@@ -1,6 +1,9 @@
 "use client";
 import { useUpdateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
-import { useLecturesByWeekQuery, useLectureUpdateMutation } from "@/hooks/localCourse/lectureHooks";
+import {
+  useLecturesByWeekQuery,
+  useLectureUpdateMutation,
+} from "@/hooks/localCourse/lectureHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
@@ -9,20 +12,27 @@ import { Lecture } from "@/models/local/lecture";
 import { getLectureForDay } from "@/models/local/lectureUtils";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
-import { getDateFromStringOrThrow, getDateOnlyMarkdownString, dateToMarkdownString } from "@/models/local/timeUtils";
+import {
+  getDateFromStringOrThrow,
+  getDateOnlyMarkdownString,
+  dateToMarkdownString,
+} from "@/models/local/timeUtils";
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
 
-
 export function useItemDropOnDay({
-  setIsDragging, setModalText, setModalCallback, setIsLoading, modal,
+  setIsDragging,
+  setModalText,
+  setModalCallback,
+  setIsLoading,
+  modal,
 }: {
   setIsDragging: Dispatch<SetStateAction<boolean>>;
   setModalText: Dispatch<SetStateAction<string>>;
   setModalCallback: Dispatch<SetStateAction<() => void>>;
   setIsLoading: Dispatch<SetStateAction<boolean>>;
-  modal: { isOpen: boolean; openModal: () => void; closeModal: () => void; };
+  modal: { isOpen: boolean; openModal: () => void; closeModal: () => void };
 }) {
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: weeks } = useLecturesByWeekQuery();
@@ -30,6 +40,7 @@ export function useItemDropOnDay({
   const updateLectureMutation = useLectureUpdateMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();
   const updatePageMutation = useUpdatePageMutation();
+
   return useCallback(
     (e: DragEvent, day: string) => {
       const rawData = e.dataTransfer.getData("draggableItem");
@@ -66,7 +77,11 @@ export function useItemDropOnDay({
         if (existingLecture) {
           console.log("attempting to drop on existing lecture");
           setModalText(
-            `Are you sure you want to replace ${existingLecture?.name} with ${lecture.name}? This will delete ${existingLecture.name}.`
+            `Are you sure you want to replace ${
+              existingLecture?.name || "Un-named Lecture"
+            } with ${lecture.name}? This will delete ${
+              existingLecture?.name || "Un-named Lecture"
+            }.`
           );
 
           setModalCallback(() => async () => {
@@ -81,7 +96,7 @@ export function useItemDropOnDay({
               },
             });
             setModalText("");
-            setModalCallback(() => { });
+            setModalCallback(() => {});
             modal.closeModal();
             setIsLoading(false);
           });
