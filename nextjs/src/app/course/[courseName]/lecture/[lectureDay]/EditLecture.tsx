@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import LecturePreview from "./LecturePreview";
 import EditLectureTitle from "./EditLectureTitle";
+import LectureButtons from "./LectureButtons";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   const { data: weeks } = useLecturesByWeekQuery();
@@ -63,6 +64,7 @@ Date: ${lectureDay}
           {lecture && <LecturePreview lecture={lecture} />}
         </div>
       </div>
+      <LectureButtons lectureDay={lectureDay} />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import Modal from "@/components/Modal";
+import Modal, { useModal } from "@/components/Modal";
 import { useLecturesByWeekQuery } from "@/hooks/localCourse/lectureHooks";
 import { getLectureUrl } from "@/services/urlUtils";
 import Link from "next/link";
@@ -13,6 +13,8 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { data: weeks } = useLecturesByWeekQuery();
   const { setIsDragging } = useDragStyleContext();
   const todaysLecture = getLectureForDay(weeks, dayAsDate);
+  const modal = useModal();
+
   return (
     <div className="flex justify-between">
       <Link
@@ -37,6 +39,7 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
         {dayAsDate.getDate()} {todaysLecture?.name}
       </Link>
       <Modal
+        modalControl={modal}
         buttonText="+"
         buttonClass="unstyled hover:font-bold hover:scale-125 px-1 mb-auto mt-0 pt-0"
       >

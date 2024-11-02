@@ -1,5 +1,5 @@
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import Modal from "@/components/Modal";
+import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import {
   useCanvasAssignmentsQuery,
@@ -45,6 +45,7 @@ export function AssignmentButtons({
   const updateAssignment = useUpdateAssignmentInCanvasMutation();
   const deleteLocal = useDeleteAssignmentMutation();
   const [isLoading, setIsLoading] = useState(false);
+  const modal = useModal();
 
   const assignmentInCanvas = canvasAssignments.find(
     (a) => a.name === assignmentName
@@ -116,6 +117,7 @@ export function AssignmentButtons({
         )}
         {!assignmentInCanvas && (
           <Modal
+            modalControl={modal}
             buttonText="Delete Localy"
             buttonClass="btn-danger"
             modalWidth="w-1/5"

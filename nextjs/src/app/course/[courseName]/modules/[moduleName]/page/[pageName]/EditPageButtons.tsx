@@ -1,5 +1,5 @@
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import Modal from "@/components/Modal";
+import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import {
   useCanvasPagesQuery,
@@ -14,7 +14,6 @@ import {
 } from "@/hooks/localCourse/pageHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
-import { revalidatePath } from "next/cache";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
@@ -35,6 +34,7 @@ export default function EditPageButtons({
   const updatePageInCanvas = useUpdateCanvasPageMutation();
   const deletePageInCanvas = useDeleteCanvasPageMutation();
   const deletePageLocal = useDeletePageMutation();
+  const modal = useModal();
 
   const pageInCanvas = canvasPages?.find((p) => p.title === pageName);
 
@@ -88,6 +88,7 @@ export default function EditPageButtons({
 
       {!pageInCanvas && (
         <Modal
+          modalControl={modal}
           buttonText="Delete Localy"
           buttonClass="btn-danger"
           modalWidth="w-1/5"

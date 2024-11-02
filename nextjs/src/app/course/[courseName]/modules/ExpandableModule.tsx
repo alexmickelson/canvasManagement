@@ -9,7 +9,7 @@ import {
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
 import { Fragment } from "react";
-import Modal from "../../../../components/Modal";
+import Modal, { useModal } from "../../../../components/Modal";
 import NewItemForm from "./NewItemForm";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
@@ -31,6 +31,7 @@ export default function ExpandableModule({
   const { data: assignments } = useAssignmentsQueries(moduleName);
   const { data: quizzes } = useQuizzesQueries(moduleName);
   const { data: pages } = usePagesQueries(moduleName);
+  const modal = useModal();
 
   const moduleItems: {
     type: "assignment" | "quiz" | "page";
@@ -91,7 +92,7 @@ export default function ExpandableModule({
             )}
           >
             <>
-              <Modal buttonText="New Item">
+              <Modal modalControl={modal} buttonText="New Item">
                 {({ closeModal }) => (
                   <div>
                     <NewItemForm

@@ -1,5 +1,5 @@
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import Modal from "@/components/Modal";
+import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import {
   useCanvasQuizzesQuery,
@@ -33,6 +33,7 @@ export function QuizButtons({
   const addToCanvas = useAddQuizToCanvasMutation();
   const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
   const deleteLocal = useDeleteQuizMutation();
+  const modal = useModal();
 
   const quizInCanvas = canvasQuizzes.find((c) => c.title === quizName);
 
@@ -74,6 +75,7 @@ export function QuizButtons({
         )}
         {!quizInCanvas && (
           <Modal
+            modalControl={modal}
             buttonText="Delete Localy"
             buttonClass="btn-danger"
             modalWidth="w-1/5"

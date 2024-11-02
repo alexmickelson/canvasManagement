@@ -253,8 +253,10 @@ export default function DraggingContextProvider({
       settings.defaultDueTime.hour,
       settings.defaultDueTime.minute,
       updateAssignmentMutation,
+      updateLectureMutation,
       updatePageMutation,
       updateQuizMutation,
+      weeks,
     ]
   );
 

@@ -1,25 +1,41 @@
 "use client";
 import React, { ReactNode, useState } from "react";
 
-export default function Modal({
-  children,
-  buttonText,
-  buttonClass = "",
-  modalWidth = "w-1/3",
-}: {
-  children: (props: { closeModal: () => void }) => ReactNode;
-  buttonText: string;
-  buttonClass?: string;
-  modalWidth?: string;
-}) {
+export interface ModalControl {
+  isOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
+}
+
+export function useModal() {
   const [isOpen, setIsOpen] = useState(false);
 
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
+  return {
+    isOpen,
+    openModal,
+    closeModal,
+  };
+}
+
+export default function Modal({
+  children,
+  buttonText,
+  buttonClass = "",
+  modalWidth = "w-1/3",
+  modalControl,
+}: {
+  children: (props: { closeModal: () => void }) => ReactNode;
+  buttonText: string;
+  buttonClass?: string;
+  modalWidth?: string;
+  modalControl: ModalControl;
+}) {
   return (
     <>
-      <button onClick={openModal} className={buttonClass}>
+      <button onClick={modalControl.openModal} className={buttonClass}>
         {buttonText}
       </button>
 
@@ -27,9 +43,11 @@ export default function Modal({
         className={
           " fixed inset-0 flex items-center justify-center transition-all duration-400 h-screen " +
           " bg-black" +
-          (isOpen ? " bg-opacity-50  z-50  " : " bg-opacity-0  -z-50  ")
+          (modalControl.isOpen
+            ? " bg-opacity-50  z-50  "
+            : " bg-opacity-0  -z-50  ")
         }
-        onClick={closeModal}
+        onClick={modalControl.closeModal}
       >
         <div
           onClick={(e) => {
@@ -40,10 +58,11 @@ export default function Modal({
             ` bg-slate-800 p-6 rounded-lg shadow-lg ` +
             modalWidth +
             ` transition-all duration-400 ` +
-            ` ${isOpen ? "opacity-100" : "opacity-0"}`
+            ` ${modalControl.isOpen ? "opacity-100" : "opacity-0"}`
           }
         >
-          {isOpen && children({ closeModal })}
+          {modalControl.isOpen &&
+            children({ closeModal: modalControl.closeModal })}
         </div>
       </div>
     </>

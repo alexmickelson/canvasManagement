@@ -3,7 +3,6 @@ import { getDayOfWeek } from "@/models/local/localCourse";
 import { getDateFromString } from "@/models/local/timeUtils";
 import { getLectureWeekName } from "@/services/fileStorage/utils/lectureUtils";
 import { getCourseUrl, getLecturePreviewUrl } from "@/services/urlUtils";
-import { useRouter } from "next/navigation";
 import { useCourseContext } from "../../context/courseContext";
 import Link from "next/link";
 
