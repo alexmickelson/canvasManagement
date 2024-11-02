@@ -13,12 +13,12 @@ export default async function CoursePage({}: {}) {
       <div className="h-full flex flex-col">
         <DragStyleContextProvider>
           <DraggingContextProvider>
-            <div className="flex flex-row h-full">
+            <div className="flex sm:flex-row h-full flex-col">
               <div className="flex-1 h-full flex flex-col">
                 <CourseNavigation />
                 <CourseCalendar />
               </div>
-              <div className="w-96 p-3 h-full overflow-y-auto">
+              <div className="w-96 sm:p-3 h-full overflow-y-auto">
                 <CourseSettingsLink />
                 <ModuleList />
               </div>

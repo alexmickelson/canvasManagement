@@ -31,10 +31,10 @@ export default function CourseCalendar() {
         border-gray-900
         rounded-lg
         bg-slate-950
-        p-1
+        sm:p-1
       "
     >
-      <div className="h-full overflow-y-scroll pe-1">
+      <div className="h-full overflow-y-scroll sm:pe-1">
         <CalendarItemsContextProvider>
           {months.map((month) => (
             <CalendarMonth key={month.month + "" + month.year} month={month} />
