@@ -1,4 +1,3 @@
-import React from "react";
 import StartAndEndDate from "./StartAndEndDate";
 import SettingsHeader from "./SettingsHeader";
 import DefaultDueTime from "./DefaultDueTime";
