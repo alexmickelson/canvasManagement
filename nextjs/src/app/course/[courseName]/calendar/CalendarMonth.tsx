@@ -5,7 +5,7 @@ import { Expandable } from "@/components/Expandable";
 import { CalendarWeek } from "./CalendarWeek";
 
 export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
-  const weekInMilliseconds = 604_800_000;
+  // const weekInMilliseconds = 604_800_000;
   const four_days_in_milliseconds = 345_600_000;
   const isInPast =
     new Date(month.year, month.month, 1) <
@@ -16,7 +16,6 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
     { month: "long" }
   );
   const weekDaysList: DayOfWeek[] = Object.values(DayOfWeek);
-
   return (
     <>
       <Expandable
@@ -39,7 +38,8 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
         <div className="grid grid-cols-7 text-center fw-bold ms-3">
           {weekDaysList.map((day) => (
             <div key={day} className={""}>
-              {day}
+              <span className="hidden xl:inline">{day}</span>
+              <span className="xl:hidden inline">{day.slice(0, 3)}</span>
             </div>
           ))}
         </div>

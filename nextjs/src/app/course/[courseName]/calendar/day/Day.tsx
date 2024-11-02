@@ -75,7 +75,10 @@ export default function Day({ day, month }: { day: string; month: number }) {
   return (
     <div
       className={
-        " rounded-lg m-1 min-h-10 " + meetingClasses + monthClass + todayClasses
+        " rounded-lg sm:m-1 m-0.5 min-h-10 " +
+        meetingClasses +
+        monthClass +
+        todayClasses
       }
       onDrop={(e) => itemDropOnDay(e, day)}
       onDragOver={(e) => e.preventDefault()}
@@ -136,7 +139,10 @@ function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
     .find((l) => l.date == getDateOnlyMarkdownString(dayAsDate));
   return (
     <div className="flex justify-between">
-      <Link className="ms-1 me-1 truncate text-nowrap transition-all hover:font-bold hover:text-slate-300" href={getLectureUrl(courseName, day)}>
+      <Link
+        className="ms-1 me-1 truncate text-nowrap transition-all hover:font-bold hover:text-slate-300"
+        href={getLectureUrl(courseName, day)}
+      >
         {dayAsDate.getDate()} {todaysLecture?.name}
       </Link>
       <Modal

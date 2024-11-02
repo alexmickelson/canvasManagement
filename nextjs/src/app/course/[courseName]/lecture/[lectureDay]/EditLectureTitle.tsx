@@ -12,16 +12,15 @@ export default function EditLectureTitle({
 }: {
   lectureDay: string;
 }) {
-  const router = useRouter();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
   const lectureDate = getDateFromString(lectureDay);
   const lectureWeekName = getLectureWeekName(settings.startDate, lectureDay);
   return (
-    <div className="flex justify-between">
+    <div className="flex justify-between sm:flex-row flex-col">
       <div className="my-auto">
         <Link
-          className="btn"
+          className="btn hidden sm:inline"
           href={getCourseUrl(courseName)}
         >
           {courseName}
@@ -34,9 +33,9 @@ export default function EditLectureTitle({
           {lectureWeekName.toUpperCase()}
         </h1>
       </div>
-      <div className="text-end my-auto">
+      <div className="text-end my-auto flex">
         <Link
-          className="btn"
+          className="btn inline text-center flex-grow m-1"
           href={getLecturePreviewUrl(courseName, lectureDay)}
         >
           preview

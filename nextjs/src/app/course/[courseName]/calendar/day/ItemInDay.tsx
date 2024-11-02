@@ -34,7 +34,7 @@ export function ItemInDay({
         href={getModuleItemUrl(courseName, moduleName, type, item.name)}
         shallow={true}
         className={
-          " border rounded-sm px-1 mx-1 break-words mb-1 " +
+          " border rounded-sm sm:px-1 sm:mx-1 break-words mb-1 truncate sm:text-wrap text-nowrap " +
           " bg-slate-800 " +
           " block " +
           (status === "localOnly" && " text-slate-500 border-slate-600 ") +

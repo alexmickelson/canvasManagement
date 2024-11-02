@@ -54,11 +54,11 @@ Date: ${lectureDay}
   return (
     <div className="h-full flex flex-col">
       <EditLectureTitle lectureDay={lectureDay} />
-      <div className="columns-2 min-h-0 flex-1">
+      <div className="sm:columns-2 min-h-0 flex-1">
         <div className="flex-1 h-full">
           <MonacoEditor value={text} onChange={setText} />
         </div>
-        <div className="h-full">
+        <div className="h-full sm:block none">
           <div className="text-red-300">{error && error}</div>
           {lecture && <LecturePreview lecture={lecture} />}
         </div>
