@@ -9,8 +9,8 @@ export interface DraggableItem {
 }
 
 export interface DraggingContextInterface {
-  itemDropOnDay: (e: DragEvent<HTMLDivElement>, droppedOnDay: string) => void;
-  itemDropOnModule: (e: DragEvent<HTMLDivElement>, moduleName: string) => void;
+  itemDropOnDay: (e: DragEvent, droppedOnDay: string) => void;
+  itemDropOnModule: (e: DragEvent, moduleName: string) => void;
 }
 const defaultDraggingValue: DraggingContextInterface = {
   itemDropOnDay: () => {},
