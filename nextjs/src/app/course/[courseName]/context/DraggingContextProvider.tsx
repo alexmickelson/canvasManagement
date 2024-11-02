@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useCallback, DragEvent, useEffect } from "react";
+import { ReactNode, useCallback, DragEvent, useEffect, useState } from "react";
 import { DraggableItem, DraggingContext } from "./draggingContext";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
@@ -20,6 +20,8 @@ import {
   useLectureUpdateMutation,
 } from "@/hooks/localCourse/lectureHooks";
 import { getLectureForDay } from "@/models/local/lectureUtils";
+import Modal, { useModal } from "@/components/Modal";
+import { Spinner } from "@/components/Spinner";
 
 export default function DraggingContextProvider({
   children,
@@ -33,6 +35,10 @@ export default function DraggingContextProvider({
   const updatePageMutation = useUpdatePageMutation();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: weeks } = useLecturesByWeekQuery();
+  const [isLoading, setIsLoading] = useState(false);
+  const [modalText, setModalText] = useState("");
+  const modal = useModal();
+  const [modalCallback, setModalCallback] = useState<() => void>(() => {});
 
   useEffect(() => {
     const handleDrop = () => {
@@ -166,7 +172,28 @@ export default function DraggingContextProvider({
         const existingLecture = getLectureForDay(weeks, dayAsDate);
         if (existingLecture) {
           console.log("attempting to drop on existing lecture");
+          setModalText(
+            `Are you sure you want to replace ${existingLecture?.name} with ${lecture.name}? This will delete ${existingLecture.name}.`
+          );
+
+          setModalCallback(() => async () => { // because sometimes setStates receive a function
+            console.log("running callback");
+            setIsLoading(true);
+            await updateLectureMutation.mutateAsync({
+              previousDay: lecture.date,
+              lecture: {
+                ...lecture,
+                date: getDateOnlyMarkdownString(dayAsDate),
+              },
+            });
+            setModalText("");
+            setModalCallback(() => {});
+            modal.closeModal();
+            setIsLoading(false);
+          });
+          modal.openModal();
         } else {
+          console.log("updating lecture on unique day");
           updateLectureMutation.mutate({
             previousDay: lecture.date,
             lecture: {
@@ -249,6 +276,7 @@ export default function DraggingContextProvider({
       }
     },
     [
+      modal,
       setIsDragging,
       settings.defaultDueTime.hour,
       settings.defaultDueTime.minute,
@@ -267,6 +295,30 @@ export default function DraggingContextProvider({
         itemDropOnModule,
       }}
     >
+      <Modal modalControl={modal} buttonText={""} buttonClass="hidden">
+        {({ closeModal }) => (
+          <div>
+            <div className="text-center">{modalText}</div>
+            <br />
+            <div className="flex justify-around gap-3">
+              <button
+                onClick={() => {
+                  console.log("deleting");
+                  modalCallback();
+                }}
+                disabled={isLoading}
+                className="btn-danger"
+              >
+                Yes
+              </button>
+              <button onClick={closeModal} disabled={isLoading}>
+                No
+              </button>
+            </div>
+            {isLoading && <Spinner />}
+          </div>
+        )}
+      </Modal>
       {children}
     </DraggingContext.Provider>
   );

@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode, useCallback, useMemo, useState } from "react";
 
 export interface ModalControl {
   isOpen: boolean;
@@ -10,14 +10,17 @@ export interface ModalControl {
 export function useModal() {
   const [isOpen, setIsOpen] = useState(false);
 
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const openModal = useCallback(() => setIsOpen(true), []);
+  const closeModal = useCallback(() => setIsOpen(false), []);
 
-  return {
-    isOpen,
-    openModal,
-    closeModal,
-  };
+  return useMemo(
+    () => ({
+      isOpen,
+      openModal,
+      closeModal,
+    }),
+    [closeModal, isOpen, openModal]
+  );
 }
 
 export default function Modal({
