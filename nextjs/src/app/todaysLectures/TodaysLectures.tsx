@@ -4,6 +4,7 @@ import { useLocalCoursesSettingsQuery } from "@/hooks/localCourse/localCoursesHo
 import OneCourseLectures from "./OneCourseLectures";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import CourseContextProvider from "../course/[courseName]/context/CourseContextProvider";
+import { Fragment } from "react";
 
 export default function TodaysLectures() {
   const { data: allSettings } = useLocalCoursesSettingsQuery();
@@ -13,11 +14,11 @@ export default function TodaysLectures() {
       <div className="flex justify-around w-full">
         <SuspenseAndErrorHandling>
           {allSettings.map((settings) => (
-            <div key={settings.name} className="flex-shrink">
+            <Fragment key={settings.name}>
               <CourseContextProvider localCourseName={settings.name}>
                 <OneCourseLectures />
               </CourseContextProvider>
-            </div>
+            </Fragment>
           ))}
         </SuspenseAndErrorHandling>
       </div>

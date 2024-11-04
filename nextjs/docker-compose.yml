@@ -16,3 +16,26 @@ services:
       - ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/intro_to_web
       - ~/projects/faculty/1420/2024-fall/Modules:/app/storage/1420
       - ~/projects/faculty/1425/2024-fall/Modules:/app/storage/1425
+
+  # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
+  # https://github.com/jonas-merkle/container-cloudflare-tunnel
+  # cloudflare-tunnel:
+  #   image: cloudflare/cloudflared
+  #   container_name: cloudflare-tunnel
+  #   restart: unless-stopped
+  #   env_file:
+  #     - .env
+  #   command: tunnel run
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #   environment:
+  #     - "TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}"
+  #   healthcheck:
+  #     test: ["CMD", "cloudflared", "--version"]
+  #     interval: 30s
+  #     timeout: 10s
+  #     retries: 3
+  #     start_period: 10s
+
+
+  # https://ngrok.com/docs/using-ngrok-with/docker/
