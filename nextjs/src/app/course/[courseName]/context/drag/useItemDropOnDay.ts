@@ -6,7 +6,6 @@ import {
 } from "@/hooks/localCourse/lectureHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
-import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { Lecture } from "@/models/local/lecture";
 import { getLectureForDay } from "@/models/local/lectureUtils";
@@ -20,6 +19,7 @@ import {
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
+import { useUpdateItemMutation } from "@/hooks/localCourse/courseItemHooks";
 
 export function useItemDropOnDay({
   setIsDragging,
@@ -36,7 +36,7 @@ export function useItemDropOnDay({
 }) {
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: weeks } = useLecturesByWeekQuery();
-  const updateQuizMutation = useUpdateQuizMutation();
+  const updateQuizMutation = useUpdateItemMutation("Quiz");
   const updateLectureMutation = useLectureUpdateMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();
   const updatePageMutation = useUpdatePageMutation();

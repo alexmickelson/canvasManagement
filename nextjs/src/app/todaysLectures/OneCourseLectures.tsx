@@ -20,11 +20,13 @@ export default function OneCourseLectures() {
       href={getLecturePreviewUrl(courseName, dayAsString)}
       className="
         border-4 rounded-lg border-slate-500 
-        p-3 m-3 block text-end
+        px-3 py-1 m-3 block text-end
         bg-slate-950
         transition-all hover:scale-110 hover:shadow-md
       "
     >
+      <span className="text-end text-slate-500">lecture</span>
+      <br />
       <span className="font-bold text-xl">{todaysLecture?.name}</span>
       <br />
       <span className="text-slate-500">{courseName}</span>

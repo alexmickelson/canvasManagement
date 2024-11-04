@@ -6,11 +6,8 @@ import {
   useAddQuizToCanvasMutation,
   useDeleteQuizFromCanvasMutation,
 } from "@/hooks/canvas/canvasQuizHooks";
+import { useDeleteItemMutation, useItemQuery } from "@/hooks/localCourse/courseItemHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import {
-  useDeleteQuizMutation,
-  useQuizQuery,
-} from "@/hooks/localCourse/quizHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
@@ -29,10 +26,10 @@ export function QuizButtons({
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: canvasQuizzes } = useCanvasQuizzesQuery();
-  const { data: quiz } = useQuizQuery(moduleName, quizName);
+  const { data: quiz } = useItemQuery(moduleName, quizName, "Quiz");
   const addToCanvas = useAddQuizToCanvasMutation();
   const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
-  const deleteLocal = useDeleteQuizMutation();
+  const deleteLocal = useDeleteItemMutation("Quiz");
   const modal = useModal();
 
   const quizInCanvas = canvasQuizzes.find((c) => c.title === quizName);

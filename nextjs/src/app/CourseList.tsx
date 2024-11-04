@@ -14,7 +14,8 @@ export default function CourseList() {
             shallow={true}
             className="
               font-bold text-xl block
-              transition-all hover:scale-105 hover:underline
+              transition-all hover:scale-105 hover:underline hover:text-slate-200
+              mb-3
             "
           >
             {settings.name}

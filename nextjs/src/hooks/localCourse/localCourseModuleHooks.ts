@@ -7,7 +7,6 @@ import {
 } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourseKeys";
 import { getAllAssignmentsQueryConfig } from "./assignmentHooks";
-import { getAllQuizzesQueryConfig } from "./quizHooks";
 import { getAllItemsQueryConfig } from "./courseItemHooks";
 import {
   createModuleOnServer,
@@ -39,36 +38,6 @@ export const useCreateModuleMutation = () => {
   });
 };
 
-// // dangerous? really slowed down page...
-// // maybe it only slowed down with react query devtools...
-// export const useModuleDataQuery = (moduleName: string) => {
-//   console.log("running");
-//   const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
-//   const { data: quizNames } = useQuizNamesQuery(moduleName);
-//   const { data: pageNames } = usePageNamesQuery(moduleName);
-
-//   const { data: assignments } = useAssignmentsQueries(
-//     moduleName,
-//     assignmentNames
-//   );
-//   const { data: quizzes } = useQuizzesQueries(moduleName, quizNames);
-//   const { data: pages } = usePagesQueries(moduleName, pageNames);
-
-//   return {
-//     assignments,
-//     quizzes,
-//     pages,
-//   };
-//   // return useMemo(
-//   //   () => ({
-//   //     assignments,
-//   //     quizzes,
-//   //     pages,
-//   //   }),
-//   //   [assignments, pages, quizzes]
-//   // );
-// };
-
 export const useAllCourseDataQuery = () => {
   const { courseName } = useCourseContext();
   const { data: moduleNames } = useModuleNamesQuery();
@@ -90,7 +59,7 @@ export const useAllCourseDataQuery = () => {
 
   const { data: quizzesAndModules } = useSuspenseQueries({
     queries: moduleNames.map((moduleName) =>
-      getAllQuizzesQueryConfig(courseName, moduleName)
+      getAllItemsQueryConfig(courseName, moduleName, "Quiz")
     ),
     combine: (results) => ({
       data: results.flatMap((r, i) =>

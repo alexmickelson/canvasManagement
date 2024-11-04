@@ -4,11 +4,10 @@ import SelectInput from "@/components/form/SelectInput";
 import TextInput from "@/components/form/TextInput";
 import { Spinner } from "@/components/Spinner";
 import { useCreateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
+import { useCreateItemMutation } from "@/hooks/localCourse/courseItemHooks";
 import { useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useCreatePageMutation } from "@/hooks/localCourse/pageHooks";
-import { useCreateQuizMutation } from "@/hooks/localCourse/quizHooks";
-import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
 import {
   dateToMarkdownString,
@@ -53,7 +52,7 @@ export default function NewItemForm({
 
   const createAssignment = useCreateAssignmentMutation();
   const createPage = useCreatePageMutation();
-  const createQuiz = useCreateQuizMutation();
+  const createQuiz = useCreateItemMutation("Quiz");
 
   const isPending =
     createAssignment.isPending || createPage.isPending || createQuiz.isPending;

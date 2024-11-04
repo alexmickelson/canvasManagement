@@ -33,8 +33,15 @@ export async function getAllItemsFromServer<T extends CourseItemType>({
     );
     return quizzes as CourseItemReturnType<T>[];
   }
-  const pages = await fileStorageService.pages.getPages(courseName, moduleName);
-  return pages as CourseItemReturnType<T>[];
+  if (type === "Page") {
+    const pages = await fileStorageService.pages.getPages(
+      courseName,
+      moduleName
+    );
+    return pages as CourseItemReturnType<T>[];
+  }
+
+  throw Error(`cannot get item from server, invalid type: ${type}`)
 }
 
 export async function getItemFromServer<T extends CourseItemType>({

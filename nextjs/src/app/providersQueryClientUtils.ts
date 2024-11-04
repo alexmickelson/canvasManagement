@@ -8,6 +8,7 @@ export function makeQueryClient() {
         // above 0 to avoid refetching immediately on the client
         // staleTime: 60_000,
         staleTime: 1000 * 60 * 60, // 1 hour
+        // refetchInterval: 5000, // debug only
         refetchOnWindowFocus: false,
         retry: 0,
         refetchOnMount: false,

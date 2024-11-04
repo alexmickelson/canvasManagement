@@ -10,7 +10,7 @@ export default function LecturePreview({ lecture }: { lecture: Lecture }) {
       </section>
       <section>
         <div
-          className="markdownPreview"
+          className="markdownPreview text-xl"
           dangerouslySetInnerHTML={{
             __html: markdownToHTMLSafe(lecture.content),
           }}

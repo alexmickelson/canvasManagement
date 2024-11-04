@@ -1,9 +1,5 @@
 "use client";
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
-import {
-  useQuizQuery,
-  useUpdateQuizMutation,
-} from "@/hooks/localCourse/quizHooks";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import { useEffect, useState } from "react";
 import QuizPreview from "./QuizPreview";
@@ -13,6 +9,7 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import { useRouter } from "next/navigation";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import { useItemQuery, useUpdateItemMutation } from "@/hooks/localCourse/courseItemHooks";
 
 const helpString = `QUESTION REFERENCE
 ---
@@ -64,8 +61,8 @@ export default function EditQuiz({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const { data: quiz } = useQuizQuery(moduleName, quizName);
-  const updateQuizMutation = useUpdateQuizMutation();
+  const { data: quiz } = useItemQuery(moduleName, quizName, "Quiz");
+  const updateQuizMutation = useUpdateItemMutation("Quiz");
   const [quizText, setQuizText] = useState(quizMarkdownUtils.toMarkdown(quiz));
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);
@@ -111,7 +108,15 @@ export default function EditQuiz({
     return () => {
       clearTimeout(handler);
     };
-  }, [courseName, moduleName, quiz, quizName, quizText, router, updateQuizMutation]);
+  }, [
+    courseName,
+    moduleName,
+    quiz,
+    quizName,
+    quizText,
+    router,
+    updateQuizMutation,
+  ]);
 
   return (
     <div className="h-full flex flex-col align-middle px-1">

@@ -1,7 +1,6 @@
 "use client";
 import { useAssignmentsQueries } from "@/hooks/localCourse/assignmentHooks";
 import { usePagesQueries } from "@/hooks/localCourse/pageHooks";
-import { useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import {
   getDateFromString,
@@ -20,6 +19,7 @@ import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
 import { useDragStyleContext } from "../context/drag/dragStyleContext";
+import { useItemsQueries } from "@/hooks/localCourse/courseItemHooks";
 
 export default function ExpandableModule({
   moduleName,
@@ -29,7 +29,7 @@ export default function ExpandableModule({
   const { itemDropOnModule } = useDraggingContext();
 
   const { data: assignments } = useAssignmentsQueries(moduleName);
-  const { data: quizzes } = useQuizzesQueries(moduleName);
+  const { data: quizzes } = useItemsQueries(moduleName, "Quiz");
   const { data: pages } = usePagesQueries(moduleName);
   const modal = useModal();
 

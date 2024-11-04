@@ -1,11 +1,9 @@
 import CheckIcon from "@/components/icons/CheckIcon";
-import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
+import { useItemQuery } from "@/hooks/localCourse/courseItemHooks";
 import {
   LocalQuizQuestion,
   QuestionType,
 } from "@/models/local/quiz/localQuizQuestion";
-import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 export default function QuizPreview({
@@ -15,7 +13,7 @@ export default function QuizPreview({
   quizName: string;
   moduleName: string;
 }) {
-  const { data: quiz } = useQuizQuery(moduleName, quizName);
+  const { data: quiz } = useItemQuery(moduleName, quizName, "Quiz");
   return (
     <div style={{ overflow: "scroll", height: "100%" }}>
       <div className="columns-2">
