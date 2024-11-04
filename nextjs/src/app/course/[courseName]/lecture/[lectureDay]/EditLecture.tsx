@@ -59,7 +59,7 @@ Date: ${lectureDay}
         <div className="flex-1 h-full">
           <MonacoEditor value={text} onChange={setText} />
         </div>
-        <div className="h-full sm:block none">
+        <div className="h-full sm:block none overflow-auto">
           <div className="text-red-300">{error && error}</div>
           {lecture && <LecturePreview lecture={lecture} />}
         </div>
