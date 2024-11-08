@@ -27,7 +27,7 @@ export default function EditAssignment({
   const router = useRouter();
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
-  const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
+  const [assignment] = useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
 
   const [assignmentText, setAssignmentText] = useState(

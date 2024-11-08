@@ -8,6 +8,7 @@ import {
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
 import { useAllCourseDataQuery } from "@/hooks/localCourse/localCourseModuleHooks";
+import { trpc } from "@/services/trpc/utils";
 
 export default function CalendarItemsContextProvider({
   children,
@@ -16,6 +17,9 @@ export default function CalendarItemsContextProvider({
 }) {
   const { assignmentsAndModules, quizzesAndModules, pagesAndModules } =
     useAllCourseDataQuery();
+
+  
+
 
   const assignmentsByModuleByDate = assignmentsAndModules.reduce(
     (previous, { assignment, moduleName }) => {

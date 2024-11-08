@@ -6,12 +6,12 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourseKeys";
-import { getAllAssignmentsQueryConfig } from "./assignmentHooks";
 import { getAllItemsQueryConfig } from "./courseItemHooks";
 import {
   createModuleOnServer,
   getModuleNamesFromServer,
 } from "./localCourseModuleServerActions";
+import { trpc } from "@/services/trpc/utils";
 
 export const useModuleNamesQuery = () => {
   const { courseName } = useCourseContext();
@@ -42,20 +42,30 @@ export const useAllCourseDataQuery = () => {
   const { courseName } = useCourseContext();
   const { data: moduleNames } = useModuleNamesQuery();
 
-  const { data: assignmentsAndModules } = useSuspenseQueries({
-    queries: moduleNames.map((moduleName) =>
-      getAllAssignmentsQueryConfig(courseName, moduleName)
-    ),
-    combine: (results) => ({
-      data: results.flatMap((r, i) =>
-        r.data.map((assignment) => ({
-          moduleName: moduleNames[i],
-          assignment,
-        }))
-      ),
-      pending: results.some((r) => r.isPending),
-    }),
+  const [assignments] = trpc.useSuspenseQueries((t) =>
+    moduleNames.map((moduleName) =>
+      t.assignment.getAllAssignments({ courseName, moduleName })
+    )
+  );
+
+  const assignmentsAndModules = moduleNames.flatMap((moduleName, index) => {
+    return assignments[index].map((assignment) => ({ moduleName, assignment }));
   });
+
+  // const { data: assignmentsAndModules } = useSuspenseQueries({
+  //   queries: moduleNames.map((moduleName) =>
+  //     getAllAssignmentsQueryConfig(courseName, moduleName)
+  //   ),
+  //   combine: (results) => ({
+  //     data: results.flatMap((r, i) =>
+  //       r.data.map((assignment) => ({
+  //         moduleName: moduleNames[i],
+  //         assignment,
+  //       }))
+  //     ),
+  //     pending: results.some((r) => r.isPending),
+  //   }),
+  // });
 
   const { data: quizzesAndModules } = useSuspenseQueries({
     queries: moduleNames.map((moduleName) =>

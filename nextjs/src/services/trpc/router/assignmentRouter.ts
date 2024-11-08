@@ -2,8 +2,9 @@ import publicProcedure from "../procedures/public";
 import { z } from "zod";
 import { router } from "../trpc";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { zodLocalAssignment } from "@/models/local/assignment/localAssignment";
 
-export const courseItemRouter = router({
+export const assignmentRouter = router({
   getAssignment: publicProcedure
     .input(
       z.object({
@@ -32,4 +33,28 @@ export const courseItemRouter = router({
         moduleName
       );
     }),
+  createAssignment: publicProcedure
+    .input(
+      z.object({
+        courseName: z.string(),
+        moduleName: z.string(),
+        assignmentName: z.string(),
+        assignment: zodLocalAssignment,
+      })
+    )
+    .mutation(
+      async ({
+        input: { courseName, moduleName, assignmentName, assignment },
+        ctx,
+      }) => {
+        await fileStorageService.assignments.updateOrCreateAssignment({
+          courseName,
+          moduleName,
+          assignmentName,
+          assignment,
+        });
+
+        ctx;
+      }
+    ),
 });

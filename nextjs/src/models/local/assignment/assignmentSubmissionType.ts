@@ -1,3 +1,4 @@
+import { z } from "zod";
 export enum AssignmentSubmissionType {
   ONLINE_TEXT_ENTRY = "online_text_entry",
   ONLINE_UPLOAD = "online_upload",
@@ -6,6 +7,14 @@ export enum AssignmentSubmissionType {
   ONLINE_URL = "online_url",
   NONE = "none",
 }
+export const zodAssignmentSubmissionType = z.enum([
+  AssignmentSubmissionType.ONLINE_TEXT_ENTRY,
+  AssignmentSubmissionType.ONLINE_UPLOAD,
+  AssignmentSubmissionType.ONLINE_QUIZ,
+  AssignmentSubmissionType.DISCUSSION_TOPIC,
+  AssignmentSubmissionType.ONLINE_URL,
+  AssignmentSubmissionType.NONE,
+]);
 
 export const AssignmentSubmissionTypeList: AssignmentSubmissionType[] = [
   AssignmentSubmissionType.ONLINE_TEXT_ENTRY,

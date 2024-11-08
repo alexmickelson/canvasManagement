@@ -1,8 +1,12 @@
 import { IModuleItem } from "../IModuleItem";
-import { AssignmentSubmissionType } from "./assignmentSubmissionType";
-import { RubricItem } from "./rubricItem";
+import {
+  AssignmentSubmissionType,
+  zodAssignmentSubmissionType,
+} from "./assignmentSubmissionType";
+import { RubricItem, zodRubricItem } from "./rubricItem";
 import { assignmentMarkdownParser } from "./utils/assignmentMarkdownParser";
 import { assignmentMarkdownSerializer } from "./utils/assignmentMarkdownSerializer";
+import { z } from "zod";
 
 export interface LocalAssignment extends IModuleItem {
   name: string;
@@ -15,6 +19,16 @@ export interface LocalAssignment extends IModuleItem {
   rubric: RubricItem[];
 }
 
+export const zodLocalAssignment = z.object({
+  name: z.string(),
+  description: z.string(),
+  lockAt: z.string().optional(),
+  dueAt: z.string(),
+  localAssignmentGroupName: z.string(),
+  submissionTypes: zodAssignmentSubmissionType.array(),
+  allowedFileUploadExtensions: z.string().array(),
+  rubric: zodRubricItem.array(),
+});
 
 export const localAssignmentMarkdown = {
   parseMarkdown: assignmentMarkdownParser.parseMarkdown,

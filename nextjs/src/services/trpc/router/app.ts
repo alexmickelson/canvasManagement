@@ -1,6 +1,7 @@
 import { createContext } from "../context";
 import publicProcedure from "../procedures/public";
 import { createCallerFactory, mergeRouters, router } from "../trpc";
+import { assignmentRouter } from "./assignmentRouter";
 
 export const helloRouter = router({
   sayHello: publicProcedure.query(() => {
@@ -10,8 +11,10 @@ export const helloRouter = router({
   }),
 });
 
-
-export const appRouter = mergeRouters(helloRouter);
+export const appRouter = router({
+  hello: helloRouter,
+  assignment: assignmentRouter,
+});
 
 export const createCaller = createCallerFactory(appRouter);
 

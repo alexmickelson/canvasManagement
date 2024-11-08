@@ -1,16 +1,11 @@
 "use client";
 import { useLocalCoursesSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { trpc } from "@/services/trpc/utils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
-import { useEffect } from "react";
 
 export default function CourseList() {
   const { data: allSettings } = useLocalCoursesSettingsQuery();
 
-  const {data} = trpc.sayHello.useQuery()
-
-console.log(data);
   return (
     <div>
       {allSettings.map((settings) => (

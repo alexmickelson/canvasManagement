@@ -1,5 +1,4 @@
 "use client";
-import { useAssignmentsQueries } from "@/hooks/localCourse/assignmentHooks";
 import { usePagesQueries } from "@/hooks/localCourse/pageHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import {
@@ -13,13 +12,17 @@ import NewItemForm from "./NewItemForm";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";
 import ClientOnly from "@/components/ClientOnly";
 import ExpandIcon from "../../../../components/icons/ExpandIcon";
-import { DraggableItem, useDraggingContext } from "../context/drag/draggingContext";
+import {
+  DraggableItem,
+  useDraggingContext,
+} from "../context/drag/draggingContext";
 import Link from "next/link";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
 import { useDragStyleContext } from "../context/drag/dragStyleContext";
 import { useItemsQueries } from "@/hooks/localCourse/courseItemHooks";
+import { useAssignmentsQuery } from "@/hooks/localCourse/assignmentHooks";
 
 export default function ExpandableModule({
   moduleName,
@@ -28,7 +31,7 @@ export default function ExpandableModule({
 }) {
   const { itemDropOnModule } = useDraggingContext();
 
-  const { data: assignments } = useAssignmentsQueries(moduleName);
+  const [assignments] = useAssignmentsQuery(moduleName);
   const { data: quizzes } = useItemsQueries(moduleName, "Quiz");
   const { data: pages } = usePagesQueries(moduleName);
   const modal = useModal();

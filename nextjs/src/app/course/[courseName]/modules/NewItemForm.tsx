@@ -14,7 +14,9 @@ import {
   getDateFromString,
   getDateFromStringOrThrow,
 } from "@/models/local/timeUtils";
+import { trpc } from "@/services/trpc/utils";
 import React, { useState } from "react";
+import { useCourseContext } from "../context/courseContext";
 
 export default function NewItemForm({
   moduleName: defaultModuleName,
@@ -26,10 +28,15 @@ export default function NewItemForm({
   onCreate?: () => void;
 }) {
   const { data: settings } = useLocalCourseSettingsQuery();
+  const { courseName } = useCourseContext();
   const { data: modules } = useModuleNamesQuery();
   const [type, setType] = useState<"Assignment" | "Quiz" | "Page">(
     "Assignment"
   );
+  const assignmentCreationMutation = useCreateAssignmentMutation({
+    courseName,
+    moduleName: defaultModuleName ?? "",
+  });
 
   const [moduleName, setModuleName] = useState<string | undefined>(
     defaultModuleName
@@ -50,12 +57,13 @@ export default function NewItemForm({
   const [assignmentGroup, setAssignmentGroup] =
     useState<LocalAssignmentGroup>();
 
-  const createAssignment = useCreateAssignmentMutation();
   const createPage = useCreatePageMutation();
   const createQuiz = useCreateItemMutation("Quiz");
 
   const isPending =
-    createAssignment.isPending || createPage.isPending || createQuiz.isPending;
+    assignmentCreationMutation.isPending ||
+    createPage.isPending ||
+    createQuiz.isPending;
 
   return (
     <form
@@ -84,8 +92,22 @@ export default function NewItemForm({
           return;
         }
         if (type === "Assignment") {
-          createAssignment.mutate({
-            item: {
+          // createAssignment.mutate({
+          //   item: {
+          //     name,
+          //     description: "",
+          //     localAssignmentGroupName: assignmentGroup?.name ?? "",
+          //     dueAt,
+          //     lockAt,
+          //     submissionTypes: settings.defaultAssignmentSubmissionTypes,
+          //     allowedFileUploadExtensions: settings.defaultFileUploadTypes,
+          //     rubric: [],
+          //   },
+          //   moduleName: moduleName,
+          //   itemName: name,
+          // });
+          assignmentCreationMutation.mutate({
+            assignment: {
               name,
               description: "",
               localAssignmentGroupName: assignmentGroup?.name ?? "",
@@ -96,7 +118,8 @@ export default function NewItemForm({
               rubric: [],
             },
             moduleName: moduleName,
-            itemName: name,
+            assignmentName: name,
+            courseName,
           });
         } else if (type === "Quiz") {
           createQuiz.mutate({
