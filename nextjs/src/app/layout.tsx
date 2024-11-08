@@ -52,6 +52,13 @@ async function DataHydration({
     router: trpcAppRouter,
     ctx: createTrpcContext(),
     transformer: superjson,
+    queryClientConfig: {
+      defaultOptions: {
+        queries: {
+          staleTime: Infinity,
+        },
+      },
+    },
   });
   const allSettings = await fileStorageService.settings.getAllCoursesSettings();
   await Promise.all(
@@ -63,7 +70,7 @@ async function DataHydration({
       await Promise.all(
         moduleNames.map(
           async (moduleName) =>
-            await trpcHelper.assignment.getAllAssignments.prefetch({
+            await trpcHelper.assignment.getAllAssignments.fetch({
               courseName,
               moduleName,
             })
@@ -75,7 +82,7 @@ async function DataHydration({
   await Promise.all(
     allSettings.map(
       async (settings) =>
-        await trpcHelper.lectures.getLectures.prefetch({
+        await trpcHelper.lectures.getLectures.fetch({
           courseName: settings.name,
         })
     )
