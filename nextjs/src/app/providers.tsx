@@ -1,9 +1,9 @@
 "use client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { getQueryClient } from "./providersQueryClientUtils";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
+import TrpcProvider from "@/services/trpc/TrpcProvider";
 
 export default function Providers({ children }: { children: ReactNode }) {
   // NOTE: Avoid useState when initializing the query client if you don't
@@ -15,10 +15,12 @@ export default function Providers({ children }: { children: ReactNode }) {
 
   return (
     <SuspenseAndErrorHandling>
-      <QueryClientProvider client={queryClient}>
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-        {children}
-      </QueryClientProvider>
+      <TrpcProvider>
+        <QueryClientProvider client={queryClient}>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+          {children}
+        </QueryClientProvider>
+      </TrpcProvider>
     </SuspenseAndErrorHandling>
   );
 }

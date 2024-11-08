@@ -2,33 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import loader from "@monaco-editor/loader";
 import { editor } from "monaco-editor/esm/vs/editor/editor.api";
-// import * as monaco from "monaco-editor";
 
-// import * as editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker';
-// import * as jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
-// import * as cssWorker from 'monaco-editor/esm/vs/language/css/css.worker?worker';
-// import * as htmlWorker from 'monaco-editor/esm/vs/language/html/html.worker?worker';
-// import * as tsWorker from 'monaco-editor/esm/vs/language/typescript/ts.worker?worker';
-
-// self.MonacoEnvironment = {
-//   getWorker(_, label) {
-//     if (label === 'json') {
-//       return new jsonWorker();
-//     }
-//     if (label === 'css' || label === 'scss' || label === 'less') {
-//       return new cssWorker();
-//     }
-//     if (label === 'html' || label === 'handlebars' || label === 'razor') {
-//       return new htmlWorker();
-//     }
-//     if (label === 'typescript' || label === 'javascript') {
-//       return new tsWorker();
-//     }
-//     return new editorWorker();
-//   },
-// };
-
-// loader.config({ monaco });
 
 export default function InnerMonacoEditor({
   value,
