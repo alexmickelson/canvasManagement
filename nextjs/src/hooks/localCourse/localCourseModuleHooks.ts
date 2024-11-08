@@ -12,6 +12,7 @@ import {
   getModuleNamesFromServer,
 } from "./localCourseModuleServerActions";
 import { trpc } from "@/services/trpc/utils";
+import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 
 export const useModuleNamesQuery = () => {
   const { courseName } = useCourseContext();
@@ -38,7 +39,14 @@ export const useCreateModuleMutation = () => {
   });
 };
 
-export const useAllCourseDataQuery = () => {
+export const useAllCourseDataQuery = (): {
+  assignmentsAndModules: {
+    moduleName: string;
+    assignment: LocalAssignment;
+}[];
+  quizzesAndModules: any[];
+  pagesAndModules: any[];
+} => {
   const { courseName } = useCourseContext();
   const { data: moduleNames } = useModuleNamesQuery();
 

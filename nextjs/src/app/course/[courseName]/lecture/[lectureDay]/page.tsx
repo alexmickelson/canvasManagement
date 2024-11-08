@@ -4,11 +4,12 @@ import {
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
 
-export default function page({
-  params: { lectureDay },
+export default async function page({
+  params,
 }: {
-  params: { lectureDay: string };
+  params: Promise<{ lectureDay: string }>;
 }) {
+  const { lectureDay } = await params;
   const decodedLectureDay = decodeURIComponent(lectureDay);
   console.log(decodedLectureDay);
   const lectureDate = getDateFromStringOrThrow(

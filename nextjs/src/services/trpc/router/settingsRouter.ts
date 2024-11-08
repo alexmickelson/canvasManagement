@@ -2,6 +2,7 @@ import publicProcedure from "../procedures/public";
 import { z } from "zod";
 import { router } from "../trpc";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { zodLocalCourseSettings } from "@/models/local/localCourseSettings";
 
 export const settingsRouter = router({
   allCoursesSettings: publicProcedure.query(async () => {
@@ -23,4 +24,29 @@ export const settingsRouter = router({
       }
       return s;
     }),
+  createCourse: publicProcedure
+    .input(
+      z.object({
+        settings: zodLocalCourseSettings,
+      })
+    )
+    .mutation(async ({ input: { settings } }) => {
+      await fileStorageService.settings.updateCourseSettings(
+        settings.name,
+        settings
+      );
+    }),
+  updateSettings: publicProcedure
+  .input(
+    z.object({
+      settings: zodLocalCourseSettings,
+    })
+  )
+  .mutation(async ({ input: { settings } }) => {
+    await fileStorageService.settings.updateCourseSettings(
+      settings.name,
+      settings
+    );
+  }),
+
 });

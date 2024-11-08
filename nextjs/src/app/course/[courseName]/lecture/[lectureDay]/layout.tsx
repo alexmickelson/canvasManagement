@@ -3,11 +3,12 @@ import CourseContextProvider from "../../context/CourseContextProvider";
 
 export default async function LectureLayout({
   children,
-  params: { courseName, lectureDay },
+  params,
 }: {
   children: React.ReactNode;
-  params: { courseName: string; lectureDay: string };
+  params: Promise<{ courseName: string; lectureDay: string }>;
 }) {
+  const { courseName, lectureDay } = await params;
   const decodedCourseName = decodeURIComponent(courseName);
   if (courseName.includes(".js.map")) {
     console.log("cannot load course that is .js.map " + decodedCourseName);

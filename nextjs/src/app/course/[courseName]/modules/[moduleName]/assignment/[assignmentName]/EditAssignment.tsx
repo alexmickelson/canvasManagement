@@ -13,7 +13,7 @@ import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHoo
 import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
-import { LocalCourseSettings } from "@/models/local/localCourse";
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { useRouter } from "next/navigation";
 import { AssignmentButtons } from "./AssignmentButtons";
 

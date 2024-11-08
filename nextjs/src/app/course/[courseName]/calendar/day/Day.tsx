@@ -5,7 +5,7 @@ import {
 } from "@/models/local/timeUtils";
 import { useDraggingContext } from "../../context/drag/draggingContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { getDayOfWeek } from "@/models/local/localCourse";
+import { getDayOfWeek } from "@/models/local/localCourseSettings";
 import { ItemInDay } from "./ItemInDay";
 import { useTodaysItems } from "./useTodaysItems";
 import { DayTitle } from "./DayTitle";

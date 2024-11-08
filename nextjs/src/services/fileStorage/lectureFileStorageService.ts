@@ -9,7 +9,10 @@ import {
   parseLecture,
 } from "./utils/lectureUtils";
 import { Lecture } from "@/models/local/lecture";
-import { getDayOfWeek, LocalCourseSettings } from "@/models/local/localCourse";
+import {
+  getDayOfWeek,
+  LocalCourseSettings,
+} from "@/models/local/localCourseSettings";
 import { getWeekNumber } from "@/app/course/[courseName]/calendar/calendarMonthUtils";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 

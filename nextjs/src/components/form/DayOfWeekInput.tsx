@@ -1,4 +1,4 @@
-import { DayOfWeek } from "@/models/local/localCourse";
+import { DayOfWeek } from "@/models/local/localCourseSettings";
 
 export function DayOfWeekInput({
   selectedDays,
@@ -15,11 +15,7 @@ export function DayOfWeekInput({
           <button
             role="button"
             key={day}
-            className={
-              hasDay
-                ? ""
-                : "unstyled btn-outline "
-            }
+            className={hasDay ? "" : "unstyled btn-outline "}
             onClick={() => updateSettings(day)}
           >
             {day}

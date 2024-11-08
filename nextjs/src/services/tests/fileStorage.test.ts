@@ -1,6 +1,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { promises as fs } from "fs";
-import { DayOfWeek, LocalCourseSettings } from "@/models/local/localCourse";
+import {
+  DayOfWeek,
+  LocalCourseSettings,
+} from "@/models/local/localCourseSettings";
 import { fileStorageService } from "../fileStorage/fileStorageService";
 
 describe("FileStorageTests", () => {

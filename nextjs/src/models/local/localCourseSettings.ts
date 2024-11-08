@@ -1,17 +1,48 @@
-import { AssignmentSubmissionType } from "./assignment/assignmentSubmissionType";
-import { LocalAssignmentGroup } from "./assignment/localAssignmentGroup";
+import { z } from "zod";
+import {
+  AssignmentSubmissionType,
+  zodAssignmentSubmissionType,
+} from "./assignment/assignmentSubmissionType";
+import {
+  LocalAssignmentGroup,
+  zodLocalAssignmentGroup,
+} from "./assignment/localAssignmentGroup";
 import { LocalModule } from "./localModules";
 import { parse, stringify } from "yaml";
 
-export interface LocalCourse {
-  modules: LocalModule[];
-  settings: LocalCourseSettings;
-}
+// export interface LocalCourse {
+//   modules: LocalModule[];
+//   settings: LocalCourseSettings;
+// }
 
 export interface SimpleTimeOnly {
   hour: number;
   minute: number;
 }
+export const zodSimpleTimeOnly = z.object({
+  hour: z.number().int().min(0).max(23), // hour should be an integer between 0 and 23
+  minute: z.number().int().min(0).max(59), // minute should be an integer between 0 and 59
+});
+
+export enum DayOfWeek {
+  Sunday = "Sunday",
+  Monday = "Monday",
+  Tuesday = "Tuesday",
+  Wednesday = "Wednesday",
+  Thursday = "Thursday",
+  Friday = "Friday",
+  Saturday = "Saturday",
+}
+
+export const zodDayOfWeek = z.enum([
+  DayOfWeek.Sunday,
+  DayOfWeek.Monday,
+  DayOfWeek.Tuesday,
+  DayOfWeek.Wednesday,
+  DayOfWeek.Thursday,
+  DayOfWeek.Friday,
+  DayOfWeek.Saturday,
+]);
 
 export interface LocalCourseSettings {
   name: string;
@@ -30,15 +61,24 @@ export interface LocalCourseSettings {
   }[];
 }
 
-export enum DayOfWeek {
-  Sunday = "Sunday",
-  Monday = "Monday",
-  Tuesday = "Tuesday",
-  Wednesday = "Wednesday",
-  Thursday = "Thursday",
-  Friday = "Friday",
-  Saturday = "Saturday",
-}
+export const zodLocalCourseSettings = z.object({
+  name: z.string(),
+  assignmentGroups: zodLocalAssignmentGroup.array(),
+  daysOfWeek: zodDayOfWeek.array(),
+  canvasId: z.number(),
+  startDate: z.string(),
+  endDate: z.string(),
+  defaultDueTime: zodSimpleTimeOnly,
+  defaultLockHoursOffset: z.number().int().optional(),
+  defaultAssignmentSubmissionTypes: zodAssignmentSubmissionType.array(),
+  defaultFileUploadTypes: z.string().array(),
+  holidays: z
+    .object({
+      name: z.string(),
+      days: z.string().array(),
+    })
+    .array(),
+});
 
 export function getDayOfWeek(date: Date): DayOfWeek {
   const dayIndex = date.getDay(); // Returns 0 for Sunday, 1 for Monday, etc.

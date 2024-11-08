@@ -1,6 +1,6 @@
 "use client";
 import { CalendarMonthModel } from "./calendarMonthUtils";
-import { DayOfWeek } from "@/models/local/localCourse";
+import { DayOfWeek } from "@/models/local/localCourseSettings";
 import { Expandable } from "@/components/Expandable";
 import { CalendarWeek } from "./CalendarWeek";
 

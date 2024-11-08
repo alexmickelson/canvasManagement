@@ -1,7 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourse/localCourseKeys";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
-import { LocalCourseSettings } from "@/models/local/localCourse";
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { canvasAssignmentService } from "@/services/canvas/canvasAssignmentService";
 import { canvasAssignmentKeys } from "./canvas/canvasAssignmentHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
@@ -32,7 +32,6 @@ export const hydrateCourse = async (
   queryClient: QueryClient,
   courseSettings: LocalCourseSettings
 ) => {
-
   const courseName = courseSettings.name;
   const moduleNames = await fileStorageService.modules.getModuleNames(
     courseName

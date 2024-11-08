@@ -7,7 +7,7 @@ import CourseContextProvider from "../course/[courseName]/context/CourseContextP
 import { Fragment } from "react";
 
 export default function TodaysLectures() {
-  const { data: allSettings } = useLocalCoursesSettingsQuery();
+  const [allSettings] = useLocalCoursesSettingsQuery();
   return (
     <div className="w-full">
       {/* <h3 className="text-center text-slate-400">todays lectures</h3> */}

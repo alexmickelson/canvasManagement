@@ -4,7 +4,7 @@ import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 
 export default function CourseList() {
-  const { data: allSettings } = useLocalCoursesSettingsQuery();
+  const [allSettings] = useLocalCoursesSettingsQuery();
 
   return (
     <div>

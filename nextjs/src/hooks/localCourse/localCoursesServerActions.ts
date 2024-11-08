@@ -1,5 +1,7 @@
 "use server";
-import { LocalCourse, LocalCourseSettings } from "@/models/local/localCourse";
+import {
+  LocalCourseSettings,
+} from "@/models/local/localCourseSettings";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 
 export async function getCourseSettingsFromServer({
@@ -13,23 +15,23 @@ export async function getAllCoursesSettingsFromServer() {
   return await fileStorageService.settings.getAllCoursesSettings();
 }
 
-export async function createCourseOnServer({
-  course,
-}: {
-  course: LocalCourse;
-}) {
-  await fileStorageService.settings.updateCourseSettings(
-    course.settings.name,
-    course.settings
-  );
-}
+// export async function createCourseOnServer({
+//   course,
+// }: {
+//   course: LocalCourse;
+// }) {
+//   await fileStorageService.settings.updateCourseSettings(
+//     course.settings.name,
+//     course.settings
+//   );
+// }
 
-export async function updateCourseSettingsOnServer({
-  courseName,
-  settings,
-}: {
-  courseName: string;
-  settings: LocalCourseSettings;
-}) {
-  await fileStorageService.settings.updateCourseSettings(courseName, settings);
-}
+// export async function updateCourseSettingsOnServer({
+//   courseName,
+//   settings,
+// }: {
+//   courseName: string;
+//   settings: LocalCourseSettings;
+// }) {
+//   await fileStorageService.settings.updateCourseSettings(courseName, settings);
+// }

@@ -13,7 +13,7 @@ import { useEmptyDirectoriesQuery } from "@/hooks/localCourse/storageDirectoryHo
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
-import { DayOfWeek } from "@/models/local/localCourse";
+import { DayOfWeek } from "@/models/local/localCourseSettings";
 import { getCourseUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
@@ -81,7 +81,6 @@ export default function NewCourseForm() {
             if (formIsComplete) {
               createCourse
                 .mutateAsync({
-                  modules: [],
                   settings: {
                     name: selectedDirectory,
                     assignmentGroups: [],
@@ -96,7 +95,7 @@ export default function NewCourseForm() {
                     ],
                     defaultFileUploadTypes: ["pdf", "png", "jpg", "jpeg"],
                     defaultLockHoursOffset: 0,
-                    holidays: []
+                    holidays: [],
                   },
                 })
                 .then(() => {
@@ -140,7 +139,7 @@ function OtherSettings({
   setSelectedDaysOfWeek: React.Dispatch<React.SetStateAction<DayOfWeek[]>>;
 }) {
   const { data: canvasCourses } = useCourseListInTermQuery(selectedTerm.id);
-  const { data: allSettings } = useLocalCoursesSettingsQuery();
+  const [allSettings] = useLocalCoursesSettingsQuery();
   const { data: emptyDirectories } = useEmptyDirectoriesQuery();
 
   const populatedCanvasCourseIds = allSettings.map((s) => s.canvasId);
