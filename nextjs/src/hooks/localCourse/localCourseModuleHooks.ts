@@ -67,35 +67,35 @@ export const useAllCourseDataQuery = () => {
   //   }),
   // });
 
-  const { data: quizzesAndModules } = useSuspenseQueries({
-    queries: moduleNames.map((moduleName) =>
-      getAllItemsQueryConfig(courseName, moduleName, "Quiz")
-    ),
-    combine: (results) => ({
-      data: results.flatMap((r, i) =>
-        r.data.map((quiz) => ({
-          moduleName: moduleNames[i],
-          quiz,
-        }))
-      ),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
+  // const { data: quizzesAndModules } = useSuspenseQueries({
+  //   queries: moduleNames.map((moduleName) =>
+  //     getAllItemsQueryConfig(courseName, moduleName, "Quiz")
+  //   ),
+  //   combine: (results) => ({
+  //     data: results.flatMap((r, i) =>
+  //       r.data.map((quiz) => ({
+  //         moduleName: moduleNames[i],
+  //         quiz,
+  //       }))
+  //     ),
+  //     pending: results.some((r) => r.isPending),
+  //   }),
+  // });
 
-  const { data: pagesAndModules } = useSuspenseQueries({
-    queries: moduleNames.map((moduleName) =>
-      getAllItemsQueryConfig(courseName, moduleName, "Page")
-    ),
-    combine: (results) => ({
-      data: results.flatMap((r, i) =>
-        r.data.map((page) => ({
-          moduleName: moduleNames[i],
-          page,
-        }))
-      ),
-      pending: results.some((r) => r.isPending),
-    }),
-  });
+  // const { data: pagesAndModules } = useSuspenseQueries({
+  //   queries: moduleNames.map((moduleName) =>
+  //     getAllItemsQueryConfig(courseName, moduleName, "Page")
+  //   ),
+  //   combine: (results) => ({
+  //     data: results.flatMap((r, i) =>
+  //       r.data.map((page) => ({
+  //         moduleName: moduleNames[i],
+  //         page,
+  //       }))
+  //     ),
+  //     pending: results.some((r) => r.isPending),
+  //   }),
+  // });
 
-  return { assignmentsAndModules, quizzesAndModules, pagesAndModules };
+  return { assignmentsAndModules, quizzesAndModules: [], pagesAndModules: [] };
 };

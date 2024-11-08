@@ -13,16 +13,16 @@ import {
 import { Lecture } from "@/models/local/lecture";
 import { useLocalCourseSettingsQuery } from "./localCoursesHooks";
 
-export const getLecturesQueryConfig = (courseName: string) =>
-  ({
-    queryKey: lectureKeys.allLectures(courseName),
-    queryFn: async () => await getLectures(courseName),
-  } as const);
+// export const getLecturesQueryConfig = (courseName: string) =>
+//   ({
+//     queryKey: lectureKeys.allLectures(courseName),
+//     queryFn: async () => await getLectures(courseName),
+//   } as const);
 
-export const useLecturesByWeekQuery = () => {
-  const { courseName } = useCourseContext();
-  return useSuspenseQuery(getLecturesQueryConfig(courseName));
-};
+// export const useLecturesByWeekQuery = () => {
+//   const { courseName } = useCourseContext();
+//   return useSuspenseQuery(getLecturesQueryConfig(courseName));
+// };
 
 export const useLectureUpdateMutation = () => {
   const { courseName } = useCourseContext();

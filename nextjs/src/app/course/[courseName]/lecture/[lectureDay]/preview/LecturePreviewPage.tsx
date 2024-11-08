@@ -1,10 +1,10 @@
 "use client";
 
-import { useLecturesByWeekQuery } from "@/hooks/localCourse/lectureHooks";
 import LecturePreview from "../LecturePreview";
 import { getCourseUrl, getLectureUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../../../context/courseContext";
 import Link from "next/link";
+import { trpc } from "@/services/trpc/utils";
 
 export default function LecturePreviewPage({
   lectureDay,
@@ -12,7 +12,7 @@ export default function LecturePreviewPage({
   lectureDay: string;
 }) {
   const { courseName } = useCourseContext();
-  const { data: weeks } = useLecturesByWeekQuery();
+  const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({ courseName });
   const lecture = weeks
     .flatMap(({ lectures }) => lectures.map((lecture) => lecture))
     .find((l) => l.date === lectureDay);

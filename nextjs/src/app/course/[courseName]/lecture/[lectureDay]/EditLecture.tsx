@@ -2,7 +2,6 @@
 
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import {
-  useLecturesByWeekQuery,
   useLectureUpdateMutation,
 } from "@/hooks/localCourse/lectureHooks";
 import {
@@ -13,9 +12,13 @@ import { useEffect, useState } from "react";
 import LecturePreview from "./LecturePreview";
 import EditLectureTitle from "./EditLectureTitle";
 import LectureButtons from "./LectureButtons";
+import { trpc } from "@/services/trpc/utils";
+import { useCourseContext } from "../../context/courseContext";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
-  const { data: weeks } = useLecturesByWeekQuery();
+  // const { data: weeks } = useLecturesByWeekQuery();
+  const { courseName } = useCourseContext();
+  const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({ courseName });
   const updateLecture = useLectureUpdateMutation();
 
   const lecture = weeks

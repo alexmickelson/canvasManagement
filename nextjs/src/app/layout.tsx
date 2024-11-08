@@ -4,7 +4,7 @@ import Providers from "./providers";
 import { Suspense } from "react";
 import { getQueryClient } from "./providersQueryClientUtils";
 import { hydrateCourses } from "@/hooks/hookHydration";
-import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { dehydrate, hydrate, HydrationBoundary } from "@tanstack/react-query";
 import { MyToaster } from "./MyToaster";
 import { cookies } from "next/headers";
 import { createServerSideHelpers } from "@trpc/react-query/server";
@@ -13,6 +13,7 @@ import { createTrpcContext } from "@/services/trpc/context";
 import superjson from "superjson";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import ClientOnly from "@/components/ClientOnly";
+import { createTRPCQueryUtils } from "@trpc/react-query";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -24,47 +25,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const queryClient = getQueryClient();
-  await hydrateCourses(queryClient);
-  const dehydratedState = dehydrate(queryClient);
-  cookies(); // disables static page generation at build time
-
-  const trpcHelper = createServerSideHelpers({
-    router: trpcAppRouter,
-    ctx: createTrpcContext(),
-    transformer: superjson,
-  });
-
-  const allSettings = await fileStorageService.settings.getAllCoursesSettings();
-  await Promise.all(
-    allSettings.map(async (settings) => {
-      const courseName = settings.name;
-      const moduleNames = await fileStorageService.modules.getModuleNames(
-        courseName
-      );
-      await Promise.all(
-        moduleNames.map(async (moduleName) => {
-          await trpcHelper.assignment.getAllAssignments.prefetch({
-            courseName,
-            moduleName,
-          });
-
-          // await Promise.all(
-          //   assignments.map(
-          //     async (a) =>
-          //       await trpcHelper.assignment.getAssignment.fetch({
-          //         courseName,
-          //         moduleName,
-          //         assignmentName: a.name,
-          //       })
-          //   )
-          // );
-        })
-      );
-    })
-  );
-
-  const dehydratedTrpc = trpcHelper.dehydrate();
   return (
     <html lang="en">
       <head></head>
@@ -73,11 +33,7 @@ export default async function RootLayout({
           <MyToaster />
           <Suspense>
             <Providers>
-              <HydrationBoundary state={dehydratedTrpc}>
-                <HydrationBoundary state={dehydratedState}>
-                  {children}
-                </HydrationBoundary>
-              </HydrationBoundary>
+                {children}
             </Providers>
           </Suspense>
         </div>

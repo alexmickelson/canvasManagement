@@ -1,9 +1,6 @@
 "use client";
 import { useUpdateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
-import {
-  useLecturesByWeekQuery,
-  useLectureUpdateMutation,
-} from "@/hooks/localCourse/lectureHooks";
+import { useLectureUpdateMutation } from "@/hooks/localCourse/lectureHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
@@ -20,6 +17,7 @@ import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
 import { useUpdateItemMutation } from "@/hooks/localCourse/courseItemHooks";
+import { trpc } from "@/services/trpc/utils";
 
 export function useItemDropOnDay({
   setIsDragging,
@@ -35,7 +33,10 @@ export function useItemDropOnDay({
   modal: { isOpen: boolean; openModal: () => void; closeModal: () => void };
 }) {
   const { data: settings } = useLocalCourseSettingsQuery();
-  const { data: weeks } = useLecturesByWeekQuery();
+  // const { data: weeks } = useLecturesByWeekQuery();
+  const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({
+    courseName: settings.name,
+  });
   const updateQuizMutation = useUpdateItemMutation("Quiz");
   const updateLectureMutation = useLectureUpdateMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();

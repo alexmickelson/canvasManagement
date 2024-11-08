@@ -31,15 +31,15 @@ export default function ExpandableModule({
 }) {
   const { itemDropOnModule } = useDraggingContext();
 
-  const [assignments] = useAssignmentsQuery(moduleName);
-  const { data: quizzes } = useItemsQueries(moduleName, "Quiz");
+  const { data: assignments } = useAssignmentsQuery(moduleName);
+  // const { data: quizzes } = useItemsQueries(moduleName, "Quiz");
   const { data: pages } = usePagesQueries(moduleName);
   const modal = useModal();
 
   const moduleItems: {
     type: "assignment" | "quiz" | "page";
     item: IModuleItem;
-  }[] = assignments
+  }[] = (assignments ?? [])
     .map(
       (
         a
@@ -51,7 +51,7 @@ export default function ExpandableModule({
         item: a,
       })
     )
-    .concat(quizzes.map((q) => ({ type: "quiz", item: q })))
+    // .concat(quizzes.map((q) => ({ type: "quiz", item: q })))
     .concat(pages.map((p) => ({ type: "page", item: p })))
     .sort(
       (a, b) =>

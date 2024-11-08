@@ -1,5 +1,4 @@
 import Modal, { useModal } from "@/components/Modal";
-import { useLecturesByWeekQuery } from "@/hooks/localCourse/lectureHooks";
 import { getLectureUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useCourseContext } from "../../context/courseContext";
@@ -7,10 +6,11 @@ import NewItemForm from "../../modules/NewItemForm";
 import { DraggableItem } from "../../context/drag/draggingContext";
 import { useDragStyleContext } from "../../context/drag/dragStyleContext";
 import { getLectureForDay } from "@/models/local/lectureUtils";
+import { trpc } from "@/services/trpc/utils";
 
 export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { courseName } = useCourseContext();
-  const { data: weeks } = useLecturesByWeekQuery();
+  const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({ courseName });
   const { setIsDragging } = useDragStyleContext();
   const todaysLecture = getLectureForDay(weeks, dayAsDate);
   const modal = useModal();

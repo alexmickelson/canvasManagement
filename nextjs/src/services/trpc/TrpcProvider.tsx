@@ -11,11 +11,12 @@ export default function TrpcProvider({
   children: React.ReactNode;
 }) {
   // NOTE: Your production URL environment variable may be different
-  const url = "/api/trpc";
-  // process.env.NEXT_PUBLIC_APP_DOMAIN &&
-  // !process.env.NEXT_PUBLIC_APP_DOMAIN.includes("localhost")
-  //   ? `https://www.${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/trpc/`
-  //   : "http://localhost:3000/api/trpc/";
+  const url = "http://localhost:3000/api/trpc/"
+   //"/api/trpc";
+    // process.env.NEXT_PUBLIC_APP_DOMAIN &&
+    // !process.env.NEXT_PUBLIC_APP_DOMAIN.includes("localhost")
+    //   ? `https://www.${process.env.NEXT_PUBLIC_APP_DOMAIN}/api/trpc/`
+    //   : "http://localhost:3000/api/trpc/";
 
   const [trpcClient] = useState(() =>
     trpc.createClient({

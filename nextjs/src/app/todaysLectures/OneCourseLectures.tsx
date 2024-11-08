@@ -1,19 +1,21 @@
 "use client";
 
-import { useLecturesByWeekQuery } from "@/hooks/localCourse/lectureHooks";
 import { getDateOnlyMarkdownString } from "@/models/local/timeUtils";
 import { getLecturePreviewUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useCourseContext } from "../course/[courseName]/context/courseContext";
 import { getLectureForDay } from "@/models/local/lectureUtils";
+import { trpc } from "@/services/trpc/utils";
 
 export default function OneCourseLectures() {
   const { courseName } = useCourseContext();
-  const { data: weeks } = useLecturesByWeekQuery();
+  // const { data: weeks } = useLecturesByWeekQuery();
+  const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({ courseName });
 
   const dayAsDate = new Date();
   const dayAsString = getDateOnlyMarkdownString(dayAsDate);
   const todaysLecture = getLectureForDay(weeks, dayAsDate);
+
   if (!todaysLecture) return <></>;
   return (
     <Link
