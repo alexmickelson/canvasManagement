@@ -9,15 +9,14 @@ export function parseLecture(fileContent: string): Lecture {
     const name = extractLabelValue(settings, "Name");
     const date = extractLabelValue(settings, "Date");
 
-    const content = fileContent.split("---\n")[1].trim();
-
+    const content = fileContent.split("---\n").slice(1).join("---\n").trim();
     return {
       name,
       date,
       content,
     };
   } catch (error) {
-    console.error("Error parsing lecture", fileContent);
+    console.error("Error parsing lecture: ", fileContent);
     throw error;
   }
 }
