@@ -35,7 +35,7 @@ export const useAssignmentQuery = (
 
 export const useAssignmentsQuery = (moduleName: string) => {
   const { courseName } = useCourseContext();
-  return trpc.assignment.getAllAssignments.useSuspenseQuery({
+  return trpc.assignment.getAllAssignments.useQuery({
     moduleName,
     courseName,
   });

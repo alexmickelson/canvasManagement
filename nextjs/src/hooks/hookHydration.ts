@@ -12,10 +12,6 @@ import { canvasPageService } from "@/services/canvas/canvasPageService";
 import { canvasQuizKeys } from "./canvas/canvasQuizHooks";
 import { canvasPageKeys } from "./canvas/canvasPageHooks";
 import { getLecturesQueryConfig } from "./localCourse/lectureHooks";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import { appRouter } from "@/services/trpc/router/app";
-import superjson from "superjson";
-import { createContext } from "@/services/trpc/context";
 
 // https://tanstack.com/query/latest/docs/framework/react/guides/ssr
 export const hydrateCourses = async (queryClient: QueryClient) => {
@@ -36,26 +32,30 @@ export const hydrateCourse = async (
   queryClient: QueryClient,
   courseSettings: LocalCourseSettings
 ) => {
-  const trpcHelpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: createContext(),
-    transformer: superjson,
-  });
 
   const courseName = courseSettings.name;
   const moduleNames = await fileStorageService.modules.getModuleNames(
     courseName
   );
 
-  await Promise.all(
-    moduleNames.map(
-      async (moduleName) =>
-        await trpcHelpers.assignment.getAllAssignments.fetch({
-          courseName,
-          moduleName,
-        })
-    )
-  );
+  // await Promise.all(
+  //   moduleNames.map(async (moduleName) => {
+  //     const assignments = await trpcHelpers.assignment.getAllAssignments.fetch({
+  //       courseName,
+  //       moduleName,
+  //     });
+  //     await Promise.all(
+  //       assignments.map(
+  //         async (a) =>
+  //           await trpcHelpers.assignment.getAssignment.fetch({
+  //             courseName,
+  //             moduleName,
+  //             assignmentName: a.name,
+  //           })
+  //       )
+  //     );
+  //   })
+  // );
 
   const modulesData = await Promise.all(
     moduleNames.map((moduleName) => loadAllModuleData(courseName, moduleName))
@@ -136,26 +136,26 @@ const loadAllModuleData = async (courseName: string, moduleName: string) => {
 const hydrateModuleData = async (
   {
     moduleName,
-    assignments,
+    // assignments,
     quizzes,
     pages,
   }: {
     moduleName: string;
-    assignments: LocalAssignment[];
+    // assignments: LocalAssignment[];
     quizzes: LocalQuiz[];
     pages: LocalCoursePage[];
   },
   courseName: string,
   queryClient: QueryClient
 ) => {
-  await queryClient.prefetchQuery({
-    queryKey: localCourseKeys.allItemsOfType(
-      courseName,
-      moduleName,
-      "Assignment"
-    ),
-    queryFn: () => assignments,
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: localCourseKeys.allItemsOfType(
+  //     courseName,
+  //     moduleName,
+  //     "Assignment"
+  //   ),
+  //   queryFn: () => assignments,
+  // });
   await queryClient.prefetchQuery({
     queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Quiz"),
     queryFn: () => quizzes,
@@ -164,20 +164,20 @@ const hydrateModuleData = async (
     queryKey: localCourseKeys.allItemsOfType(courseName, moduleName, "Page"),
     queryFn: () => pages,
   });
-  await Promise.all(
-    assignments.map(
-      async (assignment) =>
-        await queryClient.prefetchQuery({
-          queryKey: localCourseKeys.itemOfType(
-            courseName,
-            moduleName,
-            assignment.name,
-            "Assignment"
-          ),
-          queryFn: () => assignment,
-        })
-    )
-  );
+  // await Promise.all(
+  //   assignments.map(
+  //     async (assignment) =>
+  //       await queryClient.prefetchQuery({
+  //         queryKey: localCourseKeys.itemOfType(
+  //           courseName,
+  //           moduleName,
+  //           assignment.name,
+  //           "Assignment"
+  //         ),
+  //         queryFn: () => assignment,
+  //       })
+  //   )
+  // );
   await Promise.all(
     quizzes.map(
       async (quiz) =>
