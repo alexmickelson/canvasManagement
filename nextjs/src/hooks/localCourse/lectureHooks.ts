@@ -26,7 +26,7 @@ import { useLocalCourseSettingsQuery } from "./localCoursesHooks";
 
 export const useLectureUpdateMutation = () => {
   const { courseName } = useCourseContext();
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({

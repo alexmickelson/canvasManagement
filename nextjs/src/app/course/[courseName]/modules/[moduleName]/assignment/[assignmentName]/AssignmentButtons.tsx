@@ -29,7 +29,7 @@ export function AssignmentButtons({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const {
     data: canvasAssignments,
     isPending: canvasIsPending,

@@ -9,7 +9,7 @@ import { useState } from "react";
 import DefaultLockOffset from "./DefaultLockOffset";
 
 export default function DefaultDueTime() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const [haveLockOffset, setHaveLockOffset] = useState(
     !!settings.defaultLockHoursOffset

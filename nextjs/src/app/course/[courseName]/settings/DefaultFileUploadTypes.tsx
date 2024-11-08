@@ -7,7 +7,7 @@ import {
 import { useState, useEffect } from "react";
 
 export default function DefaultFileUploadTypes() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const [defaultFileUploadTypes, setDefaultFileUploadTypes] = useState<
     string[]
   >(settings.defaultFileUploadTypes);

@@ -7,23 +7,20 @@ import { useCourseContext } from "../context/courseContext";
 
 export default function SettingsHeader() {
   const { courseName } = useCourseContext();
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   return (
     <>
       <div className="flex flex-row justify-between">
         <div className="my-auto">
-
-        <Link className="btn" href={getCourseUrl(courseName)}>
-          Back To Course
-        </Link>
+          <Link className="btn" href={getCourseUrl(courseName)}>
+            Back To Course
+          </Link>
         </div>
         <h3 className="text-center mb-3">
           {settings.name}{" "}
           <span className="text-slate-500 text-xl"> settings</span>
         </h3>
-        <div>
-
-        </div>
+        <div></div>
       </div>
       <hr />
     </>

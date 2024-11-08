@@ -11,7 +11,7 @@ import {
 import React, { useEffect, useState } from "react";
 
 export default function SubmissionDefaults() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const [defaultSubmissionTypes, setDefaultSubmissionTypes] = useState<
     AssignmentSubmissionType[]
   >(settings.defaultAssignmentSubmissionTypes);
@@ -29,8 +29,6 @@ export default function SubmissionDefaults() {
     }
   }, [defaultSubmissionTypes, settings, updateSettings]);
 
-
-  
   return (
     <div className="border w-fit p-3 m-3 rounded-md">
       <div className="text-center">Default Assignment Submission Type</div>

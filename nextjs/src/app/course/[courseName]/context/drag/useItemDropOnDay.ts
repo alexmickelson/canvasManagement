@@ -32,7 +32,7 @@ export function useItemDropOnDay({
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   modal: { isOpen: boolean; openModal: () => void; closeModal: () => void };
 }) {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   // const { data: weeks } = useLecturesByWeekQuery();
   const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({
     courseName: settings.name,

@@ -11,17 +11,14 @@ export default function EditLectureTitle({
 }: {
   lectureDay: string;
 }) {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
   const lectureDate = getDateFromString(lectureDay);
   const lectureWeekName = getLectureWeekName(settings.startDate, lectureDay);
   return (
     <div className="flex justify-between sm:flex-row flex-col">
       <div className="my-auto">
-        <Link
-          className="btn hidden sm:inline"
-          href={getCourseUrl(courseName)}
-        >
+        <Link className="btn hidden sm:inline" href={getCourseUrl(courseName)}>
           {courseName}
         </Link>
       </div>

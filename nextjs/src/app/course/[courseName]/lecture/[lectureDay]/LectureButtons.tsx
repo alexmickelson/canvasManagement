@@ -14,7 +14,7 @@ import { lectureKeys } from "@/hooks/localCourse/lectureKeys";
 export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
   const queryClient = useQueryClient();
   const { courseName } = useCourseContext();
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const modal = useModal();

@@ -7,9 +7,9 @@ export default function ModuleList() {
   const { data: moduleNames } = useModuleNamesQuery();
   return (
     <div>
-      {moduleNames.map((m) => (
+      {/* {moduleNames.map((m) => (
         <ExpandableModule key={m} moduleName={m} />
-      ))}
+      ))} */}
       <div className="flex flex-col justify-center">
         <CreateModule />
       </div>

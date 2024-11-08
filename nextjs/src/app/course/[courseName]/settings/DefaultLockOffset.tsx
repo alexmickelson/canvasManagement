@@ -8,7 +8,7 @@ import {
 import { useEffect, useState } from "react";
 
 export default function DefaultLockOffset() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const [hoursOffset, setHoursOffset] = useState(
     settings.defaultLockHoursOffset?.toString() ?? "0"

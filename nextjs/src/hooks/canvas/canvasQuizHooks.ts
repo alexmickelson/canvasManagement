@@ -6,7 +6,10 @@ import {
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 import { canvasQuizService } from "@/services/canvas/canvasQuizService";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
-import { useAddCanvasModuleMutation, useCanvasModulesQuery } from "./canvasModuleHooks";
+import {
+  useAddCanvasModuleMutation,
+  useCanvasModulesQuery,
+} from "./canvasModuleHooks";
 import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 
 export const canvasQuizKeys = {
@@ -15,7 +18,7 @@ export const canvasQuizKeys = {
 };
 
 export const useCanvasQuizzesQuery = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
 
   return useSuspenseQuery({
     queryKey: canvasQuizKeys.quizzes(settings.canvasId),
@@ -24,7 +27,7 @@ export const useCanvasQuizzesQuery = () => {
 };
 
 export const useAddQuizToCanvasMutation = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   const { data: canvasModules } = useCanvasModulesQuery();
   const addModule = useAddCanvasModuleMutation();
@@ -68,7 +71,7 @@ export const useAddQuizToCanvasMutation = () => {
 };
 
 export const useDeleteQuizFromCanvasMutation = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (canvasQuizId: number) => {

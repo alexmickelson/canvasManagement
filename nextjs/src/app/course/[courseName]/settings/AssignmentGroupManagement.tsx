@@ -10,7 +10,7 @@ import TextInput from "../../../../components/form/TextInput";
 import { useSetAssignmentGroupsMutation } from "@/hooks/canvas/canvasCourseHooks";
 
 export default function AssignmentGroupManagement() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const applyInCanvas = useSetAssignmentGroupsMutation(settings.canvasId); // untested
 

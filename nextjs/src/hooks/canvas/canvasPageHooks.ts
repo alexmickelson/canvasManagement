@@ -21,7 +21,7 @@ export const canvasPageKeys = {
 };
 
 export const useCanvasPagesQuery = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   return useSuspenseQuery({
     queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),
     queryFn: async () => await canvasPageService.getAll(settings.canvasId),
@@ -29,7 +29,7 @@ export const useCanvasPagesQuery = () => {
 };
 
 export const useCreateCanvasPageMutation = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   const { data: canvasModules } = useCanvasModulesQuery();
   const addModule = useAddCanvasModuleMutation();
@@ -69,7 +69,7 @@ export const useCreateCanvasPageMutation = () => {
 };
 
 export const useUpdateCanvasPageMutation = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
@@ -88,7 +88,7 @@ export const useUpdateCanvasPageMutation = () => {
 };
 
 export const useDeleteCanvasPageMutation = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (canvasPageId: number) =>

@@ -3,7 +3,7 @@ import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHoo
 import Link from "next/link";
 
 export function CourseNavigation() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   return (
     <div className="pb-1 ps-5 flex flex-row gap-3">
       <Link href={"/"} className="btn">

@@ -4,7 +4,7 @@ import { getDateOnlyMarkdownString } from "@/models/local/timeUtils";
 import React from "react";
 
 export default function StartAndEndDate() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const startDate = new Date(settings.startDate);
   const endDate = new Date(settings.endDate);
   return (

@@ -6,7 +6,10 @@ import {
   useAddQuizToCanvasMutation,
   useDeleteQuizFromCanvasMutation,
 } from "@/hooks/canvas/canvasQuizHooks";
-import { useDeleteItemMutation, useItemQuery } from "@/hooks/localCourse/courseItemHooks";
+import {
+  useDeleteItemMutation,
+  useItemQuery,
+} from "@/hooks/localCourse/courseItemHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
@@ -24,7 +27,7 @@ export function QuizButtons({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const { data: canvasQuizzes } = useCanvasQuizzesQuery();
   const { data: quiz } = useItemQuery(moduleName, quizName, "Quiz");
   const addToCanvas = useAddQuizToCanvasMutation();

@@ -33,11 +33,60 @@ export default async function RootLayout({
           <MyToaster />
           <Suspense>
             <Providers>
-                {children}
+              <DataHydration>{children}</DataHydration>
             </Providers>
           </Suspense>
         </div>
       </body>
     </html>
+  );
+}
+
+async function DataHydration({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  console.log("starting hydration");
+  const trpcHelper = createServerSideHelpers({
+    router: trpcAppRouter,
+    ctx: createTrpcContext(),
+    transformer: superjson,
+  });
+  const allSettings = await fileStorageService.settings.getAllCoursesSettings();
+  await Promise.all(
+    allSettings.map(async (settings) => {
+      const courseName = settings.name;
+      const moduleNames = await fileStorageService.modules.getModuleNames(
+        courseName
+      );
+      await Promise.all(
+        moduleNames.map(
+          async (moduleName) =>
+            await trpcHelper.assignment.getAllAssignments.prefetch({
+              courseName,
+              moduleName,
+            })
+        )
+      );
+    })
+  );
+
+  await Promise.all(
+    allSettings.map(
+      async (settings) =>
+        await trpcHelper.lectures.getLectures.prefetch({
+          courseName: settings.name,
+        })
+    )
+  );
+
+  await hydrateCourses(trpcHelper.queryClient);
+
+  const dehydratedState = dehydrate(trpcHelper.queryClient);
+  console.log("ran hydration");
+
+  return (
+    <HydrationBoundary state={dehydratedState}>{children}</HydrationBoundary>
   );
 }

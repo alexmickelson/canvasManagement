@@ -11,7 +11,7 @@ export const canvasCourseModuleKeys = {
 };
 
 export const useCanvasModulesQuery = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   return useSuspenseQuery({
     queryKey: canvasCourseModuleKeys.modules(settings.canvasId),
     queryFn: async () =>
@@ -20,7 +20,7 @@ export const useCanvasModulesQuery = () => {
 };
 
 export const useAddCanvasModuleMutation = () => {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (moduleName: string) =>

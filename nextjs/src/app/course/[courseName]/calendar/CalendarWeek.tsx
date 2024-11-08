@@ -11,7 +11,7 @@ export function CalendarWeek({
   week: string[]; //date strings
   monthNumber: number;
 }) {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings]= useLocalCourseSettingsQuery();
   const startDate = getDateFromStringOrThrow(
     settings.startDate,
     "week calculation start date"

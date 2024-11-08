@@ -30,7 +30,7 @@ export default function EditPage({
     localPageMarkdownUtils.toMarkdown(page)
   );
   const [error, setError] = useState("");
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
 
   useEffect(() => {
     const delay = 500;

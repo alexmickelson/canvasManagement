@@ -9,33 +9,35 @@ import { localCourseKeys } from "./localCourseKeys";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import {
   createCourseOnServer,
-  getAllCoursesSettingsFromServer,
   updateCourseSettingsOnServer,
 } from "./localCoursesServerActions";
+import { trpc } from "@/services/trpc/utils";
 
 export const useLocalCoursesSettingsQuery = () =>
-  useSuspenseQuery({
-    queryKey: localCourseKeys.allCoursesSettings,
-    queryFn: async () => {
-      return await getAllCoursesSettingsFromServer();
-    },
-  });
+  trpc.settings.allCoursesSettings.useSuspenseQuery();
+// useSuspenseQuery({
+//   queryKey: localCourseKeys.allCoursesSettings,
+//   queryFn: async () => {
+//     return await getAllCoursesSettingsFromServer();
+//   },
+// });
 
 export const useLocalCourseSettingsQuery = () => {
   const { courseName } = useCourseContext();
   // const { data: settingsList } = useLocalCoursesSettingsQuery();
-  return useSuspenseQuery({
-    queryKey: localCourseKeys.settings(courseName),
-    queryFn: async () => {
-      const settingsList = await getAllCoursesSettingsFromServer();
-      const s = settingsList.find((s) => s.name === courseName);
-      if (!s) {
-        console.log(courseName, settingsList);
-        throw Error("Could not find settings for course " + courseName);
-      }
-      return s;
-    },
-  });
+  return trpc.settings.courseSettings.useSuspenseQuery({ courseName });
+  // return useSuspenseQuery({
+  //   queryKey: localCourseKeys.settings(courseName),
+  //   queryFn: async () => {
+  //     const settingsList = await getAllCoursesSettingsFromServer();
+  //     const s = settingsList.find((s) => s.name === courseName);
+  //     if (!s) {
+  //       console.log(courseName, settingsList);
+  //       throw Error("Could not find settings for course " + courseName);
+  //     }
+  //     return s;
+  //   },
+  // });
 };
 
 export const useCreateLocalCourseMutation = () => {

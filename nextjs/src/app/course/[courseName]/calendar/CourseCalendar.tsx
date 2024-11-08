@@ -7,7 +7,7 @@ import { useMemo } from "react";
 import CalendarItemsContextProvider from "../context/CalendarItemsContextProvider";
 
 export default function CourseCalendar() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
 
   const startDateTime = useMemo(
     () => getDateFromStringOrThrow(settings.startDate, "course start date"),

@@ -62,7 +62,7 @@ export default function HolidayConfig() {
   );
 }
 function InnerHolidayConfig() {
-  const { data: settings } = useLocalCourseSettingsQuery();
+  const [settings] = useLocalCourseSettingsQuery();
   console.log(settings.holidays);
   const updateSettings = useUpdateLocalCourseSettingsMutation();
 
