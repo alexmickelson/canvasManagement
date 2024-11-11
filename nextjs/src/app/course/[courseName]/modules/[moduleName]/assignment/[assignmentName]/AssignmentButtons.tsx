@@ -35,11 +35,7 @@ export function AssignmentButtons({
     isPending: canvasIsPending,
     isRefetching: canvasIsRefetching,
   } = useCanvasAssignmentsQuery();
-  const {
-    data: assignment,
-    isPending: assignmentIsPending,
-    isRefetching,
-  } = useAssignmentQuery(moduleName, assignmentName);
+  const [assignment] = useAssignmentQuery(moduleName, assignmentName);
   const addToCanvas = useAddAssignmentToCanvasMutation();
   const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
   const updateAssignment = useUpdateAssignmentInCanvasMutation();
@@ -54,8 +50,6 @@ export function AssignmentButtons({
   const anythingIsLoading =
     addToCanvas.isPending ||
     canvasIsPending ||
-    assignmentIsPending ||
-    isRefetching ||
     canvasIsRefetching ||
     deleteFromCanvas.isPending ||
     updateAssignment.isPending;
@@ -135,7 +129,8 @@ export function AssignmentButtons({
                       router.push(getCourseUrl(courseName));
                       await deleteLocal.mutateAsync({
                         moduleName,
-                        itemName: assignmentName,
+                        assignmentName,
+                        courseName,
                       });
                       router.refresh();
                       // setIsLoading(false); //refreshing the router will make spinner go away

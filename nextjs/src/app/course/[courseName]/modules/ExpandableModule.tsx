@@ -21,8 +21,8 @@ import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
 import { useDragStyleContext } from "../context/drag/dragStyleContext";
-import { useItemsQueries } from "@/hooks/localCourse/courseItemHooks";
 import { useAssignmentsQuery } from "@/hooks/localCourse/assignmentHooks";
+import { useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
 
 export default function ExpandableModule({
   moduleName,
@@ -31,9 +31,9 @@ export default function ExpandableModule({
 }) {
   const { itemDropOnModule } = useDraggingContext();
 
-  const { data: assignments } = useAssignmentsQuery(moduleName);
-  // const { data: quizzes } = useItemsQueries(moduleName, "Quiz");
-  const { data: pages } = usePagesQueries(moduleName);
+  const [assignments ] = useAssignmentsQuery(moduleName);
+  const [quizzes] = useQuizzesQueries(moduleName);
+  const [pages] = usePagesQueries(moduleName);
   const modal = useModal();
 
   const moduleItems: {
@@ -51,7 +51,7 @@ export default function ExpandableModule({
         item: a,
       })
     )
-    // .concat(quizzes.map((q) => ({ type: "quiz", item: q })))
+    .concat(quizzes.map((q) => ({ type: "quiz", item: q })))
     .concat(pages.map((p) => ({ type: "page", item: p })))
     .sort(
       (a, b) =>

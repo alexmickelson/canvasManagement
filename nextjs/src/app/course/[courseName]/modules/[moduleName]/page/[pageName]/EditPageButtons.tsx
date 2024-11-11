@@ -28,7 +28,7 @@ export default function EditPageButtons({
   const router = useRouter();
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
-  const { data: page } = usePageQuery(moduleName, pageName);
+  const [page] = usePageQuery(moduleName, pageName);
   const { data: canvasPages } = useCanvasPagesQuery();
   const createPageInCanvas = useCreateCanvasPageMutation();
   const updatePageInCanvas = useUpdateCanvasPageMutation();
@@ -105,7 +105,8 @@ export default function EditPageButtons({
                     router.push(getCourseUrl(courseName));
                     deletePageLocal.mutate({
                       moduleName,
-                      itemName: pageName,
+                      pageName,
+                      courseName,
                     });
                   }}
                   className="btn-danger"

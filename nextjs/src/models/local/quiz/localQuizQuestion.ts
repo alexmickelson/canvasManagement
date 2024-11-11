@@ -1,12 +1,8 @@
-import { LocalQuizQuestionAnswer } from "./localQuizQuestionAnswer";
-
-export interface LocalQuizQuestion {
-  text: string;
-  questionType: QuestionType;
-  points: number;
-  answers: LocalQuizQuestionAnswer[];
-  matchDistractors: string[];
-}
+import { z } from "zod";
+import {
+  LocalQuizQuestionAnswer,
+  zodLocalQuizQuestionAnswer,
+} from "./localQuizQuestionAnswer";
 
 export enum QuestionType {
   MULTIPLE_ANSWERS = "multiple_answers",
@@ -16,3 +12,27 @@ export enum QuestionType {
   MATCHING = "matching",
   NONE = "",
 }
+
+export const zodQuestionType = z.enum([
+  QuestionType.MULTIPLE_ANSWERS,
+  QuestionType.MULTIPLE_CHOICE,
+  QuestionType.ESSAY,
+  QuestionType.SHORT_ANSWER,
+  QuestionType.MATCHING,
+  QuestionType.NONE,
+]);
+
+export interface LocalQuizQuestion {
+  text: string;
+  questionType: QuestionType;
+  points: number;
+  answers: LocalQuizQuestionAnswer[];
+  matchDistractors: string[];
+}
+export const zodLocalQuizQuestion = z.object({
+  text: z.string(),
+  questionType: zodQuestionType,
+  points: z.number(),
+  answers: zodLocalQuizQuestionAnswer.array(),
+  matchDistractors: z.array(z.string()),
+});

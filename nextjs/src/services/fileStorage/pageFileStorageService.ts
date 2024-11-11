@@ -18,12 +18,17 @@ export const pageFileStorageService = {
   getPages: async (courseName: string, moduleName: string) =>
     await courseItemFileStorageService.getItems(courseName, moduleName, "Page"),
 
-  async updatePage(
-    courseName: string,
-    moduleName: string,
-    pageName: string,
-    page: LocalCoursePage
-  ) {
+  async updatePage({
+    courseName,
+    moduleName,
+    pageName,
+    page,
+  }: {
+    courseName: string;
+    moduleName: string;
+    pageName: string;
+    page: LocalCoursePage;
+  }) {
     const folder = path.join(basePath, courseName, moduleName, "pages");
     await fs.mkdir(folder, { recursive: true });
 

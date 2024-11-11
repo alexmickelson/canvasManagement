@@ -9,7 +9,10 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import { useRouter } from "next/navigation";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import { useItemQuery, useUpdateItemMutation } from "@/hooks/localCourse/courseItemHooks";
+import {
+  useQuizQuery,
+  useUpdateQuizMutation,
+} from "@/hooks/localCourse/quizHooks";
 
 const helpString = `QUESTION REFERENCE
 ---
@@ -61,8 +64,8 @@ export default function EditQuiz({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const { data: quiz } = useItemQuery(moduleName, quizName, "Quiz");
-  const updateQuizMutation = useUpdateItemMutation("Quiz");
+  const [quiz] = useQuizQuery(moduleName, quizName);
+  const updateQuizMutation = useUpdateQuizMutation();
   const [quizText, setQuizText] = useState(quizMarkdownUtils.toMarkdown(quiz));
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);
@@ -81,11 +84,12 @@ export default function EditQuiz({
           const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
           updateQuizMutation
             .mutateAsync({
-              item: updatedQuiz,
+              quiz: updatedQuiz,
               moduleName,
-              itemName: updatedQuiz.name,
+              quizName: updatedQuiz.name,
               previousModuleName: moduleName,
-              previousItemName: quizName,
+              previousQuizName: quizName,
+              courseName,
             })
             .then(() => {
               if (updatedQuiz.name !== quizName)

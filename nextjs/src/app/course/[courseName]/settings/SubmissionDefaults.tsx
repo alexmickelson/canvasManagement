@@ -23,8 +23,10 @@ export default function SubmissionDefaults() {
       JSON.stringify(defaultSubmissionTypes)
     ) {
       updateSettings.mutate({
-        ...settings,
-        defaultAssignmentSubmissionTypes: defaultSubmissionTypes,
+        settings: {
+          ...settings,
+          defaultAssignmentSubmissionTypes: defaultSubmissionTypes,
+        },
       });
     }
   }, [defaultSubmissionTypes, settings, updateSettings]);

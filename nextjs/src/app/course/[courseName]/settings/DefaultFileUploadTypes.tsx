@@ -20,8 +20,10 @@ export default function DefaultFileUploadTypes() {
         JSON.stringify(defaultFileUploadTypes)
       ) {
         updateSettings.mutate({
-          ...settings,
-          defaultFileUploadTypes: defaultFileUploadTypes,
+          settings: {
+            ...settings,
+            defaultFileUploadTypes: defaultFileUploadTypes,
+          },
         });
       }
     }, 500);

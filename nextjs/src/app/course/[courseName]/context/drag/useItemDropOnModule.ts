@@ -6,16 +6,18 @@ import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
-import { useUpdateItemMutation } from "@/hooks/localCourse/courseItemHooks";
+import { useCourseContext } from "../courseContext";
+import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 
 export function useItemDropOnModule({
   setIsDragging,
 }: {
   setIsDragging: Dispatch<SetStateAction<boolean>>;
 }) {
-  const updateQuizMutation = useUpdateItemMutation("Quiz");
+  const updateQuizMutation = useUpdateQuizMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();
   const updatePageMutation = useUpdatePageMutation();
+  const { courseName } = useCourseContext();
 
   return useCallback(
     (e: DragEvent, dropModuleName: string) => {
@@ -41,11 +43,12 @@ export function useItemDropOnModule({
         const quiz = itemBeingDragged.item as LocalQuiz;
         if (itemBeingDragged.sourceModuleName) {
           updateQuizMutation.mutate({
-            item: quiz,
-            itemName: quiz.name,
+            quiz,
+            quizName: quiz.name,
             moduleName: dropModuleName,
             previousModuleName: itemBeingDragged.sourceModuleName,
-            previousItemName: quiz.name,
+            previousQuizName: quiz.name,
+            courseName,
           });
         } else {
           console.error(
@@ -58,11 +61,12 @@ export function useItemDropOnModule({
         const assignment = itemBeingDragged.item as LocalAssignment;
         if (itemBeingDragged.sourceModuleName) {
           updateAssignmentMutation.mutate({
-            item: assignment,
+            assignment,
             previousModuleName: itemBeingDragged.sourceModuleName,
             moduleName: dropModuleName,
-            itemName: assignment.name,
-            previousItemName: assignment.name,
+            assignmentName: assignment.name,
+            previousAssignmentName: assignment.name,
+            courseName,
           });
         } else {
           console.error(
@@ -75,11 +79,12 @@ export function useItemDropOnModule({
         const page = itemBeingDragged.item as LocalCoursePage;
         if (itemBeingDragged.sourceModuleName) {
           updatePageMutation.mutate({
-            item: page,
+            page,
             moduleName: dropModuleName,
-            itemName: page.name,
-            previousItemName: page.name,
+            pageName: page.name,
+            previousPageName: page.name,
             previousModuleName: itemBeingDragged.sourceModuleName,
+            courseName,
           });
         } else {
           console.error(
@@ -90,6 +95,7 @@ export function useItemDropOnModule({
       }
     },
     [
+      courseName,
       setIsDragging,
       updateAssignmentMutation,
       updatePageMutation,

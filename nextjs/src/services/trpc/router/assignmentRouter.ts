@@ -45,7 +45,36 @@ export const assignmentRouter = router({
     .mutation(
       async ({
         input: { courseName, moduleName, assignmentName, assignment },
-        ctx,
+      }) => {
+        await fileStorageService.assignments.updateOrCreateAssignment({
+          courseName,
+          moduleName,
+          assignmentName,
+          assignment,
+        });
+      }
+    ),
+  updateAssignment: publicProcedure
+    .input(
+      z.object({
+        courseName: z.string(),
+        moduleName: z.string(),
+        previousModuleName: z.string(),
+        previousAssignmentName: z.string(),
+        assignmentName: z.string(),
+        assignment: zodLocalAssignment,
+      })
+    )
+    .mutation(
+      async ({
+        input: {
+          courseName,
+          moduleName,
+          assignmentName,
+          assignment,
+          previousModuleName,
+          previousAssignmentName,
+        },
       }) => {
         await fileStorageService.assignments.updateOrCreateAssignment({
           courseName,
@@ -54,7 +83,31 @@ export const assignmentRouter = router({
           assignment,
         });
 
-        ctx;
+        if (
+          assignment.name !== previousAssignmentName ||
+          moduleName !== previousModuleName
+        ) {
+          fileStorageService.assignments.delete({
+            courseName,
+            moduleName: previousModuleName,
+            assignmentName: previousAssignmentName,
+          });
+        }
       }
     ),
+  deleteAssignment: publicProcedure
+    .input(
+      z.object({
+        courseName: z.string(),
+        moduleName: z.string(),
+        assignmentName: z.string(),
+      })
+    )
+    .mutation(async ({ input: { courseName, moduleName, assignmentName } }) => {
+      await fileStorageService.assignments.delete({
+        courseName,
+        moduleName,
+        assignmentName,
+      });
+    }),
 });

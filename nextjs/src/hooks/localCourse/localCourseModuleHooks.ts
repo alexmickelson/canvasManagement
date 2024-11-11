@@ -2,11 +2,9 @@ import { useCourseContext } from "@/app/course/[courseName]/context/courseContex
 import {
   useMutation,
   useQueryClient,
-  useSuspenseQueries,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { localCourseKeys } from "./localCourseKeys";
-import { getAllItemsQueryConfig } from "./courseItemHooks";
 import {
   createModuleOnServer,
   getModuleNamesFromServer,

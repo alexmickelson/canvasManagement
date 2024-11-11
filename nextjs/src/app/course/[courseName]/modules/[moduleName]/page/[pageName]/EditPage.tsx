@@ -24,7 +24,7 @@ export default function EditPage({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const { data: page } = usePageQuery(moduleName, pageName);
+  const [page] = usePageQuery(moduleName, pageName);
   const updatePage = useUpdatePageMutation();
   const [pageText, setPageText] = useState(
     localPageMarkdownUtils.toMarkdown(page)
@@ -44,11 +44,12 @@ export default function EditPage({
           console.log("updating page");
           updatePage
             .mutateAsync({
-              item: updatedPage,
+              page: updatedPage,
               moduleName,
-              itemName: updatedPage.name,
+              pageName: updatedPage.name,
               previousModuleName: moduleName,
-              previousItemName: pageName,
+              previousPageName: pageName,
+              courseName,
             })
             .then(() => {
               if (updatedPage.name !== pageName)

@@ -24,7 +24,7 @@ export const zodLocalAssignment = z.object({
   description: z.string(),
   lockAt: z.string().optional(),
   dueAt: z.string(),
-  localAssignmentGroupName: z.string(),
+  localAssignmentGroupName: z.string().optional(),
   submissionTypes: zodAssignmentSubmissionType.array(),
   allowedFileUploadExtensions: z.string().array(),
   rubric: zodRubricItem.array(),

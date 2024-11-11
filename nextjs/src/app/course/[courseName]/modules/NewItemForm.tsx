@@ -4,7 +4,6 @@ import SelectInput from "@/components/form/SelectInput";
 import TextInput from "@/components/form/TextInput";
 import { Spinner } from "@/components/Spinner";
 import { useCreateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
-import { useCreateItemMutation } from "@/hooks/localCourse/courseItemHooks";
 import { useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useCreatePageMutation } from "@/hooks/localCourse/pageHooks";
@@ -14,9 +13,9 @@ import {
   getDateFromString,
   getDateFromStringOrThrow,
 } from "@/models/local/timeUtils";
-import { trpc } from "@/services/trpc/utils";
 import React, { useState } from "react";
 import { useCourseContext } from "../context/courseContext";
+import { useCreateQuizMutation } from "@/hooks/localCourse/quizHooks";
 
 export default function NewItemForm({
   moduleName: defaultModuleName,
@@ -33,10 +32,6 @@ export default function NewItemForm({
   const [type, setType] = useState<"Assignment" | "Quiz" | "Page">(
     "Assignment"
   );
-  const assignmentCreationMutation = useCreateAssignmentMutation({
-    courseName,
-    moduleName: defaultModuleName ?? "",
-  });
 
   const [moduleName, setModuleName] = useState<string | undefined>(
     defaultModuleName
@@ -58,12 +53,11 @@ export default function NewItemForm({
     useState<LocalAssignmentGroup>();
 
   const createPage = useCreatePageMutation();
-  const createQuiz = useCreateItemMutation("Quiz");
+  const createQuiz = useCreateQuizMutation();
+  const createAssignment = useCreateAssignmentMutation();
 
   const isPending =
-    assignmentCreationMutation.isPending ||
-    createPage.isPending ||
-    createQuiz.isPending;
+    createAssignment.isPending || createPage.isPending || createQuiz.isPending;
 
   return (
     <form
@@ -87,26 +81,11 @@ export default function NewItemForm({
                 )
               );
 
-        console.log("submitting");
         if (!moduleName) {
           return;
         }
         if (type === "Assignment") {
-          // createAssignment.mutate({
-          //   item: {
-          //     name,
-          //     description: "",
-          //     localAssignmentGroupName: assignmentGroup?.name ?? "",
-          //     dueAt,
-          //     lockAt,
-          //     submissionTypes: settings.defaultAssignmentSubmissionTypes,
-          //     allowedFileUploadExtensions: settings.defaultFileUploadTypes,
-          //     rubric: [],
-          //   },
-          //   moduleName: moduleName,
-          //   itemName: name,
-          // });
-          assignmentCreationMutation.mutate({
+          createAssignment.mutate({
             assignment: {
               name,
               description: "",
@@ -123,7 +102,7 @@ export default function NewItemForm({
           });
         } else if (type === "Quiz") {
           createQuiz.mutate({
-            item: {
+            quiz: {
               name,
               description: "",
               localAssignmentGroupName: assignmentGroup?.name ?? "",
@@ -136,17 +115,19 @@ export default function NewItemForm({
               questions: [],
             },
             moduleName: moduleName,
-            itemName: name,
+            quizName: name,
+            courseName,
           });
         } else if (type === "Page") {
           createPage.mutate({
-            item: {
+            page: {
               name,
               text: "",
               dueAt,
             },
             moduleName: moduleName,
-            itemName: name,
+            pageName: name,
+            courseName,
           });
         }
         onCreate();

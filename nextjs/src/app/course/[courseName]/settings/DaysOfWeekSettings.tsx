@@ -17,11 +17,14 @@ export default function DaysOfWeekSettings() {
         selectedDays={settings.daysOfWeek}
         updateSettings={(day) => {
           const hasDay = settings.daysOfWeek.includes(day);
+
           updateSettings.mutate({
-            ...settings,
-            daysOfWeek: hasDay
-              ? settings.daysOfWeek.filter((d) => d !== day)
-              : [day, ...settings.daysOfWeek],
+            settings: {
+              ...settings,
+              daysOfWeek: hasDay
+                ? settings.daysOfWeek.filter((d) => d !== day)
+                : [day, ...settings.daysOfWeek],
+            },
           });
         }}
       />

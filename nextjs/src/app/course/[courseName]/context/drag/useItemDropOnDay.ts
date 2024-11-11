@@ -16,8 +16,8 @@ import {
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
-import { useUpdateItemMutation } from "@/hooks/localCourse/courseItemHooks";
 import { trpc } from "@/services/trpc/utils";
+import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 
 export function useItemDropOnDay({
   setIsDragging,
@@ -37,7 +37,7 @@ export function useItemDropOnDay({
   const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({
     courseName: settings.name,
   });
-  const updateQuizMutation = useUpdateItemMutation("Quiz");
+  const updateQuizMutation = useUpdateQuizMutation();
   const updateLectureMutation = useLectureUpdateMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();
   const updatePageMutation = useUpdatePageMutation();
@@ -132,11 +132,12 @@ export function useItemDropOnDay({
           ),
         };
         updateQuizMutation.mutate({
-          item: quiz,
-          itemName: quiz.name,
+          quiz,
+          quizName: quiz.name,
           moduleName: itemBeingDragged.sourceModuleName,
           previousModuleName: itemBeingDragged.sourceModuleName,
-          previousItemName: quiz.name,
+          previousQuizName: quiz.name,
+          courseName: settings.name,
         });
       }
       function updatePage(dayAsDate: Date) {
@@ -152,11 +153,12 @@ export function useItemDropOnDay({
           dueAt: dateToMarkdownString(dayAsDate),
         };
         updatePageMutation.mutate({
-          item: page,
+          page,
           moduleName: itemBeingDragged.sourceModuleName,
-          itemName: page.name,
-          previousItemName: page.name,
+          pageName: page.name,
+          previousPageName: page.name,
           previousModuleName: itemBeingDragged.sourceModuleName,
+          courseName: settings.name,
         });
       }
       function updateAssignment(dayAsDate: Date) {
@@ -177,11 +179,12 @@ export function useItemDropOnDay({
           ),
         };
         updateAssignmentMutation.mutate({
-          item: assignment,
+          assignment,
           previousModuleName: itemBeingDragged.sourceModuleName,
           moduleName: itemBeingDragged.sourceModuleName,
-          itemName: assignment.name,
-          previousItemName: assignment.name,
+          assignmentName: assignment.name,
+          previousAssignmentName: assignment.name,
+          courseName: settings.name,
         });
       }
     },

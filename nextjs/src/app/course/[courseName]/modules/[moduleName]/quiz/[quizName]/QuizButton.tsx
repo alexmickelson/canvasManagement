@@ -6,11 +6,11 @@ import {
   useAddQuizToCanvasMutation,
   useDeleteQuizFromCanvasMutation,
 } from "@/hooks/canvas/canvasQuizHooks";
-import {
-  useDeleteItemMutation,
-  useItemQuery,
-} from "@/hooks/localCourse/courseItemHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import {
+  useDeleteQuizMutation,
+  useQuizQuery,
+} from "@/hooks/localCourse/quizHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
@@ -29,10 +29,11 @@ export function QuizButtons({
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
   const { data: canvasQuizzes } = useCanvasQuizzesQuery();
-  const { data: quiz } = useItemQuery(moduleName, quizName, "Quiz");
+
+  const [quiz] = useQuizQuery(moduleName, quizName);
   const addToCanvas = useAddQuizToCanvasMutation();
   const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
-  const deleteLocal = useDeleteItemMutation("Quiz");
+  const deleteLocal = useDeleteQuizMutation();
   const modal = useModal();
 
   const quizInCanvas = canvasQuizzes.find((c) => c.title === quizName);
@@ -90,7 +91,7 @@ export function QuizButtons({
                   <button
                     onClick={async () => {
                       router.push(getCourseUrl(courseName));
-                      deleteLocal.mutate({ moduleName, itemName: quizName });
+                      deleteLocal.mutate({ moduleName, quizName, courseName });
                     }}
                     className="btn-danger"
                   >

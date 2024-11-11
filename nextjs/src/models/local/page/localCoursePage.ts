@@ -1,3 +1,4 @@
+import { z } from "zod";
 import { extractLabelValue } from "../assignment/utils/markdownUtils";
 import { IModuleItem } from "../IModuleItem";
 import { verifyDateOrThrow } from "../timeUtils";
@@ -8,9 +9,18 @@ export interface LocalCoursePage extends IModuleItem {
   dueAt: string;
 }
 
+export const zodLocalCoursePage = z.object({
+  name: z.string(),
+  text: z.string(),
+  dueAt: z.string(), // ISO 8601 date string
+});
+
 export const localPageMarkdownUtils = {
   toMarkdown: (page: LocalCoursePage) => {
-    const printableDueDate = verifyDateOrThrow(page.dueAt, "page DueDateForOrdering")
+    const printableDueDate = verifyDateOrThrow(
+      page.dueAt,
+      "page DueDateForOrdering"
+    );
     const settingsMarkdown = `Name: ${page.name}\nDueDateForOrdering: ${printableDueDate}\n---\n`;
     return settingsMarkdown + page.text;
   },

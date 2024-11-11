@@ -1,5 +1,5 @@
 import CheckIcon from "@/components/icons/CheckIcon";
-import { useItemQuery } from "@/hooks/localCourse/courseItemHooks";
+import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
 import {
   LocalQuizQuestion,
   QuestionType,
@@ -13,7 +13,7 @@ export default function QuizPreview({
   quizName: string;
   moduleName: string;
 }) {
-  const { data: quiz } = useItemQuery(moduleName, quizName, "Quiz");
+  const [quiz] = useQuizQuery(moduleName, quizName);
   return (
     <div style={{ overflow: "scroll", height: "100%" }}>
       <div className="columns-2">

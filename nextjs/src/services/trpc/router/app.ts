@@ -3,6 +3,8 @@ import publicProcedure from "../procedures/public";
 import { createCallerFactory, router } from "../trpc";
 import { assignmentRouter } from "./assignmentRouter";
 import { lectureRouter } from "./lectureRouter";
+import { pageRouter } from "./pageRouter";
+import { quizRouter } from "./quizRouter";
 import { settingsRouter } from "./settingsRouter";
 
 export const helloRouter = router({
@@ -18,6 +20,8 @@ export const trpcAppRouter = router({
   assignment: assignmentRouter,
   lectures: lectureRouter,
   settings: settingsRouter,
+  quiz: quizRouter,
+  page: pageRouter,
 });
 
 export const createCaller = createCallerFactory(trpcAppRouter);

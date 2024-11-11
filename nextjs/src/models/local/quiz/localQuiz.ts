@@ -1,5 +1,6 @@
+import { z } from "zod";
 import { IModuleItem } from "../IModuleItem";
-import { LocalQuizQuestion } from "./localQuizQuestion";
+import { LocalQuizQuestion, zodLocalQuizQuestion } from "./localQuizQuestion";
 import { quizMarkdownUtils } from "./utils/quizMarkdownUtils";
 
 export interface LocalQuiz extends IModuleItem {
@@ -15,6 +16,20 @@ export interface LocalQuiz extends IModuleItem {
   allowedAttempts: number;
   questions: LocalQuizQuestion[];
 }
+
+export const zodLocalQuiz = z.object({
+  name: z.string(),
+  description: z.string(),
+  password: z.string().optional(),
+  lockAt: z.string().optional(),
+  dueAt: z.string(),
+  shuffleAnswers: z.boolean(),
+  showCorrectAnswers: z.boolean(),
+  oneQuestionAtATime: z.boolean(),
+  localAssignmentGroupName: z.string().optional(),
+  allowedAttempts: z.number(),
+  questions: zodLocalQuizQuestion.array(),
+});
 
 export const localQuizMarkdownUtils = {
   parseMarkdown: quizMarkdownUtils.parseMarkdown,

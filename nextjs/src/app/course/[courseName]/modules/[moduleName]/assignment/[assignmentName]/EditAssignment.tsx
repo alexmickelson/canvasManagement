@@ -4,7 +4,10 @@ import {
   useAssignmentQuery,
   useUpdateAssignmentMutation,
 } from "@/hooks/localCourse/assignmentHooks";
-import { localAssignmentMarkdown } from "@/models/local/assignment/localAssignment";
+import {
+  LocalAssignment,
+  localAssignmentMarkdown,
+} from "@/models/local/assignment/localAssignment";
 import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
 import { getModuleItemUrl } from "@/services/urlUtils";
@@ -41,7 +44,7 @@ export default function EditAssignment({
     const delay = 500;
     const handler = setTimeout(() => {
       try {
-        const updatedAssignment =
+        const updatedAssignment: LocalAssignment =
           localAssignmentMarkdown.parseMarkdown(assignmentText);
         if (
           localAssignmentMarkdown.toMarkdown(assignment) !==
@@ -50,11 +53,12 @@ export default function EditAssignment({
           console.log("updating assignment");
           updateAssignment
             .mutateAsync({
-              item: updatedAssignment,
+              assignment: updatedAssignment,
               moduleName,
-              itemName: updatedAssignment.name,
+              assignmentName: updatedAssignment.name,
               previousModuleName: moduleName,
-              previousItemName: assignmentName,
+              previousAssignmentName: assignmentName,
+              courseName,
             })
             .then(() => {
               if (updatedAssignment.name !== assignmentName)

@@ -1,12 +1,9 @@
-import {
-  LocalQuiz,
-} from "@/models/local/quiz/localQuiz";
+import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import path from "path";
 import { basePath } from "./utils/fileSystemUtils";
 import { promises as fs } from "fs";
 import { courseItemFileStorageService } from "./courseItemFileStorageService";
-
 
 export const quizFileStorageService = {
   getQuiz: async (courseName: string, moduleName: string, quizName: string) =>
@@ -19,12 +16,17 @@ export const quizFileStorageService = {
   getQuizzes: async (courseName: string, moduleName: string) =>
     await courseItemFileStorageService.getItems(courseName, moduleName, "Quiz"),
 
-  async updateQuiz(
-    courseName: string,
-    moduleName: string,
-    quizName: string,
-    quiz: LocalQuiz
-  ) {
+  async updateQuiz({
+    courseName,
+    moduleName,
+    quizName,
+    quiz,
+  }: {
+    courseName: string;
+    moduleName: string;
+    quizName: string;
+    quiz: LocalQuiz;
+  }) {
     const folder = path.join(basePath, courseName, moduleName, "quizzes");
     await fs.mkdir(folder, { recursive: true });
     const filePath = path.join(

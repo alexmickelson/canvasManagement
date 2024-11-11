@@ -75,9 +75,12 @@ function InnerHolidayConfig() {
 
         if (!holidaysAreEqual(settings.holidays, parsed)) {
           console.log("different holiday configs", settings.holidays, parsed);
+
           updateSettings.mutate({
-            ...settings,
-            holidays: parsed,
+            settings: {
+              ...settings,
+              holidays: parsed,
+            },
           });
         }
       } catch (error: any) {}

@@ -23,8 +23,10 @@ export default function DefaultDueTime() {
         setChosenTime={(simpleTime) => {
           console.log(simpleTime);
           updateSettings.mutate({
-            ...settings,
-            defaultDueTime: simpleTime,
+            settings: {
+              ...settings,
+              defaultDueTime: simpleTime,
+            },
           });
         }}
       />
@@ -33,8 +35,10 @@ export default function DefaultDueTime() {
         <button
           onClick={async () => {
             await updateSettings.mutateAsync({
-              ...settings,
-              defaultLockHoursOffset: 0,
+              settings: {
+                ...settings,
+                defaultLockHoursOffset: 0,
+              },
             });
             setHaveLockOffset(true);
           }}
@@ -50,8 +54,10 @@ export default function DefaultDueTime() {
           className="btn-danger"
           onClick={async () => {
             await updateSettings.mutateAsync({
-              ...settings,
-              defaultLockHoursOffset: undefined,
+              settings: {
+                ...settings,
+                defaultLockHoursOffset: undefined,
+              },
             });
             setHaveLockOffset(false);
           }}

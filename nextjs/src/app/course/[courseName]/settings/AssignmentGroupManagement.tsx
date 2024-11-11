@@ -25,8 +25,10 @@ export default function AssignmentGroupManagement() {
         !areAssignmentGroupsEqual(assignmentGroups, settings.assignmentGroups)
       ) {
         updateSettings.mutate({
-          ...settings,
-          assignmentGroups,
+          settings: {
+            ...settings,
+            assignmentGroups,
+          },
         });
       }
     }, delay);

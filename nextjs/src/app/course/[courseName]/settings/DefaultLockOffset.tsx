@@ -23,8 +23,10 @@ export default function DefaultLockOffset() {
           hoursNumber !== settings.defaultLockHoursOffset
         ) {
           updateSettings.mutate({
-            ...settings,
-            defaultLockHoursOffset: hoursNumber,
+            settings: {
+              ...settings,
+              defaultLockHoursOffset: hoursNumber,
+            },
           });
         }
       } catch {}
