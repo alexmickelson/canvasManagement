@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Providers from "./providers";
 import { Suspense } from "react";
-import { hydrateCourses } from "@/hooks/hookHydration";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { MyToaster } from "./MyToaster";
 import { createServerSideHelpers } from "@trpc/react-query/server";
@@ -58,22 +57,39 @@ async function DataHydration({
   });
 
   const allSettings = await fileStorageService.settings.getAllCoursesSettings();
-  // assignments
+
   await Promise.all(
     allSettings.map(async (settings) => {
       const courseName = settings.name;
-      const moduleNames = await fileStorageService.modules.getModuleNames(
-        courseName
-      );
-      await Promise.all(
-        moduleNames.map(
+      const moduleNames = await trpcHelper.module.getModuleNames.fetch({
+        courseName,
+      });
+      await Promise.all([
+        // assignments
+        ...moduleNames.map(
           async (moduleName) =>
-            await trpcHelper.assignment.getAllAssignments.fetch({
+            await trpcHelper.assignment.getAllAssignments.prefetch({
               courseName,
               moduleName,
             })
-        )
-      );
+        ),
+        // quizzes
+        ...moduleNames.map(
+          async (moduleName) =>
+            await trpcHelper.quiz.getAllQuizzes.prefetch({
+              courseName,
+              moduleName,
+            })
+        ),
+        // pages
+        ...moduleNames.map(
+          async (moduleName) =>
+            await trpcHelper.page.getAllPages.prefetch({
+              courseName,
+              moduleName,
+            })
+        ),
+      ]);
     })
   );
 
@@ -86,8 +102,6 @@ async function DataHydration({
         })
     )
   );
-
-  // await hydrateCourses(trpcHelper.queryClient);
 
   const dehydratedState = dehydrate(trpcHelper.queryClient);
   console.log("ran hydration");
