@@ -2,8 +2,10 @@ import { Expandable } from "@/components/Expandable";
 import TextInput from "@/components/form/TextInput";
 import { useCreateModuleMutation } from "@/hooks/localCourse/localCourseModuleHooks";
 import React, { useState } from "react";
+import { useCourseContext } from "../context/courseContext";
 
 export default function CreateModule() {
+  const { courseName } = useCourseContext();
   const createModule = useCreateModuleMutation();
   const [moduleName, setModuleName] = useState("");
   return (
@@ -19,7 +21,7 @@ export default function CreateModule() {
           onSubmit={async (e) => {
             e.preventDefault();
             if (moduleName) {
-              await createModule.mutateAsync(moduleName);
+              await createModule.mutateAsync({ moduleName, courseName });
               setModuleName("");
             }
           }}

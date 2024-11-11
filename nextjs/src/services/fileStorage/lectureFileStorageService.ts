@@ -1,4 +1,4 @@
-"use server";
+
 import path from "path";
 import { basePath } from "./utils/fileSystemUtils";
 import fs from "fs/promises";

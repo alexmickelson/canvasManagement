@@ -1,9 +1,7 @@
 "use client";
 
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
-import {
-  useLectureUpdateMutation,
-} from "@/hooks/localCourse/lectureHooks";
+import { useLectureUpdateMutation } from "@/hooks/localCourse/lectureHooks";
 import {
   lectureToString,
   parseLecture,
@@ -14,10 +12,11 @@ import EditLectureTitle from "./EditLectureTitle";
 import LectureButtons from "./LectureButtons";
 import { trpc } from "@/services/trpc/utils";
 import { useCourseContext } from "../../context/courseContext";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
-  // const { data: weeks } = useLecturesByWeekQuery();
   const { courseName } = useCourseContext();
+  const [settings] = useLocalCourseSettingsQuery();
   const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({ courseName });
   const updateLecture = useLectureUpdateMutation();
 
@@ -42,7 +41,7 @@ Date: ${lectureDay}
         const parsed = parseLecture(text);
         if (!lecture || lectureToString(parsed) !== lectureToString(lecture)) {
           console.log("updating lecture");
-          updateLecture.mutate({ lecture: parsed });
+          updateLecture.mutate({ lecture: parsed, settings, courseName });
         }
         setError("");
       } catch (e: any) {

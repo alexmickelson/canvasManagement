@@ -2,7 +2,9 @@ import { createTrpcContext } from "../context";
 import publicProcedure from "../procedures/public";
 import { createCallerFactory, router } from "../trpc";
 import { assignmentRouter } from "./assignmentRouter";
+import { directoriesRouter } from "./directoriesRouter";
 import { lectureRouter } from "./lectureRouter";
+import { moduleRouter } from "./moduleRouter";
 import { pageRouter } from "./pageRouter";
 import { quizRouter } from "./quizRouter";
 import { settingsRouter } from "./settingsRouter";
@@ -22,6 +24,8 @@ export const trpcAppRouter = router({
   settings: settingsRouter,
   quiz: quizRouter,
   page: pageRouter,
+  module: moduleRouter,
+  directories: directoriesRouter,
 });
 
 export const createCaller = createCallerFactory(trpcAppRouter);

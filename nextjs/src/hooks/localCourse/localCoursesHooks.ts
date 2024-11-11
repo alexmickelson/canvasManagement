@@ -5,11 +5,9 @@ import { trpc } from "@/services/trpc/utils";
 export const useLocalCoursesSettingsQuery = () =>
   trpc.settings.allCoursesSettings.useSuspenseQuery();
 
-
 export const useLocalCourseSettingsQuery = () => {
   const { courseName } = useCourseContext();
   return trpc.settings.courseSettings.useSuspenseQuery({ courseName });
-
 };
 
 export const useCreateLocalCourseMutation = () => {
@@ -17,6 +15,7 @@ export const useCreateLocalCourseMutation = () => {
   return trpc.settings.createCourse.useMutation({
     onSuccess: () => {
       utils.settings.allCoursesSettings.invalidate();
+      utils.directories.getEmptyDirectories.invalidate();
     },
   });
 };

@@ -56,33 +56,36 @@ async function DataHydration({
       },
     },
   });
-  // const allSettings = await fileStorageService.settings.getAllCoursesSettings();
-  // await Promise.all(
-  //   allSettings.map(async (settings) => {
-  //     const courseName = settings.name;
-  //     const moduleNames = await fileStorageService.modules.getModuleNames(
-  //       courseName
-  //     );
-  //     await Promise.all(
-  //       moduleNames.map(
-  //         async (moduleName) =>
-  //           await trpcHelper.assignment.getAllAssignments.fetch({
-  //             courseName,
-  //             moduleName,
-  //           })
-  //       )
-  //     );
-  //   })
-  // );
 
-  // await Promise.all(
-  //   allSettings.map(
-  //     async (settings) =>
-  //       await trpcHelper.lectures.getLectures.fetch({
-  //         courseName: settings.name,
-  //       })
-  //   )
-  // );
+  const allSettings = await fileStorageService.settings.getAllCoursesSettings();
+  // assignments
+  await Promise.all(
+    allSettings.map(async (settings) => {
+      const courseName = settings.name;
+      const moduleNames = await fileStorageService.modules.getModuleNames(
+        courseName
+      );
+      await Promise.all(
+        moduleNames.map(
+          async (moduleName) =>
+            await trpcHelper.assignment.getAllAssignments.fetch({
+              courseName,
+              moduleName,
+            })
+        )
+      );
+    })
+  );
+
+  // lectures
+  await Promise.all(
+    allSettings.map(
+      async (settings) =>
+        await trpcHelper.lectures.getLectures.fetch({
+          courseName: settings.name,
+        })
+    )
+  );
 
   // await hydrateCourses(trpcHelper.queryClient);
 

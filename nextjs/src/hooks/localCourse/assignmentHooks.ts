@@ -48,7 +48,7 @@ export const useUpdateAssignmentMutation = () => {
 export const useCreateAssignmentMutation = () => {
   const utils = trpc.useUtils();
   return trpc.assignment.createAssignment.useMutation({
-    onSuccess: (_, { courseName, moduleName, assignmentName }) => {
+    onSuccess: (_, { courseName, moduleName }) => {
       utils.assignment.getAllAssignments.invalidate({ courseName, moduleName });
     },
   });

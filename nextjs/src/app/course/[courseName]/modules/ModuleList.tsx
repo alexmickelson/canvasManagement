@@ -4,7 +4,7 @@ import ExpandableModule from "./ExpandableModule";
 import CreateModule from "./CreateModule";
 
 export default function ModuleList() {
-  const { data: moduleNames } = useModuleNamesQuery();
+  const [moduleNames] = useModuleNamesQuery();
   return (
     <div>
       {/* {moduleNames.map((m) => (

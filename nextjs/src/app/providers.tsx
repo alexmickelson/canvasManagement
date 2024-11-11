@@ -1,5 +1,5 @@
 "use client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import {  QueryClientProvider } from "@tanstack/react-query";
 import { ReactNode } from "react";
 import { getQueryClient } from "./providersQueryClientUtils";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";

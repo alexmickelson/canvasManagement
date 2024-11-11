@@ -18,6 +18,7 @@ import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
 import { trpc } from "@/services/trpc/utils";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
+import { useCourseContext } from "../courseContext";
 
 export function useItemDropOnDay({
   setIsDragging,
@@ -33,6 +34,7 @@ export function useItemDropOnDay({
   modal: { isOpen: boolean; openModal: () => void; closeModal: () => void };
 }) {
   const [settings] = useLocalCourseSettingsQuery();
+  const { courseName } = useCourseContext();
   // const { data: weeks } = useLecturesByWeekQuery();
   const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({
     courseName: settings.name,
@@ -95,6 +97,8 @@ export function useItemDropOnDay({
                 ...lecture,
                 date: getDateOnlyMarkdownString(dayAsDate),
               },
+              courseName,
+              settings,
             });
             setModalText("");
             setModalCallback(() => {});
@@ -110,6 +114,8 @@ export function useItemDropOnDay({
               ...lecture,
               date: getDateOnlyMarkdownString(dayAsDate),
             },
+            courseName,
+            settings,
           });
         }
       }
