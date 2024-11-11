@@ -8,3 +8,12 @@ export const useLectureUpdateMutation = () => {
     },
   });
 };
+
+export const useDeleteLectureMutation = () => {
+  const utils = trpc.useUtils();
+  return trpc.lectures.deleteLecture.useMutation({
+    onSuccess: () => {
+      utils.lectures.getLectures.invalidate();
+    },
+  });
+};

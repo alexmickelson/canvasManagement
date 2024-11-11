@@ -7,9 +7,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCourseContext } from "../../context/courseContext";
-import { deleteLecture } from "@/services/fileStorage/lectureFileStorageService";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { lectureKeys } from "@/hooks/localCourse/lectureKeys";
+import { useDeleteLectureMutation } from "@/hooks/localCourse/lectureHooks";
 
 export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
   const queryClient = useQueryClient();
@@ -18,6 +17,7 @@ export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const modal = useModal();
+  const deleteLecture = useDeleteLectureMutation();
 
   return (
     <div className="p-5 flex flex-row justify-end gap-3">
@@ -39,9 +39,10 @@ export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
                   onClick={async () => {
                     setIsLoading(true);
                     router.push(getCourseUrl(courseName));
-                    await deleteLecture(courseName, settings, lectureDay);
-                    await queryClient.invalidateQueries({
-                      queryKey: lectureKeys.allLectures(courseName),
+                    await deleteLecture.mutateAsync({
+                      courseName,
+                      settings,
+                      lectureDay,
                     });
                   }}
                   disabled={isLoading}

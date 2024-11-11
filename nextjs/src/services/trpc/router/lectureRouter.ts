@@ -37,4 +37,15 @@ export const lectureRouter = router({
         }
       }
     ),
+  deleteLecture: publicProcedure
+    .input(
+      z.object({
+        courseName: z.string(),
+        lectureDay: z.string(),
+        settings: zodLocalCourseSettings,
+      })
+    )
+    .mutation(async ({ input: { courseName, settings, lectureDay } }) => {
+      await deleteLecture(courseName, settings, lectureDay);
+    }),
 });

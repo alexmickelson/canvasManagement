@@ -140,7 +140,7 @@ function OtherSettings({
 }) {
   const { data: canvasCourses } = useCourseListInTermQuery(selectedTerm.id);
   const [allSettings] = useLocalCoursesSettingsQuery();
-  const { data: emptyDirectories } = useEmptyDirectoriesQuery();
+  const [emptyDirectories] = useEmptyDirectoriesQuery();
 
   const populatedCanvasCourseIds = allSettings.map((s) => s.canvasId);
   const availableCourses = canvasCourses.filter(

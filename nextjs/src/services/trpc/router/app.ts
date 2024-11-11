@@ -9,16 +9,8 @@ import { pageRouter } from "./pageRouter";
 import { quizRouter } from "./quizRouter";
 import { settingsRouter } from "./settingsRouter";
 
-export const helloRouter = router({
-  sayHello: publicProcedure.query(() => {
-    // runs on the server I think
-    console.log("hello world router on the server?");
-    return { greeting: `Hello World!` };
-  }),
-});
 
 export const trpcAppRouter = router({
-  hello: helloRouter,
   assignment: assignmentRouter,
   lectures: lectureRouter,
   settings: settingsRouter,

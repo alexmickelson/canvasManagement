@@ -52,7 +52,7 @@ Date: ${lectureDay}
     return () => {
       clearTimeout(handler);
     };
-  }, [lecture, text, updateLecture]);
+  }, [courseName, lecture, settings, text, updateLecture]);
 
   return (
     <div className="h-full flex flex-col">

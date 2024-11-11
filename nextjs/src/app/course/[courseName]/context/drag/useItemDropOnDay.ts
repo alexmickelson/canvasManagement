@@ -195,14 +195,13 @@ export function useItemDropOnDay({
       }
     },
     [
+      courseName,
       modal,
       setIsDragging,
       setIsLoading,
       setModalCallback,
       setModalText,
-      settings.defaultDueTime.hour,
-      settings.defaultDueTime.minute,
-      settings.name,
+      settings,
       updateAssignmentMutation,
       updateLectureMutation,
       updatePageMutation,
