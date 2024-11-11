@@ -196,6 +196,7 @@ export function useItemDropOnDay({
       setModalText,
       settings.defaultDueTime.hour,
       settings.defaultDueTime.minute,
+      settings.name,
       updateAssignmentMutation,
       updateLectureMutation,
       updatePageMutation,

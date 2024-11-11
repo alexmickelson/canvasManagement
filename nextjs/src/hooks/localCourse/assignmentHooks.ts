@@ -2,17 +2,6 @@
 import { trpc } from "@/services/trpc/utils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
-// export const getAllAssignmentsQueryConfig = (
-//   courseName: string,
-//   moduleName: string
-// ) => getAllItemsQueryConfig(courseName, moduleName, "Assignment");
-
-// export const getAssignmentQueryConfig = (
-//   courseName: string,
-//   moduleName: string,
-//   assignmentName: string
-// ) => getItemQueryConfig(courseName, moduleName, assignmentName, "Assignment");
-
 export const useAssignmentQuery = (
   moduleName: string,
   assignmentName: string
@@ -35,18 +24,35 @@ export const useAssignmentsQuery = (moduleName: string) => {
 };
 
 export const useUpdateAssignmentMutation = () => {
-  return trpc.assignment.updateAssignment.useMutation();
+  const utils = trpc.useUtils();
+  return trpc.assignment.updateAssignment.useMutation({
+    onSuccess: (
+      _,
+      { courseName, moduleName, assignmentName, previousAssignmentName }
+    ) => {
+      utils.assignment.getAllAssignments.invalidate({ courseName, moduleName });
+      utils.assignment.getAssignment.invalidate({
+        courseName,
+        moduleName,
+        assignmentName,
+      });
+      utils.assignment.getAssignment.invalidate({
+        courseName,
+        moduleName,
+        assignmentName: previousAssignmentName,
+      });
+    },
+  });
 };
 
 export const useCreateAssignmentMutation = () => {
   const utils = trpc.useUtils();
   return trpc.assignment.createAssignment.useMutation({
-    onSuccess: (_, { courseName, moduleName }) => {
+    onSuccess: (_, { courseName, moduleName, assignmentName }) => {
       utils.assignment.getAllAssignments.invalidate({ courseName, moduleName });
     },
   });
 };
-// useCreateItemMutation("Assignment");
 
 export const useDeleteAssignmentMutation = () => {
   const utils = trpc.useUtils();
