@@ -1,5 +1,4 @@
 import { createTrpcContext } from "../context";
-import publicProcedure from "../procedures/public";
 import { createCallerFactory, router } from "../trpc";
 import { assignmentRouter } from "./assignmentRouter";
 import { directoriesRouter } from "./directoriesRouter";
