@@ -1,10 +1,6 @@
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { canvasPageService } from "@/services/canvas/canvasPageService";
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 import {
@@ -22,7 +18,7 @@ export const canvasPageKeys = {
 
 export const useCanvasPagesQuery = () => {
   const [settings] = useLocalCourseSettingsQuery();
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),
     queryFn: async () => await canvasPageService.getAll(settings.canvasId),
   });
@@ -42,6 +38,10 @@ export const useCreateCanvasPageMutation = () => {
       page: LocalCoursePage;
       moduleName: string;
     }) => {
+      if (!canvasModules) {
+        console.log("cannot add page until modules loaded");
+        return;
+      }
       const canvasPage = await canvasPageService.create(
         settings.canvasId,
         page

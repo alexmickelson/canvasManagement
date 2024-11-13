@@ -1,11 +1,5 @@
 import { canvasAssignmentService } from "@/services/canvas/canvasAssignmentService";
-import { canvasService } from "@/services/canvas/canvasService";
-import {
-  useMutation,
-  useQueryClient,
-  useSuspenseQueries,
-  useSuspenseQuery,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { canvasModuleService } from "@/services/canvas/canvasModuleService";
@@ -24,27 +18,11 @@ export const canvasAssignmentKeys = {
 export const useCanvasAssignmentsQuery = () => {
   const [settings] = useLocalCourseSettingsQuery();
 
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: canvasAssignmentKeys.assignments(settings.canvasId),
     queryFn: async () => canvasAssignmentService.getAll(settings.canvasId),
   });
 };
-
-// export const useCanvasAssignmentsQuery = () => {
-//   const [settings] = useLocalCourseSettingsQuery();
-//   const { data: allAssignments } = useInnerCanvasAssignmentsQuery();
-
-//   return useSuspenseQueries({
-//     queries: allAssignments.map((a) => ({
-//       queryKey: canvasAssignmentKeys.assignment(settings.canvasId, a.name),
-//       queryFn: () => a,
-//     })),
-//     combine: (results) => ({
-//       data: results.map((r) => r.data),
-//       pending: results.some((r) => r.isPending),
-//     }),
-//   });
-// };
 
 export const useAddAssignmentToCanvasMutation = () => {
   const [settings] = useLocalCourseSettingsQuery();
@@ -60,6 +38,11 @@ export const useAddAssignmentToCanvasMutation = () => {
       assignment: LocalAssignment;
       moduleName: string;
     }) => {
+      if (!canvasModules) {
+        console.log("cannot add assignment until modules loaded");
+        return;
+      }
+
       const assignmentGroup = settings.assignmentGroups.find(
         (g) => g.name === assignment.localAssignmentGroupName
       );

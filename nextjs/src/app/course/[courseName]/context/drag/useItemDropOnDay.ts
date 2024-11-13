@@ -1,6 +1,9 @@
 "use client";
 import { useUpdateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
-import { useLectureUpdateMutation } from "@/hooks/localCourse/lectureHooks";
+import {
+  useLecturesSuspenseQuery,
+  useLectureUpdateMutation,
+} from "@/hooks/localCourse/lectureHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
@@ -36,9 +39,7 @@ export function useItemDropOnDay({
   const [settings] = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
   // const { data: weeks } = useLecturesByWeekQuery();
-  const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({
-    courseName: settings.name,
-  });
+  const [weeks] = useLecturesSuspenseQuery();
   const updateQuizMutation = useUpdateQuizMutation();
   const updateLectureMutation = useLectureUpdateMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();

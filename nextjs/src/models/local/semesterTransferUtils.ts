@@ -1,11 +1,10 @@
 import { LocalAssignment } from "./assignment/localAssignment";
+import { Lecture } from "./lecture";
 import { LocalCoursePage } from "./page/localCoursePage";
 import { LocalQuiz } from "./quiz/localQuiz";
 import {
   dateToMarkdownString,
-  getDateFromString,
   getDateFromStringOrThrow,
-  getDateOnlyMarkdownString,
 } from "./timeUtils";
 
 export const prepAssignmentForNewSemester = (
@@ -67,6 +66,24 @@ export const prepPageForNewSemester = (
     dueAt:
       newDateOffset(page.dueAt, oldSemesterStartDate, newSemesterStartDate) ??
       page.dueAt,
+  };
+};
+export const prepLectureForNewSemester = (
+  lecture: Lecture,
+  oldSemesterStartDate: string,
+  newSemesterStartDate: string
+): Lecture => {
+  const updatedText = replaceClassroomUrl(lecture.content);
+  const newDate = newDateOffset(
+    lecture.date,
+    oldSemesterStartDate,
+    newSemesterStartDate
+  );
+  const newDateOnly = newDate?.split(" ")[0];
+  return {
+    ...lecture,
+    content: updatedText,
+    date: newDateOnly ?? lecture.date,
   };
 };
 

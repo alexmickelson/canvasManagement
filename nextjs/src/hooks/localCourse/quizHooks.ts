@@ -41,7 +41,10 @@ export const useDeleteQuizMutation = () => {
   const utils = trpc.useUtils();
   return trpc.quiz.deleteQuiz.useMutation({
     onSuccess: (_, { courseName, moduleName, quizName }) => {
-      utils.quiz.getAllQuizzes.invalidate({ courseName, moduleName });
+      utils.quiz.getAllQuizzes.invalidate(
+        { courseName, moduleName },
+        { refetchType: "all" }
+      );
       utils.quiz.getQuiz.invalidate({ courseName, moduleName, quizName });
     },
   });

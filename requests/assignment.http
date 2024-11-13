@@ -5,7 +5,7 @@ Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 
 ###
-GET https://snow.instructure.com/api/v1/courses/871954/assignments
+GET https://snow.instructure.com/api/v1/courses/1013058/assignments
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 

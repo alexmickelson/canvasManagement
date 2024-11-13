@@ -1,5 +1,5 @@
 
-GET https://snow.instructure.com/api/v1/courses/958185/quizzes
+GET https://snow.instructure.com/api/v1/courses/1013058/quizzes
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
 ###

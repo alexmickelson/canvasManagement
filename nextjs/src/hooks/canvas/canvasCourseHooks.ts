@@ -1,7 +1,9 @@
+import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
+import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
 import { canvasAssignmentGroupService } from "@/services/canvas/canvasAssignmentGroupService";
 import { canvasService } from "@/services/canvas/canvasService";
-import { useMutation, useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const canvasCourseKeys = {
   courseDetails: (canavasId: number) =>
@@ -13,34 +15,37 @@ export const canvasCourseKeys = {
 };
 
 export const useCourseListInTermQuery = (canvasTermId: number | undefined) =>
-  useSuspenseQuery({
+  useQuery({
     queryKey: canvasCourseKeys.courseListInTerm(canvasTermId),
-    queryFn: async () =>
+    queryFn: async (): Promise<CanvasCourseModel[]> =>
       canvasTermId ? await canvasService.getCourses(canvasTermId) : [],
+    enabled: !!canvasTermId,
   });
 
-export const useCanvasCourseQuery = (canvasId: number) =>
-  useSuspenseQuery({
-    queryKey: canvasCourseKeys.courseDetails(canvasId),
-    queryFn: async () => await canvasService.getCourse(canvasId),
-  });
+// export const useCanvasCourseQuery = (canvasId: number) =>
+//   useQuery({
+//     queryKey: canvasCourseKeys.courseDetails(canvasId),
+//     queryFn: async () => await canvasService.getCourse(canvasId),
+//   });
 
 export const useSetAssignmentGroupsMutation = (canvasId: number) => {
   const { data: canvasAssignmentGroups } = useAssignmentGroupsQuery(canvasId);
   return useMutation({
     mutationFn: async (localAssignmentGroups: LocalAssignmentGroup[]) => {
+      if (!canvasAssignmentGroups) return;
+
       const localNames = localAssignmentGroups.map((g) => g.name);
       const groupsToDelete = canvasAssignmentGroups.filter(
-        (c) => !localNames.includes(c.name)
+        (c: CanvasAssignmentGroup) => !localNames.includes(c.name)
       );
       await Promise.all([
         ...groupsToDelete.map(
-          async (g) =>
+          async (g: CanvasAssignmentGroup) =>
             await canvasAssignmentGroupService.delete(canvasId, g.id, g.name)
         ),
         ...localAssignmentGroups.map(async (group) => {
           const canvasGroup = canvasAssignmentGroups.find(
-            (c) => c.name === group.name
+            (c: CanvasAssignmentGroup) => c.name === group.name
           );
           if (!canvasGroup) {
             await canvasAssignmentGroupService.create(canvasId, group);
@@ -55,8 +60,8 @@ export const useSetAssignmentGroupsMutation = (canvasId: number) => {
 };
 
 export const useAssignmentGroupsQuery = (canvasId: number) => {
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: canvasCourseKeys.assignmentGroups(canvasId),
-    queryFn: async () => await canvasAssignmentGroupService.getAll(canvasId),
+    queryFn: async (): Promise<CanvasAssignmentGroup[]> => await canvasAssignmentGroupService.getAll(canvasId),
   });
 };

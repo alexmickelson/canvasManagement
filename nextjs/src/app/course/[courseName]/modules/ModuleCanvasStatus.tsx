@@ -10,7 +10,7 @@ export function ModuleCanvasStatus({ moduleName }: { moduleName: string }) {
   const { data: canvasModules } = useCanvasModulesQuery();
   const addToCanvas = useAddCanvasModuleMutation();
 
-  const canvasModule = canvasModules.find((c) => c.name === moduleName);
+  const canvasModule = canvasModules?.find((c) => c.name === moduleName);
 
   return (
     <div className="text-slate-400 text-end">

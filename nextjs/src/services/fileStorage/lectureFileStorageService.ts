@@ -13,7 +13,6 @@ import {
   getDayOfWeek,
   LocalCourseSettings,
 } from "@/models/local/localCourseSettings";
-import { getWeekNumber } from "@/app/course/[courseName]/calendar/calendarMonthUtils";
 import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
 
 export async function getLectures(courseName: string) {

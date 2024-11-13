@@ -33,7 +33,7 @@ export function useTodaysItems(day: string) {
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].assignments.map((assignment) => {
-          const canvasAssignment = canvasAssignments.find(
+          const canvasAssignment = canvasAssignments?.find(
             (c) => c.name === assignment.name
           );
           return {
@@ -57,7 +57,7 @@ export function useTodaysItems(day: string) {
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].quizzes.map((quiz) => {
-          const canvasQuiz = canvasQuizzes.find((q) => q.title === quiz.name);
+          const canvasQuiz = canvasQuizzes?.find((q) => q.title === quiz.name);
           return {
             moduleName,
             quiz,
@@ -79,7 +79,7 @@ export function useTodaysItems(day: string) {
   }[] = todaysModules
     ? Object.keys(todaysModules).flatMap((moduleName) =>
         todaysModules[moduleName].pages.map((page) => {
-          const canvasPage = canvasPages.find((p) => p.title === page.name);
+          const canvasPage = canvasPages?.find((p) => p.title === page.name);
           return {
             moduleName,
             page,

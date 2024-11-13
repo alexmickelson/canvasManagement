@@ -13,7 +13,10 @@ import { useEmptyDirectoriesQuery } from "@/hooks/localCourse/storageDirectoryHo
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
-import { DayOfWeek } from "@/models/local/localCourseSettings";
+import {
+  DayOfWeek,
+  LocalCourseSettings,
+} from "@/models/local/localCourseSettings";
 import { getCourseUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import React, { useMemo, useState } from "react";
@@ -47,6 +50,9 @@ export default function NewCourseForm() {
   const [selectedDirectory, setSelectedDirectory] = useState<
     string | undefined
   >();
+  const [courseToImport, setCourseToImport] = useState<
+    LocalCourseSettings | undefined
+  >();
   const createCourse = useCreateLocalCourseMutation();
 
   const formIsComplete =
@@ -71,17 +77,34 @@ export default function NewCourseForm() {
             setSelectedDirectory={setSelectedDirectory}
             selectedDaysOfWeek={selectedDaysOfWeek}
             setSelectedDaysOfWeek={setSelectedDaysOfWeek}
+            courseToImport={courseToImport}
+            setCourseToImport={setCourseToImport}
           />
         )}
       </SuspenseAndErrorHandling>
       <div className="m-3 text-center">
         <button
           disabled={!formIsComplete || createCourse.isPending}
-          onClick={() => {
+          onClick={async () => {
             if (formIsComplete) {
-              createCourse
-                .mutateAsync({
-                  settings: {
+              const newSettings: LocalCourseSettings = courseToImport
+                ? {
+                    ...courseToImport,
+                    name: selectedDirectory,
+                    daysOfWeek: selectedDaysOfWeek,
+                    canvasId: selectedCanvasCourse.id,
+                    startDate: selectedTerm.start_at ?? "",
+                    endDate: selectedTerm.end_at ?? "",
+                    holidays: [],
+                    assignmentGroups: courseToImport.assignmentGroups.map(
+                      (assignmentGroup) => {
+                        const { canvasId, ...groupWithoutCanvas } =
+                          assignmentGroup;
+                        return groupWithoutCanvas;
+                      }
+                    ),
+                  }
+                : {
                     name: selectedDirectory,
                     assignmentGroups: [],
                     daysOfWeek: selectedDaysOfWeek,
@@ -96,11 +119,12 @@ export default function NewCourseForm() {
                     defaultFileUploadTypes: ["pdf", "png", "jpg", "jpeg"],
                     defaultLockHoursOffset: 0,
                     holidays: [],
-                  },
-                })
-                .then(() => {
-                  router.push(getCourseUrl(selectedDirectory));
-                });
+                  };
+              await createCourse.mutateAsync({
+                settings: newSettings,
+                settingsFromCourseToImport: courseToImport,
+              });
+              router.push(getCourseUrl(selectedDirectory));
             }
           }}
         >
@@ -125,6 +149,8 @@ function OtherSettings({
   setSelectedDirectory,
   selectedDaysOfWeek,
   setSelectedDaysOfWeek,
+  courseToImport,
+  setCourseToImport,
 }: {
   selectedTerm: CanvasEnrollmentTermModel;
   selectedCanvasCourse: CanvasCourseModel | undefined;
@@ -137,15 +163,21 @@ function OtherSettings({
   >;
   selectedDaysOfWeek: DayOfWeek[];
   setSelectedDaysOfWeek: React.Dispatch<React.SetStateAction<DayOfWeek[]>>;
+  courseToImport: LocalCourseSettings | undefined;
+  setCourseToImport: React.Dispatch<
+    React.SetStateAction<LocalCourseSettings | undefined>
+  >;
 }) {
   const { data: canvasCourses } = useCourseListInTermQuery(selectedTerm.id);
   const [allSettings] = useLocalCoursesSettingsQuery();
   const [emptyDirectories] = useEmptyDirectoriesQuery();
 
   const populatedCanvasCourseIds = allSettings.map((s) => s.canvasId);
-  const availableCourses = canvasCourses.filter(
-    (canvas) => !populatedCanvasCourseIds.includes(canvas.id)
-  );
+  const availableCourses =
+    canvasCourses?.filter(
+      (canvas: CanvasCourseModel) =>
+        !populatedCanvasCourseIds.includes(canvas.id)
+    ) ?? [];
 
   return (
     <>
@@ -183,6 +215,13 @@ function OtherSettings({
           }}
         />
       </div>
+      <SelectInput
+        value={courseToImport}
+        setValue={setCourseToImport}
+        label={"(Optional) Course Content to Import"}
+        options={allSettings}
+        getOptionName={(c) => c.name}
+      />
     </>
   );
 }

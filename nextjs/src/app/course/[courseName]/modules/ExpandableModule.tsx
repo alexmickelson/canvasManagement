@@ -21,8 +21,9 @@ import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
 import { useDragStyleContext } from "../context/drag/dragStyleContext";
-import { useAssignmentsQuery } from "@/hooks/localCourse/assignmentHooks";
 import { useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
+import { useAssignmentNamesQuery } from "@/hooks/localCourse/assignmentHooks";
+import { trpc } from "@/services/trpc/utils";
 
 export default function ExpandableModule({
   moduleName,
@@ -30,8 +31,14 @@ export default function ExpandableModule({
   moduleName: string;
 }) {
   const { itemDropOnModule } = useDraggingContext();
-
-  const [assignments ] = useAssignmentsQuery(moduleName);
+  const { courseName } = useCourseContext();
+  const [assignmentNames] = useAssignmentNamesQuery(moduleName);
+  
+  const [assignments] = trpc.useSuspenseQueries((t) =>
+    assignmentNames.map((assignmentName) =>
+      t.assignment.getAssignment({ courseName, moduleName, assignmentName })
+    )
+  );
   const [quizzes] = useQuizzesQueries(moduleName);
   const [pages] = usePagesQueries(moduleName);
   const modal = useModal();

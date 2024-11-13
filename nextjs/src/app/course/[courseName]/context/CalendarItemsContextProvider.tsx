@@ -18,9 +18,6 @@ export default function CalendarItemsContextProvider({
   const { assignmentsAndModules, quizzesAndModules, pagesAndModules } =
     useAllCourseDataQuery();
 
-  
-
-
   const assignmentsByModuleByDate = assignmentsAndModules.reduce(
     (previous, { assignment, moduleName }) => {
       const dueDay = getDateOnlyMarkdownString(

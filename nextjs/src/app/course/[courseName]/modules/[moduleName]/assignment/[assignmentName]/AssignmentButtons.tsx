@@ -43,7 +43,7 @@ export function AssignmentButtons({
   const [isLoading, setIsLoading] = useState(false);
   const modal = useModal();
 
-  const assignmentInCanvas = canvasAssignments.find(
+  const assignmentInCanvas = canvasAssignments?.find(
     (a) => a.name === assignmentName
   );
 
@@ -61,7 +61,7 @@ export function AssignmentButtons({
       </div>
       <div className="flex flex-row gap-3 justify-end">
         {anythingIsLoading && <Spinner />}
-        {assignmentInCanvas && !assignmentInCanvas.published && (
+        {assignmentInCanvas && !assignmentInCanvas?.published && (
           <div className="text-rose-300 my-auto">Not Published</div>
         )}
         {!assignmentInCanvas && (
@@ -125,8 +125,8 @@ export function AssignmentButtons({
                 <div className="flex justify-around gap-3">
                   <button
                     onClick={async () => {
-                      setIsLoading(true);
                       router.push(getCourseUrl(courseName));
+                      setIsLoading(true);
                       await deleteLocal.mutateAsync({
                         moduleName,
                         assignmentName,

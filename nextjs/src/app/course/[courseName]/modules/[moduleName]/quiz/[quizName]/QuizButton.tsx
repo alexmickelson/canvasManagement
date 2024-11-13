@@ -36,7 +36,7 @@ export function QuizButtons({
   const deleteLocal = useDeleteQuizMutation();
   const modal = useModal();
 
-  const quizInCanvas = canvasQuizzes.find((c) => c.title === quizName);
+  const quizInCanvas = canvasQuizzes?.find((c) => c.title === quizName);
 
   return (
     <div className="p-5 flex flex-row justify-between">
@@ -90,8 +90,8 @@ export function QuizButtons({
                 <div className="flex justify-around gap-3">
                   <button
                     onClick={async () => {
+                      await deleteLocal.mutateAsync({ moduleName, quizName, courseName });
                       router.push(getCourseUrl(courseName));
-                      deleteLocal.mutate({ moduleName, quizName, courseName });
                     }}
                     className="btn-danger"
                   >

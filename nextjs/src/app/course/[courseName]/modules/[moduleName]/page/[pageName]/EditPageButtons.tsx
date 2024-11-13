@@ -16,7 +16,7 @@ import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 
 export default function EditPageButtons({
   moduleName,
@@ -35,6 +35,7 @@ export default function EditPageButtons({
   const deletePageInCanvas = useDeleteCanvasPageMutation();
   const deletePageLocal = useDeletePageMutation();
   const modal = useModal();
+  const [loading, setLoading] = useState(false);
 
   const pageInCanvas = canvasPages?.find((p) => p.title === pageName);
 
@@ -101,13 +102,14 @@ export default function EditPageButtons({
               <br />
               <div className="flex justify-around gap-3">
                 <button
-                  onClick={() => {
-                    router.push(getCourseUrl(courseName));
-                    deletePageLocal.mutate({
+                  onClick={async () => {
+                    setLoading(true);
+                    await deletePageLocal.mutateAsync({
                       moduleName,
                       pageName,
                       courseName,
                     });
+                    router.push(getCourseUrl(courseName));
                   }}
                   className="btn-danger"
                 >
@@ -115,6 +117,7 @@ export default function EditPageButtons({
                 </button>
                 <button onClick={closeModal}>No</button>
               </div>
+              {loading && <Spinner />}
             </div>
           )}
         </Modal>

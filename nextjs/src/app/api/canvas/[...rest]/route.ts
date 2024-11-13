@@ -17,13 +17,14 @@ const getUrl = (params: { rest: string[] }, req: NextRequest) => {
 
   appendQueryParams(url, req);
 
-  return url;
+  return url;``
 };
 
 const proxyResponseHeaders = (response: any) => {
   const headers = new Headers();
   Object.entries(response.headers).forEach(([key, value]) => {
-    headers.set(key, value as string);
+    if (["link", "x-rate-limit-remaining"].includes(key))
+      headers.set(key, value as string);
   });
   return headers;
 };
@@ -32,21 +33,19 @@ export async function GET(
   req: NextRequest,
   { params }: { params: Promise<{ rest: string[] }> }
 ) {
-  return withErrorHandling(async () => {
-    try {
-      const url = getUrl(await params, req);
+  try {
+    const url = getUrl(await params, req);
 
-      const response = await axiosClient.get(url.toString());
-
-      const headers = proxyResponseHeaders(response);
-      return new NextResponse(JSON.stringify(response.data), { headers });
-    } catch (error: any) {
-      return new NextResponse(
-        JSON.stringify({ error: error.message || "Canvas GET request failed" }),
-        { status: error.response?.status || 500 }
-      );
-    }
-  });
+    const response = await axiosClient.get(url.toString());
+    const headers = proxyResponseHeaders(response);
+    return NextResponse.json(response.data, { headers });
+  } catch (error: any) {
+    console.log("canvas get error", error, error?.message);
+    return NextResponse.json(
+      JSON.stringify({ error: error.message || "Canvas GET request failed" }),
+      { status: error.response?.status || 500 }
+    );
+  }
 }
 
 export async function POST(

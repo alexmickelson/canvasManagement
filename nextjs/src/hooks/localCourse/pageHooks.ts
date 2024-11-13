@@ -41,7 +41,12 @@ export const useDeletePageMutation = () => {
   const utils = trpc.useUtils();
   return trpc.page.deletePage.useMutation({
     onSuccess: (_, { courseName, moduleName, pageName }) => {
-      utils.page.getAllPages.invalidate({ courseName, moduleName });
+      utils.page.getAllPages.invalidate(
+        { courseName, moduleName },
+        {
+          refetchType: "all",
+        }
+      );
       utils.page.getPage.invalidate({ courseName, moduleName, pageName });
     },
   });

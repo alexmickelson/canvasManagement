@@ -1,7 +1,7 @@
 import {
   useMutation,
+  useQuery,
   useQueryClient,
-  useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 import { canvasQuizService } from "@/services/canvas/canvasQuizService";
@@ -20,7 +20,7 @@ export const canvasQuizKeys = {
 export const useCanvasQuizzesQuery = () => {
   const [settings] = useLocalCourseSettingsQuery();
 
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: canvasQuizKeys.quizzes(settings.canvasId),
     queryFn: async () => canvasQuizService.getAll(settings.canvasId),
   });
@@ -40,6 +40,10 @@ export const useAddQuizToCanvasMutation = () => {
       quiz: LocalQuiz;
       moduleName: string;
     }) => {
+      if (!canvasModules) {
+        console.log("cannot add quiz until modules loaded");
+        return;
+      }
       const assignmentGroup = settings.assignmentGroups.find(
         (g) => g.name === quiz.localAssignmentGroupName
       );

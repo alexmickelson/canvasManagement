@@ -1,8 +1,8 @@
 import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 import {
   useMutation,
+  useQuery,
   useQueryClient,
-  useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 
@@ -12,7 +12,7 @@ export const canvasCourseModuleKeys = {
 
 export const useCanvasModulesQuery = () => {
   const [settings] = useLocalCourseSettingsQuery();
-  return useSuspenseQuery({
+  return useQuery({
     queryKey: canvasCourseModuleKeys.modules(settings.canvasId),
     queryFn: async () =>
       await canvasModuleService.getCourseModules(settings.canvasId),

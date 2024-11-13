@@ -6,11 +6,11 @@ import NewItemForm from "../../modules/NewItemForm";
 import { DraggableItem } from "../../context/drag/draggingContext";
 import { useDragStyleContext } from "../../context/drag/dragStyleContext";
 import { getLectureForDay } from "@/models/local/lectureUtils";
-import { trpc } from "@/services/trpc/utils";
+import { useLecturesSuspenseQuery } from "@/hooks/localCourse/lectureHooks";
 
 export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { courseName } = useCourseContext();
-  const [weeks] = trpc.lectures.getLectures.useSuspenseQuery({ courseName });
+  const [weeks] = useLecturesSuspenseQuery();
   const { setIsDragging } = useDragStyleContext();
   const todaysLecture = getLectureForDay(weeks, dayAsDate);
   const modal = useModal();

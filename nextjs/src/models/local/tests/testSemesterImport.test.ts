@@ -1,8 +1,14 @@
 import { describe, it, expect } from "vitest";
 import { LocalAssignment } from "../assignment/localAssignment";
-import { prepAssignmentForNewSemester, prepPageForNewSemester, prepQuizForNewSemester } from "../semesterTransferUtils";
+import {
+  prepAssignmentForNewSemester,
+  prepLectureForNewSemester,
+  prepPageForNewSemester,
+  prepQuizForNewSemester,
+} from "../semesterTransferUtils";
 import { LocalQuiz } from "../quiz/localQuiz";
 import { LocalCoursePage } from "../page/localCoursePage";
+import { Lecture } from "../lecture";
 
 describe("can take an assignment and template it for a new semester", () => {
   it("can sanitize assignment github classroom repo url", () => {
@@ -191,5 +197,26 @@ describe("can prep pages", () => {
     );
 
     expect(sanitizedPage.dueAt).toEqual("01/12/2024 23:59:00");
+  });
+});
+
+describe("can prep lecture", () => {
+  it("lecture gets new date, github url changes", () => {
+    const lecture: Lecture = {
+      name: "test title",
+      date: "08/30/2023",
+      content: "test text content",
+    };
+
+    const oldSemesterStartDate = "08/26/2023 23:59:00";
+    const newSemesterStartDate = "01/08/2024 23:59:00";
+
+    const sanitizedLecture = prepLectureForNewSemester(
+      lecture,
+      oldSemesterStartDate,
+      newSemesterStartDate
+    );
+
+    expect(sanitizedLecture.date).toEqual("01/12/2024");
   });
 });
