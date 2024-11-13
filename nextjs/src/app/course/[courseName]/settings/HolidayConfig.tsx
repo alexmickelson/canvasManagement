@@ -12,6 +12,7 @@ import {
   holidaysToString,
   parseHolidays,
 } from "../../../../models/local/settingsUtils";
+import { settingsBox } from "./sharedSettings";
 
 const exampleString = `springBreak:
 - 10/12/2024
@@ -89,7 +90,7 @@ function InnerHolidayConfig() {
   }, [rawText, settings.holidays, settings, updateSettings]);
 
   return (
-    <div className=" border w-fit p-3 m-3 rounded-md">
+    <div className={settingsBox}>
       <div className="flex flex-row gap-3">
         <TextInput
           value={rawText}

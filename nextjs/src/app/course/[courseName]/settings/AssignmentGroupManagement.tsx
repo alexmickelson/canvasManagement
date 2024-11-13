@@ -8,11 +8,12 @@ import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentG
 import { useEffect, useState } from "react";
 import TextInput from "../../../../components/form/TextInput";
 import { useSetAssignmentGroupsMutation } from "@/hooks/canvas/canvasCourseHooks";
+import { settingsBox } from "./sharedSettings";
 
 export default function AssignmentGroupManagement() {
   const [settings] = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
-  // const applyInCanvas = useSetAssignmentGroupsMutation(settings.canvasId); // untested
+  const applyInCanvas = useSetAssignmentGroupsMutation(settings.canvasId); // untested
 
   const [assignmentGroups, setAssignmentGroups] = useState<
     LocalAssignmentGroup[]
@@ -39,7 +40,7 @@ export default function AssignmentGroupManagement() {
   }, [assignmentGroups, settings, updateSettings]);
 
   return (
-    <div>
+    <div className={settingsBox}>
       {assignmentGroups.map((group) => (
         <div key={group.id} className="flex flex-row gap-3">
           <TextInput

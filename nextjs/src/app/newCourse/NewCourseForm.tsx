@@ -26,7 +26,7 @@ const sampleCompose = `services:
     image: alexmickelson/canvas_management:2 # pull this image regularly
     user: 1000:1000 # userid:groupid that matches file ownership on host system
     ports:
-      - 8080:8080 # hostPort:containerPort - you can change the first one if you like
+      - 8080:3000 # hostPort:containerPort - you can change the first one if you like
     env_file:
       - .env # needs to have your CANVAS_TOKEN set
     environment:
@@ -196,9 +196,9 @@ function OtherSettings({
         getOptionName={(d) => d}
         emptyOptionText="--- add a new folder to your docker compose to add more folders ---"
       />
-      <div>
+      <div className="px-5">
         New folders will not be created automatically, you are expected to mount
-        a docker volume for each coures.
+        a docker volume for each courses.
       </div>
       <br />
       <div className="flex justify-center">
@@ -222,6 +222,13 @@ function OtherSettings({
         options={allSettings}
         getOptionName={(c) => c.name}
       />
+      <div className="px-5">
+        Assignments, Quizzes, Pages, and Lectures will have their due dates
+        moved based on how far they are from the start of the semester.
+        <br />
+        You will still need to go through and re-order the course content, but
+        things will be within a few days of where they should be.
+      </div>
     </>
   );
 }

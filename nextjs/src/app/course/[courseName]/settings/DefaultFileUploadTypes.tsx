@@ -5,6 +5,7 @@ import {
   useUpdateLocalCourseSettingsMutation,
 } from "@/hooks/localCourse/localCoursesHooks";
 import { useState, useEffect } from "react";
+import { settingsBox } from "./sharedSettings";
 
 export default function DefaultFileUploadTypes() {
   const [settings] = useLocalCourseSettingsQuery();
@@ -31,7 +32,7 @@ export default function DefaultFileUploadTypes() {
   }, [defaultFileUploadTypes, settings, updateSettings]);
 
   return (
-    <div className="border w-fit p-3 m-3 rounded-md">
+    <div className={settingsBox}>
       <div className="text-center">Default File Upload Types</div>
 
       {defaultFileUploadTypes.map((type, index) => (

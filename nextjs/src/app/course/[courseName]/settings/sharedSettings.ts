@@ -1,0 +1,1 @@
+export const settingsBox = "border w-full p-3 m-3 rounded-md border-slate-500"

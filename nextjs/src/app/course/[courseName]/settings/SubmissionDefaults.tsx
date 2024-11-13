@@ -9,6 +9,7 @@ import {
   AssignmentSubmissionTypeList,
 } from "@/models/local/assignment/assignmentSubmissionType";
 import React, { useEffect, useState } from "react";
+import { settingsBox } from "./sharedSettings";
 
 export default function SubmissionDefaults() {
   const [settings] = useLocalCourseSettingsQuery();
@@ -32,7 +33,7 @@ export default function SubmissionDefaults() {
   }, [defaultSubmissionTypes, settings, updateSettings]);
 
   return (
-    <div className="border w-fit p-3 m-3 rounded-md">
+    <div className={settingsBox}>
       <div className="text-center">Default Assignment Submission Type</div>
 
       {defaultSubmissionTypes.map((type, index) => (

@@ -7,6 +7,7 @@ import {
 import { TimePicker } from "../../../../components/TimePicker";
 import { useState } from "react";
 import DefaultLockOffset from "./DefaultLockOffset";
+import { settingsBox } from "./sharedSettings";
 
 export default function DefaultDueTime() {
   const [settings] = useLocalCourseSettingsQuery();
@@ -15,7 +16,7 @@ export default function DefaultDueTime() {
     !!settings.defaultLockHoursOffset
   );
   return (
-    <div className="border w-fit p-3 m-3 rounded-md">
+    <div className={settingsBox}>
       <div className="text-center">Default Assignment Due Time</div>
       <hr className="m-1 p-0" />
       <TimePicker

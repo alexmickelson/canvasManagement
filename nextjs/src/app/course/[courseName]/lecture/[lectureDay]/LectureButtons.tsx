@@ -3,15 +3,14 @@
 import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import { getCourseUrl } from "@/services/urlUtils";
-import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCourseContext } from "../../context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useDeleteLectureMutation } from "@/hooks/localCourse/lectureHooks";
+import Link from "next/link";
 
 export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
-  const queryClient = useQueryClient();
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
   const router = useRouter();
@@ -58,8 +57,11 @@ export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
             </div>
           )}
         </Modal>
-        {isLoading && <Spinner />}
       </div>
+      <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+        Go Back
+      </Link>
+      {isLoading && <Spinner />}
     </div>
   );
 }
