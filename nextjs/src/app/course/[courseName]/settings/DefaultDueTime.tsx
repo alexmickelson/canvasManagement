@@ -13,7 +13,7 @@ export default function DefaultDueTime() {
   const [settings] = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const [haveLockOffset, setHaveLockOffset] = useState(
-    !!settings.defaultLockHoursOffset
+    typeof settings.defaultLockHoursOffset !== "undefined"
   );
   return (
     <div className={settingsBox}>

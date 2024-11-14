@@ -113,19 +113,17 @@ export default function AssignmentGroupManagement() {
         >
           Update Assignment Groups In Canvas
         </button>
-        {applyInCanvas.isPending && <Spinner />}
-        {applyInCanvas.isSuccess && (
-          <div>
-            {
-              "You will need to go to your course assignments page > settings > Assignment Group Weights"
-            }
-            <br />
-            {
-              "and check the 'Weight final grade based on assignment groups' box"
-            }
-          </div>
-        )}
       </div>
+      {applyInCanvas.isPending && <Spinner />}
+      {applyInCanvas.isSuccess && (
+        <div>
+          {
+            "You will need to go to your course assignments page > settings > Assignment Group Weights"
+          }
+          <br />
+          {"and check the 'Weight final grade based on assignment groups' box"}
+        </div>
+      )}
     </div>
   );
 }
