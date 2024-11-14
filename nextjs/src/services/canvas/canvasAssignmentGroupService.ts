@@ -40,7 +40,7 @@ export const canvasAssignmentGroupService = {
     canvasCourseId: number,
     localAssignmentGroup: LocalAssignmentGroup
   ): Promise<void> {
-    console.log(`Updating assignment group: ${localAssignmentGroup.name}`);
+    console.log(`Updating assignment group: ${localAssignmentGroup.name}, ${localAssignmentGroup.canvasId}`);
     if (!localAssignmentGroup.canvasId) {
       throw new Error("Cannot update assignment group if canvas ID is null");
     }

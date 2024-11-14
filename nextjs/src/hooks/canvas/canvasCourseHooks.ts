@@ -1,12 +1,16 @@
 import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
+import {
+  LocalCourseSettings,
+  zodLocalCourseSettings,
+} from "@/models/local/localCourseSettings";
 import { canvasAssignmentGroupService } from "@/services/canvas/canvasAssignmentGroupService";
 import { canvasService } from "@/services/canvas/canvasService";
 import { trpc } from "@/services/trpc/utils";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUpdateLocalCourseSettingsMutation } from "../localCourse/localCoursesHooks";
+import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
 export const canvasCourseKeys = {
   courseDetails: (canavasId: number) =>
@@ -40,7 +44,7 @@ export const useSetAssignmentGroupsMutation = (canvasId: number) => {
       const groupsToDelete = canvasAssignmentGroups.filter(
         (c: CanvasAssignmentGroup) => !localNames.includes(c.name)
       );
-      console.log("updating canvas groups", groupsToDelete);
+
       await Promise.all(
         groupsToDelete.map(
           async (g: CanvasAssignmentGroup) =>
@@ -63,13 +67,17 @@ export const useSetAssignmentGroupsMutation = (canvasId: number) => {
                 canvasId: newGroup.canvasId,
               };
             } else {
-              if (canvasGroup.group_weight !== group.weight) {
-                await canvasAssignmentGroupService.update(canvasId, group);
-              }
-              return {
+              const groupWithCanvasId = {
                 ...group,
                 canvasId: canvasGroup.id,
               };
+              if (canvasGroup.group_weight !== group.weight) {
+                await canvasAssignmentGroupService.update(
+                  canvasId,
+                  groupWithCanvasId
+                );
+              }
+              return groupWithCanvasId;
             }
           }
         )
@@ -79,11 +87,9 @@ export const useSetAssignmentGroupsMutation = (canvasId: number) => {
         ...settings,
         assignmentGroups: updatedGroups,
       };
-      console.log(
-        "finished updating canvas assignment groups, updating settings of file system",
-        updatedSettings
-      );
+
       await updateSettingsMutation.mutateAsync({ settings: updatedSettings });
+      return updatedSettings;
     },
   });
 };

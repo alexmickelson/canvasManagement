@@ -54,19 +54,6 @@ export const settingsRouter = router({
         const oldModules = await fileStorageService.modules.getModuleNames(
           oldCourseName
         );
-        console.log(
-          "old course name",
-          oldCourseName,
-          "new course name",
-          newCourseName
-        );
-
-        console.log(
-          "old start date",
-          settingsFromCourseToImport.startDate,
-          "new start date",
-          settings.startDate
-        );
         await Promise.all(
           oldModules.map(async (moduleName) => {
             await fileStorageService.modules.createModule(
@@ -96,7 +83,7 @@ export const settingsRouter = router({
                 const newAssignment = prepAssignmentForNewSemester(
                   oldAssignment,
                   settingsFromCourseToImport.startDate,
-                  settings.startDate,
+                  settings.startDate
                 );
                 await fileStorageService.assignments.updateOrCreateAssignment({
                   courseName: newCourseName,
@@ -109,7 +96,7 @@ export const settingsRouter = router({
                 const newQuiz = prepQuizForNewSemester(
                   oldQuiz,
                   settingsFromCourseToImport.startDate,
-                  settings.startDate,
+                  settings.startDate
                 );
                 await fileStorageService.quizzes.updateQuiz({
                   courseName: newCourseName,
@@ -122,7 +109,7 @@ export const settingsRouter = router({
                 const newPage = prepPageForNewSemester(
                   oldPage,
                   settingsFromCourseToImport.startDate,
-                  settings.startDate,
+                  settings.startDate
                 );
                 await fileStorageService.pages.updatePage({
                   courseName: newCourseName,
@@ -136,7 +123,7 @@ export const settingsRouter = router({
                   const newLecture = prepLectureForNewSemester(
                     oldLecture,
                     settingsFromCourseToImport.startDate,
-                    settings.startDate,
+                    settings.startDate
                   );
                   await updateLecture(newCourseName, settings, newLecture);
                 })

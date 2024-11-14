@@ -12,9 +12,9 @@ import { settingsBox } from "./sharedSettings";
 import { Spinner } from "@/components/Spinner";
 
 export default function AssignmentGroupManagement() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const [settings, { isPending }] = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
-  const applyInCanvas = useSetAssignmentGroupsMutation(settings.canvasId); // untested
+  const applyInCanvas = useSetAssignmentGroupsMutation(settings.canvasId);
 
   const [assignmentGroups, setAssignmentGroups] = useState<
     LocalAssignmentGroup[]
@@ -26,6 +26,12 @@ export default function AssignmentGroupManagement() {
       if (
         !areAssignmentGroupsEqual(assignmentGroups, settings.assignmentGroups)
       ) {
+        console.log(
+          "updating",
+          assignmentGroups,
+          updateSettings.isPending,
+          isPending
+        );
         updateSettings.mutate({
           settings: {
             ...settings,
@@ -38,7 +44,7 @@ export default function AssignmentGroupManagement() {
     return () => {
       clearTimeout(handler);
     };
-  }, [assignmentGroups, settings, updateSettings]);
+  }, [assignmentGroups, isPending, settings, updateSettings]);
 
   return (
     <div className={settingsBox}>
@@ -97,8 +103,11 @@ export default function AssignmentGroupManagement() {
       <br />
       <div className="flex justify-end">
         <button
-          onClick={() => {
-            applyInCanvas.mutate(settings);
+          onClick={async () => {
+            const newSettings = await applyInCanvas.mutateAsync(settings);
+
+            // prevent debounce from resetting
+            if (newSettings) setAssignmentGroups(newSettings.assignmentGroups);
           }}
           disabled={applyInCanvas.isPending}
         >
