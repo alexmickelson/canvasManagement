@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import TextInput from "../../../../components/form/TextInput";
 import { useSetAssignmentGroupsMutation } from "@/hooks/canvas/canvasCourseHooks";
 import { settingsBox } from "./sharedSettings";
+import { Spinner } from "@/components/Spinner";
 
 export default function AssignmentGroupManagement() {
   const [settings] = useLocalCourseSettingsQuery();
@@ -92,6 +93,29 @@ export default function AssignmentGroupManagement() {
         >
           Add Assignment Group
         </button>
+      </div>
+      <br />
+      <div className="flex justify-end">
+        <button
+          onClick={() => {
+            applyInCanvas.mutate(settings);
+          }}
+          disabled={applyInCanvas.isPending}
+        >
+          Update Assignment Groups In Canvas
+        </button>
+        {applyInCanvas.isPending && <Spinner />}
+        {applyInCanvas.isSuccess && (
+          <div>
+            {
+              "You will need to go to your course assignments page > settings > Assignment Group Weights"
+            }
+            <br />
+            {
+              "and check the 'Weight final grade based on assignment groups' box"
+            }
+          </div>
+        )}
       </div>
     </div>
   );

@@ -100,7 +100,7 @@ export default function NewCourseForm() {
                       (assignmentGroup) => {
                         const { canvasId, ...groupWithoutCanvas } =
                           assignmentGroup;
-                        return groupWithoutCanvas;
+                        return { ...groupWithoutCanvas, canvasId: undefined };
                       }
                     ),
                   }

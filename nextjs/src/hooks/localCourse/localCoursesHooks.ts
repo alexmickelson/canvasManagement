@@ -24,7 +24,7 @@ export const useUpdateLocalCourseSettingsMutation = () => {
   const { courseName } = useCourseContext();
   const utils = trpc.useUtils();
 
-  return trpc.settings.createCourse.useMutation({
+  return trpc.settings.updateSettings.useMutation({
     onSuccess: () => {
       utils.settings.allCoursesSettings.invalidate();
       utils.settings.courseSettings.invalidate({ courseName });
