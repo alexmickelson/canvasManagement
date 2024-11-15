@@ -109,4 +109,29 @@ Which events are triggered when the user clicks on an input field?
 essay`;
     expect(questionMarkdown).toContain(expectedMarkdown);
   });
+
+//   it("Can parse short answer with auto graded answers", () => {
+//     const rawMarkdownQuiz = `
+// Name: Test Quiz
+// ShuffleAnswers: true
+// OneQuestionAtATime: false
+// DueAt: 08/21/2023 23:59:00
+// LockAt: 08/21/2023 23:59:00
+// AssignmentGroup: Assignments
+// AllowedAttempts: -1
+// Description: this is the 
+// multi line
+// description
+// ---
+// Which events are triggered when the user clicks on an input field?
+// *a) test
+// short_answer=
+// `;
+
+//     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+//     const firstQuestion = quiz.questions[0];
+
+
+//     expect(firstQuestion.questionType).toBe(QuestionType.SHORT_ANSWER_WITH_ANSWERS)
+//   });
 });

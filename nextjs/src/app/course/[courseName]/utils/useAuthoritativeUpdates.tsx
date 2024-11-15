@@ -18,7 +18,7 @@ export function useAuthoritativeUpdates({
     [clientDataUpdatedAt, serverUpdatedAt]
   );
 
-  console.log("client is authoritative", clientIsAuthoritative);
+  // console.log("client is authoritative", clientIsAuthoritative);
   const textUpdate = useCallback((t: string, updateMonaco: boolean = false) => {
     setText(t);
     setClientDataUpdatedAt(Date.now());
