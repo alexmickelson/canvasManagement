@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "socket": "node src/websocket.js",
+    "devNoSocket": "next dev",
+    "dev": "node src/websocket.js",
     "build": "next build",
-    "start": "next start",
-    "socketProd": "NODE_ENV=production node src/websocket.js",
+    "startNoSocket": "next start",
+    "start": "NODE_ENV=production node src/websocket.js",
     "lint": "tsc && next lint",
     "test": "vitest"
   },

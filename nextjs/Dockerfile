@@ -29,5 +29,4 @@ COPY --from=builder /app/public ./public
 
 RUN mkdir -p storage && rm -rf /app/storage/*
 
-# CMD [ "pnpm", "run", "start" ]
-CMD [ "pnpm", "run", "socketProd" ]
+CMD [ "pnpm", "run", "start" ]

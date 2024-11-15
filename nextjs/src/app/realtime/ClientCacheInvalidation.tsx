@@ -1,7 +1,7 @@
 "use client";
 
 import { trpc } from "@/services/trpc/utils";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
 interface ServerToClientEvents {
@@ -24,18 +24,48 @@ function removeFileExtension(fileName: string): string {
 }
 
 export function ClientCacheInvalidation() {
-  const utils = trpc.useUtils();
+  const invalidateCache = useFilePathInvalidation();
+  const [connectionAttempted, setConnectionAttempted] = useState(false);
   useEffect(() => {
+    if (!connectionAttempted) {
+      socket.connect();
+      setConnectionAttempted(true);
+    }
+
+    socket.on("connect", () => {
+      console.log("Socket connected successfully.");
+    });
+
     socket.on("message", (data) => {
       console.log("Received message:", data);
     });
 
-    socket.on("fileChanged", (filePath) => {
+    socket.on("fileChanged", invalidateCache);
+
+    socket.on("connect_error", (error) => {
+      console.error("Connection error:", error);
+      console.error("File system real time updates disabled");
+      socket.disconnect();
+    });
+
+    return () => {
+      socket.off("message");
+      socket.off("fileChanged");
+      socket.off("connect_error");
+    };
+  }, [connectionAttempted, invalidateCache]);
+
+  return <></>;
+}
+
+const useFilePathInvalidation = () => {
+  const utils = trpc.useUtils();
+  return useCallback(
+    (filePath: string) => {
       const [courseName, moduleOrLectures, itemType, itemFile] =
         filePath.split("/");
 
       const itemName = itemFile ? removeFileExtension(itemFile) : undefined;
-
       const allParts = [courseName, moduleOrLectures, itemType, itemName];
 
       if (moduleOrLectures === "settings.yml") {
@@ -91,28 +121,17 @@ export function ClientCacheInvalidation() {
         });
         return;
       }
-    });
-
-    socket.on("connect_error", (error) => {
-      console.error("Connection error:", error);
-    });
-
-    return () => {
-      socket.off("message");
-      socket.off("fileChanged");
-      socket.off("connect_error");
-    };
-  }, [
-    utils.assignment.getAllAssignments,
-    utils.assignment.getAssignment,
-    utils.lectures.getLectures,
-    utils.page.getAllPages,
-    utils.page.getPage,
-    utils.quiz.getAllQuizzes,
-    utils.quiz.getQuiz,
-    utils.settings.allCoursesSettings,
-    utils.settings.courseSettings,
-  ]);
-
-  return <></>;
-}
+    },
+    [
+      utils.assignment.getAllAssignments,
+      utils.assignment.getAssignment,
+      utils.lectures.getLectures,
+      utils.page.getAllPages,
+      utils.page.getPage,
+      utils.quiz.getAllQuizzes,
+      utils.quiz.getQuiz,
+      utils.settings.allCoursesSettings,
+      utils.settings.courseSettings,
+    ]
+  );
+};
