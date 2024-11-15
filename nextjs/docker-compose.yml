@@ -1,6 +1,6 @@
 services:
   canvas_manager:
-    image: alexmickelson/canvas_management:2.2
+    image: alexmickelson/canvas_management:2.3
     user: "1000:1000"
     container_name: canvas-manager-2
     ports:
