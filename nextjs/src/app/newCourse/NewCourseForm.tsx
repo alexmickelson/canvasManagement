@@ -24,9 +24,9 @@ import React, { useMemo, useState } from "react";
 const sampleCompose = `services:
   canvas_manager:
     image: alexmickelson/canvas_management:2 # pull this image regularly
-    user: 1000:1000 # userid:groupid that matches file ownership on host system
+    user: 1000:1000 # userid:groupid that matches file ownership on host system (probably leave like this)
     ports:
-      - 8080:3000 # hostPort:containerPort - you can change the first one if you like
+      - 8080:3000 # hostPort:containerPort - you can change the host port if you like
     env_file:
       - .env # needs to have your CANVAS_TOKEN set
     environment:

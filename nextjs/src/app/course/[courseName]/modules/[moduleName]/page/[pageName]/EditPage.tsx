@@ -1,5 +1,4 @@
 "use client";
-
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import {
   usePageQuery,
