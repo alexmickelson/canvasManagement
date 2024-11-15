@@ -1,5 +1,5 @@
 "use client";
-import { trpc } from "@/services/trpc/utils";
+import { trpc } from "@/services/serverFunctions/trpcClient";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
 export const useAssignmentQuery = (

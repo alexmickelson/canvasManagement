@@ -8,7 +8,7 @@ import {
   getDateOnlyMarkdownString,
 } from "@/models/local/timeUtils";
 import { useAllCourseDataQuery } from "@/hooks/localCourse/localCourseModuleHooks";
-import { trpc } from "@/services/trpc/utils";
+import { trpc } from "@/services/serverFunctions/trpcClient";
 
 export default function CalendarItemsContextProvider({
   children,

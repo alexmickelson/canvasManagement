@@ -1,5 +1,5 @@
 import { createTrpcContext } from "../context";
-import { createCallerFactory, router } from "../trpc";
+import { createCallerFactory, router } from "../trpcSetup";
 import { assignmentRouter } from "./assignmentRouter";
 import { directoriesRouter } from "./directoriesRouter";
 import { lectureRouter } from "./lectureRouter";
@@ -7,7 +7,6 @@ import { moduleRouter } from "./moduleRouter";
 import { pageRouter } from "./pageRouter";
 import { quizRouter } from "./quizRouter";
 import { settingsRouter } from "./settingsRouter";
-
 
 export const trpcAppRouter = router({
   assignment: assignmentRouter,

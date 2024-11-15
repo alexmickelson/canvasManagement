@@ -1,6 +1,6 @@
 import publicProcedure from "../procedures/public";
 import { z } from "zod";
-import { router } from "../trpc";
+import { router } from "../trpcSetup";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { zodLocalAssignment } from "@/models/local/assignment/localAssignment";
 

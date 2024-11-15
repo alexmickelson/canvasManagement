@@ -23,7 +23,7 @@ import { Expandable } from "../../../../components/Expandable";
 import { useDragStyleContext } from "../context/drag/dragStyleContext";
 import { useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
 import { useAssignmentNamesQuery } from "@/hooks/localCourse/assignmentHooks";
-import { trpc } from "@/services/trpc/utils";
+import { trpc } from "@/services/serverFunctions/trpcClient";
 
 export default function ExpandableModule({
   moduleName,
@@ -33,7 +33,7 @@ export default function ExpandableModule({
   const { itemDropOnModule } = useDraggingContext();
   const { courseName } = useCourseContext();
   const [assignmentNames] = useAssignmentNamesQuery(moduleName);
-  
+
   const [assignments] = trpc.useSuspenseQueries((t) =>
     assignmentNames.map((assignmentName) =>
       t.assignment.getAssignment({ courseName, moduleName, assignmentName })

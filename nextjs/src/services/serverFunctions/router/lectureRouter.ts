@@ -1,6 +1,6 @@
 import { z } from "zod";
 import publicProcedure from "../procedures/public";
-import { router } from "../trpc";
+import { router } from "../trpcSetup";
 import {
   deleteLecture,
   getLectures,

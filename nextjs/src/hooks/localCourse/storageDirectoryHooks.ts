@@ -1,4 +1,4 @@
-import { trpc } from "@/services/trpc/utils";
+import { trpc } from "@/services/serverFunctions/trpcClient";
 
 export const directoryKeys = {
   emptyFolders: ["empty folders"] as const,

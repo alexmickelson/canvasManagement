@@ -19,7 +19,7 @@ import {
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
-import { trpc } from "@/services/trpc/utils";
+import { trpc } from "@/services/serverFunctions/trpcClient";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { useCourseContext } from "../courseContext";
 

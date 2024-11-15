@@ -4,7 +4,7 @@ import LecturePreview from "../LecturePreview";
 import { getCourseUrl, getLectureUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../../../context/courseContext";
 import Link from "next/link";
-import { trpc } from "@/services/trpc/utils";
+import { trpc } from "@/services/serverFunctions/trpcClient";
 import { useLecturesSuspenseQuery } from "@/hooks/localCourse/lectureHooks";
 
 export default function LecturePreviewPage({

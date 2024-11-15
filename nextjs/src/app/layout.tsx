@@ -5,11 +5,11 @@ import { Suspense } from "react";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { MyToaster } from "./MyToaster";
 import { createServerSideHelpers } from "@trpc/react-query/server";
-import { trpcAppRouter } from "@/services/trpc/router/app";
-import { createTrpcContext } from "@/services/trpc/context";
+import { trpcAppRouter } from "@/services/serverFunctions/router/app";
+import { createTrpcContext } from "@/services/serverFunctions/context";
 import superjson from "superjson";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
-import { ClientCacheInvalidation } from "./realtime/ClientCacheInvalidation";
+import { ClientCacheInvalidation } from "../components/realtime/ClientCacheInvalidation";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -32,7 +32,7 @@ export default async function RootLayout({
               <DataHydration>
                 <ClientCacheInvalidation></ClientCacheInvalidation>
                 {children}
-                </DataHydration>
+              </DataHydration>
             </Providers>
           </Suspense>
         </div>

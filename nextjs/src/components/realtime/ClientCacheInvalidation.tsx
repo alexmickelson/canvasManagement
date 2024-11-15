@@ -1,6 +1,6 @@
 "use client";
 
-import { trpc } from "@/services/trpc/utils";
+import { trpc } from "@/services/serverFunctions/trpcClient";
 import React, { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
 
