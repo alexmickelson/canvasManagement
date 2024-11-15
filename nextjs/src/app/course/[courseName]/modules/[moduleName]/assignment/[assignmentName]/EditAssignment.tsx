@@ -8,7 +8,7 @@ import {
   LocalAssignment,
   localAssignmentMarkdown,
 } from "@/models/local/assignment/localAssignment";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
@@ -27,37 +27,34 @@ export default function EditAssignment({
   assignmentName: string;
   moduleName: string;
 }) {
-  const [_, {dataUpdatedAt}] = useAssignmentQuery(moduleName, assignmentName);
-  return (
-    <InnerEditAssignment
-      key={dataUpdatedAt}
-      assignmentName={assignmentName}
-      moduleName={moduleName}
-    />
-  );
-}
-export function InnerEditAssignment({
-  moduleName,
-  assignmentName,
-}: {
-  assignmentName: string;
-  moduleName: string;
-}) {
   const router = useRouter();
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
-  const [assignment] = useAssignmentQuery(moduleName, assignmentName);
+  const [assignment, { dataUpdatedAt: serverDataUpdatedAt }] =
+    useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
 
   const [assignmentText, setAssignmentText] = useState(
     localAssignmentMarkdown.toMarkdown(assignment)
   );
 
+  const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
+  const [clientDataUpdatedAt, setClientDataUpdatedAt] =
+    useState(serverDataUpdatedAt);
+
+  const textUpdate = useCallback((t: string) => {
+    setAssignmentText(t);
+    setClientDataUpdatedAt(Date.now());
+  }, []);
+
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     const delay = 500;
+    const clientIsAuthoritative = serverDataUpdatedAt <= clientDataUpdatedAt;
+    console.log("client is authoritative", clientIsAuthoritative);
+
     const handler = setTimeout(() => {
       try {
         const updatedAssignment: LocalAssignment =
@@ -66,27 +63,35 @@ export function InnerEditAssignment({
           localAssignmentMarkdown.toMarkdown(assignment) !==
           localAssignmentMarkdown.toMarkdown(updatedAssignment)
         ) {
-          console.log("updating assignment");
-          updateAssignment
-            .mutateAsync({
-              assignment: updatedAssignment,
-              moduleName,
-              assignmentName: updatedAssignment.name,
-              previousModuleName: moduleName,
-              previousAssignmentName: assignmentName,
-              courseName,
-            })
-            .then(() => {
-              if (updatedAssignment.name !== assignmentName)
-                router.replace(
-                  getModuleItemUrl(
-                    courseName,
-                    moduleName,
-                    "assignment",
-                    updatedAssignment.name
-                  )
-                );
-            });
+          if (clientIsAuthoritative) {
+            console.log("updating assignment");
+            updateAssignment
+              .mutateAsync({
+                assignment: updatedAssignment,
+                moduleName,
+                assignmentName: updatedAssignment.name,
+                previousModuleName: moduleName,
+                previousAssignmentName: assignmentName,
+                courseName,
+              })
+              .then(() => {
+                if (updatedAssignment.name !== assignmentName)
+                  router.replace(
+                    getModuleItemUrl(
+                      courseName,
+                      moduleName,
+                      "assignment",
+                      updatedAssignment.name
+                    )
+                  );
+              });
+          } else {
+            console.log(
+              "client not authoritative, updating client with server data"
+            );
+            textUpdate(localAssignmentMarkdown.toMarkdown(assignment));
+            setUpdateMonacoKey((k) => k + 1);
+          }
         }
         setError("");
       } catch (e: any) {
@@ -116,7 +121,11 @@ export function InnerEditAssignment({
           </pre>
         )}
         <div className="flex-1 h-full">
-          <MonacoEditor value={assignmentText} onChange={setAssignmentText} />
+          <MonacoEditor
+            key={updateMonacoKey}
+            value={assignmentText}
+            onChange={textUpdate}
+          />
         </div>
         <div className="flex-1 h-full">
           <div className="text-red-300">{error && error}</div>

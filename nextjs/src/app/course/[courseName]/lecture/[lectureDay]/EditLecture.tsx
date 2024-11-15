@@ -27,16 +27,14 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
     .flatMap(({ lectures }) => lectures.map((lecture) => lecture))
     .find((l) => l.date === lectureDay);
 
-  const serverVersionOfText = getLectureTextOrDefault(lecture, lectureDay);
+  const startingText = getLectureTextOrDefault(lecture, lectureDay);
 
-  const [text, setText] = useState(serverVersionOfText);
+  const [text, setText] = useState(startingText);
   const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
   const [error, setError] = useState("");
 
   const [clientDataUpdatedAt, setClientDataUpdatedAt] =
     useState(serverDataUpdatedAt);
-  const clientIsAuthoritative = serverDataUpdatedAt <= clientDataUpdatedAt;
-  console.log("client it authoritative", clientIsAuthoritative);
 
   const textUpdate = useCallback((t: string) => {
     setText(t);
@@ -45,6 +43,9 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
 
   useEffect(() => {
     const delay = 500;
+    const clientIsAuthoritative = serverDataUpdatedAt <= clientDataUpdatedAt;
+    console.log("client is authoritative", clientIsAuthoritative);
+
     const handler = setTimeout(() => {
       try {
         const parsed = parseLecture(text);
@@ -75,15 +76,7 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
     return () => {
       clearTimeout(handler);
     };
-  }, [
-    clientIsAuthoritative,
-    courseName,
-    lecture,
-    settings,
-    text,
-    textUpdate,
-    updateLecture,
-  ]);
+  }, [courseName, lecture, settings, text, textUpdate, updateLecture]);
 
   return (
     <div className="h-full flex flex-col">

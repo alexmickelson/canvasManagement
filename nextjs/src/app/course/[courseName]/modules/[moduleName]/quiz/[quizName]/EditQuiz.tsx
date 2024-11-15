@@ -1,7 +1,7 @@
 "use client";
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import QuizPreview from "./QuizPreview";
 import { QuizButtons } from "./QuizButton";
 import ClientOnly from "@/components/ClientOnly";
@@ -62,7 +62,7 @@ export default function EditQuiz({
   quizName: string;
   moduleName: string;
 }) {
-  const [_, {dataUpdatedAt}] = useQuizQuery(moduleName, quizName);
+  const [_, { dataUpdatedAt }] = useQuizQuery(moduleName, quizName);
   return (
     <InnerEditQuiz
       key={dataUpdatedAt}
@@ -80,44 +80,66 @@ export function InnerEditQuiz({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [quiz] = useQuizQuery(moduleName, quizName);
+  const [quiz, { dataUpdatedAt: serverDataUpdatedAt }] = useQuizQuery(
+    moduleName,
+    quizName
+  );
   const updateQuizMutation = useUpdateQuizMutation();
   const [quizText, setQuizText] = useState(quizMarkdownUtils.toMarkdown(quiz));
+
+  const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
+  const [clientDataUpdatedAt, setClientDataUpdatedAt] =
+    useState(serverDataUpdatedAt);
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);
 
+  const textUpdate = useCallback((t: string) => {
+    setQuizText(t);
+    setClientDataUpdatedAt(Date.now());
+  }, []);
+
   useEffect(() => {
     const delay = 1000;
+    const clientIsAuthoritative = serverDataUpdatedAt <= clientDataUpdatedAt;
+    console.log("client is authoritative", clientIsAuthoritative);
+
     const handler = setTimeout(async () => {
       try {
-        console.log("checking if the same...");
         if (
           quizMarkdownUtils.toMarkdown(quiz) !==
           quizMarkdownUtils.toMarkdown(
             quizMarkdownUtils.parseMarkdown(quizText)
           )
         ) {
-          const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
-          updateQuizMutation
-            .mutateAsync({
-              quiz: updatedQuiz,
-              moduleName,
-              quizName: updatedQuiz.name,
-              previousModuleName: moduleName,
-              previousQuizName: quizName,
-              courseName,
-            })
-            .then(() => {
-              if (updatedQuiz.name !== quizName)
-                router.replace(
-                  getModuleItemUrl(
-                    courseName,
-                    moduleName,
-                    "quiz",
-                    updatedQuiz.name
-                  )
-                );
-            });
+          if (clientIsAuthoritative) {
+            const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
+            await updateQuizMutation
+              .mutateAsync({
+                quiz: updatedQuiz,
+                moduleName,
+                quizName: updatedQuiz.name,
+                previousModuleName: moduleName,
+                previousQuizName: quizName,
+                courseName,
+              })
+              .then(() => {
+                if (updatedQuiz.name !== quizName)
+                  router.replace(
+                    getModuleItemUrl(
+                      courseName,
+                      moduleName,
+                      "quiz",
+                      updatedQuiz.name
+                    )
+                  );
+              });
+          } else {
+            console.log(
+              "client not authoritative, updating client with server data"
+            );
+            textUpdate(quizMarkdownUtils.toMarkdown(quiz));
+            setUpdateMonacoKey((k) => k + 1);
+          }
         }
         setError("");
       } catch (e: any) {
@@ -129,15 +151,19 @@ export function InnerEditQuiz({
       clearTimeout(handler);
     };
   }, [
+    clientDataUpdatedAt,
     courseName,
     moduleName,
     quiz,
     quizName,
     quizText,
     router,
+    serverDataUpdatedAt,
+    textUpdate,
     updateQuizMutation,
   ]);
 
+  console.log("updateMonacoKey", updateMonacoKey);
   return (
     <div className="h-full flex flex-col align-middle px-1">
       <div className={"min-h-96 h-full flex flex-row w-full"}>
@@ -147,7 +173,11 @@ export function InnerEditQuiz({
           </pre>
         )}
         <div className="flex-1 h-full">
-          <MonacoEditor value={quizText} onChange={setQuizText} />
+          <MonacoEditor
+            key={updateMonacoKey}
+            value={quizText}
+            onChange={textUpdate}
+          />
         </div>
         <div className="flex-1 h-full">
           <div className="text-red-300">{error && error}</div>
