@@ -14,6 +14,7 @@ import ClientOnly from "@/components/ClientOnly";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 
 export default function EditPage({
   moduleName,
@@ -22,68 +23,60 @@ export default function EditPage({
   pageName: string;
   moduleName: string;
 }) {
-  const [_, { dataUpdatedAt }] = usePageQuery(moduleName, pageName);
-
-  return (
-    <InnerEditPage
-      key={dataUpdatedAt}
-      pageName={pageName}
-      moduleName={moduleName}
-    ></InnerEditPage>
-  );
-}
-
-function InnerEditPage({
-  moduleName,
-  pageName,
-}: {
-  pageName: string;
-  moduleName: string;
-}) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [page, pageQuery] = usePageQuery(moduleName, pageName);
-  const updatePage = useUpdatePageMutation();
-  const [pageText, setPageText] = useState(
-    localPageMarkdownUtils.toMarkdown(page)
+  const [page, { dataUpdatedAt }] = usePageQuery(
+    moduleName,
+    pageName
   );
+  const updatePage = useUpdatePageMutation();
+
+  const { clientIsAuthoritative, text, textUpdate, monacoKey } =
+    useAuthoritativeUpdates({
+      serverUpdatedAt: dataUpdatedAt,
+      startingText: localPageMarkdownUtils.toMarkdown(page),
+    });
+
   const [error, setError] = useState("");
   const [settings] = useLocalCourseSettingsQuery();
-
-  useEffect(() => {
-    console.log("page data updated on sever", pageQuery.dataUpdatedAt);
-  }, [pageQuery.dataUpdatedAt]);
 
   useEffect(() => {
     const delay = 500;
     const handler = setTimeout(() => {
       try {
-        const updatedPage = localPageMarkdownUtils.parseMarkdown(pageText);
+        const updatedPage = localPageMarkdownUtils.parseMarkdown(text);
         if (
           localPageMarkdownUtils.toMarkdown(page) !==
           localPageMarkdownUtils.toMarkdown(updatedPage)
         ) {
-          console.log("updating page");
-          updatePage
-            .mutateAsync({
-              page: updatedPage,
-              moduleName,
-              pageName: updatedPage.name,
-              previousModuleName: moduleName,
-              previousPageName: pageName,
-              courseName,
-            })
-            .then(() => {
-              if (updatedPage.name !== pageName)
-                router.replace(
-                  getModuleItemUrl(
-                    courseName,
-                    moduleName,
-                    "page",
-                    updatedPage.name
-                  )
-                );
-            });
+          if (clientIsAuthoritative) {
+            console.log("updating page");
+            updatePage
+              .mutateAsync({
+                page: updatedPage,
+                moduleName,
+                pageName: updatedPage.name,
+                previousModuleName: moduleName,
+                previousPageName: pageName,
+                courseName,
+              })
+              .then(() => {
+                if (updatedPage.name !== pageName)
+                  router.replace(
+                    getModuleItemUrl(
+                      courseName,
+                      moduleName,
+                      "page",
+                      updatedPage.name
+                    )
+                  );
+              });
+          } else {
+            console.log(
+              "client not authoritative, updating client with server data"
+            );
+            textUpdate(localPageMarkdownUtils.toMarkdown(page), true);
+          }
         }
         setError("");
       } catch (e: any) {
@@ -94,13 +87,23 @@ function InnerEditPage({
     return () => {
       clearTimeout(handler);
     };
-  }, [courseName, moduleName, page, pageName, pageText, router, updatePage]);
+  }, [
+    clientIsAuthoritative,
+    courseName,
+    moduleName,
+    page,
+    pageName,
+    router,
+    text,
+    textUpdate,
+    updatePage,
+  ]);
 
   return (
     <div className="h-full flex flex-col">
       <div className="columns-2 min-h-0 flex-1">
         <div className="flex-1 h-full">
-          <MonacoEditor value={pageText} onChange={setPageText} />
+          <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
         </div>
         <div className="h-full">
           <div className="text-red-300">{error && error}</div>

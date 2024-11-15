@@ -15,6 +15,7 @@ import LectureButtons from "./LectureButtons";
 import { useCourseContext } from "../../context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { Lecture } from "@/models/local/lecture";
+import { useAuthoritativeUpdates } from "../../utils/useAuthoritativeUpdates";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
@@ -27,24 +28,15 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
     .flatMap(({ lectures }) => lectures.map((lecture) => lecture))
     .find((l) => l.date === lectureDay);
 
-  const startingText = getLectureTextOrDefault(lecture, lectureDay);
-
-  const [text, setText] = useState(startingText);
-  const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
+  const { clientIsAuthoritative, text, textUpdate, monacoKey } =
+    useAuthoritativeUpdates({
+      serverUpdatedAt: serverDataUpdatedAt,
+      startingText: getLectureTextOrDefault(lecture, lectureDay),
+    });
   const [error, setError] = useState("");
-
-  const [clientDataUpdatedAt, setClientDataUpdatedAt] =
-    useState(serverDataUpdatedAt);
-
-  const textUpdate = useCallback((t: string) => {
-    setText(t);
-    setClientDataUpdatedAt(Date.now());
-  }, []);
 
   useEffect(() => {
     const delay = 500;
-    const clientIsAuthoritative = serverDataUpdatedAt <= clientDataUpdatedAt;
-    console.log("client is authoritative", clientIsAuthoritative);
 
     const handler = setTimeout(() => {
       try {
@@ -58,8 +50,7 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
               console.log(
                 "client not authoritative, updating client with server data"
               );
-              textUpdate(lectureToString(lecture));
-              setUpdateMonacoKey((k) => k + 1);
+              textUpdate(lectureToString(lecture), true);
             } else {
               console.log(
                 "client not authoritative, but no lecture on server, this is a bug"
@@ -76,18 +67,22 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
     return () => {
       clearTimeout(handler);
     };
-  }, [courseName, lecture, settings, text, textUpdate, updateLecture]);
+  }, [
+    clientIsAuthoritative,
+    courseName,
+    lecture,
+    settings,
+    text,
+    textUpdate,
+    updateLecture,
+  ]);
 
   return (
     <div className="h-full flex flex-col">
       <EditLectureTitle lectureDay={lectureDay} />
       <div className="sm:columns-2 min-h-0 flex-1">
         <div className="flex-1 h-full">
-          <MonacoEditor
-            key={updateMonacoKey}
-            value={text}
-            onChange={textUpdate}
-          />
+          <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
         </div>
         <div className="h-full sm:block none overflow-auto">
           <div className="text-red-300">{error && error}</div>

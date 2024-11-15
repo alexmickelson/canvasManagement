@@ -8,7 +8,7 @@ import {
   LocalAssignment,
   localAssignmentMarkdown,
 } from "@/models/local/assignment/localAssignment";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
@@ -19,6 +19,7 @@ import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSu
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { useRouter } from "next/navigation";
 import { AssignmentButtons } from "./AssignmentButtons";
+import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 
 export default function EditAssignment({
   moduleName,
@@ -34,31 +35,22 @@ export default function EditAssignment({
     useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
 
-  const [assignmentText, setAssignmentText] = useState(
-    localAssignmentMarkdown.toMarkdown(assignment)
-  );
-
-  const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
-  const [clientDataUpdatedAt, setClientDataUpdatedAt] =
-    useState(serverDataUpdatedAt);
-
-  const textUpdate = useCallback((t: string) => {
-    setAssignmentText(t);
-    setClientDataUpdatedAt(Date.now());
-  }, []);
+  const { clientIsAuthoritative, text, textUpdate, monacoKey } =
+    useAuthoritativeUpdates({
+      serverUpdatedAt: serverDataUpdatedAt,
+      startingText: localAssignmentMarkdown.toMarkdown(assignment),
+    });
 
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);
 
   useEffect(() => {
     const delay = 500;
-    const clientIsAuthoritative = serverDataUpdatedAt <= clientDataUpdatedAt;
-    console.log("client is authoritative", clientIsAuthoritative);
 
     const handler = setTimeout(() => {
       try {
         const updatedAssignment: LocalAssignment =
-          localAssignmentMarkdown.parseMarkdown(assignmentText);
+          localAssignmentMarkdown.parseMarkdown(text);
         if (
           localAssignmentMarkdown.toMarkdown(assignment) !==
           localAssignmentMarkdown.toMarkdown(updatedAssignment)
@@ -89,8 +81,7 @@ export default function EditAssignment({
             console.log(
               "client not authoritative, updating client with server data"
             );
-            textUpdate(localAssignmentMarkdown.toMarkdown(assignment));
-            setUpdateMonacoKey((k) => k + 1);
+            textUpdate(localAssignmentMarkdown.toMarkdown(assignment), true);
           }
         }
         setError("");
@@ -105,10 +96,12 @@ export default function EditAssignment({
   }, [
     assignment,
     assignmentName,
-    assignmentText,
+    clientIsAuthoritative,
     courseName,
     moduleName,
     router,
+    text,
+    textUpdate,
     updateAssignment,
   ]);
 
@@ -121,11 +114,7 @@ export default function EditAssignment({
           </pre>
         )}
         <div className="flex-1 h-full">
-          <MonacoEditor
-            key={updateMonacoKey}
-            value={assignmentText}
-            onChange={textUpdate}
-          />
+          <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
         </div>
         <div className="flex-1 h-full">
           <div className="text-red-300">{error && error}</div>

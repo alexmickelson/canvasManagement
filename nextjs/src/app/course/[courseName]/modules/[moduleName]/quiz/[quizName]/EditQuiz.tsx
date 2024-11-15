@@ -1,7 +1,7 @@
 "use client";
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import QuizPreview from "./QuizPreview";
 import { QuizButtons } from "./QuizButton";
 import ClientOnly from "@/components/ClientOnly";
@@ -13,6 +13,7 @@ import {
   useQuizQuery,
   useUpdateQuizMutation,
 } from "@/hooks/localCourse/quizHooks";
+import { useAuthoritativeUpdates } from "../../../../utils/useAuthoritativeUpdates";
 
 const helpString = `QUESTION REFERENCE
 ---
@@ -62,22 +63,6 @@ export default function EditQuiz({
   quizName: string;
   moduleName: string;
 }) {
-  const [_, { dataUpdatedAt }] = useQuizQuery(moduleName, quizName);
-  return (
-    <InnerEditQuiz
-      key={dataUpdatedAt}
-      quizName={quizName}
-      moduleName={moduleName}
-    />
-  );
-}
-export function InnerEditQuiz({
-  moduleName,
-  quizName,
-}: {
-  quizName: string;
-  moduleName: string;
-}) {
   const router = useRouter();
   const { courseName } = useCourseContext();
   const [quiz, { dataUpdatedAt: serverDataUpdatedAt }] = useQuizQuery(
@@ -85,34 +70,25 @@ export function InnerEditQuiz({
     quizName
   );
   const updateQuizMutation = useUpdateQuizMutation();
-  const [quizText, setQuizText] = useState(quizMarkdownUtils.toMarkdown(quiz));
+  const { clientIsAuthoritative, text, textUpdate, monacoKey } =
+    useAuthoritativeUpdates({
+      serverUpdatedAt: serverDataUpdatedAt,
+      startingText: quizMarkdownUtils.toMarkdown(quiz),
+    });
 
-  const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
-  const [clientDataUpdatedAt, setClientDataUpdatedAt] =
-    useState(serverDataUpdatedAt);
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);
 
-  const textUpdate = useCallback((t: string) => {
-    setQuizText(t);
-    setClientDataUpdatedAt(Date.now());
-  }, []);
-
   useEffect(() => {
     const delay = 1000;
-    const clientIsAuthoritative = serverDataUpdatedAt <= clientDataUpdatedAt;
-    console.log("client is authoritative", clientIsAuthoritative);
-
     const handler = setTimeout(async () => {
       try {
         if (
           quizMarkdownUtils.toMarkdown(quiz) !==
-          quizMarkdownUtils.toMarkdown(
-            quizMarkdownUtils.parseMarkdown(quizText)
-          )
+          quizMarkdownUtils.toMarkdown(quizMarkdownUtils.parseMarkdown(text))
         ) {
           if (clientIsAuthoritative) {
-            const updatedQuiz = quizMarkdownUtils.parseMarkdown(quizText);
+            const updatedQuiz = quizMarkdownUtils.parseMarkdown(text);
             await updateQuizMutation
               .mutateAsync({
                 quiz: updatedQuiz,
@@ -137,8 +113,7 @@ export function InnerEditQuiz({
             console.log(
               "client not authoritative, updating client with server data"
             );
-            textUpdate(quizMarkdownUtils.toMarkdown(quiz));
-            setUpdateMonacoKey((k) => k + 1);
+            textUpdate(quizMarkdownUtils.toMarkdown(quiz), true);
           }
         }
         setError("");
@@ -151,19 +126,17 @@ export function InnerEditQuiz({
       clearTimeout(handler);
     };
   }, [
-    clientDataUpdatedAt,
+    clientIsAuthoritative,
     courseName,
     moduleName,
     quiz,
     quizName,
-    quizText,
     router,
-    serverDataUpdatedAt,
+    text,
     textUpdate,
     updateQuizMutation,
   ]);
 
-  console.log("updateMonacoKey", updateMonacoKey);
   return (
     <div className="h-full flex flex-col align-middle px-1">
       <div className={"min-h-96 h-full flex flex-row w-full"}>
@@ -173,11 +146,7 @@ export function InnerEditQuiz({
           </pre>
         )}
         <div className="flex-1 h-full">
-          <MonacoEditor
-            key={updateMonacoKey}
-            value={quizText}
-            onChange={textUpdate}
-          />
+          <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
         </div>
         <div className="flex-1 h-full">
           <div className="text-red-300">{error && error}</div>
