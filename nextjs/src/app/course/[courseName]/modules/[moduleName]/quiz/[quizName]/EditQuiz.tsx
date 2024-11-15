@@ -62,6 +62,22 @@ export default function EditQuiz({
   quizName: string;
   moduleName: string;
 }) {
+  const [_, {dataUpdatedAt}] = useQuizQuery(moduleName, quizName);
+  return (
+    <InnerEditQuiz
+      key={dataUpdatedAt}
+      quizName={quizName}
+      moduleName={moduleName}
+    />
+  );
+}
+export function InnerEditQuiz({
+  moduleName,
+  quizName,
+}: {
+  quizName: string;
+  moduleName: string;
+}) {
   const router = useRouter();
   const { courseName } = useCourseContext();
   const [quiz] = useQuizQuery(moduleName, quizName);

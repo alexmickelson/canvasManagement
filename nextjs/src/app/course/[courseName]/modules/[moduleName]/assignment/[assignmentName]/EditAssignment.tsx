@@ -27,6 +27,22 @@ export default function EditAssignment({
   assignmentName: string;
   moduleName: string;
 }) {
+  const [_, {dataUpdatedAt}] = useAssignmentQuery(moduleName, assignmentName);
+  return (
+    <InnerEditAssignment
+      key={dataUpdatedAt}
+      assignmentName={assignmentName}
+      moduleName={moduleName}
+    />
+  );
+}
+export function InnerEditAssignment({
+  moduleName,
+  assignmentName,
+}: {
+  assignmentName: string;
+  moduleName: string;
+}) {
   const router = useRouter();
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();

@@ -22,15 +22,37 @@ export default function EditPage({
   pageName: string;
   moduleName: string;
 }) {
+  const [_, { dataUpdatedAt }] = usePageQuery(moduleName, pageName);
+
+  return (
+    <InnerEditPage
+      key={dataUpdatedAt}
+      pageName={pageName}
+      moduleName={moduleName}
+    ></InnerEditPage>
+  );
+}
+
+function InnerEditPage({
+  moduleName,
+  pageName,
+}: {
+  pageName: string;
+  moduleName: string;
+}) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [page] = usePageQuery(moduleName, pageName);
+  const [page, pageQuery] = usePageQuery(moduleName, pageName);
   const updatePage = useUpdatePageMutation();
   const [pageText, setPageText] = useState(
     localPageMarkdownUtils.toMarkdown(page)
   );
   const [error, setError] = useState("");
   const [settings] = useLocalCourseSettingsQuery();
+
+  useEffect(() => {
+    console.log("page data updated on sever", pageQuery.dataUpdatedAt);
+  }, [pageQuery.dataUpdatedAt]);
 
   useEffect(() => {
     const delay = 500;

@@ -1,7 +1,10 @@
 "use client";
 
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
-import { useLecturesSuspenseQuery, useLectureUpdateMutation } from "@/hooks/localCourse/lectureHooks";
+import {
+  useLecturesSuspenseQuery,
+  useLectureUpdateMutation,
+} from "@/hooks/localCourse/lectureHooks";
 import {
   lectureToString,
   parseLecture,
@@ -10,11 +13,16 @@ import { useEffect, useState } from "react";
 import LecturePreview from "./LecturePreview";
 import EditLectureTitle from "./EditLectureTitle";
 import LectureButtons from "./LectureButtons";
-import { trpc } from "@/services/trpc/utils";
 import { useCourseContext } from "../../context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
+  const [_, {dataUpdatedAt}] = useLecturesSuspenseQuery();
+  return (
+    <InnerEditLecture key={dataUpdatedAt} lectureDay={lectureDay} />
+  );
+}
+export function InnerEditLecture({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
   const [weeks] = useLecturesSuspenseQuery();

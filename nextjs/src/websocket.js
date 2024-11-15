@@ -12,7 +12,7 @@ const port = 3000;
 const app = next({ dev, hostname, port });
 const handler = app.getRequestHandler();
 
-const folderToWatch = path.join(process.cwd(), "./storage");
+const folderToWatch = path.join(process.cwd(), "./storage", "/");
 console.log("watching folder", folderToWatch);
 
 app.prepare().then(() => {
@@ -23,21 +23,14 @@ app.prepare().then(() => {
 
   io.on("connection", (socket) => {
     console.log("websocket connection created");
-
-    // Define a change event handler
     const changeHandler = (filePath) => {
-      const relativePath = filePath.replace(folderToWatch, "")
+      const relativePath = filePath.replace(folderToWatch, "");
       console.log(`Sending file changed websocket message: ${relativePath}`);
 
-
-
-      socket.emit("fileChanged", `File changed: ${filePath}`);
+      socket.emit("fileChanged", relativePath);
     };
-
-    // Attach the change event handler
     watcher.on("change", changeHandler);
 
-    // Clean up the change event handler when the client disconnects
     socket.on("disconnect", () => {
       console.log("Client disconnected");
       watcher.off("change", changeHandler); // Remove the event listener

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MAJOR_VERSION="2"
-MINOR_VERSION="2"
+MINOR_VERSION="3"
 VERSION="$MAJOR_VERSION.$MINOR_VERSION"
 
 docker build -t canvas_management:$VERSION .
