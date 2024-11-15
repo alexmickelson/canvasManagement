@@ -34,7 +34,7 @@ export function ClientCacheInvalidation() {
       const [courseName, moduleOrLectures, itemType, itemFile] =
         filePath.split("/");
 
-      const itemName = removeFileExtension(itemFile);
+      const itemName = itemFile ? removeFileExtension(itemFile) : undefined;
 
       const allParts = [courseName, moduleOrLectures, itemType, itemName];
 
