@@ -22,19 +22,19 @@ laborDay:
 - 9/1/2024`;
 
 export const holidaysAreEqual = (
-  obj1: {
+  holidays1: {
     name: string;
     days: string[];
   }[],
-  obj2: {
+  holidays2: {
     name: string;
     days: string[];
   }[]
 ): boolean => {
-  if (obj1.length !== obj2.length) return false;
+  if (holidays1.length !== holidays2.length) return false;
 
-  const sortedObj1 = [...obj1].sort((a, b) => a.name.localeCompare(b.name));
-  const sortedObj2 = [...obj2].sort((a, b) => a.name.localeCompare(b.name));
+  const sortedObj1 = [...holidays1].sort((a, b) => a.name.localeCompare(b.name));
+  const sortedObj2 = [...holidays2].sort((a, b) => a.name.localeCompare(b.name));
 
   for (let i = 0; i < sortedObj1.length; i++) {
     const holiday1 = sortedObj1[i];
@@ -64,7 +64,6 @@ export default function HolidayConfig() {
 }
 function InnerHolidayConfig() {
   const [settings] = useLocalCourseSettingsQuery();
-  console.log(settings.holidays);
   const updateSettings = useUpdateLocalCourseSettingsMutation();
 
   const [rawText, setRawText] = useState(holidaysToString(settings.holidays));

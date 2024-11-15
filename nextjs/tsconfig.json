@@ -34,7 +34,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "src/app/course/[courseName]/modules/[moduleName]/quiz/[quizName]/EditQuiztsx"
-  ],
+, "next.config.mjs", "src/websocket.js"  ],
   "exclude": [
     "node_modules"
   ]

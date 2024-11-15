@@ -9,6 +9,7 @@ import { trpcAppRouter } from "@/services/trpc/router/app";
 import { createTrpcContext } from "@/services/trpc/context";
 import superjson from "superjson";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { ClientCacheInvalidation } from "./realtime/ClientCacheInvalidation";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
@@ -28,7 +29,10 @@ export default async function RootLayout({
           <MyToaster />
           <Suspense>
             <Providers>
-              <DataHydration>{children}</DataHydration>
+              <DataHydration>
+                <ClientCacheInvalidation></ClientCacheInvalidation>
+                {children}
+                </DataHydration>
             </Providers>
           </Suspense>
         </div>
