@@ -10,6 +10,7 @@ services:
     environment:
       - storageDirectory=/app/storage
       - TZ=America/Denver
+      # - FILE_POLLING=true
     volumes:
       - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/UX
       - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend

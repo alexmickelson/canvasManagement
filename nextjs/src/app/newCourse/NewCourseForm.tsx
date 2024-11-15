@@ -31,6 +31,7 @@ const sampleCompose = `services:
       - .env # needs to have your CANVAS_TOKEN set
     environment:
       - TZ=America/Denver # prevents timezone issues for due dates
+      # - FILE_POLLING=true # increases cpu usage, uncomment if source volumes are on ntfs
     volumes:
       - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/UX
       - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend

@@ -3,6 +3,8 @@ import next from "next";
 import { Server } from "socket.io";
 import chokidar from "chokidar";
 import path from "path";
+import dotenv from "dotenv";
+dotenv.config();
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = "localhost";
@@ -14,12 +16,18 @@ const handler = app.getRequestHandler();
 
 const folderToWatch = path.join(process.cwd(), "./storage", "/");
 console.log("watching folder", folderToWatch);
+const usePolling = process.env.FILE_POLLING === "true";
+console.log("FILE_POLLING:", usePolling);
+
+const watcher = chokidar.watch(folderToWatch, {
+  persistent: true,
+  usePolling,
+});
 
 app.prepare().then(() => {
   const httpServer = createServer(handler);
 
   const io = new Server(httpServer);
-  const watcher = chokidar.watch(folderToWatch, { persistent: true });
 
   io.on("connection", (socket) => {
     console.log("websocket connection created");
