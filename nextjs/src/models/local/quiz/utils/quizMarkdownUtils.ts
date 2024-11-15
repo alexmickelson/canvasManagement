@@ -1,7 +1,7 @@
 import {
   verifyDateOrThrow,
   verifyDateStringOrUndefined,
-} from "../../timeUtils";
+} from "../../utils/timeUtils";
 import { LocalQuiz } from "../localQuiz";
 import { quizQuestionMarkdownUtils } from "./quizQuestionMarkdownUtils";
 

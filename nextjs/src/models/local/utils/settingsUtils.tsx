@@ -1,6 +1,4 @@
 import {
-  dateToMarkdownString,
-  getDateFromString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "./timeUtils";

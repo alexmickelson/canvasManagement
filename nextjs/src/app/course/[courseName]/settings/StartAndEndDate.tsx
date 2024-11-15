@@ -1,6 +1,6 @@
 "use client";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { getDateOnlyMarkdownString } from "@/models/local/timeUtils";
+import { getDateOnlyMarkdownString } from "@/models/local/utils/timeUtils";
 import React from "react";
 import { settingsBox } from "./sharedSettings";
 

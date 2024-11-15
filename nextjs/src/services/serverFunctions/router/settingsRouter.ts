@@ -13,7 +13,7 @@ import {
   prepLectureForNewSemester,
   prepPageForNewSemester,
   prepQuizForNewSemester,
-} from "@/models/local/semesterTransferUtils";
+} from "@/models/local/utils/semesterTransferUtils";
 
 export const settingsRouter = router({
   allCoursesSettings: publicProcedure.query(async () => {

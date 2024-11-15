@@ -8,14 +8,15 @@ import { useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks"
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useCreatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
-import {
-  dateToMarkdownString,
-  getDateFromString,
-  getDateFromStringOrThrow,
-} from "@/models/local/timeUtils";
+
 import React, { useState } from "react";
 import { useCourseContext } from "../context/courseContext";
 import { useCreateQuizMutation } from "@/hooks/localCourse/quizHooks";
+import {
+  getDateFromString,
+  dateToMarkdownString,
+  getDateFromStringOrThrow,
+} from "@/models/local/utils/timeUtils";
 
 export default function NewItemForm({
   moduleName: defaultModuleName,

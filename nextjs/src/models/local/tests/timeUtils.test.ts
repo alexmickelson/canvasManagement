@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { dateToMarkdownString, getDateFromString } from "../timeUtils";
+import { dateToMarkdownString, getDateFromString } from "../utils/timeUtils";
 
 describe("Can properly handle expected date formats", () => {
   it("can use AM/PM dates", () => {

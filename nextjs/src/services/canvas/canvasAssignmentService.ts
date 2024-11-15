@@ -5,9 +5,7 @@ import { axiosClient } from "../axiosUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { CanvasRubricCreationResponse } from "@/models/canvas/assignments/canvasRubricCreationResponse";
 import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
-import { getDateFromString } from "@/models/local/timeUtils";
-import { canvasModuleService } from "./canvasModuleService";
-import { CanvasModule } from "@/models/canvas/modules/canvasModule";
+import { getDateFromString } from "@/models/local/utils/timeUtils";
 import { getRubricCriterion } from "./canvasRubricUtils";
 
 export const canvasAssignmentService = {

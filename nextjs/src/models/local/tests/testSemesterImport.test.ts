@@ -5,7 +5,7 @@ import {
   prepLectureForNewSemester,
   prepPageForNewSemester,
   prepQuizForNewSemester,
-} from "../semesterTransferUtils";
+} from "../utils/semesterTransferUtils";
 import { LocalQuiz } from "../quiz/localQuiz";
 import { LocalCoursePage } from "../page/localCoursePage";
 import { Lecture } from "../lecture";

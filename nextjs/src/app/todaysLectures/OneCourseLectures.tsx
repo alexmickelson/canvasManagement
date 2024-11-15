@@ -1,11 +1,11 @@
 "use client";
 
-import { getDateOnlyMarkdownString } from "@/models/local/timeUtils";
 import { getLecturePreviewUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useCourseContext } from "../course/[courseName]/context/courseContext";
-import { getLectureForDay } from "@/models/local/lectureUtils";
 import { useLecturesSuspenseQuery as useLecturesQuery } from "@/hooks/localCourse/lectureHooks";
+import { getLectureForDay } from "@/models/local/utils/lectureUtils";
+import { getDateOnlyMarkdownString } from "@/models/local/utils/timeUtils";
 
 export default function OneCourseLectures() {
   const { courseName } = useCourseContext();

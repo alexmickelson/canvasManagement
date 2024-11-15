@@ -8,7 +8,7 @@ import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   dateToMarkdownString,
   getDateFromStringOrThrow,
-} from "@/models/local/timeUtils";
+} from "@/models/local/utils/timeUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 import { htmlIsCloseEnough } from "@/services/utils/htmlIsCloseEnough";
 import { ReactNode } from "react";

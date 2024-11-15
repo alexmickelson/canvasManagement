@@ -3,7 +3,7 @@ import { axiosClient } from "../axiosUtils";
 import { canvasApi } from "./canvasServiceUtils";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
-import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
+import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
 import { canvasAssignmentService } from "./canvasAssignmentService";
 import {
   LocalQuizQuestion,

@@ -2,7 +2,7 @@ import EditLecture from "./EditLecture";
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
-} from "@/models/local/timeUtils";
+} from "@/models/local/utils/timeUtils";
 
 export default async function page({
   params,

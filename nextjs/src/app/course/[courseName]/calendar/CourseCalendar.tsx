@@ -1,5 +1,5 @@
 "use client";
-import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
+import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
 import { getMonthsBetweenDates } from "./calendarMonthUtils";
 import { CalendarMonth } from "./CalendarMonth";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";

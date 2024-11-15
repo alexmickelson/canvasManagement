@@ -8,18 +8,17 @@ import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHoo
 import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { Lecture } from "@/models/local/lecture";
-import { getLectureForDay } from "@/models/local/lectureUtils";
+import { getLectureForDay } from "@/models/local/utils/lectureUtils";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
   dateToMarkdownString,
-} from "@/models/local/timeUtils";
+} from "@/models/local/utils/timeUtils";
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
-import { trpc } from "@/services/serverFunctions/trpcClient";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { useCourseContext } from "../courseContext";
 

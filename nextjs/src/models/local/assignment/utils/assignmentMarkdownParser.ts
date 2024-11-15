@@ -1,7 +1,7 @@
 import {
   verifyDateOrThrow,
   verifyDateStringOrUndefined,
-} from "../../timeUtils";
+} from "../../utils/timeUtils";
 import { AssignmentSubmissionType } from "../assignmentSubmissionType";
 import { LocalAssignment } from "../localAssignment";
 import { RubricItem } from "../rubricItem";

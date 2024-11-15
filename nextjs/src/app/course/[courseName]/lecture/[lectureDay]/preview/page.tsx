@@ -1,7 +1,7 @@
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
-} from "@/models/local/timeUtils";
+} from "@/models/local/utils/timeUtils";
 import LecturePreviewPage from "./LecturePreviewPage";
 
 export default async function Page({

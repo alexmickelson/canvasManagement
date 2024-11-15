@@ -5,7 +5,7 @@ import {
   getDateFromString,
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
-} from "@/models/local/timeUtils";
+} from "@/models/local/utils/timeUtils";
 import { Fragment } from "react";
 import Modal, { useModal } from "../../../../components/Modal";
 import NewItemForm from "./NewItemForm";

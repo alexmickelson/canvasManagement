@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { extractLabelValue } from "../assignment/utils/markdownUtils";
 import { IModuleItem } from "../IModuleItem";
-import { verifyDateOrThrow } from "../timeUtils";
+import { verifyDateOrThrow } from "../utils/timeUtils";
 
 export interface LocalCoursePage extends IModuleItem {
   name: string;

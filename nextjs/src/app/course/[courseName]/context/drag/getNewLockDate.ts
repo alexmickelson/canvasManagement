@@ -1,5 +1,5 @@
 "use client";
-import { getDateFromStringOrThrow, dateToMarkdownString } from "@/models/local/timeUtils";
+import { getDateFromStringOrThrow, dateToMarkdownString } from "@/models/local/utils/timeUtils";
 
 
 export function getNewLockDate(

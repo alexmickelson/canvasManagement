@@ -1,4 +1,4 @@
-import { Lecture } from "./lecture";
+import { Lecture } from "../lecture";
 import { getDateOnlyMarkdownString } from "./timeUtils";
 
 export function getLectureForDay(weeks: { weekName: string; lectures: Lecture[]; }[], dayAsDate: Date) {

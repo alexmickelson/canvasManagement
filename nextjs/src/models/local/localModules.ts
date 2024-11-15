@@ -2,7 +2,7 @@ import { LocalAssignment } from "./assignment/localAssignment";
 import { IModuleItem } from "./IModuleItem";
 import { LocalCoursePage } from "./page/localCoursePage";
 import { LocalQuiz } from "./quiz/localQuiz";
-import { getDateFromString } from "./timeUtils";
+import { getDateFromString } from "./utils/timeUtils";
 
 export interface LocalModule {
   name: string;

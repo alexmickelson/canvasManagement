@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { parseHolidays } from "../settingsUtils";
+import { parseHolidays } from "../utils/settingsUtils";
 
 describe("can parse holiday string", () => {
   it("can parse empty list", () => {

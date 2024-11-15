@@ -1,6 +1,6 @@
 "use client";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
+import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
 import { getWeekNumber } from "./calendarMonthUtils";
 import Day from "./day/Day";
 

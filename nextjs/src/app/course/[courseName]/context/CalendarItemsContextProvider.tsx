@@ -6,7 +6,7 @@ import {
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
-} from "@/models/local/timeUtils";
+} from "@/models/local/utils/timeUtils";
 import { useAllCourseDataQuery } from "@/hooks/localCourse/localCourseModuleHooks";
 import { trpc } from "@/services/serverFunctions/trpcClient";
 

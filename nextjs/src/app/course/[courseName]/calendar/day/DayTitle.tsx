@@ -5,7 +5,7 @@ import { useCourseContext } from "../../context/courseContext";
 import NewItemForm from "../../modules/NewItemForm";
 import { DraggableItem } from "../../context/drag/draggingContext";
 import { useDragStyleContext } from "../../context/drag/dragStyleContext";
-import { getLectureForDay } from "@/models/local/lectureUtils";
+import { getLectureForDay } from "@/models/local/utils/lectureUtils";
 import { useLecturesSuspenseQuery } from "@/hooks/localCourse/lectureHooks";
 
 export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {

@@ -13,7 +13,7 @@ import {
   getDayOfWeek,
   LocalCourseSettings,
 } from "@/models/local/localCourseSettings";
-import { getDateFromStringOrThrow } from "@/models/local/timeUtils";
+import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
 
 export async function getLectures(courseName: string) {
   const courseLectureRoot = path.join(basePath, courseName, lectureFolderName);

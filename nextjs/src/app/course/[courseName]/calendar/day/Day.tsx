@@ -2,7 +2,7 @@
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
-} from "@/models/local/timeUtils";
+} from "@/models/local/utils/timeUtils";
 import { useDraggingContext } from "../../context/drag/draggingContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDayOfWeek } from "@/models/local/localCourseSettings";

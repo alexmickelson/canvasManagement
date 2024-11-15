@@ -1,6 +1,6 @@
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDayOfWeek } from "@/models/local/localCourseSettings";
-import { getDateFromString } from "@/models/local/timeUtils";
+import { getDateFromString } from "@/models/local/utils/timeUtils";
 import { getLectureWeekName } from "@/services/fileStorage/utils/lectureUtils";
 import { getCourseUrl, getLecturePreviewUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../../context/courseContext";

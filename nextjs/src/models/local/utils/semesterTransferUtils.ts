@@ -1,7 +1,8 @@
-import { LocalAssignment } from "./assignment/localAssignment";
-import { Lecture } from "./lecture";
-import { LocalCoursePage } from "./page/localCoursePage";
-import { LocalQuiz } from "./quiz/localQuiz";
+
+import { LocalAssignment } from "../assignment/localAssignment";
+import { Lecture } from "../lecture";
+import { LocalCoursePage } from "../page/localCoursePage";
+import { LocalQuiz } from "../quiz/localQuiz";
 import {
   dateToMarkdownString,
   getDateFromStringOrThrow,

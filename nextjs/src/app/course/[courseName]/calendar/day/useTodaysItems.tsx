@@ -8,7 +8,7 @@ import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
-} from "@/models/local/timeUtils";
+} from "@/models/local/utils/timeUtils";
 import { ReactNode } from "react";
 import { useCalendarItemsContext } from "../../context/calendarItemsContext";
 import { getStatus } from "./getStatus";
