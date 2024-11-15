@@ -14,11 +14,13 @@ export const assignmentRouter = router({
       })
     )
     .query(async ({ input: { courseName, moduleName, assignmentName } }) => {
-      return await fileStorageService.assignments.getAssignment(
+      const assignment = await fileStorageService.assignments.getAssignment(
         courseName,
         moduleName,
         assignmentName
       );
+      // console.log(assignment);
+      return assignment;
     }),
   getAllAssignments: publicProcedure
     .input(
@@ -28,10 +30,11 @@ export const assignmentRouter = router({
       })
     )
     .query(async ({ input: { courseName, moduleName } }) => {
-      return await fileStorageService.assignments.getAssignments(
+      const assignments = await fileStorageService.assignments.getAssignments(
         courseName,
         moduleName
       );
+      return assignments;
     }),
   createAssignment: publicProcedure
     .input(

@@ -19,6 +19,7 @@ export default function TrpcProvider({
         httpBatchLink({
           url,
           transformer: superjson,
+          maxURLLength: 10_000, // limit number of batched requests
         }),
       ],
     })
