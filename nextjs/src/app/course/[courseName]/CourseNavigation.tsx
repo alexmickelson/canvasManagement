@@ -54,6 +54,7 @@ export function CourseNavigation() {
         </div>
       ) : (
         <button
+          className="unstyled btn-outline"
           onClick={() => {
             queryClient.invalidateQueries({
               queryKey: canvasAssignmentKeys.assignments(settings.canvasId),
