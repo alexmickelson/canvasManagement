@@ -35,11 +35,17 @@ export default function EditAssignment({
     useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
 
-  const { clientIsAuthoritative, text, textUpdate, monacoKey } =
-    useAuthoritativeUpdates({
-      serverUpdatedAt: serverDataUpdatedAt,
-      startingText: localAssignmentMarkdown.toMarkdown(assignment),
-    });
+  const {
+    clientIsAuthoritative,
+    text,
+    textUpdate,
+    monacoKey,
+    serverUpdatedAt,
+    clientDataUpdatedAt,
+  } = useAuthoritativeUpdates({
+    serverUpdatedAt: serverDataUpdatedAt,
+    startingText: localAssignmentMarkdown.toMarkdown(assignment),
+  });
 
   const [error, setError] = useState("");
   const [showHelp, setShowHelp] = useState(false);
@@ -79,7 +85,11 @@ export default function EditAssignment({
               });
           } else {
             console.log(
-              "client not authoritative, updating client with server data"
+              "client not authoritative, updating client with server assignment",
+              "client updated",
+              clientDataUpdatedAt,
+              "server updated",
+              serverUpdatedAt
             );
             textUpdate(localAssignmentMarkdown.toMarkdown(assignment), true);
           }
@@ -96,10 +106,12 @@ export default function EditAssignment({
   }, [
     assignment,
     assignmentName,
+    clientDataUpdatedAt,
     clientIsAuthoritative,
     courseName,
     moduleName,
     router,
+    serverUpdatedAt,
     text,
     textUpdate,
     updateAssignment,

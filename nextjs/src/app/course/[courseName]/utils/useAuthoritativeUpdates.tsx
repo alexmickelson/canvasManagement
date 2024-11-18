@@ -13,11 +13,6 @@ export function useAuthoritativeUpdates({
     useState(serverUpdatedAt);
   const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
 
-  const clientIsAuthoritative = useMemo(
-    () => serverUpdatedAt <= clientDataUpdatedAt,
-    [clientDataUpdatedAt, serverUpdatedAt]
-  );
-
   // console.log("client is authoritative", clientIsAuthoritative);
   const textUpdate = useCallback((t: string, updateMonaco: boolean = false) => {
     setText(t);
@@ -27,11 +22,13 @@ export function useAuthoritativeUpdates({
 
   return useMemo(
     () => ({
-      clientIsAuthoritative,
+      clientIsAuthoritative: serverUpdatedAt <= clientDataUpdatedAt,
+      serverUpdatedAt,
+      clientDataUpdatedAt,
       textUpdate,
       text,
       monacoKey: updateMonacoKey,
     }),
-    [clientIsAuthoritative, text, textUpdate, updateMonacoKey]
+    [clientDataUpdatedAt, serverUpdatedAt, text, textUpdate, updateMonacoKey]
   );
 }

@@ -111,7 +111,7 @@ export default function EditQuiz({
               });
           } else {
             console.log(
-              "client not authoritative, updating client with server data"
+              "client not authoritative, updating client with server quiz"
             );
             textUpdate(quizMarkdownUtils.toMarkdown(quiz), true);
           }

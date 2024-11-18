@@ -48,7 +48,7 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
           } else {
             if (lecture) {
               console.log(
-                "client not authoritative, updating client with server data"
+                "client not authoritative, updating client with server lecture"
               );
               textUpdate(lectureToString(lecture), true);
             } else {

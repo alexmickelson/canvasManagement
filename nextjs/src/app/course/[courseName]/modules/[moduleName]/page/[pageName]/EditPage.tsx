@@ -72,7 +72,7 @@ export default function EditPage({
               });
           } else {
             console.log(
-              "client not authoritative, updating client with server data"
+              "client not authoritative, updating client with server page"
             );
             textUpdate(localPageMarkdownUtils.toMarkdown(page), true);
           }
