@@ -4,6 +4,7 @@ import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { axiosClient } from "../axiosUtils";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 
 export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {
@@ -17,14 +18,15 @@ export const canvasPageService = {
 
   async create(
     canvasCourseId: number,
-    page: LocalCoursePage
+    page: LocalCoursePage,
+    settings: LocalCourseSettings
   ): Promise<CanvasPage> {
     console.log(`Creating course page: ${page.name}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/pages`;
     const body = {
       wiki_page: {
         title: page.name,
-        body: markdownToHTMLSafe(page.text),
+        body: markdownToHTMLSafe(page.text, settings),
       },
     };
 
@@ -38,14 +40,15 @@ export const canvasPageService = {
   async update(
     courseId: number,
     canvasPageId: number,
-    page: LocalCoursePage
+    page: LocalCoursePage,
+    settings: LocalCourseSettings
   ): Promise<void> {
     console.log(`Updating course page: ${page.name}`);
     const url = `${canvasApi}/courses/${courseId}/pages/${canvasPageId}`;
     const body = {
       wiki_page: {
         title: page.name,
-        body: markdownToHTMLSafe(page.text),
+        body: markdownToHTMLSafe(page.text, settings),
       },
     };
     await axiosClient.put(url, body);

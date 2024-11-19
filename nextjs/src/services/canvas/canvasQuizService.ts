@@ -10,8 +10,12 @@ import {
   QuestionType,
 } from "@/models/local/quiz/localQuizQuestion";
 import { CanvasQuizQuestion } from "@/models/canvas/quizzes/canvasQuizQuestionModel";
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 
-const getAnswers = (question: LocalQuizQuestion) => {
+const getAnswers = (
+  question: LocalQuizQuestion,
+  settings: LocalCourseSettings
+) => {
   if (question.questionType === QuestionType.MATCHING)
     return question.answers.map((a) => ({
       answer_match_left: a.text,
@@ -19,7 +23,7 @@ const getAnswers = (question: LocalQuizQuestion) => {
     }));
 
   return question.answers.map((answer) => ({
-    answer_html: markdownToHTMLSafe(answer.text),
+    answer_html: markdownToHTMLSafe(answer.text, settings),
     answer_weight: answer.correct ? 100 : 0,
   }));
 };
@@ -28,18 +32,19 @@ const createQuestionOnly = async (
   canvasCourseId: number,
   canvasQuizId: number,
   question: LocalQuizQuestion,
-  position: number
+  position: number,
+  settings: LocalCourseSettings
 ) => {
   console.log("Creating individual question"); //, question);
 
   const url = `${canvasApi}/courses/${canvasCourseId}/quizzes/${canvasQuizId}/questions`;
   const body = {
     question: {
-      question_text: markdownToHTMLSafe(question.text),
+      question_text: markdownToHTMLSafe(question.text, settings),
       question_type: `${question.questionType}_question`,
       points_possible: question.points,
       position,
-      answers: getAnswers(question),
+      answers: getAnswers(question, settings),
     },
   };
 
@@ -93,13 +98,20 @@ const hackFixRedundantAssignments = async (canvasCourseId: number) => {
 const createQuizQuestions = async (
   canvasCourseId: number,
   canvasQuizId: number,
-  localQuiz: LocalQuiz
+  localQuiz: LocalQuiz,
+  settings: LocalCourseSettings
 ) => {
   console.log("Creating quiz questions"); //, localQuiz);
 
   const tasks = localQuiz.questions.map(
     async (question, index) =>
-      await createQuestionOnly(canvasCourseId, canvasQuizId, question, index)
+      await createQuestionOnly(
+        canvasCourseId,
+        canvasQuizId,
+        question,
+        index,
+        settings
+      )
   );
   const questionAndPositions = await Promise.all(tasks);
   await hackFixQuestionOrdering(
@@ -126,15 +138,17 @@ export const canvasQuizService = {
   async create(
     canvasCourseId: number,
     localQuiz: LocalQuiz,
+    settings: LocalCourseSettings,
     canvasAssignmentGroupId?: number
   ) {
     console.log("Creating quiz", localQuiz);
 
     const url = `${canvasApi}/courses/${canvasCourseId}/quizzes`;
+
     const body = {
       quiz: {
         title: localQuiz.name,
-        description: markdownToHTMLSafe(localQuiz.description),
+        description: markdownToHTMLSafe(localQuiz.description, settings),
         shuffle_answers: localQuiz.shuffleAnswers,
         access_code: localQuiz.password,
         show_correct_answers: localQuiz.showCorrectAnswers,
@@ -158,7 +172,7 @@ export const canvasQuizService = {
     };
 
     const { data: canvasQuiz } = await axiosClient.post<CanvasQuiz>(url, body);
-    await createQuizQuestions(canvasCourseId, canvasQuiz.id, localQuiz);
+    await createQuizQuestions(canvasCourseId, canvasQuiz.id, localQuiz, settings);
     return canvasQuiz.id;
   },
   async delete(canvasCourseId: number, canvasQuizId: number) {

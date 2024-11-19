@@ -104,6 +104,7 @@ export default function NewCourseForm() {
                         return { ...groupWithoutCanvas, canvasId: undefined };
                       }
                     ),
+                    assets: [],
                   }
                 : {
                     name: selectedDirectory,
@@ -120,6 +121,7 @@ export default function NewCourseForm() {
                     defaultFileUploadTypes: ["pdf", "png", "jpg", "jpeg"],
                     defaultLockHoursOffset: 0,
                     holidays: [],
+                    assets: [],
                   };
               await createCourse.mutateAsync({
                 settings: newSettings,

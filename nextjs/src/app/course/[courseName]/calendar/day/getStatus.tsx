@@ -3,6 +3,7 @@ import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { LocalCoursePage } from "@/models/local/page/localCoursePage";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
@@ -17,10 +18,12 @@ export const getStatus = ({
   item,
   canvasItem,
   type,
+  settings,
 }: {
   item: LocalQuiz | LocalAssignment | LocalCoursePage;
   canvasItem?: CanvasQuiz | CanvasAssignment | CanvasPage;
   type: "assignment" | "page" | "quiz";
+  settings: LocalCourseSettings;
 }): {
   status: "localOnly" | "incomplete" | "published";
   message: ReactNode;
@@ -102,7 +105,7 @@ export const getStatus = ({
       };
 
     const htmlIsSame = htmlIsCloseEnough(
-      markdownToHTMLSafe(assignment.description),
+      markdownToHTMLSafe(assignment.description, settings),
       canvasAssignment.description
     );
     if (!htmlIsSame)

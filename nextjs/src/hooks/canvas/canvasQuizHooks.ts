@@ -50,6 +50,7 @@ export const useAddQuizToCanvasMutation = () => {
       const canvasQuizId = await canvasQuizService.create(
         settings.canvasId,
         quiz,
+        settings,
         assignmentGroup?.canvasId
       );
 

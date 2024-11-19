@@ -7,7 +7,6 @@ import {
   LocalAssignmentGroup,
   zodLocalAssignmentGroup,
 } from "./assignment/localAssignmentGroup";
-import { LocalModule } from "./localModules";
 import { parse, stringify } from "yaml";
 
 // export interface LocalCourse {
@@ -59,6 +58,10 @@ export interface LocalCourseSettings {
     name: string;
     days: string[];
   }[];
+  assets: {
+    sourceUrl: string;
+    canvasUrl: string;
+  }[];
 }
 
 export const zodLocalCourseSettings = z.object({
@@ -76,6 +79,12 @@ export const zodLocalCourseSettings = z.object({
     .object({
       name: z.string(),
       days: z.string().array(),
+    })
+    .array(),
+  assets: z
+    .object({
+      sourceUrl: z.string(),
+      canvasUrl: z.string(),
     })
     .array(),
 });

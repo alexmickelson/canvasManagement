@@ -50,6 +50,9 @@ const populateDefaultValues = (settingsFromFile: LocalCourseSettings) => {
     holidays: Array.isArray(settingsFromFile.holidays)
       ? settingsFromFile.holidays
       : [],
+    assets: Array.isArray(settingsFromFile.assets)
+      ? settingsFromFile.assets
+      : [],
   };
   return settings;
 };

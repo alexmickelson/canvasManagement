@@ -44,7 +44,7 @@ export const useCreateCanvasPageMutation = () => {
       }
       const canvasPage = await canvasPageService.create(
         settings.canvasId,
-        page
+        page,settings
       );
 
       const canvasModule = canvasModules.find((c) => c.name === moduleName);
@@ -78,7 +78,7 @@ export const useUpdateCanvasPageMutation = () => {
     }: {
       page: LocalCoursePage;
       canvasPageId: number;
-    }) => canvasPageService.update(settings.canvasId, canvasPageId, page),
+    }) => canvasPageService.update(settings.canvasId, canvasPageId, page, settings),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),

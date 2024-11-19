@@ -1,4 +1,5 @@
 import CheckIcon from "@/components/icons/CheckIcon";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
 import {
   LocalQuizQuestion,
@@ -14,6 +15,7 @@ export default function QuizPreview({
   moduleName: string;
 }) {
   const [quiz] = useQuizQuery(moduleName, quizName);
+  const [settings] = useLocalCourseSettingsQuery();
   return (
     <div style={{ overflow: "scroll", height: "100%" }}>
       <div className="columns-2">
@@ -53,7 +55,7 @@ export default function QuizPreview({
       <div
         className="p-3 markdownPreview"
         dangerouslySetInnerHTML={{
-          __html: markdownToHTMLSafe(quiz.description),
+          __html: markdownToHTMLSafe(quiz.description, settings),
         }}
       ></div>
       <div className="p-3 rounded-md bg-slate-950 m-5 flex flex-col gap-3">
@@ -75,6 +77,7 @@ export default function QuizPreview({
 }
 
 function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
+  const [settings] = useLocalCourseSettingsQuery();
   return (
     <div className="rounded bg-slate-900 px-2">
       <div className="flex flex-row justify-between text-slate-400">
@@ -86,7 +89,7 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
 
       <div
         className="ms-4 mb-2 markdownPreview"
-        dangerouslySetInnerHTML={{ __html: markdownToHTMLSafe(question.text) }}
+        dangerouslySetInnerHTML={{ __html: markdownToHTMLSafe(question.text, settings) }}
       ></div>
       {question.questionType === QuestionType.MATCHING && (
         <div>
@@ -128,7 +131,7 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
               <div
                 className="markdownQuizAnswerPreview"
                 dangerouslySetInnerHTML={{
-                  __html: markdownToHTMLSafe(answer.text),
+                  __html: markdownToHTMLSafe(answer.text, settings),
                 }}
               />
             </div>

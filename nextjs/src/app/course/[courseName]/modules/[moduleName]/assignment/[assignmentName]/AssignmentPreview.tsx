@@ -1,3 +1,4 @@
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { rubricItemIsExtraCredit } from "@/models/local/assignment/rubricItem";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
@@ -8,6 +9,7 @@ export default function AssignmentPreview({
 }: {
   assignment: LocalAssignment;
 }) {
+  const [settings] = useLocalCourseSettingsQuery();
   const totalPoints = assignment.rubric.reduce(
     (sum, cur) => (rubricItemIsExtraCredit(cur) ? sum : sum + cur.points),
     0
@@ -59,7 +61,7 @@ export default function AssignmentPreview({
         <div
           className="markdownPreview"
           dangerouslySetInnerHTML={{
-            __html: markdownToHTMLSafe(assignment.description),
+            __html: markdownToHTMLSafe(assignment.description, settings),
           }}
         ></div>
       </section>

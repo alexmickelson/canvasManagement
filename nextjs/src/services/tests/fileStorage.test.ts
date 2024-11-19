@@ -31,6 +31,7 @@ describe("FileStorageTests", () => {
       defaultAssignmentSubmissionTypes: [],
       defaultFileUploadTypes: [],
       holidays: [],
+      assets: []
     };
 
     await fileStorageService.settings.updateCourseSettings(name, settings);

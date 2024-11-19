@@ -7,6 +7,7 @@ import { CanvasRubricCreationResponse } from "@/models/canvas/assignments/canvas
 import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
 import { getDateFromString } from "@/models/local/utils/timeUtils";
 import { getRubricCriterion } from "./canvasRubricUtils";
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {
@@ -23,6 +24,7 @@ export const canvasAssignmentService = {
   async create(
     canvasCourseId: number,
     localAssignment: LocalAssignment,
+    settings: LocalCourseSettings,
     canvasAssignmentGroupId?: number
   ) {
     console.log(`Creating assignment: ${localAssignment.name}`);
@@ -36,7 +38,7 @@ export const canvasAssignmentService = {
         allowed_extensions: localAssignment.allowedFileUploadExtensions.map(
           (e) => e.toString()
         ),
-        description: markdownToHTMLSafe(localAssignment.description),
+        description: markdownToHTMLSafe(localAssignment.description, settings),
         due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
         lock_at:
           localAssignment.lockAt &&
@@ -58,6 +60,7 @@ export const canvasAssignmentService = {
     courseId: number,
     canvasAssignmentId: number,
     localAssignment: LocalAssignment,
+    settings: LocalCourseSettings,
     canvasAssignmentGroupId?: number
   ) {
     console.log(`Updating assignment: ${localAssignment.name}`);
@@ -71,7 +74,7 @@ export const canvasAssignmentService = {
         allowed_extensions: localAssignment.allowedFileUploadExtensions.map(
           (e) => e.toString()
         ),
-        description: markdownToHTMLSafe(localAssignment.description),
+        description: markdownToHTMLSafe(localAssignment.description, settings),
         due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
         lock_at:
           localAssignment.lockAt &&

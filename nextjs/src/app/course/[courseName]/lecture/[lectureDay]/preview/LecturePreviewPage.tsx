@@ -16,7 +16,6 @@ export default function LecturePreviewPage({
   const lecture = weeks
     .flatMap(({ lectures }) => lectures.map((lecture) => lecture))
     .find((l) => l.date === lectureDay);
-  console.log(lecture);
 
   if (!lecture) {
     return <div>lecture not found for day</div>;

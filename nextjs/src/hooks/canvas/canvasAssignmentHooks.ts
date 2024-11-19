@@ -22,6 +22,7 @@ export const useCanvasAssignmentsQuery = () => {
   });
 };
 
+
 export const useAddAssignmentToCanvasMutation = () => {
   const [settings] = useLocalCourseSettingsQuery();
   const { data: canvasModules } = useCanvasModulesQuery();
@@ -44,9 +45,11 @@ export const useAddAssignmentToCanvasMutation = () => {
       const assignmentGroup = settings.assignmentGroups.find(
         (g) => g.name === assignment.localAssignmentGroupName
       );
+
       const canvasAssignmentId = await canvasAssignmentService.create(
         settings.canvasId,
         assignment,
+        settings,
         assignmentGroup?.canvasId
       );
       const canvasModule = canvasModules.find((c) => c.name === moduleName);
@@ -89,6 +92,7 @@ export const useUpdateAssignmentInCanvasMutation = () => {
         settings.canvasId,
         canvasAssignmentId,
         assignment,
+        settings,
         assignmentGroup?.canvasId
       );
     },

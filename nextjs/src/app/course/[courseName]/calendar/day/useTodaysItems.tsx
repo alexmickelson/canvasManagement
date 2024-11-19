@@ -12,8 +12,10 @@ import {
 import { ReactNode } from "react";
 import { useCalendarItemsContext } from "../../context/calendarItemsContext";
 import { getStatus } from "./getStatus";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
 export function useTodaysItems(day: string) {
+  const [settings] = useLocalCourseSettingsQuery();
   const dayAsDate = getDateFromStringOrThrow(
     day,
     "calculating same month in day items"
@@ -43,6 +45,7 @@ export function useTodaysItems(day: string) {
               item: assignment,
               canvasItem: canvasAssignment,
               type: "assignment",
+              settings,
             }),
           };
         })
@@ -65,6 +68,7 @@ export function useTodaysItems(day: string) {
               item: quiz,
               canvasItem: canvasQuiz,
               type: "quiz",
+              settings,
             }),
           };
         })
@@ -87,6 +91,7 @@ export function useTodaysItems(day: string) {
               item: page,
               canvasItem: canvasPage,
               type: "page",
+              settings,
             }),
           };
         })

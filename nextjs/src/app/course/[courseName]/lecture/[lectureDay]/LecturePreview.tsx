@@ -1,7 +1,9 @@
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { Lecture } from "@/models/local/lecture";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 export default function LecturePreview({ lecture }: { lecture: Lecture }) {
+  const [settings] = useLocalCourseSettingsQuery();
   return (
     <>
       <section className="border-b-slate-700 border-b-4">
@@ -12,7 +14,7 @@ export default function LecturePreview({ lecture }: { lecture: Lecture }) {
         <div
           className="markdownPreview text-xl"
           dangerouslySetInnerHTML={{
-            __html: markdownToHTMLSafe(lecture.content),
+            __html: markdownToHTMLSafe(lecture.content, settings),
           }}
         ></div>
       </section>
