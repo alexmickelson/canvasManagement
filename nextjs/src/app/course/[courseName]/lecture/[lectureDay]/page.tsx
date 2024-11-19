@@ -3,6 +3,7 @@ import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
 } from "@/models/local/utils/timeUtils";
+export const dynamic = "force-dynamic";
 
 export default async function page({
   params,

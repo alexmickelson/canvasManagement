@@ -8,7 +8,7 @@ import {
   lectureToString,
   parseLecture,
 } from "@/services/fileStorage/utils/lectureUtils";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import LecturePreview from "./LecturePreview";
 import EditLectureTitle from "./EditLectureTitle";
 import LectureButtons from "./LectureButtons";

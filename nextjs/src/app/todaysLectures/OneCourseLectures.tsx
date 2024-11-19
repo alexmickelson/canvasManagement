@@ -19,6 +19,8 @@ export default function OneCourseLectures() {
   return (
     <Link
       href={getLecturePreviewUrl(courseName, dayAsString)}
+      shallow={true}
+      prefetch={false}
       className="
         border-4 rounded-lg border-slate-500 
         px-3 py-1 m-3 block text-end
