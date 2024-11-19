@@ -4,7 +4,7 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 const handler = async (request: Request) => {
 
-  await new Promise(r => setTimeout(r, 1000)); // delay for testing
+  // await new Promise(r => setTimeout(r, 1000)); // delay for testing
   return fetchRequestHandler({
     endpoint: "/api/trpc",
     req: request,
