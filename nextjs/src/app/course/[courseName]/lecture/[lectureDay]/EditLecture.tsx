@@ -20,7 +20,7 @@ import { useAuthoritativeUpdates } from "../../utils/useAuthoritativeUpdates";
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
-  const [weeks, { dataUpdatedAt: serverDataUpdatedAt }] =
+  const [weeks, { dataUpdatedAt: serverDataUpdatedAt, isFetching }] =
     useLecturesSuspenseQuery();
   const updateLecture = useLectureUpdateMutation();
 
@@ -40,6 +40,10 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
 
     const handler = setTimeout(() => {
       try {
+        if (isFetching || updateLecture.isPending) {
+          console.log("network requests in progress, not updating page");
+          return;
+        }
         const parsed = parseLecture(text);
         if (!lecture || lectureToString(parsed) !== lectureToString(lecture)) {
           if (clientIsAuthoritative) {
@@ -70,6 +74,7 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   }, [
     clientIsAuthoritative,
     courseName,
+    isFetching,
     lecture,
     settings,
     text,

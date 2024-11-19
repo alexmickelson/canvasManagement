@@ -30,12 +30,12 @@ export function AssignmentButtons({
   const router = useRouter();
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
-  const {
-    data: canvasAssignments,
-    isPending: canvasIsPending,
-    isRefetching: canvasIsRefetching,
-  } = useCanvasAssignmentsQuery();
-  const [assignment] = useAssignmentQuery(moduleName, assignmentName);
+  const { data: canvasAssignments, isFetching: canvasIsFetching } =
+    useCanvasAssignmentsQuery();
+  const [assignment, { isFetching }] = useAssignmentQuery(
+    moduleName,
+    assignmentName
+  );
   const addToCanvas = useAddAssignmentToCanvasMutation();
   const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
   const updateAssignment = useUpdateAssignmentInCanvasMutation();
@@ -49,10 +49,12 @@ export function AssignmentButtons({
 
   const anythingIsLoading =
     addToCanvas.isPending ||
-    canvasIsPending ||
-    canvasIsRefetching ||
+    canvasIsFetching ||
+    isFetching ||
     deleteFromCanvas.isPending ||
     updateAssignment.isPending;
+
+  console.log("assignment pending", updateAssignment.isPending);
 
   return (
     <div className="p-5 flex flex-row justify-between gap-3">

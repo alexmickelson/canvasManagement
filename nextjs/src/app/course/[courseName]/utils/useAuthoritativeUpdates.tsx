@@ -13,8 +13,10 @@ export function useAuthoritativeUpdates({
     useState(serverUpdatedAt);
   const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
   const clientIsAuthoritative = useMemo(() => {
-    const authority = serverUpdatedAt <= clientDataUpdatedAt;
-    // const authority = serverUpdatedAt <= clientDataUpdatedAt + 500; // if it is close, it might be the second-to-last update changing the first (by file update delays), add some buffer...
+    // const authority = serverUpdatedAt <= clientDataUpdatedAt;
+    const estimatedNetworkRoundTrip = 500; // network latency means client is still authoritative for a slight delay
+    const authority =
+      serverUpdatedAt <= clientDataUpdatedAt + estimatedNetworkRoundTrip;
     // console.log("client is authoritative", authority);
     return authority;
   }, [clientDataUpdatedAt, serverUpdatedAt]);
