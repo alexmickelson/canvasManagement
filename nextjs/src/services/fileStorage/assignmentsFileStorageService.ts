@@ -71,6 +71,8 @@ export const assignmentsFileStorageService = {
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
     console.log(`Saving assignment ${filePath}`);
+
+
     await fs.writeFile(filePath, assignmentMarkdown);
   },
   async delete({

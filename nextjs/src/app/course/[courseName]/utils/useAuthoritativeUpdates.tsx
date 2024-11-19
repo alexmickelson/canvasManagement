@@ -12,8 +12,12 @@ export function useAuthoritativeUpdates({
   const [clientDataUpdatedAt, setClientDataUpdatedAt] =
     useState(serverUpdatedAt);
   const [updateMonacoKey, setUpdateMonacoKey] = useState(1);
+  const clientIsAuthoritative = useMemo(() => {
+    const authority = serverUpdatedAt <= clientDataUpdatedAt + 500;
+    console.log("client is authoritative", authority);
+    return authority;
+  }, [clientDataUpdatedAt, serverUpdatedAt]); // if it is close, it might be the second-to-last update changing the first (by file update delays), add some buffer...
 
-  // console.log("client is authoritative", clientIsAuthoritative);
   const textUpdate = useCallback((t: string, updateMonaco: boolean = false) => {
     setText(t);
     setClientDataUpdatedAt(Date.now());
@@ -22,13 +26,20 @@ export function useAuthoritativeUpdates({
 
   return useMemo(
     () => ({
-      clientIsAuthoritative: serverUpdatedAt <= clientDataUpdatedAt,
+      clientIsAuthoritative,
       serverUpdatedAt,
       clientDataUpdatedAt,
       textUpdate,
       text,
       monacoKey: updateMonacoKey,
     }),
-    [clientDataUpdatedAt, serverUpdatedAt, text, textUpdate, updateMonacoKey]
+    [
+      clientDataUpdatedAt,
+      clientIsAuthoritative,
+      serverUpdatedAt,
+      text,
+      textUpdate,
+      updateMonacoKey,
+    ]
   );
 }

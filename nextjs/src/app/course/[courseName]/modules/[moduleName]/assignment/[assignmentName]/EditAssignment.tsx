@@ -31,7 +31,7 @@ export default function EditAssignment({
   const router = useRouter();
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
-  const [assignment, { dataUpdatedAt: serverDataUpdatedAt }] =
+  const [assignment, { dataUpdatedAt: serverDataUpdatedAt, isFetching: assignmentIsFetching }] =
     useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
 
@@ -55,6 +55,11 @@ export default function EditAssignment({
 
     const handler = setTimeout(() => {
       try {
+        if (assignmentIsFetching || updateAssignment.isPending) {
+          console.log("network requests in progress, not updating assignments");
+          return;
+        }
+
         const updatedAssignment: LocalAssignment =
           localAssignmentMarkdown.parseMarkdown(text);
         if (
@@ -62,7 +67,7 @@ export default function EditAssignment({
           localAssignmentMarkdown.toMarkdown(updatedAssignment)
         ) {
           if (clientIsAuthoritative) {
-            console.log("updating assignment");
+            console.log("updating assignment, client is authoritative");
             updateAssignment
               .mutateAsync({
                 assignment: updatedAssignment,
@@ -109,6 +114,7 @@ export default function EditAssignment({
     clientDataUpdatedAt,
     clientIsAuthoritative,
     courseName,
+    assignmentIsFetching,
     moduleName,
     router,
     serverUpdatedAt,

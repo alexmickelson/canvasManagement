@@ -65,10 +65,8 @@ export default function EditQuiz({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [quiz, { dataUpdatedAt: serverDataUpdatedAt }] = useQuizQuery(
-    moduleName,
-    quizName
-  );
+  const [quiz, { dataUpdatedAt: serverDataUpdatedAt, isFetching }] =
+    useQuizQuery(moduleName, quizName);
   const updateQuizMutation = useUpdateQuizMutation();
   const { clientIsAuthoritative, text, textUpdate, monacoKey } =
     useAuthoritativeUpdates({
@@ -82,6 +80,10 @@ export default function EditQuiz({
   useEffect(() => {
     const delay = 1000;
     const handler = setTimeout(async () => {
+      if (isFetching || updateQuizMutation.isPending) {
+        console.log("network requests in progress, not updating page");
+        return;
+      }
       try {
         if (
           quizMarkdownUtils.toMarkdown(quiz) !==
@@ -128,6 +130,7 @@ export default function EditQuiz({
   }, [
     clientIsAuthoritative,
     courseName,
+    isFetching,
     moduleName,
     quiz,
     quizName,

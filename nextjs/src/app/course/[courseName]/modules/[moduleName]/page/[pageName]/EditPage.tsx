@@ -24,7 +24,7 @@ export default function EditPage({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [page, { dataUpdatedAt }] = usePageQuery(
+  const [page, { dataUpdatedAt, isFetching }] = usePageQuery(
     moduleName,
     pageName
   );
@@ -42,6 +42,11 @@ export default function EditPage({
   useEffect(() => {
     const delay = 500;
     const handler = setTimeout(() => {
+      if (isFetching || updatePage.isPending) {
+        console.log("network requests in progress, not updating page");
+        return;
+      }
+
       try {
         const updatedPage = localPageMarkdownUtils.parseMarkdown(text);
         if (
@@ -89,6 +94,7 @@ export default function EditPage({
   }, [
     clientIsAuthoritative,
     courseName,
+    isFetching,
     moduleName,
     page,
     pageName,
