@@ -34,44 +34,53 @@ export const useUpdateImageSettingsForAssignment = ({
   const [assignment] = useAssignmentQuery(moduleName, assignmentName);
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const [isUpdatingSettings, setIsUpdatingSettings] = useState(false);
+  const createCanvasUrlMutation =
+    trpc.canvasFile.getCanvasFileUrl.useMutation();
 
-  // useEffect(() => {
-  //   if (isUpdatingSettings) {
-  //     console.log("not updating image assets, still loading");
-  //     return;
-  //   }
-  //   setIsUpdatingSettings(true);
-  //   const assignmentMarkdown = markdownToHtmlNoImages(assignment.description);
+  useEffect(() => {
+    if (isUpdatingSettings) {
+      console.log("not updating image assets, still loading");
+      return;
+    }
+    setIsUpdatingSettings(true);
+    const assignmentMarkdown = markdownToHtmlNoImages(assignment.description);
 
-  //   const imageSources = extractImageSources(assignmentMarkdown);
-  //   const imagesToUpdate = imageSources.filter((source) =>
-  //     settings.assets.every((a) => a.sourceUrl !== source)
-  //   );
-  //   console.log("images to update", imagesToUpdate);
+    const imageSources = extractImageSources(assignmentMarkdown);
+    const imagesToUpdate = imageSources.filter((source) =>
+      settings.assets.every((a) => a.sourceUrl !== source)
+    );
+    console.log("images to update", imagesToUpdate);
 
-
-  //   Promise.all(
-  //     imagesToUpdate.map(async (source) => {
-  //       // todo: get canvas url
-  //       const canvasUrl = "";
-  //       return { sourceUrl: source, canvasUrl };
-  //     })
-  //   ).then(async (newAssets) => {
-  //     await updateSettings.mutateAsync({
-  //       settings: {
-  //         ...settings,
-  //         assets: [...settings.assets, ...newAssets],
-  //       },
-  //     });
-  //     setIsUpdatingSettings(false);
-  //   });
-  // }, [
-  //   assignment.description,
-  //   isUpdatingSettings,
-  //   settings,
-  //   settings.assets,
-  //   updateSettings,
-  // ]);
+    if (imagesToUpdate.length)
+{
+    Promise.all(
+      imagesToUpdate.map(async (source) => {
+        // todo: get canvas url
+        // const canvasUrl = "";
+        const canvasUrl = await createCanvasUrlMutation.mutateAsync({
+          sourceUrl: source,
+          canvasCourseId: settings.canvasId,
+        });
+        console.log("got canvas url", source, canvasUrl);
+        return { sourceUrl: source, canvasUrl };
+      })
+    ).then(async (newAssets) => {
+      await updateSettings.mutateAsync({
+        settings: {
+          ...settings,
+          assets: [...settings.assets, ...newAssets],
+        },
+      });
+      setIsUpdatingSettings(false);
+    });}
+  }, [
+    assignment.description,
+    createCanvasUrlMutation,
+    isUpdatingSettings,
+    settings,
+    settings.assets,
+    updateSettings,
+  ]);
 };
 
 export const useAssignmentNamesQuery = (moduleName: string) => {

@@ -17,15 +17,18 @@ export const canvasFileRouter = router({
     )
     .mutation(async ({ input: { sourceUrl, canvasCourseId } }) => {
       const localTempFile = await downloadUrlToTempDirectory(sourceUrl);
+      console.log("local temp file", localTempFile);
       const { upload_url, upload_params } = await uploadToCanvasPart1(
         localTempFile,
         canvasCourseId
       );
+      console.log("part 1 done", upload_url, upload_params);
       const canvasUrl = await uploadToCanvasPart2({
         pathToUpload: localTempFile,
         upload_url,
         upload_params,
       });
+      console.log("canvas url done");
       return canvasUrl;
     }),
 });

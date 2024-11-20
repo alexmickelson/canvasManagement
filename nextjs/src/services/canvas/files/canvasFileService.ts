@@ -38,7 +38,7 @@ export const uploadToCanvasPart1 = async (
   canvasCourseId: number
 ) => {
   try {
-    const url = `${canvasApi}/courses/${canvasCourseId}/assignment_groups`;
+    const url = `${canvasApi}/courses/${canvasCourseId}/files`;
 
     const formData = new FormData();
 
@@ -69,7 +69,7 @@ export const uploadToCanvasPart2 = async ({
   try {
     const formData = new FormData();
 
-    Object.keys(formData).forEach((key) => {
+    Object.keys(upload_params).forEach((key) => {
       formData.append(key, upload_params[key]);
     });
 
@@ -95,7 +95,7 @@ export const uploadToCanvasPart2 = async ({
     }
     return response.data.url;
   } catch (error) {
-    console.error("Error uploading file to Canvas part 1:", error);
+    console.error("Error uploading file to Canvas part 2:", error);
     throw error;
   }
 };
