@@ -35,7 +35,7 @@ const getFileSize = async (pathToFile: string): Promise<number> => {
 
 export const uploadToCanvasPart1 = async (
   pathToUpload: string,
-  canvasCourseId: string
+  canvasCourseId: number
 ) => {
   try {
     const url = `${canvasApi}/courses/${canvasCourseId}/assignment_groups`;
@@ -57,11 +57,15 @@ export const uploadToCanvasPart1 = async (
   }
 };
 
-export const uploadToCanvasPart2 = async (
-  pathToUpload: string,
-  upload_url: string,
-  upload_params: { [key: string]: string }
-) => {
+export const uploadToCanvasPart2 = async ({
+  pathToUpload,
+  upload_url,
+  upload_params,
+}: {
+  pathToUpload: string;
+  upload_url: string;
+  upload_params: { [key: string]: string };
+}) => {
   try {
     const formData = new FormData();
 
@@ -89,6 +93,7 @@ export const uploadToCanvasPart2 = async (
       const redirectResponse = await axiosClient.get(redirectUrl);
       console.log("redirect response", redirectResponse.data);
     }
+    return response.data.url;
   } catch (error) {
     console.error("Error uploading file to Canvas part 1:", error);
     throw error;

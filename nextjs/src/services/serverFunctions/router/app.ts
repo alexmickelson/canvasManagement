@@ -1,6 +1,7 @@
 import { createTrpcContext } from "../context";
 import { createCallerFactory, router } from "../trpcSetup";
 import { assignmentRouter } from "./assignmentRouter";
+import { canvasFileRouter } from "./canvasFileRouter";
 import { directoriesRouter } from "./directoriesRouter";
 import { lectureRouter } from "./lectureRouter";
 import { moduleRouter } from "./moduleRouter";
@@ -16,6 +17,7 @@ export const trpcAppRouter = router({
   page: pageRouter,
   module: moduleRouter,
   directories: directoriesRouter,
+  canvasFile: canvasFileRouter,
 });
 
 export const createCaller = createCallerFactory(trpcAppRouter);

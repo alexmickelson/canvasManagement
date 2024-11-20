@@ -33,7 +33,6 @@ export function convertImagesToCanvasImages(
     }
     mutableHtml = mutableHtml.replaceAll(imageSrc, destinationUrl);
   }
-  // console.log(imageSources, imageLookup, mutableHtml);
   return mutableHtml;
 }
 
