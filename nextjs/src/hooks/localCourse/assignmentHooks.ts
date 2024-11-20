@@ -1,6 +1,15 @@
 "use client";
 import { trpc } from "@/services/serverFunctions/trpcClient";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
+import {
+  useLocalCourseSettingsQuery,
+  useUpdateLocalCourseSettingsMutation,
+} from "./localCoursesHooks";
+import {
+  extractImageSources,
+  markdownToHtmlNoImages,
+} from "@/services/htmlMarkdownUtils";
+import { useActionState, useEffect, useState } from "react";
 
 export const useAssignmentQuery = (
   moduleName: string,
@@ -12,6 +21,57 @@ export const useAssignmentQuery = (
     courseName,
     assignmentName,
   });
+};
+
+export const useUpdateImageSettingsForAssignment = ({
+  moduleName,
+  assignmentName,
+}: {
+  moduleName: string;
+  assignmentName: string;
+}) => {
+  const [settings] = useLocalCourseSettingsQuery();
+  const [assignment] = useAssignmentQuery(moduleName, assignmentName);
+  const updateSettings = useUpdateLocalCourseSettingsMutation();
+  const [isUpdatingSettings, setIsUpdatingSettings] = useState(false);
+
+  // useEffect(() => {
+  //   if (isUpdatingSettings) {
+  //     console.log("not updating image assets, still loading");
+  //     return;
+  //   }
+  //   setIsUpdatingSettings(true);
+  //   const assignmentMarkdown = markdownToHtmlNoImages(assignment.description);
+
+  //   const imageSources = extractImageSources(assignmentMarkdown);
+  //   const imagesToUpdate = imageSources.filter((source) =>
+  //     settings.assets.every((a) => a.sourceUrl !== source)
+  //   );
+  //   console.log("images to update", imagesToUpdate);
+
+
+  //   Promise.all(
+  //     imagesToUpdate.map(async (source) => {
+  //       // todo: get canvas url
+  //       const canvasUrl = "";
+  //       return { sourceUrl: source, canvasUrl };
+  //     })
+  //   ).then(async (newAssets) => {
+  //     await updateSettings.mutateAsync({
+  //       settings: {
+  //         ...settings,
+  //         assets: [...settings.assets, ...newAssets],
+  //       },
+  //     });
+  //     setIsUpdatingSettings(false);
+  //   });
+  // }, [
+  //   assignment.description,
+  //   isUpdatingSettings,
+  //   settings,
+  //   settings.assets,
+  //   updateSettings,
+  // ]);
 };
 
 export const useAssignmentNamesQuery = (moduleName: string) => {

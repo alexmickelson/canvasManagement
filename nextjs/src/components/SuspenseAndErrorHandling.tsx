@@ -5,16 +5,19 @@ import { ErrorBoundary } from "react-error-boundary";
 import { Spinner } from "./Spinner";
 import toast from "react-hot-toast";
 
-export const SuspenseAndErrorHandling: FC<{ children: ReactNode }> = ({
-  children,
-}) => {
+export const SuspenseAndErrorHandling: FC<{
+  children: ReactNode;
+  showToast?: boolean;
+}> = ({ children, showToast = true }) => {
   return (
     <QueryErrorResetBoundary>
       {({ reset }) => (
         <ErrorBoundary
           onReset={reset}
           fallbackRender={(props) => {
-            toast.error(getErrorMessage(props.error));
+            if (showToast) {
+              toast.error(getErrorMessage(props.error));
+            }
             return (
               <div className="text-center">
                 <div className="p-3">{getErrorMessage(props.error)}</div>

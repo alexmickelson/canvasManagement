@@ -3,6 +3,7 @@ import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import {
   useAssignmentQuery,
   useUpdateAssignmentMutation,
+  useUpdateImageSettingsForAssignment,
 } from "@/hooks/localCourse/assignmentHooks";
 import {
   LocalAssignment,
@@ -31,9 +32,12 @@ export default function EditAssignment({
   const router = useRouter();
   const { courseName } = useCourseContext();
   const [settings] = useLocalCourseSettingsQuery();
-  const [assignment, { dataUpdatedAt: serverDataUpdatedAt, isFetching: assignmentIsFetching }] =
-    useAssignmentQuery(moduleName, assignmentName);
+  const [
+    assignment,
+    { dataUpdatedAt: serverDataUpdatedAt, isFetching: assignmentIsFetching },
+  ] = useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
+  useUpdateImageSettingsForAssignment({ moduleName, assignmentName });
 
   const {
     clientIsAuthoritative,
@@ -138,7 +142,11 @@ export default function EditAssignment({
           <div className="text-red-300">{error && error}</div>
 
           <div className="px-3 h-full">
-            <AssignmentPreview assignment={assignment} />
+            <ClientOnly>
+              <SuspenseAndErrorHandling showToast={false}>
+                <AssignmentPreview assignment={assignment} />
+              </SuspenseAndErrorHandling>
+            </ClientOnly>
           </div>
         </div>
       </div>

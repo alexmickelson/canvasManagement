@@ -1,3 +1,5 @@
+import ClientOnly from "@/components/ClientOnly";
+import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { rubricItemIsExtraCredit } from "@/models/local/assignment/rubricItem";
