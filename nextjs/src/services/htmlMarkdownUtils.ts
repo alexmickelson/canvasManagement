@@ -44,8 +44,8 @@ export function markdownToHTMLSafe(
   const clean = DOMPurify.sanitize(
     marked.parse(markdownString, { async: false, pedantic: false, gfm: true })
   );
-  return convertImagesToCanvasImages(clean, settings);
-  // return clean;
+  // return convertImagesToCanvasImages(clean, settings);
+  return clean;
 }
 
 export function markdownToHtmlNoImages(markdownString: string) {

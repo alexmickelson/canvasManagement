@@ -1,0 +1,52 @@
+# https://canvas.instructure.com/doc/api/file.file_uploads.html
+###
+GET https://snow.instructure.com/api/v1/courses
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+### 1st request
+# @name createFile
+
+POST https://snow.instructure.com/api/v1/courses/1014748/files
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+name=image.png&size=7339
+
+### 2nd request based on the results of the first
+### all upload_params need to be sent in the form
+# @name uploadFile
+POST {{createFile.response.body.$.upload_url}}
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="file"; filename="image.png"
+Content-Type: image/png
+
+< ./image.png
+--boundary
+Content-Disposition: form-data; name="filename"
+
+image.png
+--boundary
+Content-Disposition: form-data; name="content_type"
+
+image/png
+--boundary--
+
+### if second request is a 301, you must follow the redirect with a get request and authorization
+### mine seems to be a 201, which means i am done
+
+
+
+### alternatively, you can just give canvas the public URL
+### requires polling a status url afterwards to know when complete, yuck
+POST https://snow.instructure.com/api/v1/courses/1014748/files
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+url=http://example.com/my_pic.jpg&name=profile_pic.jpg
+
+###
+GET https://snow.instructure.com/api/v1/courses/1014748/files/170618085
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+
+# file links can be reset with <https://canvas.instructure.com/doc/api/files.html#method.files.reset_verifier>
