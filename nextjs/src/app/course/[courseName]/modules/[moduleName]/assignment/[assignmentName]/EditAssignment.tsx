@@ -81,7 +81,9 @@ export default function EditAssignment({
                 previousAssignmentName: assignmentName,
                 courseName,
               })
-              .then(() => {
+              .then(async () => {
+                await new Promise((resolve) => setTimeout(resolve, 1000));
+
                 if (updatedAssignment.name !== assignmentName)
                   router.replace(
                     getModuleItemUrl(
@@ -89,7 +91,8 @@ export default function EditAssignment({
                       moduleName,
                       "assignment",
                       updatedAssignment.name
-                    )
+                    ),
+                    {}
                   );
               });
           } else {

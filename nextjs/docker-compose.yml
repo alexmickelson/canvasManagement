@@ -17,6 +17,8 @@ services:
       - ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/intro_to_web
       - ~/projects/faculty/1420/2024-fall/Modules:/app/storage/1420
       - ~/projects/faculty/1425/2024-fall/Modules:/app/storage/1425
+      - ~/projects/faculty/3840_Telemetry/2024Spring_alex/modules:/app/storage/spring_2024_telemetry
+      - ~/projects/faculty/3840_Telemetry/2025_spring_alex/modules:/app/storage/spring_2025_telemetry
 
   # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
   # https://github.com/jonas-merkle/container-cloudflare-tunnel
