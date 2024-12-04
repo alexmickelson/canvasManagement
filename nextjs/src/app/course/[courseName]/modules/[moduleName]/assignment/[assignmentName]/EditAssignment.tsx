@@ -57,7 +57,7 @@ export default function EditAssignment({
   useEffect(() => {
     const delay = 500;
 
-    const handler = setTimeout(async () => {
+    const handler = setTimeout(() => {
       try {
         if (assignmentIsFetching || updateAssignment.isPending) {
           console.log("network requests in progress, not updating assignments");
@@ -72,28 +72,30 @@ export default function EditAssignment({
         ) {
           if (clientIsAuthoritative) {
             console.log("updating assignment, client is authoritative");
-            await updateAssignment.mutateAsync({
-              assignment: updatedAssignment,
-              moduleName,
-              assignmentName: updatedAssignment.name,
-              previousModuleName: moduleName,
-              previousAssignmentName: assignmentName,
-              courseName,
-            });
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            updateAssignment
+              .mutateAsync({
+                assignment: updatedAssignment,
+                moduleName,
+                assignmentName: updatedAssignment.name,
+                previousModuleName: moduleName,
+                previousAssignmentName: assignmentName,
+                courseName,
+              })
+              .then(async () => {
+                // await new Promise(resolve => setTimeout(resolve, 1000));
 
-            const newUpdatedAssignment: LocalAssignment =
-              localAssignmentMarkdown.parseMarkdown(text);
-            if (newUpdatedAssignment.name !== assignmentName)
-              router.replace(
-                getModuleItemUrl(
-                  courseName,
-                  moduleName,
-                  "assignment",
-                  newUpdatedAssignment.name
-                ),
-                {}
-              );
+                if (updatedAssignment.name !== assignmentName)
+                  router.replace(
+                    getModuleItemUrl(
+                      courseName,
+                      moduleName,
+                      "assignment",
+                      updatedAssignment.name
+                    ), {
+                      
+                    }
+                  );
+              });
           } else {
             console.log(
               "client not authoritative, updating client with server assignment",
