@@ -3,6 +3,7 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { rubricItemIsExtraCredit } from "@/models/local/assignment/rubricItem";
+import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 import React, { Fragment } from "react";
 
@@ -12,10 +13,7 @@ export default function AssignmentPreview({
   assignment: LocalAssignment;
 }) {
   const [settings] = useLocalCourseSettingsQuery();
-  const totalPoints = assignment.rubric.reduce(
-    (sum, cur) => (rubricItemIsExtraCredit(cur) ? sum : sum + cur.points),
-    0
-  );
+  const totalPoints = assignmentPoints(assignment.rubric)
   const extraPoints = assignment.rubric.reduce(
     (sum, cur) => (rubricItemIsExtraCredit(cur) ? sum + cur.points : sum),
     0
