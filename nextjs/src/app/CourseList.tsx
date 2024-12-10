@@ -27,7 +27,7 @@ function groupByStartDate(courses: LocalCourseSettings[]): {
 }
 
 function getTermName(startDate: string) {
-  const [year, month, ...rest] = startDate.split("-");
+  const [year, month, ..._rest] = startDate.split("-");
   if (month < "04") return "Spring " + year;
   if (month < "07") return "Summer " + year;
   return "Fall " + year;
