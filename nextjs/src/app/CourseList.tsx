@@ -38,9 +38,11 @@ export default function CourseList() {
 
   const coursesByStartDate = groupByStartDate(allSettings);
 
+  const sortedDates = Object.keys(coursesByStartDate).sort()
+
   return (
     <div className="flex flex-row ">
-      {Object.keys(coursesByStartDate).map((startDate) => (
+      {sortedDates.map((startDate) => (
         <div
           key={startDate}
           className=" border-4 border-slate-800 rounded p-3 m-3"

@@ -13,7 +13,7 @@ import { ClientCacheInvalidation } from "../components/realtime/ClientCacheInval
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: process.env.NEXT_PUBLIC_TITLE_PREFIX + "Canvas Manager 2.0",
+  title: (process.env.NEXT_PUBLIC_TITLE_PREFIX ?? "") + "Canvas Manager 2.0",
 };
 
 export default async function RootLayout({
