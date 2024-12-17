@@ -5,7 +5,6 @@ tmp.json
 
 **/*.env
 .env
-**/*.env.test
 
 # dependencies
 /node_modules
