@@ -26,7 +26,6 @@ const settingsToMarkdown = (assignment: LocalAssignment) => {
       .join("\n");
 
   const settingsMarkdown = [
-    `Name: ${assignment.name}`,
     `LockAt: ${printableLockAt}`,
     `DueAt: ${printableDueDate}`,
     `AssignmentGroupName: ${assignment.localAssignmentGroupName}`,

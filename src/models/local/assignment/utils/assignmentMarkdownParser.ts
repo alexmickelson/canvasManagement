@@ -130,7 +130,7 @@ export const assignmentMarkdownParser = {
     const rubric = parseRubricMarkdown(rubricString);
 
     const assignment: LocalAssignment = {
-      name: name.trim(),
+      name,
       localAssignmentGroupName: assignmentGroupName.trim(),
       submissionTypes: submissionTypes,
       allowedFileUploadExtensions: fileUploadExtensions,

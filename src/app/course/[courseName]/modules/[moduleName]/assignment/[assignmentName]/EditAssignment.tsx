@@ -11,7 +11,6 @@ import {
 } from "@/models/local/assignment/localAssignment";
 import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
-import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import ClientOnly from "@/components/ClientOnly";
@@ -19,9 +18,9 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { useRouter } from "next/navigation";
-import { AssignmentButtons } from "./AssignmentButtons";
+import { AssignmentFooterButtons } from "./AssignmentFooterButtons";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
-import { extractLabelValue } from "@/models/local/assignment/utils/markdownUtils";
+import EditAssignmentHeader from "./EditAssignmentHeader";
 
 export default function EditAssignment({
   moduleName,
@@ -65,39 +64,38 @@ export default function EditAssignment({
           return;
         }
 
-        const name = extractLabelValue(text, "Name");
+        // make separate way to update name?
         const updatedAssignment: LocalAssignment =
-          localAssignmentMarkdown.parseMarkdown(text, name);
+          localAssignmentMarkdown.parseMarkdown(text, assignmentName);
         if (
           localAssignmentMarkdown.toMarkdown(assignment) !==
           localAssignmentMarkdown.toMarkdown(updatedAssignment)
         ) {
           if (clientIsAuthoritative) {
             console.log("updating assignment, client is authoritative");
-            updateAssignment
-              .mutateAsync({
-                assignment: updatedAssignment,
-                moduleName,
-                assignmentName: updatedAssignment.name,
-                previousModuleName: moduleName,
-                previousAssignmentName: assignmentName,
-                courseName,
-              })
-              .then(async () => {
-                // await new Promise(resolve => setTimeout(resolve, 1000));
+            updateAssignment.mutateAsync({
+              assignment: updatedAssignment,
+              moduleName,
+              assignmentName,
+              previousModuleName: moduleName,
+              previousAssignmentName: assignmentName,
+              courseName,
+            });
+            // .then(async () => {
+            //   // await new Promise(resolve => setTimeout(resolve, 1000));
 
-                if (updatedAssignment.name !== assignmentName)
-                  router.replace(
-                    getModuleItemUrl(
-                      courseName,
-                      moduleName,
-                      "assignment",
-                      updatedAssignment.name
-                    ), {
-                      
-                    }
-                  );
-              });
+            //   if (updatedAssignment.name !== assignmentName)
+            //     router.replace(
+            //       getModuleItemUrl(
+            //         courseName,
+            //         moduleName,
+            //         "assignment",
+            //         updatedAssignment.name
+            //       ), {
+
+            //       }
+            //     );
+            // });
           } else {
             console.log(
               "client not authoritative, updating client with server assignment",
@@ -135,6 +133,10 @@ export default function EditAssignment({
 
   return (
     <div className="h-full flex flex-col align-middle px-1">
+      <EditAssignmentHeader
+        moduleName={moduleName}
+        assignmentName={assignmentName}
+      />
       <div className={"min-h-0 flex flex-row w-full flex-grow"}>
         {showHelp && (
           <pre className=" max-w-96">
@@ -158,7 +160,7 @@ export default function EditAssignment({
       </div>
       <ClientOnly>
         <SuspenseAndErrorHandling>
-          <AssignmentButtons
+          <AssignmentFooterButtons
             moduleName={moduleName}
             assignmentName={assignmentName}
             toggleHelp={() => setShowHelp((h) => !h)}

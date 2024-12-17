@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function AssignmentButtons({
+export function AssignmentFooterButtons({
   moduleName,
   assignmentName,
   toggleHelp,
@@ -53,8 +53,6 @@ export function AssignmentButtons({
     isFetching ||
     deleteFromCanvas.isPending ||
     updateAssignment.isPending;
-
-  console.log("assignment pending", updateAssignment.isPending);
 
   return (
     <div className="p-5 flex flex-row justify-between gap-3">
