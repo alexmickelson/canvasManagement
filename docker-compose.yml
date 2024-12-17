@@ -1,41 +1,45 @@
 services:
   canvas_manager:
-    image: alexmickelson/canvas_management:1
+    image: alexmickelson/canvas_management:2.3
     user: "1000:1000"
+    container_name: canvas-manager-2
     ports:
-      - 8080:8080
+      - 3000:3000
     env_file:
       - .env
     environment:
       - storageDirectory=/app/storage
       - TZ=America/Denver
+      # - FILE_POLLING=true
     volumes:
       - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/UX
       - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend
       - ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/intro_to_web
       - ~/projects/faculty/1420/2024-fall/Modules:/app/storage/1420
       - ~/projects/faculty/1425/2024-fall/Modules:/app/storage/1425
+      - ~/projects/faculty/3840_Telemetry/2024Spring_alex/modules:/app/storage/spring_2024_telemetry
+      - ~/projects/faculty/3840_Telemetry/2025_spring_alex/modules:/app/storage/spring_2025_telemetry
+      - ~/projects/faculty/4620_Distributed/2025Spring/modules:/app/storage/distributed
+
+  # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
+  # https://github.com/jonas-merkle/container-cloudflare-tunnel
+  cloudflare-tunnel:
+    image: cloudflare/cloudflared
+    container_name: cloudflare-tunnel
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: tunnel run
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    healthcheck:
+      test: ["CMD", "cloudflared", "--version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 
 
-
-  # collector:
-  #   image: otel/opentelemetry-collector-contrib
-  #   volumes:
-  #     - ./canvas-development/otel-collector-config.yml:/etc/otelcol-contrib/config.yaml
-  #   ports:
-  #     - 1888:1888 # pprof extension
-  #     - 8888:8888 # Prometheus metrics exposed by the Collector
-  #     - 8889:8889 # Prometheus exporter metrics
-  #     - 13133:13133 # health_check extension
-  #     - 4317:4317 # OTLP gRPC receiver
-  #     - 4318:4318 # OTLP http receiver
-  #     - 55679:55679 # zpages extension
-
-  # zipkin:
-  #   image: ghcr.io/openzipkin/zipkin-slim
-  #   # Environment settings are defined here https://github.com/openzipkin/zipkin/blob/master/zipkin-server/README.md#environment-variables
-  #   environment:
-  #     - STORAGE_TYPE=mem
-  #   ports:
-  #     - 9411:9411
-  #   # command: --logging.level.zipkin2=DEBUG
+  # https://ngrok.com/docs/using-ngrok-with/docker/
