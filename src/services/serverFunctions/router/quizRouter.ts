@@ -81,7 +81,7 @@ export const quizRouter = router({
         });
 
         if (
-          quiz.name !== previousQuizName ||
+          quizName !== previousQuizName ||
           moduleName !== previousModuleName
         ) {
           await fileStorageService.quizzes.delete({

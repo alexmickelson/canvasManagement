@@ -87,7 +87,7 @@ export const assignmentRouter = router({
         });
 
         if (
-          assignment.name !== previousAssignmentName ||
+          assignmentName !== previousAssignmentName ||
           moduleName !== previousModuleName
         ) {
           await fileStorageService.assignments.delete({
