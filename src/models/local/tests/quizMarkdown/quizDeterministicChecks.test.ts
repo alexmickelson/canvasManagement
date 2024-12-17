@@ -6,8 +6,9 @@ import { QuestionType } from "@/models/local/quiz/localQuizQuestion";
 // Test suite for deterministic checks on LocalQuiz
 describe("QuizDeterministicChecks", () => {
   it("SerializationIsDeterministic_EmptyQuiz", () => {
+    const name = "Test Quiz";
     const quiz: LocalQuiz = {
-      name: "Test Quiz",
+      name,
       description: "quiz description",
       lockAt: "08/21/2023 23:59:00",
       dueAt: "08/21/2023 23:59:00",
@@ -20,14 +21,15 @@ describe("QuizDeterministicChecks", () => {
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
-    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown);
+    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown, name);
 
     expect(parsedQuiz).toEqual(quiz);
   });
 
   it("SerializationIsDeterministic_ShowCorrectAnswers", () => {
+    const name = "Test Quiz";
     const quiz: LocalQuiz = {
-      name: "Test Quiz",
+      name,
       description: "quiz description",
       lockAt: "08/21/2023 23:59:00",
       dueAt: "08/21/2023 23:59:00",
@@ -40,14 +42,15 @@ describe("QuizDeterministicChecks", () => {
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
-    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown);
+    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown, name);
 
     expect(parsedQuiz).toEqual(quiz);
   });
 
   it("SerializationIsDeterministic_ShortAnswer", () => {
+    const name = "Test Quiz";
     const quiz: LocalQuiz = {
-      name: "Test Quiz",
+      name,
       description: "quiz description",
       lockAt: "08/21/2023 23:59:00",
       dueAt: "08/21/2023 23:59:00",
@@ -68,14 +71,15 @@ describe("QuizDeterministicChecks", () => {
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
-    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown);
+    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown, name);
 
     expect(parsedQuiz).toEqual(quiz);
   });
 
   it("SerializationIsDeterministic_Essay", () => {
+    const name = "Test Quiz";
     const quiz: LocalQuiz = {
-      name: "Test Quiz",
+      name,
       description: "quiz description",
       lockAt: "08/21/2023 23:59:00",
       dueAt: "08/21/2023 23:59:00",
@@ -96,14 +100,15 @@ describe("QuizDeterministicChecks", () => {
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
-    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown);
+    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown, name);
 
     expect(parsedQuiz).toEqual(quiz);
   });
 
   it("SerializationIsDeterministic_MultipleAnswer", () => {
+    const name = "Test Quiz";
     const quiz: LocalQuiz = {
-      name: "Test Quiz",
+      name,
       description: "quiz description",
       lockAt: "08/21/2023 23:59:00",
       dueAt: "08/21/2023 23:59:00",
@@ -127,14 +132,15 @@ describe("QuizDeterministicChecks", () => {
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
-    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown);
+    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown, name);
 
     expect(parsedQuiz).toEqual(quiz);
   });
 
   it("SerializationIsDeterministic_MultipleChoice", () => {
+    const name = "Test Quiz";
     const quiz: LocalQuiz = {
-      name: "Test Quiz",
+      name,
       description: "quiz description",
       lockAt: "08/21/2023 23:59:00",
       dueAt: "08/21/2023 23:59:00",
@@ -159,14 +165,15 @@ describe("QuizDeterministicChecks", () => {
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
-    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown);
+    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown, name);
 
     expect(parsedQuiz).toEqual(quiz);
   });
 
   it("SerializationIsDeterministic_Matching", () => {
+    const name = "Test Quiz";
     const quiz: LocalQuiz = {
-      name: "Test Quiz",
+      name,
       description: "quiz description",
       lockAt: "08/21/2023 23:59:00",
       dueAt: "08/21/2023 23:59:00",
@@ -191,7 +198,7 @@ describe("QuizDeterministicChecks", () => {
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
-    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown);
+    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown, name);
 
     expect(parsedQuiz).toEqual(quiz);
   });

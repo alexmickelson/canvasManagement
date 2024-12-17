@@ -5,8 +5,8 @@ import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestio
 
 describe("MatchingTests", () => {
   it("can parse matching question", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -22,7 +22,7 @@ Match the following terms & definitions
 ^ keyword - reserved word that has special meaning in a program (e.g. class, void, static, etc.)
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.questionType).toBe(QuestionType.MATCHING);
@@ -33,8 +33,8 @@ Match the following terms & definitions
   });
 
   it("can create markdown for matching question", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -50,7 +50,7 @@ Match the following terms & definitions
 ^ keyword - reserved word that has special meaning in a program (e.g. class, void, static, etc.)
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const questionMarkdown = quizQuestionMarkdownUtils.toMarkdown(
       quiz.questions[0]
     );
@@ -65,8 +65,8 @@ Match the following terms & definitions
   });
 
   it("whitespace is optional", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -80,13 +80,13 @@ Match the following terms & definitions
 ^statement - a single command to be executed
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     expect(quiz.questions[0].answers[0].text).toBe("statement");
   });
 
   it("can have distractors", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -101,15 +101,15 @@ Match the following terms & definitions
 ^ - this is the distractor
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     expect(quiz.questions[0].matchDistractors).toEqual([
       "this is the distractor",
     ]);
   });
 
   it("can have distractors and be persisted", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -124,7 +124,7 @@ Match the following terms & definitions
 ^ - this is the distractor
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
 
     expect(quizMarkdown).toContain(

@@ -37,8 +37,8 @@ this is my description in markdown
   });
 
   it("can parse markdown quiz with no questions", () => {
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -51,7 +51,7 @@ description
 ---
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
 
     const expectedDescription = `
 this is the
@@ -67,8 +67,8 @@ description`;
 
   it("can parse markdown quiz with password", () => {
     const password = "this-is-the-password";
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
-Name: Test Quiz
 Password: ${password}
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -82,14 +82,14 @@ description
 ---
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
 
     expect(quiz.password).toBe(password);
   });
 
   it("can parse markdown quiz and configure to show correct answers", () => {
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 ShowCorrectAnswers: false
@@ -103,14 +103,14 @@ description
 ---
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
 
     expect(quiz.showCorrectAnswers).toBe(false);
   });
 
   it("can parse quiz with questions", () => {
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -135,7 +135,7 @@ b) false
 
    endline`;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.questionType).toBe(QuestionType.MULTIPLE_CHOICE);
@@ -149,8 +149,8 @@ b) false
   });
 
   it("can parse multiple questions", () => {
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -170,7 +170,7 @@ Points: 2
 b) false
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
     expect(firstQuestion.points).toBe(1);
     expect(firstQuestion.questionType).toBe(QuestionType.MULTIPLE_ANSWERS);
@@ -181,8 +181,8 @@ b) false
   });
 
   it("short answer to markdown is correct", () => {
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -197,7 +197,7 @@ Which events are triggered when the user clicks on an input field?
 short answer
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     const questionMarkdown =
@@ -209,8 +209,8 @@ short_answer`;
   });
 
   it("negative points is allowed", () => {
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -226,14 +226,14 @@ Which events are triggered when the user clicks on an input field?
 short answer
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
     expect(firstQuestion.points).toBe(-4);
   });
 
   it("floating point points is allowed", () => {
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -249,7 +249,7 @@ Which events are triggered when the user clicks on an input field?
 short answer
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
     expect(firstQuestion.points).toBe(4.56);
   });

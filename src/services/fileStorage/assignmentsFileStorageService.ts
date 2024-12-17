@@ -34,8 +34,9 @@ const getAssignment = async (
     assignmentName + ".md"
   );
   const rawFile = (await fs.readFile(filePath, "utf-8")).replace(/\r\n/g, "\n");
-  return localAssignmentMarkdown.parseMarkdown(rawFile);
+  return localAssignmentMarkdown.parseMarkdown(rawFile, assignmentName);
 };
+
 export const assignmentsFileStorageService = {
   getAssignmentNames,
   getAssignment,
@@ -71,7 +72,6 @@ export const assignmentsFileStorageService = {
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
     console.log(`Saving assignment ${filePath}`);
-
 
     await fs.writeFile(filePath, assignmentMarkdown);
   },

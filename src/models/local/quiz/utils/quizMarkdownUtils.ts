@@ -40,8 +40,7 @@ const parseNumberOrThrow = (value: string, label: string): number => {
   }
   return parsed;
 };
-const getQuizWithOnlySettings = (settings: string): LocalQuiz => {
-  const name = extractLabelValue(settings, "Name");
+const getQuizWithOnlySettings = (settings: string, name: string): LocalQuiz => {
 
   const rawShuffleAnswers = extractLabelValue(settings, "ShuffleAnswers");
   const shuffleAnswers = parseBooleanOrThrow(
@@ -136,10 +135,10 @@ Description: ${quiz.description}
 ${questionMarkdown}`;
   },
 
-  parseMarkdown(input: string): LocalQuiz {
+  parseMarkdown(input: string, name: string): LocalQuiz {
     const splitInput = input.split("---\n");
     const settings = splitInput[0];
-    const quizWithoutQuestions = getQuizWithOnlySettings(settings);
+    const quizWithoutQuestions = getQuizWithOnlySettings(settings, name);
 
     const rawQuestions = splitInput.slice(1);
     const questions = rawQuestions

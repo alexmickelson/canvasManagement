@@ -19,7 +19,7 @@ GET https://snow.instructure.com/api/v1/courses?enrollment_term_id=751&per_page=
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 ###
 
-GET https://snow.instructure.com/api/v1/courses/855351/modules 
+GET https://snow.instructure.com/api/v1/courses/1014136/modules 
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 ###
 

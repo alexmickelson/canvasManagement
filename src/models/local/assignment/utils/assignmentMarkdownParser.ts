@@ -47,7 +47,6 @@ const parseIndividualRubricItemMarkdown = (rawMarkdown: string) => {
 };
 
 const parseSettings = (input: string) => {
-  const name = extractLabelValue(input, "Name");
   const rawLockAt = extractLabelValue(input, "LockAt");
   const rawDueAt = extractLabelValue(input, "DueAt");
   const assignmentGroupName = extractLabelValue(input, "AssignmentGroupName");
@@ -58,7 +57,6 @@ const parseSettings = (input: string) => {
   const lockAt = verifyDateStringOrUndefined(rawLockAt);
 
   return {
-    name,
     assignmentGroupName,
     submissionTypes,
     fileUploadExtensions,
@@ -110,10 +108,10 @@ const parseRubricMarkdown = (rawMarkdown: string) => {
 
 export const assignmentMarkdownParser = {
   parseRubricMarkdown,
-  parseMarkdown(input: string): LocalAssignment {
+  parseMarkdown(input: string, name: string): LocalAssignment {
     const settingsString = input.split("---")[0];
     const {
-      name,
+      // name,
       assignmentGroupName,
       submissionTypes,
       fileUploadExtensions,

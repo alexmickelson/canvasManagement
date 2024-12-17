@@ -14,6 +14,7 @@ import {
   useUpdateQuizMutation,
 } from "@/hooks/localCourse/quizHooks";
 import { useAuthoritativeUpdates } from "../../../../utils/useAuthoritativeUpdates";
+import { extractLabelValue } from "@/models/local/assignment/utils/markdownUtils";
 
 const helpString = `QUESTION REFERENCE
 ---
@@ -85,12 +86,19 @@ export default function EditQuiz({
         return;
       }
       try {
+        const name = extractLabelValue(text, "Name");
         if (
           quizMarkdownUtils.toMarkdown(quiz) !==
-          quizMarkdownUtils.toMarkdown(quizMarkdownUtils.parseMarkdown(text))
+          quizMarkdownUtils.toMarkdown(
+            quizMarkdownUtils.parseMarkdown(text, name)
+          )
         ) {
           if (clientIsAuthoritative) {
-            const updatedQuiz = quizMarkdownUtils.parseMarkdown(text);
+            const updatedName = extractLabelValue(text, "Name");
+            const updatedQuiz = quizMarkdownUtils.parseMarkdown(
+              text,
+              updatedName
+            );
             await updateQuizMutation
               .mutateAsync({
                 quiz: updatedQuiz,

@@ -6,8 +6,9 @@ import { assignmentMarkdownParser } from "../assignment/utils/assignmentMarkdown
 
 describe("AssignmentMarkdownTests", () => {
   it("can parse assignment settings", () => {
+    const name = "test assignment";
     const assignment: LocalAssignment = {
-      name: "test assignment",
+      name,
       description: "here is the description",
       dueAt: "08/21/2023 23:59:00",
       lockAt: "08/21/2023 23:59:00",
@@ -22,15 +23,18 @@ describe("AssignmentMarkdownTests", () => {
 
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
-    const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
 
     expect(parsedAssignment).toEqual(assignment);
   });
 
   it("assignment with empty rubric can be parsed", () => {
+    const name = "test assignment";
     const assignment: LocalAssignment = {
-      name: "test assignment",
+      name,
       description: "here is the description",
       dueAt: "08/21/2023 23:59:00",
       lockAt: "08/21/2023 23:59:00",
@@ -43,14 +47,15 @@ describe("AssignmentMarkdownTests", () => {
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
     const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown);
+      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
 
     expect(parsedAssignment).toEqual(assignment);
   });
 
   it("assignment with empty submission types can be parsed", () => {
+    const name = "test assignment";
     const assignment: LocalAssignment = {
-      name: "test assignment",
+      name,
       description: "here is the description",
       dueAt: "08/21/2023 23:59:00",
       lockAt: "08/21/2023 23:59:00",
@@ -66,14 +71,15 @@ describe("AssignmentMarkdownTests", () => {
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
     const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown);
+      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
 
     expect(parsedAssignment).toEqual(assignment);
   });
 
   it("assignment without lockAt date can be parsed", () => {
+    const name = "test assignment";
     const assignment: LocalAssignment = {
-      name: "test assignment",
+      name,
       description: "here is the description",
       dueAt: "08/21/2023 23:59:00",
       lockAt: undefined,
@@ -89,14 +95,15 @@ describe("AssignmentMarkdownTests", () => {
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
     const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown);
+      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
 
     expect(parsedAssignment).toEqual(assignment);
   });
 
   it("assignment without description can be parsed", () => {
+    const name = "test assignment";
     const assignment: LocalAssignment = {
-      name: "test assignment",
+      name,
       description: "",
       dueAt: "08/21/2023 23:59:00",
       lockAt: "08/21/2023 23:59:00",
@@ -112,14 +119,15 @@ describe("AssignmentMarkdownTests", () => {
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
     const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown);
+      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
 
     expect(parsedAssignment).toEqual(assignment);
   });
 
   it("assignments can have three dashes", () => {
+    const name = "test assignment";
     const assignment: LocalAssignment = {
-      name: "test assignment",
+      name,
       description: "test assignment\n---\nsomestuff",
       dueAt: "08/21/2023 23:59:00",
       lockAt: "08/21/2023 23:59:00",
@@ -132,14 +140,15 @@ describe("AssignmentMarkdownTests", () => {
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
     const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown);
+      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
 
     expect(parsedAssignment).toEqual(assignment);
   });
 
   it("assignments can restrict upload types", () => {
+    const name = "test assignment";
     const assignment: LocalAssignment = {
-      name: "test assignment",
+      name,
       description: "here is the description",
       dueAt: "08/21/2023 23:59:00",
       lockAt: "08/21/2023 23:59:00",
@@ -152,7 +161,7 @@ describe("AssignmentMarkdownTests", () => {
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
     const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown);
+      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
 
     expect(parsedAssignment).toEqual(assignment);
   });

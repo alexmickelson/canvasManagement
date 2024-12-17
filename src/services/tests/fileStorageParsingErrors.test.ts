@@ -98,7 +98,7 @@ SubmissionTypes:
 AllowedFileUploadExtensions:
 - pdf
 ---
-description
+this is the test description
 ## Rubric
 - 2pts: animation has at least 5 transition states
 `;

@@ -21,6 +21,7 @@ import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { useRouter } from "next/navigation";
 import { AssignmentButtons } from "./AssignmentButtons";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
+import { extractLabelValue } from "@/models/local/assignment/utils/markdownUtils";
 
 export default function EditAssignment({
   moduleName,
@@ -64,8 +65,9 @@ export default function EditAssignment({
           return;
         }
 
+        const name = extractLabelValue(text, "Name");
         const updatedAssignment: LocalAssignment =
-          localAssignmentMarkdown.parseMarkdown(text);
+          localAssignmentMarkdown.parseMarkdown(text, name);
         if (
           localAssignmentMarkdown.toMarkdown(assignment) !==
           localAssignmentMarkdown.toMarkdown(updatedAssignment)

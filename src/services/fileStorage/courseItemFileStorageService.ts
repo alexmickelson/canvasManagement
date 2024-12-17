@@ -56,11 +56,12 @@ const getItem = async <T extends CourseItemType>(
   const rawFile = (await fs.readFile(filePath, "utf-8")).replace(/\r\n/g, "\n");
   if (type === "Assignment") {
     return localAssignmentMarkdown.parseMarkdown(
-      rawFile
+      rawFile,
+      name
     ) as CourseItemReturnType<T>;
   } else if (type === "Quiz") {
     return localQuizMarkdownUtils.parseMarkdown(
-      rawFile
+      rawFile, name
     ) as CourseItemReturnType<T>;
   } else if (type === "Page") {
     return localPageMarkdownUtils.parseMarkdown(

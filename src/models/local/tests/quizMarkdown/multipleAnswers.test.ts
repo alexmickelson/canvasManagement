@@ -41,8 +41,8 @@ oneline question
   });
 
   it("can parse question with multiple answers", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -64,7 +64,7 @@ Which events are triggered when the user clicks on an input field?
 ---
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.points).toBe(1);
@@ -79,8 +79,8 @@ Which events are triggered when the user clicks on an input field?
   });
 
   it("can parse question with multiple answers without a space in false answers", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -96,7 +96,7 @@ Which events are triggered when the user clicks on an input field?
 [] submit
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.answers.length).toBe(2);
@@ -105,8 +105,8 @@ Which events are triggered when the user clicks on an input field?
   });  
   
   it("can parse question with multiple answers without a space in false answers other example", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -124,7 +124,7 @@ Which tool(s) will let you: create a database migration or reverse-engineer an e
 [*] dotnet ef command line interface
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.answers.length).toBe(3);

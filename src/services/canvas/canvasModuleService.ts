@@ -1,7 +1,7 @@
 import { CanvasModuleItem } from "@/models/canvas/modules/canvasModuleItems";
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { axiosClient } from "../axiosUtils";
-import { canvasApi } from "./canvasServiceUtils";
+import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { CanvasModule } from "@/models/canvas/modules/canvasModule";
 
 export const canvasModuleService = {
@@ -49,8 +49,8 @@ export const canvasModuleService = {
 
   async getCourseModules(canvasCourseId: number) {
     const url = `${canvasApi}/courses/${canvasCourseId}/modules`;
-    const response = await axiosClient.get<CanvasModule[]>(url);
-    return response.data;
+    const response = await paginatedRequest<CanvasModule[]>({ url });
+    return response
   },
 
   async createModule(canvasCourseId: number, moduleName: string) {

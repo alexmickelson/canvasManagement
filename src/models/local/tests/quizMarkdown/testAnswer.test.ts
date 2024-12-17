@@ -5,8 +5,8 @@ import { describe, it, expect } from "vitest";
 
 describe("TextAnswerTests", () => {
   it("can parse essay", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -21,7 +21,7 @@ Which events are triggered when the user clicks on an input field?
 essay
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.points).toBe(1);
@@ -30,8 +30,8 @@ essay
   });
 
   it("can parse short answer", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -46,7 +46,7 @@ Which events are triggered when the user clicks on an input field?
 short answer
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.points).toBe(1);
@@ -55,8 +55,9 @@ short answer
   });
 
   it("short answer to markdown is correct", () => {
+
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -71,7 +72,7 @@ Which events are triggered when the user clicks on an input field?
 short answer
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     const questionMarkdown =
@@ -83,8 +84,8 @@ short_answer`;
   });
 
   it("essay question to markdown is correct", () => {
+    const name = "Test Quiz"
     const rawMarkdownQuiz = `
-Name: Test Quiz
 ShuffleAnswers: true
 OneQuestionAtATime: false
 DueAt: 08/21/2023 23:59:00
@@ -99,7 +100,7 @@ Which events are triggered when the user clicks on an input field?
 essay
 `;
 
-    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
 
     const questionMarkdown =
@@ -128,7 +129,7 @@ essay`;
 // short_answer=
 // `;
 
-//     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz);
+//     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
 //     const firstQuestion = quiz.questions[0];
 
 
