@@ -27,13 +27,15 @@ export const useUpdatePageMutation = () => {
       _,
       { courseName, moduleName, pageName, previousModuleName }
     ) => {
-      utils.page.getAllPages.invalidate({ courseName, moduleName });
+      utils.page.getAllPages.invalidate({ courseName, moduleName },
+        { refetchType: "all" });
       utils.page.getPage.invalidate({ courseName, moduleName, pageName });
       if (moduleName !== previousModuleName) {
         utils.page.getAllPages.invalidate({
           courseName,
           moduleName: previousModuleName,
-        });
+        },
+        { refetchType: "all" });
       }
     },
   });

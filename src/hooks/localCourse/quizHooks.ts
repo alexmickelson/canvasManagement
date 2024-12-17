@@ -31,8 +31,10 @@ export const useUpdateQuizMutation = () => {
         utils.quiz.getAllQuizzes.invalidate({
           courseName,
           moduleName: previousModuleName,
-        });
-      utils.quiz.getAllQuizzes.invalidate({ courseName, moduleName });
+        },
+        { refetchType: "all" });
+      utils.quiz.getAllQuizzes.invalidate({ courseName, moduleName },
+        { refetchType: "all" });
       utils.quiz.getQuiz.invalidate({ courseName, moduleName, quizName });
     },
   });
