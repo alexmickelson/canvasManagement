@@ -23,7 +23,8 @@ export const useQuizzesQueries = (moduleName: string) => {
 export const useUpdateQuizMutation = () => {
   const utils = trpc.useUtils();
   return trpc.quiz.updateQuiz.useMutation({
-    onSuccess: (_, { courseName, moduleName, quizName }) => {
+    onSuccess: (_, { courseName, moduleName, quizName, previousModuleName }) => {
+      utils.quiz.getAllQuizzes.invalidate({ courseName, moduleName: previousModuleName });
       utils.quiz.getAllQuizzes.invalidate({ courseName, moduleName });
       utils.quiz.getQuiz.invalidate({ courseName, moduleName, quizName });
     },

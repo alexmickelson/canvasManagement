@@ -39,6 +39,7 @@ export const useAllCourseDataQuery = (): {
       t.quiz.getAllQuizzes({ courseName, moduleName })
     )
   );
+  console.log(quizzes);
 
   const [pages] = trpc.useSuspenseQueries((t) =>
     moduleNames.map((moduleName) =>

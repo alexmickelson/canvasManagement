@@ -9,6 +9,7 @@ docker run -it --rm \
   -v .:/app \
   -v ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/intro_to_web \
   -v ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend \
+  -v ~/projects/faculty/1810/2025-spring-alex/online:/app/storage/intro_to_web_online \
   node \
     sh -c "
       mkdir -p ~/.npm-global && \
