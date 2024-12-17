@@ -101,8 +101,19 @@ export const useUpdateAssignmentMutation = () => {
   return trpc.assignment.updateAssignment.useMutation({
     onSuccess: (
       _,
-      { courseName, moduleName, assignmentName, previousAssignmentName }
+      {
+        courseName,
+        moduleName,
+        assignmentName,
+        previousAssignmentName,
+        previousModuleName,
+      }
     ) => {
+      if (moduleName !== previousModuleName)
+        utils.assignment.getAllAssignments.invalidate({
+          courseName,
+          moduleName: previousModuleName,
+        });
       utils.assignment.getAllAssignments.invalidate({ courseName, moduleName });
       utils.assignment.getAssignment.invalidate({
         courseName,

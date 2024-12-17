@@ -3,6 +3,7 @@
 docker run -it --rm \
   --name canvas-manager-2 \
   -e TZ=America/Denver \
+  -e NODE_ENV=development \
   -u 1000:1000 \
   -p 3000:3000 \
   -w /app \
@@ -15,8 +16,9 @@ docker run -it --rm \
       mkdir -p ~/.npm-global && \
       npm config set prefix '~/.npm-global' && \
       export PATH=~/.npm-global/bin:\$PATH && \
+
       npm install -g pnpm && \
-      pnpm install && pnpm start
+      pnpm install && pnpm dev
     "
 
 

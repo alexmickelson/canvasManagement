@@ -4,100 +4,19 @@ import {
   CalendarItemsInterface,
 } from "./calendarItemsContext";
 import {
-  getDateFromStringOrThrow,
-  getDateOnlyMarkdownString,
-} from "@/models/local/utils/timeUtils";
-import { useAllCourseDataQuery } from "@/hooks/localCourse/localCourseModuleHooks";
-import { trpc } from "@/services/serverFunctions/trpcClient";
+  useCourseQuizzesByModuleByDateQuery,
+  useCourseAssignmentsByModuleByDateQuery,
+  useCoursePagesByModuleByDateQuery,
+} from "@/hooks/localCourse/localCourseModuleHooks";
 
 export default function CalendarItemsContextProvider({
   children,
 }: {
   children: ReactNode;
 }) {
-  const { assignmentsAndModules, quizzesAndModules, pagesAndModules } =
-    useAllCourseDataQuery();
-
-  const assignmentsByModuleByDate = assignmentsAndModules.reduce(
-    (previous, { assignment, moduleName }) => {
-      const dueDay = getDateOnlyMarkdownString(
-        getDateFromStringOrThrow(
-          assignment.dueAt,
-          "due at for assignment in items context"
-        )
-      );
-      const previousModules = previous[dueDay] ?? {};
-      const previousModule = previousModules[moduleName] ?? {
-        assignments: [],
-      };
-
-      const updatedModule = {
-        ...previousModule,
-        assignments: [...previousModule.assignments, assignment],
-      };
-
-      return {
-        ...previous,
-        [dueDay]: {
-          ...previousModules,
-          [moduleName]: updatedModule,
-        },
-      };
-    },
-    {} as CalendarItemsInterface
-  );
-
-  const quizzesByModuleByDate = quizzesAndModules.reduce(
-    (previous, { quiz, moduleName }) => {
-      const dueDay = getDateOnlyMarkdownString(
-        getDateFromStringOrThrow(quiz.dueAt, "due at for quiz in items context")
-      );
-      const previousModules = previous[dueDay] ?? {};
-      const previousModule = previousModules[moduleName] ?? {
-        quizzes: [],
-      };
-
-      const updatedModule = {
-        ...previousModule,
-        quizzes: [...previousModule.quizzes, quiz],
-      };
-
-      return {
-        ...previous,
-        [dueDay]: {
-          ...previousModules,
-          [moduleName]: updatedModule,
-        },
-      };
-    },
-    {} as CalendarItemsInterface
-  );
-
-  const pagesByModuleByDate = pagesAndModules.reduce(
-    (previous, { page, moduleName }) => {
-      const dueDay = getDateOnlyMarkdownString(
-        getDateFromStringOrThrow(page.dueAt, "due at for quiz in items context")
-      );
-      const previousModules = previous[dueDay] ?? {};
-      const previousModule = previousModules[moduleName] ?? {
-        pages: [],
-      };
-
-      const updatedModule = {
-        ...previousModule,
-        pages: [...previousModule.pages, page],
-      };
-
-      return {
-        ...previous,
-        [dueDay]: {
-          ...previousModules,
-          [moduleName]: updatedModule,
-        },
-      };
-    },
-    {} as CalendarItemsInterface
-  );
+  const quizzesByModuleByDate = useCourseQuizzesByModuleByDateQuery();
+  const assignmentsByModuleByDate = useCourseAssignmentsByModuleByDateQuery();
+  const pagesByModuleByDate = useCoursePagesByModuleByDateQuery();
 
   const allDays = [
     ...new Set([

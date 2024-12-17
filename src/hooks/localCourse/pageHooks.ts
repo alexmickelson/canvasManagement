@@ -23,9 +23,18 @@ export const usePagesQueries = (moduleName: string) => {
 export const useUpdatePageMutation = () => {
   const utils = trpc.useUtils();
   return trpc.page.updatePage.useMutation({
-    onSuccess: (_, { courseName, moduleName, pageName }) => {
+    onSuccess: (
+      _,
+      { courseName, moduleName, pageName, previousModuleName }
+    ) => {
       utils.page.getAllPages.invalidate({ courseName, moduleName });
       utils.page.getPage.invalidate({ courseName, moduleName, pageName });
+      if (moduleName !== previousModuleName) {
+        utils.page.getAllPages.invalidate({
+          courseName,
+          moduleName: previousModuleName,
+        });
+      }
     },
   });
 };
