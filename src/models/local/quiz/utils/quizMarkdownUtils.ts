@@ -121,8 +121,7 @@ export const quizMarkdownUtils = {
     const questionDelimiter = "\n\n---\n\n";
     const questionMarkdown = questionMarkdownArray.join(questionDelimiter);
 
-    return `Name: ${quiz.name}
-LockAt: ${quiz.lockAt ?? ""}
+    return `LockAt: ${quiz.lockAt ?? ""}
 DueAt: ${quiz.dueAt}
 Password: ${quiz.password ?? ""}
 ShuffleAnswers: ${quiz.shuffleAnswers.toString().toLowerCase()}

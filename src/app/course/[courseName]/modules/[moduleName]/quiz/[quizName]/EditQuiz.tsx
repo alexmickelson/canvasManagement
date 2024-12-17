@@ -15,6 +15,7 @@ import {
 } from "@/hooks/localCourse/quizHooks";
 import { useAuthoritativeUpdates } from "../../../../utils/useAuthoritativeUpdates";
 import { extractLabelValue } from "@/models/local/assignment/utils/markdownUtils";
+import EditQuizHeader from "./EditQuizHeader";
 
 const helpString = `QUESTION REFERENCE
 ---
@@ -150,6 +151,7 @@ export default function EditQuiz({
 
   return (
     <div className="h-full flex flex-col align-middle px-1">
+      <EditQuizHeader moduleName={moduleName} quizName={quizName} />
       <div className={"min-h-96 h-full flex flex-row w-full"}>
         {showHelp && (
           <pre className=" max-w-96">

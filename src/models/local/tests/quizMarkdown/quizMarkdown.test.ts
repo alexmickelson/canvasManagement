@@ -28,7 +28,7 @@ this is my description in markdown
 
     const markdown = quizMarkdownUtils.toMarkdown(quiz);
 
-    expect(markdown).toContain("Name: Test Quiz");
+    expect(markdown).not.toContain("Name: Test Quiz");
     expect(markdown).toContain(quiz.description);
     expect(markdown).toContain("ShuffleAnswers: true");
     expect(markdown).toContain("OneQuestionAtATime: false");
