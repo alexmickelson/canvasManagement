@@ -37,25 +37,12 @@ export const pageFileStorageService = {
       courseName,
       moduleName,
       "pages",
-      page.name + ".md"
+      pageName + ".md"
     );
 
     const pageMarkdown = localPageMarkdownUtils.toMarkdown(page);
     console.log(`Saving page ${filePath}`);
     await fs.writeFile(filePath, pageMarkdown);
-
-    const pageNameIsChanged = pageName !== page.name;
-    if (pageNameIsChanged) {
-      console.log("removing old page after name change " + pageName);
-      const oldFilePath = path.join(
-        basePath,
-        courseName,
-        moduleName,
-        "pages",
-        pageName + ".md"
-      );
-      await fs.unlink(oldFilePath);
-    }
   },
   async delete({
     courseName,

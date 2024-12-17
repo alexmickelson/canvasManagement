@@ -65,7 +65,7 @@ const getItem = async <T extends CourseItemType>(
     ) as CourseItemReturnType<T>;
   } else if (type === "Page") {
     return localPageMarkdownUtils.parseMarkdown(
-      rawFile
+      rawFile, name
     ) as CourseItemReturnType<T>;
   }
 

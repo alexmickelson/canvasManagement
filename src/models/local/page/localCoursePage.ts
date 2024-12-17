@@ -21,13 +21,12 @@ export const localPageMarkdownUtils = {
       page.dueAt,
       "page DueDateForOrdering"
     );
-    const settingsMarkdown = `Name: ${page.name}\nDueDateForOrdering: ${printableDueDate}\n---\n`;
+    const settingsMarkdown = `DueDateForOrdering: ${printableDueDate}\n---\n`;
     return settingsMarkdown + page.text;
   },
 
-  parseMarkdown: (pageMarkdown: string) => {
+  parseMarkdown: (pageMarkdown: string, name: string) => {
     const rawSettings = pageMarkdown.split("---")[0];
-    const name = extractLabelValue(rawSettings, "Name");
     const rawDate = extractLabelValue(rawSettings, "DueDateForOrdering");
     const dueAt = verifyDateOrThrow(rawDate, "page DueDateForOrdering");
 

@@ -10,10 +10,10 @@ import PagePreview from "./PagePreview";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import EditPageButtons from "./EditPageButtons";
 import ClientOnly from "@/components/ClientOnly";
-import { getModuleItemUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
+import EditPageHeader from "./EditPageHeader";
 
 export default function EditPage({
   moduleName,
@@ -48,33 +48,35 @@ export default function EditPage({
       }
 
       try {
-        const updatedPage = localPageMarkdownUtils.parseMarkdown(text);
+        const updatedPage = localPageMarkdownUtils.parseMarkdown(
+          text,
+          pageName
+        );
         if (
           localPageMarkdownUtils.toMarkdown(page) !==
           localPageMarkdownUtils.toMarkdown(updatedPage)
         ) {
           if (clientIsAuthoritative) {
             console.log("updating page");
-            updatePage
-              .mutateAsync({
-                page: updatedPage,
-                moduleName,
-                pageName: updatedPage.name,
-                previousModuleName: moduleName,
-                previousPageName: pageName,
-                courseName,
-              })
-              .then(() => {
-                if (updatedPage.name !== pageName)
-                  router.replace(
-                    getModuleItemUrl(
-                      courseName,
-                      moduleName,
-                      "page",
-                      updatedPage.name
-                    )
-                  );
-              });
+            updatePage.mutateAsync({
+              page: updatedPage,
+              moduleName,
+              pageName,
+              previousModuleName: moduleName,
+              previousPageName: pageName,
+              courseName,
+            });
+            // .then(() => {
+            //   if (updatedPage.name !== pageName)
+            //     router.replace(
+            //       getModuleItemUrl(
+            //         courseName,
+            //         moduleName,
+            //         "page",
+            //         updatedPage.name
+            //       )
+            //     );
+            // });
           } else {
             console.log(
               "client not authoritative, updating client with server page"
@@ -106,6 +108,7 @@ export default function EditPage({
 
   return (
     <div className="h-full flex flex-col">
+      <EditPageHeader pageName={pageName} moduleName={moduleName} />
       <div className="columns-2 min-h-0 flex-1">
         <div className="flex-1 h-full">
           <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
