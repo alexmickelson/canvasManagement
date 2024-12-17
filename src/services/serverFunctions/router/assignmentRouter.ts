@@ -90,7 +90,7 @@ export const assignmentRouter = router({
           assignment.name !== previousAssignmentName ||
           moduleName !== previousModuleName
         ) {
-          fileStorageService.assignments.delete({
+          await fileStorageService.assignments.delete({
             courseName,
             moduleName: previousModuleName,
             assignmentName: previousAssignmentName,

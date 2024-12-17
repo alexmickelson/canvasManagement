@@ -109,11 +109,12 @@ export const useUpdateAssignmentMutation = () => {
         previousModuleName,
       }
     ) => {
-      if (moduleName !== previousModuleName)
+      if (moduleName !== previousModuleName) {
         utils.assignment.getAllAssignments.invalidate({
           courseName,
           moduleName: previousModuleName,
         });
+      }
       utils.assignment.getAllAssignments.invalidate({ courseName, moduleName });
       utils.assignment.getAssignment.invalidate({
         courseName,

@@ -15,6 +15,7 @@ services:
       - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/UX
       - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend
 
+      - ~/projects/faculty/1810/2024-spring-alex/modules_online:/app/storage/intro_to_web_online_old
       - ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/intro_to_web_old
       - ~/projects/faculty/1810/2025-spring-alex/in-person:/app/storage/intro_to_web
       - ~/projects/faculty/1810/2025-spring-alex/online:/app/storage/intro_to_web_online

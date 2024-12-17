@@ -1,6 +1,6 @@
 "use client";
 import { marked } from "marked";
-import * as DOMPurify from "isomorphic-dompurify";
+import  DOMPurify from "isomorphic-dompurify";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 
 export function extractImageSources(htmlString: string) {

@@ -81,7 +81,7 @@ export const pageRouter = router({
           page.name !== previousPageName ||
           moduleName !== previousModuleName
         ) {
-          fileStorageService.pages.delete({
+          await fileStorageService.pages.delete({
             courseName,
             moduleName: previousModuleName,
             pageName: previousPageName,

@@ -6,5 +6,9 @@ temp/
 build.sh
 run.sh
 README.md
+docker-compose.yml
+Dockerfile
+.next/
+.pnpm-store/
 
 
