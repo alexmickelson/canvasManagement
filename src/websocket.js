@@ -38,10 +38,14 @@ app.prepare().then(() => {
       socket.emit("fileChanged", relativePath);
     };
     watcher.on("change", changeHandler);
+    watcher.on("unlink", changeHandler);
+    watcher.on("add", changeHandler);
 
     socket.on("disconnect", () => {
       console.log("Client disconnected");
-      watcher.off("change", changeHandler); // Remove the event listener
+      watcher.off("change", changeHandler);
+      watcher.off("unlink", changeHandler);
+      watcher.off("add", changeHandler);
     });
   });
 
