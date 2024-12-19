@@ -95,31 +95,19 @@ export default function EditQuiz({
           )
         ) {
           if (clientIsAuthoritative) {
-            const updatedName = extractLabelValue(text, "Name");
             const updatedQuiz = quizMarkdownUtils.parseMarkdown(
               text,
-              updatedName
+              quizName
             );
             await updateQuizMutation
               .mutateAsync({
                 quiz: updatedQuiz,
                 moduleName,
-                quizName: updatedQuiz.name,
+                quizName: quizName,
                 previousModuleName: moduleName,
                 previousQuizName: quizName,
                 courseName,
               })
-              .then(() => {
-                if (updatedQuiz.name !== quizName)
-                  router.replace(
-                    getModuleItemUrl(
-                      courseName,
-                      moduleName,
-                      "quiz",
-                      updatedQuiz.name
-                    )
-                  );
-              });
           } else {
             console.log(
               "client not authoritative, updating client with server quiz"
