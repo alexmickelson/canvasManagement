@@ -21,7 +21,7 @@ services:
       - ~/projects/faculty/1810/2025-spring-alex/online:/app/storage/intro_to_web_online
 
       - ~/projects/faculty/3840_Telemetry/2024Spring_alex/modules:/app/storage/spring_2024_telemetry
-      - ~/projects/faculty/3840_Telemetry/2025_spring_alex/modules:/app/storage/spring_2025_telemetry
+      - ~/projects/faculty/3840_Telemetry/2025_spring_alex/modules:/app/storage/telemetry
       - ~/projects/faculty/4620_Distributed/2025Spring/modules:/app/storage/distributed
 
   # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
