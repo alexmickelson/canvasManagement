@@ -36,7 +36,7 @@ export default function DefaultLockOffset() {
 
   return (
     <div>
-      <div className="text-center">Default Assignment Due Time</div>
+      <div className="text-center">Default Assignment Lock Offset</div>
       <hr className="m-1 p-0" />
 
       <TextInput

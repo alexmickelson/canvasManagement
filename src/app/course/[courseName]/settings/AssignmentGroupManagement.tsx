@@ -10,6 +10,8 @@ import TextInput from "../../../../components/form/TextInput";
 import { useSetAssignmentGroupsMutation } from "@/hooks/canvas/canvasCourseHooks";
 import { settingsBox } from "./sharedSettings";
 import { Spinner } from "@/components/Spinner";
+import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
+import MeatballIcon from "./MeatballIcon";
 
 export default function AssignmentGroupManagement() {
   const [settings, { isPending }] = useLocalCourseSettingsQuery();
@@ -117,11 +119,20 @@ export default function AssignmentGroupManagement() {
       {applyInCanvas.isPending && <Spinner />}
       {applyInCanvas.isSuccess && (
         <div>
-          {
-            "You will need to go to your course assignments page > settings > Assignment Group Weights"
-          }
+          {"You will need to go to your course assignments page "}
+          <a
+            href={`${baseCanvasUrl}/courses/${settings.canvasId}/assignments`}
+            className="font-bold underline hover:scale-115"
+            target="_blank"
+          >
+            HERE
+          </a>
+          {" > settings ("}
+          <MeatballIcon />
+          {")  > Assignment Group Weights"}
           <br />
           {"and check the 'Weight final grade based on assignment groups' box"}
+          <br />
         </div>
       )}
     </div>
