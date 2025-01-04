@@ -6,7 +6,7 @@ import { useCourseContext } from "../../context/courseContext";
 import { DraggableItem } from "../../context/drag/draggingContext";
 import ClientOnly from "@/components/ClientOnly";
 import { useDragStyleContext } from "../../context/drag/dragStyleContext";
-import { DayItemTooltip } from "./DayItemTooltip";
+import { Tooltip } from "../../../../../components/Tooltip";
 
 export function ItemInDay({
   type,
@@ -59,7 +59,7 @@ export function ItemInDay({
         {item.name}
       </Link>
       <ClientOnly>
-        <DayItemTooltip
+        <Tooltip
           message={message}
           targetRef={linkRef}
           visible={tooltipVisible && status === "incomplete"}

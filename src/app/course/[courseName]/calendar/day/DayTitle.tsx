@@ -7,6 +7,9 @@ import { DraggableItem } from "../../context/drag/draggingContext";
 import { useDragStyleContext } from "../../context/drag/dragStyleContext";
 import { getLectureForDay } from "@/models/local/utils/lectureUtils";
 import { useLecturesSuspenseQuery } from "@/hooks/localCourse/lectureHooks";
+import ClientOnly from "@/components/ClientOnly";
+import { Tooltip } from "@/components/Tooltip";
+import { useRef, useState } from "react";
 
 export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { courseName } = useCourseContext();
@@ -14,6 +17,8 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { setIsDragging } = useDragStyleContext();
   const todaysLecture = getLectureForDay(weeks, dayAsDate);
   const modal = useModal();
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const [tooltipVisible, setTooltipVisible] = useState(false);
 
   const lectureName = todaysLecture && (todaysLecture.name || "lecture");
 
@@ -38,9 +43,21 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
             setIsDragging(true);
           }
         }}
+        ref={linkRef}
+        onMouseEnter={() => setTooltipVisible(true)}
+        onMouseLeave={() => setTooltipVisible(false)}
       >
         {dayAsDate.getDate()} {lectureName}
       </Link>
+      <ClientOnly>
+        {(lectureName?.length ?? 0) > 0 && (
+          <Tooltip
+            message={lectureName}
+            targetRef={linkRef}
+            visible={tooltipVisible}
+          />
+        )}
+      </ClientOnly>
       <Modal
         modalControl={modal}
         buttonText="+"
