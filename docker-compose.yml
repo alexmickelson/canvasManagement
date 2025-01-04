@@ -12,9 +12,6 @@ services:
       - TZ=America/Denver
       # - FILE_POLLING=true
     volumes:
-      - ~/projects/faculty/1810/2024-spring-alex/modules_online:/app/storage/intro_to_web_online_old
-      - ~/projects/faculty/1810/2024-fall-alex/modules:/app/storage/intro_to_web_old
-
       - ~/projects/faculty/3840_Telemetry/2024Spring_alex/modules:/app/storage/spring_2024_telemetry
 
       - ~/projects/faculty/1400/2025_spring_alex/modules:/app/storage/1400
