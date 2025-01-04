@@ -1,5 +1,18 @@
 import { Suspense } from "react";
 import CourseContextProvider from "./context/CourseContextProvider";
+import { Metadata } from "next";
+import { getTitle } from "@/services/titleUtils";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ courseName: string }>;
+}): Promise<Metadata> {
+  const { courseName } = await params;
+  return {
+    title: getTitle(courseName),
+  };
+}
 
 export default async function CourseLayout({
   children,

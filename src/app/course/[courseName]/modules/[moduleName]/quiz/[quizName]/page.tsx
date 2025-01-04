@@ -1,5 +1,23 @@
 import React from "react";
 import EditQuiz from "./EditQuiz";
+import { getTitle } from "@/services/titleUtils";
+import { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{
+    courseName: string;
+    quizName: string;
+    moduleName: string;
+  }>;
+}): Promise<Metadata> {
+  const { courseName, quizName } = await params;
+  const decodedQuizName = decodeURIComponent(quizName);
+  return {
+    title: getTitle(`${decodedQuizName}, ${courseName}`),
+  };
+}
 
 export default async function Page({
   params,

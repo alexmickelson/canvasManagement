@@ -10,10 +10,11 @@ import { createTrpcContext } from "@/services/serverFunctions/context";
 import superjson from "superjson";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { ClientCacheInvalidation } from "../components/realtime/ClientCacheInvalidation";
+import { getTitle } from "@/services/titleUtils";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: (process.env.NEXT_PUBLIC_TITLE_PREFIX ?? "") + "Canvas Manager 2.0",
+  title: getTitle("Canvas Manager 2.0"),
 };
 
 export default async function RootLayout({

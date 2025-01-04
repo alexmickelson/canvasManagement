@@ -1,4 +1,17 @@
+import { Metadata } from "next";
 import AllSettings from "./AllSettings";
+import { getTitle } from "@/services/titleUtils";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ courseName: string }>;
+}): Promise<Metadata> {
+  const { courseName } = await params;
+  return {
+    title: getTitle(courseName) + " Settings",
+  };
+}
 
 export default function page() {
   return (
