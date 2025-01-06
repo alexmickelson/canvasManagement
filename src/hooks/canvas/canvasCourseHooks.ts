@@ -1,16 +1,11 @@
 import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
-import {
-  LocalCourseSettings,
-  zodLocalCourseSettings,
-} from "@/models/local/localCourseSettings";
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { canvasAssignmentGroupService } from "@/services/canvas/canvasAssignmentGroupService";
 import { canvasService } from "@/services/canvas/canvasService";
-import { trpc } from "@/services/serverFunctions/trpcClient";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useUpdateLocalCourseSettingsMutation } from "../localCourse/localCoursesHooks";
-import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 
 export const canvasCourseKeys = {
   courseDetails: (canavasId: number) =>
@@ -19,6 +14,8 @@ export const canvasCourseKeys = {
     ["canvas", canavasId, "assignment groups"] as const,
   courseListInTerm: (canvasTermId: number | undefined) =>
     ["canvas courses in term", canvasTermId] as const,
+  students: (canvasId: number) =>
+    ["students in canvas course", canvasId] as const,
 };
 
 export const useCourseListInTermQuery = (canvasTermId: number | undefined) =>
@@ -101,3 +98,9 @@ export const useAssignmentGroupsQuery = (canvasId: number) => {
       await canvasAssignmentGroupService.getAll(canvasId),
   });
 };
+
+export const useCourseStudentsQuery = (canvasId: number) =>
+  useQuery({
+    queryKey: canvasCourseKeys.students(canvasId),
+    queryFn: async () => await canvasService.getEnrolledStudents(canvasId),
+  });

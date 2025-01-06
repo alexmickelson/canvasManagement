@@ -7,7 +7,6 @@ import { QuizButtons } from "./QuizButton";
 import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import { useRouter } from "next/navigation";
-import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import {
   useQuizQuery,
@@ -16,8 +15,15 @@ import {
 import { useAuthoritativeUpdates } from "../../../../utils/useAuthoritativeUpdates";
 import { extractLabelValue } from "@/models/local/assignment/utils/markdownUtils";
 import EditQuizHeader from "./EditQuizHeader";
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
+import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
-const helpString = `QUESTION REFERENCE
+const helpString = (settings: LocalCourseSettings) => {
+  const groupNames = settings.assignmentGroups.map((g) => g.name).join("\n- ");
+  return `Assignment Group Names:
+- ${groupNames}
+
+QUESTION REFERENCE
 ---
 Points: 2
 this is a question?
@@ -57,6 +63,7 @@ short answer
 this is a matching question
 ^ left answer - right dropdown
 ^ other thing -  another option`;
+};
 
 export default function EditQuiz({
   moduleName,
@@ -66,6 +73,7 @@ export default function EditQuiz({
   moduleName: string;
 }) {
   const router = useRouter();
+  const [settings] = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
   const [quiz, { dataUpdatedAt: serverDataUpdatedAt, isFetching }] =
     useQuizQuery(moduleName, quizName);
@@ -95,19 +103,15 @@ export default function EditQuiz({
           )
         ) {
           if (clientIsAuthoritative) {
-            const updatedQuiz = quizMarkdownUtils.parseMarkdown(
-              text,
-              quizName
-            );
-            await updateQuizMutation
-              .mutateAsync({
-                quiz: updatedQuiz,
-                moduleName,
-                quizName: quizName,
-                previousModuleName: moduleName,
-                previousQuizName: quizName,
-                courseName,
-              })
+            const updatedQuiz = quizMarkdownUtils.parseMarkdown(text, quizName);
+            await updateQuizMutation.mutateAsync({
+              quiz: updatedQuiz,
+              moduleName,
+              quizName: quizName,
+              previousModuleName: moduleName,
+              previousQuizName: quizName,
+              courseName,
+            });
           } else {
             console.log(
               "client not authoritative, updating client with server quiz"
@@ -143,7 +147,7 @@ export default function EditQuiz({
       <div className={"min-h-96 h-full flex flex-row w-full"}>
         {showHelp && (
           <pre className=" max-w-96">
-            <code>{helpString}</code>
+            <code>{helpString(settings)}</code>
           </pre>
         )}
         <div className="flex-1 h-full">

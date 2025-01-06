@@ -1,8 +1,8 @@
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
-import { CanvasEnrollmentModel } from "@/models/canvas/enrollments/canvasEnrollmentModel";
 import { axiosClient } from "../axiosUtils";
+import { CanvasCourseStudentModel } from "@/models/canvas/courses/canvasCourseStudentModel";
 
 const getAllTerms = async () => {
   const url = `${canvasApi}/accounts/10/terms?per_page=100`;
@@ -54,8 +54,8 @@ export const canvasService = {
 
   async getEnrolledStudents(canvasCourseId: number) {
     console.log(`Getting students for course ${canvasCourseId}`);
-    const url = `${canvasApi}/courses/${canvasCourseId}/enrollments?enrollment_type=student`;
-    const { data } = await axiosClient.get<CanvasEnrollmentModel[]>(url);
+    const url = `${canvasApi}/courses/${canvasCourseId}/users?enrollment_type=student`;
+    const data  = await paginatedRequest<CanvasCourseStudentModel[]>({url});
 
     if (!data)
       throw new Error(
