@@ -20,6 +20,7 @@ export const Tooltip: React.FC<{
         " rounded-md py-1 px-2 " +
         " transition-all duration-400 " +
         " border border-slate-700 shadow-[0px_0px_10px_5px] shadow-slate-500/20 " +
+        " max-w-sm max-h-64 overflow-hidden " +
         (visible ? "  " : " hidden -z-50 ")
       }
       role="tooltip"

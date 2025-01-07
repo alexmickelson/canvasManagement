@@ -13,6 +13,7 @@ docker run -it --rm \
   -v ~/projects/faculty/1810/2025-spring-alex/online:/app/storage/intro_to_web_online \
   -v ~/projects/faculty/1400/2025_spring_alex/modules:/app/storage/1400 \
   -v ~/projects/faculty/3840_Telemetry/2025_spring_alex/modules:/app/storage/telemetry \
+  -v ~/projects/faculty/4620_Distributed/2025Spring/modules:/app/storage/distributed \
   node \
     sh -c "
       mkdir -p ~/.npm-global && \

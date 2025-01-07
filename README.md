@@ -56,3 +56,7 @@ tighter integration with git
 
 display days settings
 - hide all sundays (horizontal space)
+
+
+lecture preview link has server side render caching issues.
+

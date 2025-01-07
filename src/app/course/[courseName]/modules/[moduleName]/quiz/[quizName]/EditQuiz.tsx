@@ -62,7 +62,9 @@ short answer
 ---
 this is a matching question
 ^ left answer - right dropdown
-^ other thing -  another option`;
+^ other thing -  another option
+^ - distractor
+^ - other distractor`;
 };
 
 export default function EditQuiz({

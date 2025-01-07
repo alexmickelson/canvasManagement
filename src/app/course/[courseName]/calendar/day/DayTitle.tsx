@@ -52,7 +52,18 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
       <ClientOnly>
         {(lectureName?.length ?? 0) > 0 && (
           <Tooltip
-            message={lectureName}
+            message={
+              <div>
+                {lectureName}
+                {todaysLecture?.content && (
+                  <>
+                    <pre>
+                      <code>{todaysLecture?.content}</code>
+                    </pre>
+                  </>
+                )}
+              </div>
+            }
             targetRef={linkRef}
             visible={tooltipVisible}
           />
