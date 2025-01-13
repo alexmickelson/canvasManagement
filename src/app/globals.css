@@ -128,6 +128,17 @@ select {
 .markdownPreview a {
   @apply text-blue-500 hover:text-blue-600 font-bold underline;
 }
+.markdownPreview li {
+  @apply leading-tight;
+}
+
+.markdownPreview p:has(+ul) {
+  @apply mb-0 m-0;
+}
+
+.markdownPreview ul, .markdownPreview ol {
+  @apply mb-1;
+}
 
 .draggingDay {
   @apply h-full transition-all duration-500;

@@ -39,7 +39,7 @@ holiday schedule
 
 multi-section support for due dates/times
 
-better error handling when files are unparseable
+better error handling when files are unparsable
 
 websocket server to watch file system for changes, notify frontend it should invalidate cache
 

@@ -18,7 +18,11 @@ export default function EditLectureTitle({
   return (
     <div className="flex justify-between sm:flex-row flex-col">
       <div className="my-auto">
-        <Link className="btn hidden sm:inline" href={getCourseUrl(courseName)}>
+        <Link
+          className="btn hidden sm:inline"
+          href={getCourseUrl(courseName)}
+          shallow={true}
+        >
           {courseName}
         </Link>
       </div>
@@ -33,6 +37,7 @@ export default function EditLectureTitle({
         <Link
           className="btn inline text-center flex-grow m-1"
           href={getLecturePreviewUrl(courseName, lectureDay)}
+          shallow={true}
         >
           preview
         </Link>
