@@ -33,7 +33,7 @@ export function CourseNavigation() {
 
   return (
     <div className="pb-1 ps-5 flex flex-row gap-3">
-      <Link href={"/"} className="btn">
+      <Link href={"/"} className="btn" shallow={true}>
         Back to Course List
       </Link>
       <a

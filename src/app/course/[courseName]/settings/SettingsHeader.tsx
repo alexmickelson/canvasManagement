@@ -12,7 +12,7 @@ export default function SettingsHeader() {
     <>
       <div className="flex flex-row justify-between">
         <div className="my-auto">
-          <Link className="btn" href={getCourseUrl(courseName)}>
+          <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
             Back To Course
           </Link>
         </div>

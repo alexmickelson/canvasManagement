@@ -152,6 +152,7 @@ function ExpandableModuleItem({
       </div>
       <Link
         href={getModuleItemUrl(courseName, moduleName, type, item.name)}
+        shallow={true}
         className="transition-all hover:text-slate-50 hover:scale-105"
         draggable="true"
         onDragStart={(e) => {

@@ -27,6 +27,7 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
       <Link
         className="ms-1 me-1 truncate text-nowrap transition-all hover:font-bold hover:text-slate-300"
         href={getLectureUrl(courseName, day)}
+        shallow={true}
         prefetch={false}
         draggable={true}
         onDragStart={(e) => {
