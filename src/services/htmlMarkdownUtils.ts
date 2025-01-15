@@ -2,6 +2,12 @@
 import { marked } from "marked";
 import  DOMPurify from "isomorphic-dompurify";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
+import markedKatex from "marked-katex-extension";
+
+marked.use(markedKatex({
+  throwOnError: false,
+  output: "mathml"
+}));
 
 export function extractImageSources(htmlString: string) {
   const srcUrls = [];
@@ -40,16 +46,12 @@ export function markdownToHTMLSafe(
   markdownString: string,
   settings: LocalCourseSettings
 ) {
-  const clean = DOMPurify.sanitize(
-    marked.parse(markdownString, { async: false, pedantic: false, gfm: true })
-  );
-  // return convertImagesToCanvasImages(clean, settings);
-  return clean;
+  return markdownToHtmlNoImages(markdownString);
 }
 
 export function markdownToHtmlNoImages(markdownString: string) {
   const clean = DOMPurify.sanitize(
     marked.parse(markdownString, { async: false, pedantic: false, gfm: true })
-  );
+  ).replaceAll(/>[^<>]*<\/math>/g, "></math>");
   return clean;
 }
