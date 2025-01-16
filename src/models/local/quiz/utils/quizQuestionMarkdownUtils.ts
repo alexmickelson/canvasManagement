@@ -69,6 +69,11 @@ const getQuestionType = (
     "short_answer"
   )
     return QuestionType.SHORT_ANSWER;
+  if (    
+    linesWithoutPoints[linesWithoutPoints.length - 1].toLowerCase().trim() ===
+      "short_answer="
+    )
+      return QuestionType.SHORT_ANSWER_WITH_ANSWERS;
 
   const answerLines = getAnswerStringsWithMultilineSupport(
     linesWithoutPoints,
@@ -97,6 +102,7 @@ const getAnswers = (
   questionIndex: number,
   questionType: string
 ): LocalQuizQuestionAnswer[] => {
+  if (questionType == QuestionType.SHORT_ANSWER_WITH_ANSWERS) linesWithoutPoints = linesWithoutPoints.slice(0, linesWithoutPoints.length - 1);
   const answerLines = getAnswerStringsWithMultilineSupport(
     linesWithoutPoints,
     questionIndex
@@ -149,6 +155,8 @@ export const quizQuestionMarkdownUtils = {
       question.questionType === "essay" ||
       question.questionType === "short_answer"
         ? question.questionType
+        : question.questionType === QuestionType.SHORT_ANSWER_WITH_ANSWERS
+        ? `\n${QuestionType.SHORT_ANSWER_WITH_ANSWERS}`
         : "";
 
     return `Points: ${question.points}\n${question.text}\n${answersText}${distractorText}${questionTypeIndicator}`;
@@ -214,6 +222,7 @@ export const quizQuestionMarkdownUtils = {
       "multiple_choice",
       "multiple_answers",
       "matching",
+      "short_answer=",
     ];
     const answers = typesWithAnswers.includes(questionType)
       ? getAnswers(linesWithoutPoints, questionIndex, questionType)

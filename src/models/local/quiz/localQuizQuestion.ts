@@ -11,6 +11,7 @@ export enum QuestionType {
   SHORT_ANSWER = "short_answer",
   MATCHING = "matching",
   NONE = "",
+  SHORT_ANSWER_WITH_ANSWERS = "short_answer=",
 }
 
 export const zodQuestionType = z.enum([
@@ -20,6 +21,7 @@ export const zodQuestionType = z.enum([
   QuestionType.SHORT_ANSWER,
   QuestionType.MATCHING,
   QuestionType.NONE,
+  QuestionType.SHORT_ANSWER_WITH_ANSWERS,
 ]);
 
 export interface LocalQuizQuestion {

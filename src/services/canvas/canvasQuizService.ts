@@ -28,6 +28,12 @@ const getAnswers = (
   }));
 };
 
+export const getQuestionType = (
+  question: LocalQuizQuestion
+) => {
+  return `${question.questionType.replace("=", "")}_question`;
+}
+
 const createQuestionOnly = async (
   canvasCourseId: number,
   canvasQuizId: number,
@@ -41,7 +47,7 @@ const createQuestionOnly = async (
   const body = {
     question: {
       question_text: markdownToHTMLSafe(question.text, settings),
-      question_type: `${question.questionType}_question`,
+      question_type: getQuestionType(question),
       points_possible: question.points,
       position,
       answers: getAnswers(question, settings),
