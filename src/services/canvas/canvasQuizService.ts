@@ -12,7 +12,7 @@ import {
 import { CanvasQuizQuestion } from "@/models/canvas/quizzes/canvasQuizQuestionModel";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 
-const getAnswers = (
+export const getAnswers = (
   question: LocalQuizQuestion,
   settings: LocalCourseSettings
 ) => {
@@ -25,8 +25,15 @@ const getAnswers = (
   return question.answers.map((answer) => ({
     answer_html: markdownToHTMLSafe(answer.text, settings),
     answer_weight: answer.correct ? 100 : 0,
+    answer_text: answer.text,
   }));
 };
+
+export const getQuestionType = (
+  question: LocalQuizQuestion
+) => {
+  return `${question.questionType.replace("=", "")}_question`;
+}
 
 const createQuestionOnly = async (
   canvasCourseId: number,
@@ -41,7 +48,7 @@ const createQuestionOnly = async (
   const body = {
     question: {
       question_text: markdownToHTMLSafe(question.text, settings),
-      question_type: `${question.questionType}_question`,
+      question_type: getQuestionType(question),
       points_possible: question.points,
       position,
       answers: getAnswers(question, settings),

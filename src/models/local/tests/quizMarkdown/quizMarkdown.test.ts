@@ -3,6 +3,7 @@ import { LocalQuiz } from "../../quiz/localQuiz";
 import { quizMarkdownUtils } from "../../quiz/utils/quizMarkdownUtils";
 import { QuestionType } from "@/models/local/quiz/localQuizQuestion";
 import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
+import { markdownToHtmlNoImages, markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 // Test suite for QuizMarkdown
 describe("QuizMarkdownTests", () => {
@@ -253,4 +254,33 @@ short answer
     const firstQuestion = quiz.questions[0];
     expect(firstQuestion.points).toBe(4.56);
   });
+
+  it("can parse quiz with latex in a question", () => {
+    const name = "Test Quiz";
+    const rawMarkdownQuiz = `
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the
+multi line
+description
+---
+Points: 2
+
+This is latex: $x_2$
+
+*a) true
+b) false
+
+   endline`;
+
+    const quizHtml = markdownToHtmlNoImages(rawMarkdownQuiz);
+    expect(quizHtml).not.toContain("$");
+    expect(quizHtml).toContain("<mi>x</mi>");
+    expect(quizHtml).not.toContain("x_2");
+  });
+
 });
