@@ -1,8 +1,9 @@
-import { getQuestionType } from "@/services/canvas/canvasQuizService";
+import { getAnswers, getQuestionType } from "@/services/canvas/canvasQuizService";
 import { QuestionType, zodQuestionType } from "../../quiz/localQuizQuestion";
 import { quizMarkdownUtils } from "../../quiz/utils/quizMarkdownUtils";
 import { quizQuestionMarkdownUtils } from "../../quiz/utils/quizQuestionMarkdownUtils";
 import { describe, it, expect } from "vitest";
+import { LocalCourseSettings } from "../../localCourseSettings";
 
 describe("TextAnswerTests", () => {
   it("can parse essay", () => {
@@ -226,4 +227,47 @@ short_answer=
     const firstQuestion = quiz.questions[0];
     expect(getQuestionType(firstQuestion)).toBe("short_answer_question");
   });
+
+  it("Includes answer_text in answers sent to canvas", () => {
+    const name = "Test Quiz"
+    const rawMarkdownQuiz = `
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: this is the 
+multi line
+description
+---
+Which events are triggered when the user clicks on an input field?
+*a) test
+*b) other
+short_answer=
+`;
+
+  const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
+  const firstQuestion = quiz.questions[0];
+  const answers = getAnswers(firstQuestion, {
+    name: "",
+    assignmentGroups: [],
+    daysOfWeek: [],
+    canvasId: 0,
+    startDate: "",
+    endDate: "",
+    defaultDueTime: {
+      hour: 0,
+      minute: 0
+    },
+    defaultAssignmentSubmissionTypes: [],
+    defaultFileUploadTypes: [],
+    holidays: [],
+    assets: []
+  })
+  expect(answers).toHaveLength(2);
+  const firstAnswer = answers[0];
+  expect(firstAnswer).toHaveProperty("answer_text");
+  });
+
 });

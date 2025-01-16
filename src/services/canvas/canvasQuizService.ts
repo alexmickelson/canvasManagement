@@ -12,7 +12,7 @@ import {
 import { CanvasQuizQuestion } from "@/models/canvas/quizzes/canvasQuizQuestionModel";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 
-const getAnswers = (
+export const getAnswers = (
   question: LocalQuizQuestion,
   settings: LocalCourseSettings
 ) => {
@@ -25,6 +25,7 @@ const getAnswers = (
   return question.answers.map((answer) => ({
     answer_html: markdownToHTMLSafe(answer.text, settings),
     answer_weight: answer.correct ? 100 : 0,
+    answer_text: answer.text,
   }));
 };
 
