@@ -1,9 +1,8 @@
 import CourseCalendar from "./calendar/CourseCalendar";
-import CourseSettingsLink from "./CourseSettingsLink";
-import ModuleList from "./modules/ModuleList";
 import DraggingContextProvider from "./context/drag/DraggingContextProvider";
 import { CourseNavigation } from "./CourseNavigation";
 import { DragStyleContextProvider } from "./context/drag/dragStyleContext";
+import CollapsableSidebar from "./CollapsableSidebar";
 
 
 export default async function CoursePage({}: {}) {
@@ -17,10 +16,7 @@ export default async function CoursePage({}: {}) {
                 <CourseNavigation />
                 <CourseCalendar />
               </div>
-              <div className="w-96 sm:p-3 h-full overflow-y-auto">
-                <CourseSettingsLink />
-                <ModuleList />
-              </div>
+              <CollapsableSidebar />
             </div>
           </DraggingContextProvider>
         </DragStyleContextProvider>

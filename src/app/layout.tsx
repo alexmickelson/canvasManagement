@@ -26,7 +26,7 @@ export default async function RootLayout({
     <html lang="en">
       <head></head>
       <body className="flex justify-center">
-        <div className="bg-slate-900 h-screen text-slate-300 w-full sm:p-1">
+        <div className="bg-slate-900 h-screen text-slate-300 w-screen sm:p-1">
           <MyToaster />
           <Suspense>
             <Providers>
