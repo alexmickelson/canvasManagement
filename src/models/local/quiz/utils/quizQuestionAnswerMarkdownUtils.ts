@@ -1,6 +1,18 @@
 import { QuestionType } from "../localQuizQuestion";
 import { LocalQuizQuestionAnswer } from "../localQuizQuestionAnswer";
 
+const parseMatchingAnswer = (input: string) => {
+  const matchingPattern = /^\^?/;
+  const textWithoutMatchDelimiter = input.replace(matchingPattern, "");
+  const [text, ...matchedParts] = textWithoutMatchDelimiter.split(" - ");
+  const answer: LocalQuizQuestionAnswer = {
+    correct: true,
+    text: text.trim(),
+    matchedText: matchedParts.join("-").trim(),
+  };
+  return answer;
+};
+
 export const quizQuestionAnswerMarkdownUtils = {
   // getHtmlText(): string {
   //   return MarkdownService.render(this.text);
@@ -10,17 +22,7 @@ export const quizQuestionAnswerMarkdownUtils = {
     const isCorrect = input.startsWith("*") || input[1] === "*";
 
     if (questionType === QuestionType.MATCHING) {
-      const matchingPattern = /^\^ ?/;
-      const textWithoutMatchDelimiter = input
-        .replace(matchingPattern, "")
-        .trim();
-      const [text, ...matchedParts] = textWithoutMatchDelimiter.split("-");
-      const answer: LocalQuizQuestionAnswer = {
-        correct: true,
-        text: text.trim(),
-        matchedText: matchedParts.join("-").trim(),
-      };
-      return answer;
+      return parseMatchingAnswer(input);
     }
 
     const startingQuestionPattern = /^(\*?[a-z]?\))|\[\s*\]|\[\*\]|\^ /;

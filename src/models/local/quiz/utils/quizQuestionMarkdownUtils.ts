@@ -69,11 +69,11 @@ const getQuestionType = (
     "short_answer"
   )
     return QuestionType.SHORT_ANSWER;
-  if (    
+  if (
     linesWithoutPoints[linesWithoutPoints.length - 1].toLowerCase().trim() ===
-      "short_answer="
-    )
-      return QuestionType.SHORT_ANSWER_WITH_ANSWERS;
+    "short_answer="
+  )
+    return QuestionType.SHORT_ANSWER_WITH_ANSWERS;
 
   const answerLines = getAnswerStringsWithMultilineSupport(
     linesWithoutPoints,
@@ -102,7 +102,11 @@ const getAnswers = (
   questionIndex: number,
   questionType: string
 ): LocalQuizQuestionAnswer[] => {
-  if (questionType == QuestionType.SHORT_ANSWER_WITH_ANSWERS) linesWithoutPoints = linesWithoutPoints.slice(0, linesWithoutPoints.length - 1);
+  if (questionType == QuestionType.SHORT_ANSWER_WITH_ANSWERS)
+    linesWithoutPoints = linesWithoutPoints.slice(
+      0,
+      linesWithoutPoints.length - 1
+    );
   const answerLines = getAnswerStringsWithMultilineSupport(
     linesWithoutPoints,
     questionIndex

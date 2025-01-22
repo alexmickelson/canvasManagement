@@ -131,4 +131,36 @@ Match the following terms & definitions
       "^ statement - a single command to be executed\n^ - this is the distractor"
     );
   });
+  it("can escape - characters", () => {
+    const name = "Test Quiz"
+    const rawMarkdownQuiz = `
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: 
+---
+Match the following terms & definitions
+
+^ git add \-\-all - start tracking all files in the current directory and subdirectories
+`;
+
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
+
+    
+    const firstQuestion = quiz.questions[0];
+
+    expect(firstQuestion.answers[0].text).toBe("git add --all");
+    expect(firstQuestion.answers[0].matchedText).toBe("start tracking all files in the current directory and subdirectories");
+
+
+
+    const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
+
+    expect(quizMarkdown).toContain(
+      "^ git add \-\-all - start tracking all files in the current directory and subdirectories"
+    );
+  });
 });

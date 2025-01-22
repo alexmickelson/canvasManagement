@@ -11,16 +11,24 @@ import {
 } from "@/models/local/quiz/localQuizQuestion";
 import { CanvasQuizQuestion } from "@/models/canvas/quizzes/canvasQuizQuestionModel";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
+import { escapeMatchingText } from "../utils/questionHtmlUtils";
+
 
 export const getAnswers = (
   question: LocalQuizQuestion,
   settings: LocalCourseSettings
 ) => {
   if (question.questionType === QuestionType.MATCHING)
-    return question.answers.map((a) => ({
-      answer_match_left: a.text,
-      answer_match_right: a.matchedText,
-    }));
+    return question.answers.map((a) => {
+      const text =
+        question.questionType === QuestionType.MATCHING
+          ? escapeMatchingText(a.text)
+          : a.text;
+      return {
+        answer_match_left: text,
+        answer_match_right: a.matchedText,
+      };
+    });
 
   return question.answers.map((answer) => ({
     answer_html: markdownToHTMLSafe(answer.text, settings),
@@ -29,11 +37,9 @@ export const getAnswers = (
   }));
 };
 
-export const getQuestionType = (
-  question: LocalQuizQuestion
-) => {
+export const getQuestionType = (question: LocalQuizQuestion) => {
   return `${question.questionType.replace("=", "")}_question`;
-}
+};
 
 const createQuestionOnly = async (
   canvasCourseId: number,
@@ -45,6 +51,7 @@ const createQuestionOnly = async (
   console.log("Creating individual question"); //, question);
 
   const url = `${canvasApi}/courses/${canvasCourseId}/quizzes/${canvasQuizId}/questions`;
+
   const body = {
     question: {
       question_text: markdownToHTMLSafe(question.text, settings),
@@ -179,7 +186,12 @@ export const canvasQuizService = {
     };
 
     const { data: canvasQuiz } = await axiosClient.post<CanvasQuiz>(url, body);
-    await createQuizQuestions(canvasCourseId, canvasQuiz.id, localQuiz, settings);
+    await createQuizQuestions(
+      canvasCourseId,
+      canvasQuiz.id,
+      localQuiz,
+      settings
+    );
     return canvasQuiz.id;
   },
   async delete(canvasCourseId: number, canvasQuizId: number) {

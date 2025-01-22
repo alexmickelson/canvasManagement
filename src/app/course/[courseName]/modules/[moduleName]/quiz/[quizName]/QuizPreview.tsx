@@ -6,6 +6,7 @@ import {
   QuestionType,
 } from "@/models/local/quiz/localQuizQuestion";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
+import { escapeMatchingText } from "@/services/utils/questionHtmlUtils";
 
 export default function QuizPreview({
   moduleName,
@@ -78,6 +79,8 @@ export default function QuizPreview({
 
 function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
   const [settings] = useLocalCourseSettingsQuery();
+
+  question.answers.map(a => console.log(escapeMatchingText(a.text)))
   return (
     <div className="rounded bg-slate-900 px-2">
       <div className="flex flex-row justify-between text-slate-400">
@@ -89,7 +92,9 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
 
       <div
         className="ms-4 mb-2 markdownPreview"
-        dangerouslySetInnerHTML={{ __html: markdownToHTMLSafe(question.text, settings) }}
+        dangerouslySetInnerHTML={{
+          __html: markdownToHTMLSafe(question.text, settings),
+        }}
       ></div>
       {question.questionType === QuestionType.MATCHING && (
         <div>
@@ -98,8 +103,10 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
               key={JSON.stringify(answer)}
               className="mx-3 mb-1 bg-dark rounded border border-slate-600 flex flex-row"
             >
-              <div className="text-right my-auto">{answer.text} - </div>
-              <div className="">{answer.matchedText}</div>
+              <div className="text-right my-auto flex-1 pe-3">
+                {escapeMatchingText(answer.text)}
+              </div>
+              <div className=" flex-1">{answer.matchedText}</div>
             </div>
           ))}
           {question.matchDistractors.map((distractor) => (
