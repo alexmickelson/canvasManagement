@@ -10,7 +10,7 @@ export default function CollapsableSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const widthClass = isCollapsed ? "w-0" : "w-96";
-  const visibilityClass = isCollapsed ? "invisible hidden" : "visible";
+  const visibilityClass = isCollapsed ? "invisible " : "visible";
   return (
     <div>
       <div className="flex flex-row justify-between mb-2">
