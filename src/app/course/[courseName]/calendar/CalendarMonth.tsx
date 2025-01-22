@@ -5,6 +5,8 @@ import { Expandable } from "@/components/Expandable";
 import { CalendarWeek } from "./CalendarWeek";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
+import UpChevron from "@/components/icons/UpChevron";
+import DownChevron from "@/components/icons/DownChevron";
 
 export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   // const weekInMilliseconds = 604_800_000;
@@ -36,17 +38,19 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
     <>
       <Expandable
         defaultExpanded={!isInPast}
-        ExpandableElement={({ setIsExpanded }) => (
+        ExpandableElement={({ setIsExpanded, isExpanded }) => (
           <div className="flex justify-center">
             <h3
               className={
                 "text-2xl transition-all duration-500 " +
-                "hover:text-slate-50 underline hover:scale-105 "
+                "hover:text-slate-50 underline hover:scale-105 " +
+                "flex "
               }
               onClick={() => setIsExpanded((e) => !e)}
               role="button"
             >
               {monthName}
+              <div className="my-auto">{isExpanded ? <UpChevron /> : <DownChevron />}</div>
             </h3>
           </div>
         )}
