@@ -80,7 +80,6 @@ export default function QuizPreview({
 function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
   const [settings] = useLocalCourseSettingsQuery();
 
-  question.answers.map(a => console.log(escapeMatchingText(a.text)))
   return (
     <div className="rounded bg-slate-900 px-2">
       <div className="flex flex-row justify-between text-slate-400">
