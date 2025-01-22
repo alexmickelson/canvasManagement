@@ -10,7 +10,7 @@ export default function CollapsableSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const widthClass = isCollapsed ? "w-0" : "w-96";
-  const visibilityClass = isCollapsed ? "invisible" : "visible";
+  const visibilityClass = isCollapsed ? "invisible hidden" : "visible";
   return (
     <div>
       <div className="flex flex-row justify-between mb-2">
@@ -24,7 +24,7 @@ export default function CollapsableSidebar() {
         </div>
       </div>
       <div
-        className={`${widthClass} sm:p-3 h-full overflow-y-auto transition-all ${visibilityClass}`}
+        className={`${widthClass} sm:p-3 overflow-y-auto transition-all ${visibilityClass}`}
       >
         <ModuleList />
       </div>
