@@ -35,7 +35,7 @@ export const useUpdateImageSettingsForAssignment = ({
   const [settings] = useLocalCourseSettingsQuery();
   const [assignment] = useAssignmentQuery(moduleName, assignmentName);
   const updateSettings = useUpdateLocalCourseSettingsMutation();
-  const [isUpdatingSettings, setIsUpdatingSettings] = useState(false);
+  const [isPending, setIsPending] = useState(false);
   const createCanvasUrlMutation =
     trpc.canvasFile.getCanvasFileUrl.useMutation();
 
@@ -45,18 +45,17 @@ export const useUpdateImageSettingsForAssignment = ({
       return;
     }
 
-    if (isUpdatingSettings) {
+    if (isPending) {
       console.log("not updating image assets, still loading");
       return;
     }
-    setIsUpdatingSettings(true);
+    setIsPending(true);
     const assignmentMarkdown = markdownToHtmlNoImages(assignment.description);
 
     const imageSources = extractImageSources(assignmentMarkdown);
     const imagesToUpdate = imageSources.filter((source) =>
       settings.assets.every((a) => a.sourceUrl !== source)
     );
-    console.log("images to update", imagesToUpdate);
 
     if (imagesToUpdate.length) {
       Promise.all(
@@ -78,17 +77,20 @@ export const useUpdateImageSettingsForAssignment = ({
             assets: [...settings.assets, ...newAssets],
           },
         });
-        setIsUpdatingSettings(false);
+        setIsPending(false);
       });
+    } else {
+      setIsPending(false)
     }
   }, [
     assignment.description,
     createCanvasUrlMutation,
-    isUpdatingSettings,
+    isPending,
     settings,
     settings.assets,
     updateSettings,
   ]);
+  return { isPending };
 };
 
 export const useAssignmentNamesQuery = (moduleName: string) => {

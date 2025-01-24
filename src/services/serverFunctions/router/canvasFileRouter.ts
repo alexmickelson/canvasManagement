@@ -7,6 +7,8 @@ import {
   uploadToCanvasPart2,
 } from "@/services/canvas/files/canvasFileService";
 
+const fileStorageLocation = process.env.FILE_STORAGE_LOCATION ?? "/app/public";
+
 export const canvasFileRouter = router({
   getCanvasFileUrl: publicProcedure
     .input(
@@ -16,15 +18,17 @@ export const canvasFileRouter = router({
       })
     )
     .mutation(async ({ input: { sourceUrl, canvasCourseId } }) => {
-      const localTempFile = await downloadUrlToTempDirectory(sourceUrl);
-      console.log("local temp file", localTempFile);
+      const localFile = sourceUrl.startsWith("/")
+        ? fileStorageLocation + sourceUrl
+        : await downloadUrlToTempDirectory(sourceUrl);
+      console.log("local temp file", localFile);
       const { upload_url, upload_params } = await uploadToCanvasPart1(
-        localTempFile,
+        localFile,
         canvasCourseId
       );
       console.log("part 1 done", upload_url, upload_params);
       const canvasUrl = await uploadToCanvasPart2({
-        pathToUpload: localTempFile,
+        pathToUpload: localFile,
         upload_url,
         upload_params,
       });

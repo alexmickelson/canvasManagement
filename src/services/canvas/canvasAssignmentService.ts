@@ -29,6 +29,7 @@ export const canvasAssignmentService = {
   ) {
     console.log(`Creating assignment: ${localAssignment.name}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/assignments`;
+    const content = markdownToHTMLSafe(localAssignment.description, settings);
     const body = {
       assignment: {
         name: localAssignment.name,
@@ -38,7 +39,7 @@ export const canvasAssignmentService = {
         allowed_extensions: localAssignment.allowedFileUploadExtensions.map(
           (e) => e.toString()
         ),
-        description: markdownToHTMLSafe(localAssignment.description, settings),
+        description: content,
         due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
         lock_at:
           localAssignment.lockAt &&

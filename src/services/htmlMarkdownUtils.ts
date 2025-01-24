@@ -1,13 +1,15 @@
 "use client";
 import { marked } from "marked";
-import  DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "isomorphic-dompurify";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import markedKatex from "marked-katex-extension";
 
-marked.use(markedKatex({
-  throwOnError: false,
-  output: "mathml"
-}));
+marked.use(
+  markedKatex({
+    throwOnError: false,
+    output: "mathml",
+  })
+);
 
 export function extractImageSources(htmlString: string) {
   const srcUrls = [];
@@ -46,7 +48,8 @@ export function markdownToHTMLSafe(
   markdownString: string,
   settings: LocalCourseSettings
 ) {
-  return markdownToHtmlNoImages(markdownString);
+  const html = markdownToHtmlNoImages(markdownString);
+  return convertImagesToCanvasImages(html, settings);
 }
 
 export function markdownToHtmlNoImages(markdownString: string) {

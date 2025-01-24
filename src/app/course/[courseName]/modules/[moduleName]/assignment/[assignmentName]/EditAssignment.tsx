@@ -21,6 +21,7 @@ import { useRouter } from "next/navigation";
 import { AssignmentFooterButtons } from "./AssignmentFooterButtons";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 import EditAssignmentHeader from "./EditAssignmentHeader";
+import { Spinner } from "@/components/Spinner";
 
 export default function EditAssignment({
   moduleName,
@@ -37,7 +38,8 @@ export default function EditAssignment({
     { dataUpdatedAt: serverDataUpdatedAt, isFetching: assignmentIsFetching },
   ] = useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
-  useUpdateImageSettingsForAssignment({ moduleName, assignmentName });
+  const { isPending: imageUpdateIsPending } =
+    useUpdateImageSettingsForAssignment({ moduleName, assignmentName });
 
   const {
     clientIsAuthoritative,
@@ -152,6 +154,12 @@ export default function EditAssignment({
           <div className="px-3 h-full">
             <ClientOnly>
               <SuspenseAndErrorHandling showToast={false}>
+                {imageUpdateIsPending && (
+                  <div className="flex justify-center">
+                    <Spinner /> images being uploaded to canvas
+                  </div>
+                )}
+
                 <AssignmentPreview assignment={assignment} />
               </SuspenseAndErrorHandling>
             </ClientOnly>
