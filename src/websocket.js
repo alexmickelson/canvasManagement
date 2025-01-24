@@ -17,7 +17,9 @@ const handler = app.getRequestHandler();
 const folderToWatch = path.join(process.cwd(), "./storage", "/");
 console.log("watching folder", folderToWatch);
 const usePolling = process.env.FILE_POLLING === "true";
+const enable_images = process.env.NEXT_PUBLIC_ENABLE_FILE_SYNC === "true";
 console.log("FILE_POLLING:", usePolling);
+console.log("NEXT_PUBLIC_ENABLE_FILE_SYNC:", enable_images);
 
 const watcher = chokidar.watch(folderToWatch, {
   persistent: true,

@@ -15,6 +15,18 @@ Development command: `dotnet watch --project Management.Web/`
 
 <https://nowucca.com/2020/07/04/working-around-canvas-limitations.html>
 
+## Getting Started and Usage
+
+<!-- draft -->
+
+
+### Enable Image Support
+
+
+You must set the `ENABLE_FILE_SYNC` environment variable to true. Image paths will be relative to the `/app/image_storage` directory in the container.
+
+When an image is detected by canvas manager, it will upload the image to the canvas course and keep a lookup table of the original path/url of the image to the canvas course URL.
+
 # ideas
 
 matching questions
