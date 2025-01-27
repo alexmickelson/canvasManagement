@@ -18,6 +18,7 @@ export default function AssignmentPreview({
     (sum, cur) => (rubricItemIsExtraCredit(cur) ? sum + cur.points : sum),
     0
   );
+  const htmlPreview = markdownToHTMLSafe(assignment.description, settings);
   return (
     <div className="h-full overflow-y-auto">
       <section>
@@ -61,7 +62,7 @@ export default function AssignmentPreview({
         <div
           className="markdownPreview"
           dangerouslySetInnerHTML={{
-            __html: markdownToHTMLSafe(assignment.description, settings),
+            __html: htmlPreview,
           }}
         ></div>
       </section>

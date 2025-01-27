@@ -83,21 +83,6 @@ export default function EditAssignment({
               previousAssignmentName: assignmentName,
               courseName,
             });
-            // .then(async () => {
-            //   // await new Promise(resolve => setTimeout(resolve, 1000));
-
-            //   if (updatedAssignment.name !== assignmentName)
-            //     router.replace(
-            //       getModuleItemUrl(
-            //         courseName,
-            //         moduleName,
-            //         "assignment",
-            //         updatedAssignment.name
-            //       ), {
-
-            //       }
-            //     );
-            // });
           } else {
             console.log(
               "client not authoritative, updating client with server assignment",

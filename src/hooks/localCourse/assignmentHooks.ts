@@ -9,7 +9,8 @@ import {
   extractImageSources,
   markdownToHtmlNoImages,
 } from "@/services/htmlMarkdownUtils";
-import { useActionState, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 export const useAssignmentQuery = (
   moduleName: string,
@@ -32,12 +33,9 @@ export const useUpdateImageSettingsForAssignment = ({
   moduleName: string;
   assignmentName: string;
 }) => {
-  const [settings] = useLocalCourseSettingsQuery();
   const [assignment] = useAssignmentQuery(moduleName, assignmentName);
-  const updateSettings = useUpdateLocalCourseSettingsMutation();
   const [isPending, setIsPending] = useState(false);
-  const createCanvasUrlMutation =
-    trpc.canvasFile.getCanvasFileUrl.useMutation();
+  const addNewImagesToCanvasMutation = useAddNewImagesToCanvasMutation();
 
   useEffect(() => {
     if (!enable_images) {
@@ -52,17 +50,38 @@ export const useUpdateImageSettingsForAssignment = ({
     setIsPending(true);
     const assignmentMarkdown = markdownToHtmlNoImages(assignment.description);
 
-    const imageSources = extractImageSources(assignmentMarkdown);
-    const imagesToUpdate = imageSources.filter((source) =>
-      settings.assets.every((a) => a.sourceUrl !== source)
-    );
+    addNewImagesToCanvasMutation
+      .mutateAsync({
+        markdownString: assignmentMarkdown,
+      })
+      .then(() => setIsPending(false));
+    // not sure why mutation reference changes...
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [assignment.description, isPending]);
+  return { isPending };
+};
 
-    if (imagesToUpdate.length) {
-      Promise.all(
-        imagesToUpdate.map(async (source) => {
-          // todo: get canvas url
-          // const canvasUrl = "";
-          console.log(source);
+export const useAddNewImagesToCanvasMutation = () => {
+  const [settings] = useLocalCourseSettingsQuery();
+  const createCanvasUrlMutation =
+    trpc.canvasFile.getCanvasFileUrl.useMutation();
+  const updateSettings = useUpdateLocalCourseSettingsMutation();
+
+  return useMutation({
+    mutationFn: async ({ markdownString }: { markdownString: string }) => {
+      const imageSources = extractImageSources(markdownString);
+      const newImages = imageSources.filter((source) =>
+        settings.assets.every((a) => a.sourceUrl !== source)
+      );
+
+      if (newImages.length === 0) {
+        console.log("no new images to upload");
+        return;
+      }
+
+      const newAssets = await Promise.all(
+        newImages.map(async (source) => {
+          console.log("uploading image to canvas", source);
           const canvasUrl = await createCanvasUrlMutation.mutateAsync({
             sourceUrl: source,
             canvasCourseId: settings.canvasId,
@@ -70,27 +89,15 @@ export const useUpdateImageSettingsForAssignment = ({
           console.log("got canvas url", source, canvasUrl);
           return { sourceUrl: source, canvasUrl };
         })
-      ).then(async (newAssets) => {
-        await updateSettings.mutateAsync({
-          settings: {
-            ...settings,
-            assets: [...settings.assets, ...newAssets],
-          },
-        });
-        setIsPending(false);
+      );
+      await updateSettings.mutateAsync({
+        settings: {
+          ...settings,
+          assets: [...settings.assets, ...newAssets],
+        },
       });
-    } else {
-      setIsPending(false)
-    }
-  }, [
-    assignment.description,
-    createCanvasUrlMutation,
-    isPending,
-    settings,
-    settings.assets,
-    updateSettings,
-  ]);
-  return { isPending };
+    },
+  });
 };
 
 export const useAssignmentNamesQuery = (moduleName: string) => {
