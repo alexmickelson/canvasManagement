@@ -1,6 +1,6 @@
 services:
   canvas_manager:
-    image: alexmickelson/canvas_management:2.4
+    image: alexmickelson/canvas_management:2.5
     user: "1000:1000"
     container_name: canvas-manager-2
     ports:
@@ -10,6 +10,7 @@ services:
     environment:
       - storageDirectory=/app/storage
       - TZ=America/Denver
+      - NEXT_PUBLIC_ENABLE_FILE_SYNC=true
       # - FILE_POLLING=true
     volumes:
       - ~/projects/faculty/3840_Telemetry/2024Spring_alex/modules:/app/storage/spring_2024_telemetry
@@ -21,6 +22,8 @@ services:
       - ~/projects/faculty/4620_Distributed/2024Spring/modules:/app/storage/distributed_old
       - ~/projects/faculty/1810/2025-spring-alex/in-person:/app/storage/intro_to_web
       - ~/projects/faculty/1810/2025-spring-alex/online:/app/storage/intro_to_web_online
+
+      - ~/projects/facultyFiles:/app/public/images/facultyFiles
   # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
   # https://github.com/jonas-merkle/container-cloudflare-tunnel
   cloudflare-tunnel:
