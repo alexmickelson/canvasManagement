@@ -1,4 +1,5 @@
 import CheckIcon from "@/components/icons/CheckIcon";
+import MarkdownDisplay from "@/components/MarkdownDisplay";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
 import {
@@ -53,12 +54,7 @@ export default function QuizPreview({
         <div className="text-end">Assignment Group Name</div>
         <div>{quiz.localAssignmentGroupName}</div>
       </div>
-      <div
-        className="p-3 markdownPreview"
-        dangerouslySetInnerHTML={{
-          __html: markdownToHTMLSafe(quiz.description, settings),
-        }}
-      ></div>
+      <MarkdownDisplay markdown={quiz.description} className="p-3" />
       <div className="p-3 rounded-md bg-slate-950 m-5 flex flex-col gap-3">
         {quiz.questions.map((question, i) => (
           <QuizQuestionPreview key={i} question={question} />
@@ -88,13 +84,7 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
           {question.points} {question.points === 1 ? " Point" : " Points"}
         </div>
       </div>
-
-      <div
-        className="ms-4 mb-2 markdownPreview"
-        dangerouslySetInnerHTML={{
-          __html: markdownToHTMLSafe(question.text, settings),
-        }}
-      ></div>
+      <MarkdownDisplay markdown={question.text} className="ms-4 mb-2" />
       {question.questionType === QuestionType.MATCHING && (
         <div>
           {question.answers.map((answer) => (
@@ -134,12 +124,7 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
                   <div></div>
                 )}
               </div>
-              <div
-                className="markdownQuizAnswerPreview"
-                dangerouslySetInnerHTML={{
-                  __html: markdownToHTMLSafe(answer.text, settings),
-                }}
-              />
+              <MarkdownDisplay markdown={answer.text} className="markdownQuizAnswerPreview" />
             </div>
           ))}
         </div>

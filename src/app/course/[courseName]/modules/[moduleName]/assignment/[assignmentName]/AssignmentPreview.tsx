@@ -1,4 +1,5 @@
 import ClientOnly from "@/components/ClientOnly";
+import MarkdownDisplay from "@/components/MarkdownDisplay";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
@@ -18,7 +19,6 @@ export default function AssignmentPreview({
     (sum, cur) => (rubricItemIsExtraCredit(cur) ? sum + cur.points : sum),
     0
   );
-  const htmlPreview = markdownToHTMLSafe(assignment.description, settings);
   return (
     <div className="h-full overflow-y-auto">
       <section>
@@ -59,12 +59,13 @@ export default function AssignmentPreview({
       <hr />
       <br />
       <section>
-        <div
+        <MarkdownDisplay markdown={assignment.description} />
+        {/* <div
           className="markdownPreview"
           dangerouslySetInnerHTML={{
             __html: htmlPreview,
           }}
-        ></div>
+        ></div> */}
       </section>
       <hr />
       <section>

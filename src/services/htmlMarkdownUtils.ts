@@ -46,10 +46,12 @@ export function convertImagesToCanvasImages(
 
 export function markdownToHTMLSafe(
   markdownString: string,
-  settings: LocalCourseSettings
+  settings: LocalCourseSettings,
+  convertImages: boolean = true
 ) {
   const html = markdownToHtmlNoImages(markdownString);
-  return convertImagesToCanvasImages(html, settings);
+  if (convertImages) return convertImagesToCanvasImages(html, settings);
+  else return html;
 }
 
 export function markdownToHtmlNoImages(markdownString: string) {

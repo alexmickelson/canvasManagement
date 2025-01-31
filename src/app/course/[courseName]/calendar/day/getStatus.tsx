@@ -104,15 +104,22 @@ export const getStatus = ({
         ),
       };
 
-    const htmlIsSame = htmlIsCloseEnough(
-      markdownToHTMLSafe(assignment.description, settings),
-      canvasAssignment.description
-    );
-    if (!htmlIsSame)
+    try {
+      const htmlIsSame = htmlIsCloseEnough(
+        markdownToHTMLSafe(assignment.description, settings),
+        canvasAssignment.description
+      );
+      if (!htmlIsSame)
+        return {
+          status: "incomplete",
+          message: "Canvas description is different",
+        };
+    } catch (exception) {
       return {
         status: "incomplete",
-        message: "Canvas description is different",
+        message: "Error parsing markdown " + exception,
       };
+    }
   }
 
   return { status: "published", message: "" };
