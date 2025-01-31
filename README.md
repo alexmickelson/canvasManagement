@@ -23,9 +23,22 @@ Development command: `dotnet watch --project Management.Web/`
 ### Enable Image Support
 
 
-You must set the `ENABLE_FILE_SYNC` environment variable to true. Image paths will be relative to the `/app/image_storage` directory in the container.
+You must set the `ENABLE_FILE_SYNC` environment variable to true. Images need to be available in the `/app/public/` directory in the container so that nextjs will serve them as static files. Images can also be set to public URL's on the web.
 
 When an image is detected by canvas manager, it will upload the image to the canvas course and keep a lookup table of the original path/url of the image to the canvas course URL.
+
+For Snow College professors, images should be stored in a separate git repo from the `facultyFiles` git repo. Otherwise the `faculty` repository will become cluttered with duplicated large binary images. Set up your volume like this:
+
+```yml
+    volumes:
+      - ~/projects/facultyFiles:/app/public/images/facultyFiles
+```
+
+You can now embed an image in an assignment by adding something like this line.
+
+```md
+![formulas](/images/facultyFiles/1405/lab-04-simple-math-formulas.png)
+```
 
 # ideas
 
