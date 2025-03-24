@@ -3,6 +3,7 @@ import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import markedKatex from "marked-katex-extension";
+import toast from "react-hot-toast";
 
 marked.use(
   markedKatex({
@@ -37,8 +38,12 @@ export function convertImagesToCanvasImages(
   for (const imageSrc of imageSources) {
     const destinationUrl = imageLookup[imageSrc];
     if (typeof destinationUrl === "undefined") {
-      throw `cannot convert to html, no canvas url for  ${imageSrc} in settings`;
+      console.log(`No image in settings for ${imageSrc}, do you have NEXT_PUBLIC_ENABLE_FILE_SYNC=true in your settings?`)
     }
+    // could error check here, but better to just not display an image...
+    // if (typeof destinationUrl === "undefined") {
+    //   throw `cannot convert to html, no canvas url for ${imageSrc} in settings`;
+    // }
     mutableHtml = mutableHtml.replaceAll(imageSrc, destinationUrl);
   }
   return mutableHtml;

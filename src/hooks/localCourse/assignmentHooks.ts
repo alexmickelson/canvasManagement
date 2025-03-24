@@ -39,7 +39,7 @@ export const useUpdateImageSettingsForAssignment = ({
 
   useEffect(() => {
     if (!enable_images) {
-      console.log("not uploading images, FILE_POLLING is not set to true");
+      console.log("not uploading images, NEXT_PUBLIC_ENABLE_FILE_SYNC is not set to true");
       return;
     }
 
@@ -70,6 +70,7 @@ export const useAddNewImagesToCanvasMutation = () => {
   return useMutation({
     mutationFn: async ({ markdownString }: { markdownString: string }) => {
       const imageSources = extractImageSources(markdownString);
+      // console.log("original image urls", imageSources);
       const newImages = imageSources.filter((source) =>
         settings.assets.every((a) => a.sourceUrl !== source)
       );

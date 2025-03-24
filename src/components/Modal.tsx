@@ -51,6 +51,7 @@ export default function Modal({
             : " bg-opacity-0  -z-50  ")
         }
         onClick={modalControl.closeModal}
+        // if mouse up here, do not, if mouse down then still do
       >
         <div
           onClick={(e) => {

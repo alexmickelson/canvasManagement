@@ -23,7 +23,7 @@ Development command: `dotnet watch --project Management.Web/`
 ### Enable Image Support
 
 
-You must set the `ENABLE_FILE_SYNC` environment variable to true. Images need to be available in the `/app/public/` directory in the container so that nextjs will serve them as static files. Images can also be set to public URL's on the web.
+You must set the `NEXT_PUBLIC_ENABLE_FILE_SYNC` environment variable to true. Images need to be available in the `/app/public/` directory in the container so that nextjs will serve them as static files. Images can also be set to public URL's on the web.
 
 When an image is detected by canvas manager, it will upload the image to the canvas course and keep a lookup table of the original path/url of the image to the canvas course URL.
 
