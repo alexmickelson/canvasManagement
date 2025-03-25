@@ -1,6 +1,6 @@
 import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
 import { axiosClient } from "../axiosUtils";
-import { canvasApi } from "./canvasServiceUtils";
+import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
@@ -139,14 +139,22 @@ const createQuizQuestions = async (
 export const canvasQuizService = {
   async getAll(canvasCourseId: number): Promise<CanvasQuiz[]> {
     const url = `${canvasApi}/courses/${canvasCourseId}/quizzes`;
-    const response = await axiosClient.get<CanvasQuiz[]>(url);
-    return response.data.map((quiz) => ({
+    const quizzes = await paginatedRequest<CanvasQuiz[]>({ url });
+    return quizzes.map((quiz) => ({
       ...quiz,
       due_at: quiz.due_at ? new Date(quiz.due_at).toLocaleString() : undefined,
       lock_at: quiz.lock_at
         ? new Date(quiz.lock_at).toLocaleString()
         : undefined,
     }));
+    // const response = await axiosClient.get<CanvasQuiz[]>(url);
+    // return response.data.map((quiz) => ({
+    //   ...quiz,
+    //   due_at: quiz.due_at ? new Date(quiz.due_at).toLocaleString() : undefined,
+    //   lock_at: quiz.lock_at
+    //     ? new Date(quiz.lock_at).toLocaleString()
+    //     : undefined,
+    // }));
   },
 
   async create(
