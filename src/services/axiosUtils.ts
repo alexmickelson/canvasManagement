@@ -1,6 +1,7 @@
 import { isServer } from "@tanstack/react-query";
-import axios, { AxiosInstance, AxiosError, AxiosHeaders } from "axios";
+import axios, { AxiosInstance, AxiosError } from "axios";
 import toast from "react-hot-toast";
+import { baseCanvasUrl } from "./canvas/canvasServiceUtils";
 
 const canvasBaseUrl = "https://snow.instructure.com/api/v1/";
 
@@ -48,7 +49,8 @@ export function getAxiosErrorMessage(error: AxiosError) {
     if (
       !isServer &&
       error.config?.method?.toUpperCase() !== "GET" &&
-      error.response.status !== 403
+      error.response.status !== 403 &&
+      !error.config?.url?.includes(baseCanvasUrl)
     ) {
       return `Error: ${
         error.response.status
