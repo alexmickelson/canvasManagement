@@ -1,4 +1,7 @@
+import { getAxiosErrorMessage } from "@/services/axiosUtils";
 import { isServer, QueryCache, QueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
 
 export function makeQueryClient() {
   return new QueryClient({
@@ -12,6 +15,15 @@ export function makeQueryClient() {
         refetchOnWindowFocus: false,
         retry: 0,
         refetchOnMount: false,
+      },
+      mutations: {
+        onError: (error) => {
+          const message = getAxiosErrorMessage(error as AxiosError);
+          console.error("Mutation error:", message);
+          if (!isServer) {
+            toast.error(message);
+          }
+        },
       },
     },
     queryCache: new QueryCache({

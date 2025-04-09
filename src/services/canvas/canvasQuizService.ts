@@ -13,7 +13,6 @@ import { CanvasQuizQuestion } from "@/models/canvas/quizzes/canvasQuizQuestionMo
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { escapeMatchingText } from "../utils/questionHtmlUtils";
 
-
 export const getAnswers = (
   question: LocalQuizQuestion,
   settings: LocalCourseSettings
@@ -138,23 +137,27 @@ const createQuizQuestions = async (
 
 export const canvasQuizService = {
   async getAll(canvasCourseId: number): Promise<CanvasQuiz[]> {
-    const url = `${canvasApi}/courses/${canvasCourseId}/quizzes`;
-    const quizzes = await paginatedRequest<CanvasQuiz[]>({ url });
-    return quizzes.map((quiz) => ({
-      ...quiz,
-      due_at: quiz.due_at ? new Date(quiz.due_at).toLocaleString() : undefined,
-      lock_at: quiz.lock_at
-        ? new Date(quiz.lock_at).toLocaleString()
-        : undefined,
-    }));
-    // const response = await axiosClient.get<CanvasQuiz[]>(url);
-    // return response.data.map((quiz) => ({
-    //   ...quiz,
-    //   due_at: quiz.due_at ? new Date(quiz.due_at).toLocaleString() : undefined,
-    //   lock_at: quiz.lock_at
-    //     ? new Date(quiz.lock_at).toLocaleString()
-    //     : undefined,
-    // }));
+    try {
+      const url = `${canvasApi}/courses/${canvasCourseId}/quizzes`;
+      const quizzes = await paginatedRequest<CanvasQuiz[]>({ url });
+      return quizzes.map((quiz) => ({
+        ...quiz,
+        due_at: quiz.due_at
+          ? new Date(quiz.due_at).toLocaleString()
+          : undefined,
+        lock_at: quiz.lock_at
+          ? new Date(quiz.lock_at).toLocaleString()
+          : undefined,
+      }));
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        console.log(
+          "Canvas API error: 403 Forbidden for quizzes. Returning empty array."
+        );
+        return [];
+      }
+      throw error;
+    }
   },
 
   async create(

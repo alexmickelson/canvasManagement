@@ -50,7 +50,7 @@ export const canvasModuleService = {
   async getCourseModules(canvasCourseId: number) {
     const url = `${canvasApi}/courses/${canvasCourseId}/modules`;
     const response = await paginatedRequest<CanvasModule[]>({ url });
-    return response
+    return response;
   },
 
   async createModule(canvasCourseId: number, moduleName: string) {

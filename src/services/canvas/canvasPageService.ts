@@ -9,11 +9,21 @@ import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {
     console.log("requesting pages");
+    try {
     const url = `${canvasApi}/courses/${courseId}/pages`;
     const pages = await paginatedRequest<CanvasPage[]>({
       url,
     });
     return pages.flatMap((pageList) => pageList);
+  } catch (error: any) {
+    if (error?.response?.status === 403) {
+      console.log(
+        "Canvas API error: 403 Forbidden for pages. Returning empty array."
+      );
+      return [];
+    }
+    throw error;
+  }
   },
 
   async create(

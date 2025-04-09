@@ -38,8 +38,8 @@ export const useAddAssignmentToCanvasMutation = () => {
       moduleName: string;
     }) => {
       if (!canvasModules) {
-        console.log("cannot add assignment until modules loaded");
-        return;
+        // console.log("cannot add assignment until modules loaded");
+        throw new Error("cannot add assignment until modules loaded");
       }
 
       const assignmentGroup = settings.assignmentGroups.find(

@@ -17,8 +17,7 @@ if (!isServer) {
 } else {
   const token = process.env.CANVAS_TOKEN;
   if (!token) {
-    console.error("CANVAS_TOKEN not in environment")
-    // throw new Error("CANVAS_TOKEN not in environment");
+    console.error("CANVAS_TOKEN not in environment");
   } else {
     axiosClient.interceptors.request.use((config) => {
       if (config.url && config.url.startsWith(canvasBaseUrl)) {
@@ -32,28 +31,37 @@ if (!isServer) {
 axiosClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError) => {
-    if (error.response) {
-      // console.log("response error", error.response);
-      const responseErrorText =
-        typeof error.response.data === "object"
-          ? (error.response.data as any).error
-          : error.response.data;
-      if (!isServer) {
-        toast.error(
-          `Error: ${error.response.status} - ${responseErrorText}, ${decodeURI(
-            error.response.config.url ?? ""
-          )}`
-        );
-      }
-    } else if (error.request) {
-      if (!isServer) {
-        toast.error("Error: No response from server");
-      }
-    } else {
-      if (!isServer) {
-        toast.error(`Error: ${error.message}`);
-      }
-    }
+    const errorMessage = getAxiosErrorMessage(error);
+    if (errorMessage) toast.error(errorMessage);
     return Promise.reject(error);
   }
 );
+
+export function getAxiosErrorMessage(error: AxiosError) {
+  if (error.response) {
+    console.log("response error", error.response);
+    const responseErrorText =
+      typeof error.response.data === "object"
+        ? (error.response.data as any).error
+        : error.response.data;
+
+    if (
+      !isServer &&
+      error.config?.method?.toUpperCase() !== "GET" &&
+      error.response.status !== 403
+    ) {
+      return `Error: ${
+        error.response.status
+      } - ${responseErrorText}, ${decodeURI(error.response.config.url ?? "")}`;
+    }
+  } else if (error.request) {
+    if (!isServer) {
+      return "Error: No response from server";
+    }
+  } else {
+    if (!isServer) {
+      return `Error: ${error.message}`;
+    }
+  }
+  return "";
+}

@@ -16,6 +16,7 @@ docker run -it --rm \
   -v ~/projects/faculty/1405/2025_spring_alex:/app/storage/1405 \
   -v ~/projects/faculty/3840_Telemetry/2025_spring_alex/modules:/app/storage/telemetry \
   -v ~/projects/faculty/4620_Distributed/2025Spring/modules:/app/storage/distributed \
+  -v ~/projects/faculty/1430/2025-spring-jonathan/Modules:/app/storage/jonathan-ux \
   -v ~/projects/public:/app/public/images/public \
   -v ~/projects/facultyFiles:/app/public/images/facultyFiles \
   node \
