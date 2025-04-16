@@ -24,6 +24,7 @@ export const canvasFileRouter = router({
 
       if (!success) {
         console.log("could not download file, returning sourceUrl", sourceUrl);
+        // make a toast or some other way of notifying the user
         return sourceUrl;
       }
       console.log("local temp file", localFile);

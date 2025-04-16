@@ -156,6 +156,7 @@ export default function NewItemForm({
           getName={(o) => o?.toString() ?? ""}
           setSelectedOption={(t) => setType(t ?? "Assignment")}
           selectedOption={type}
+          label="Type"
         />
       </div>
       <div>
@@ -168,6 +169,7 @@ export default function NewItemForm({
             getName={(g) => g?.name ?? ""}
             setSelectedOption={setAssignmentGroup}
             selectedOption={assignmentGroup}
+            label="Assignment Group"
           />
         )}
       </div>

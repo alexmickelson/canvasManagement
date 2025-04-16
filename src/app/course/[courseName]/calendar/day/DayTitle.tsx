@@ -74,6 +74,7 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
         modalControl={modal}
         buttonText="+"
         buttonClass="unstyled hover:font-bold hover:scale-125 px-1 mb-auto mt-0 pt-0"
+        modalWidth="w-135"
       >
         {({ closeModal }) => (
           <div>

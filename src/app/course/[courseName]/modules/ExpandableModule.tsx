@@ -102,7 +102,11 @@ export default function ExpandableModule({
             )}
           >
             <>
-              <Modal modalControl={modal} buttonText="New Item">
+              <Modal
+                modalControl={modal}
+                buttonText="New Item"
+                modalWidth="w-135"
+              >
                 {({ closeModal }) => (
                   <div>
                     <NewItemForm
