@@ -39,7 +39,7 @@ export async function paginatedRequest<T extends any[]>(request: {
   var requestCount = 1;
   const url = new URL(request.url);
   url.searchParams.set("per_page", "100");
-  
+
   const { data: firstData, headers: firstHeaders } = await axiosClient.get<T>(
     url.toString()
   );
@@ -64,5 +64,3 @@ export async function paginatedRequest<T extends any[]>(request: {
 
   return returnData as T;
 }
-
-

@@ -18,9 +18,14 @@ export const canvasFileRouter = router({
       })
     )
     .mutation(async ({ input: { sourceUrl, canvasCourseId } }) => {
-      const localFile = sourceUrl.startsWith("/")
-        ? fileStorageLocation + sourceUrl
+      const { fileName: localFile, success } = sourceUrl.startsWith("/")
+        ? { fileName: fileStorageLocation + sourceUrl, success: true }
         : await downloadUrlToTempDirectory(sourceUrl);
+
+      if (!success) {
+        console.log("could not download file, returning sourceUrl", sourceUrl);
+        return sourceUrl;
+      }
       console.log("local temp file", localFile);
       const { upload_url, upload_params } = await uploadToCanvasPart1(
         localFile,
@@ -32,7 +37,7 @@ export const canvasFileRouter = router({
         upload_url,
         upload_params,
       });
-      console.log("canvas url done");
+      console.log("canvas url done", canvasUrl);
       return canvasUrl;
     }),
 });

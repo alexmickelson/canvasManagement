@@ -7,7 +7,7 @@ import FormData from "form-data";
 
 export const downloadUrlToTempDirectory = async (
   sourceUrl: string
-): Promise<string> => {
+): Promise<{fileName: string, success: boolean}> => {
   try {
     const fileName =
       path.basename(new URL(sourceUrl).pathname) || `tempfile-${Date.now()}`;
@@ -16,10 +16,10 @@ export const downloadUrlToTempDirectory = async (
       responseType: "arraybuffer",
     });
     await fs.writeFile(tempFilePath, response.data);
-    return tempFilePath;
+    return {fileName: tempFilePath, success: true};
   } catch (error) {
-    console.error("Error downloading or saving the file:", error);
-    throw error;
+    console.log("Error downloading or saving the file:", sourceUrl, error);
+    return {fileName: sourceUrl, success: false};
   }
 };
 
@@ -93,6 +93,7 @@ export const uploadToCanvasPart2 = async ({
       const redirectResponse = await axiosClient.get(redirectUrl);
       console.log("redirect response", redirectResponse.data);
     }
+    // console.log("returning from part 2", JSON.stringify(response.data));
     return response.data.url;
   } catch (error) {
     console.error("Error uploading file to Canvas part 2:", error);
