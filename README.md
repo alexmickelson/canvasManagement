@@ -1,16 +1,5 @@
 # canvasManagement
 
-
-install specflow template `dotnet new install Specflow.Templates.DotNet`
-
-view templates with `dotnet new -l`
-
-find outdated packages `dotnet list package --outdated`
-
-
-Development command: `dotnet watch --project Management.Web/`
-
-
 ## Canvas HTML Hack
 
 <https://nowucca.com/2020/07/04/working-around-canvas-limitations.html>
@@ -42,36 +31,13 @@ You can now embed an image in an assignment by adding something like this line.
 
 # ideas
 
-matching questions
-
-- different delimiter (-n in answer messes things up)
-- add distractors
-
-on calendar month, displays days that are on the same week as a month change (if month ends on monday, still show tues-sat)
-
 file uploads
-- image compression?
-- scrape html, when image embedded, upload to canvas and add img tag to canvas asset in html before sending image
-- put all images in an image repo in a /course/semester/filename format. upload the image to canvas, replace the url before sending it over with the canvas version.
-    - store canvas image ids in settings?
-
-allow multiple courses to be edited concurrently in different browser tabs
-
-schedule planning view? just outline concepts? (maybe some non-canvas scheduled thing that only shows up in planner? like a note, could be de-emphasized in webpage)
-- probably have a notes section for each module. Have a toggle to expand notes in module
-
-holiday schedule
+- working on assignments, needs to be added to pages/quizes
 
 multi-section support for due dates/times
 
 better error handling when files are unparsable
-
-websocket server to watch file system for changes, notify frontend it should invalidate cache
-
-lectures
-- create 1 lecture for a given day
-- have a way of running a lecture from an unauthenticated computer? maybe just view lecture notes?
-
+- currently falling back on orignal file url, need to raise this interaction to the user
 
 tighter integration with git
 - regularly make git commits
@@ -83,5 +49,23 @@ display days settings
 - hide all sundays (horizontal space)
 
 
-lecture preview link has server side render caching issues.
+mermaid charts:
+- inline display
+- merjaidjs has a way to encode the chart as base64 and pass it to a url to get a png back
+    - <https://github.com/mermaidjs/mermaid-live-editor/issues/41>
+    - aparently not just any base64 encoding works, use their function
+- if the chart gets auto-converted to a png to be displayed, it should work properly on canvas as well
 
+remember expanded modules as well as scorll position
+
+
+## Features
+- websocket server to watch file system for changes, notify frontend it should invalidate cache
+    - files can be edited in any text editor on the computer and changes are reflected in real time on the site
+- holiday schedule
+- lectures, 1 per day
+- image embedding / upload support for assignments
+- calendar weeks do not dupliacate, some of the first or last days of the calendar show up on the next month
+- scroll position remembered
+- matching questions have distractors
+   - `-` in the question can be escaped with `\-`
