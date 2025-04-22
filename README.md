@@ -55,6 +55,8 @@ mermaid charts:
     - <https://github.com/mermaidjs/mermaid-live-editor/issues/41>
     - aparently not just any base64 encoding works, use their function
 - if the chart gets auto-converted to a png to be displayed, it should work properly on canvas as well
+- could lead to a lot of tmp png's being added while the chart is being changed (each change will trigger an upload to canvas)
+- maybe track a list of unreferenced files and delete them?
 
 remember expanded modules as well as scorll position
 

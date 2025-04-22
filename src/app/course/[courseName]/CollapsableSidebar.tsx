@@ -12,19 +12,19 @@ export default function CollapsableSidebar() {
   const widthClass = isCollapsed ? "w-0" : "w-96";
   const visibilityClass = isCollapsed ? "invisible " : "visible";
   return (
-    <div>
+    <div className="h-full flex flex-col">
       <div className="flex flex-row justify-between mb-2">
         <div className="visible mx-3 mt-2">
           <button onClick={() => setIsCollapsed((i) => !i)}>
             {isCollapsed ? <LeftChevron /> : <RightChevron />}
           </button>
         </div>
-        <div className={isCollapsed ? "w-0 invisible hidden" : ""}>
+        <div className={" " + (isCollapsed ? "w-0 invisible hidden" : "")}>
           <CourseSettingsLink />
         </div>
       </div>
       <div
-        className={`${widthClass} sm:p-3 overflow-y-auto transition-all ${visibilityClass}`}
+        className={`${widthClass} flex-1 sm:p-3 overflow-y-auto transition-all ${visibilityClass}`}
       >
         <ModuleList />
       </div>

@@ -15,13 +15,12 @@ import { useCourseContext } from "@/app/course/[courseName]/context/courseContex
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
-import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { useRouter } from "next/navigation";
 import { AssignmentFooterButtons } from "./AssignmentFooterButtons";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 import EditAssignmentHeader from "./EditAssignmentHeader";
 import { Spinner } from "@/components/Spinner";
+import { getAssignmentHelpString } from "./getAssignmentHelpString";
 
 export default function EditAssignment({
   moduleName,
@@ -127,7 +126,7 @@ export default function EditAssignment({
       <div className={"min-h-0 flex flex-row w-full flex-grow"}>
         {showHelp && (
           <pre className=" max-w-96">
-            <code>{getHelpString(settings)}</code>
+            <code>{getAssignmentHelpString(settings)}</code>
           </pre>
         )}
         <div className="flex-1 h-full">
@@ -162,20 +161,4 @@ export default function EditAssignment({
       </ClientOnly>
     </div>
   );
-}
-
-function getHelpString(settings: LocalCourseSettings) {
-  const groupNames = settings.assignmentGroups.map((g) => g.name).join("\n- ");
-  const helpString = `SubmissionTypes:
-- ${AssignmentSubmissionType.ONLINE_TEXT_ENTRY}
-- ${AssignmentSubmissionType.ONLINE_UPLOAD}
-- ${AssignmentSubmissionType.DISCUSSION_TOPIC}
-AllowedFileUploadExtensions:
-- pdf
-- jpg
-- jpeg
-- png
-Assignment Group Names:
-- ${groupNames}`;
-  return helpString;
 }
