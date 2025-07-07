@@ -87,8 +87,8 @@ export default function ExpandableModule({
                 role="button"
                 onClick={() => setIsExpanded((e) => !e)}
               >
-                <div>{moduleName}</div>
-                <div className="flex flex-row">
+                <div className="flex-1">{moduleName}</div>
+                <div className=" flex flex-row justify-end">
                   <ClientOnly>
                     <ModuleCanvasStatus moduleName={moduleName} />
                   </ClientOnly>

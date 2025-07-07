@@ -11,6 +11,7 @@ export const NavTabListItem: FC<{
   onDrop: () => void;
 }> = ({ tab, idx, onDragStart, onDragOver, onDrop }) => {
   const updateTab = useUpdateCanvasTabMutation();
+  const [isDragOver, setIsDragOver] = React.useState(false);
   const handleToggleVisibility = () => {
     updateTab.mutate({
       tabId: tab.id,
@@ -23,11 +24,18 @@ export const NavTabListItem: FC<{
       key={tab.id}
       className={`flex items-center justify-between mb-2 p-1 px-4 rounded bg-slate-800 ${
         tab.hidden ? "opacity-50" : ""
-      }`}
+      } ${isDragOver ? "border-t-4 border-blue-400" : ""}`}
       draggable
       onDragStart={onDragStart}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
+      onDragOver={(e) => {
+        e.preventDefault();
+        setIsDragOver(true);
+      }}
+      onDragLeave={() => setIsDragOver(false)}
+      onDrop={(e) => {
+        setIsDragOver(false);
+        onDrop();
+      }}
     >
       <span className="flex-1 cursor-move">{tab.label}</span>
       {updateTab.isPending && <Spinner />}

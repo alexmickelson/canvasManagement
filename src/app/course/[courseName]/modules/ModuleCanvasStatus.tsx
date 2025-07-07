@@ -14,7 +14,7 @@ export function ModuleCanvasStatus({ moduleName }: { moduleName: string }) {
 
   return (
     <div className="text-slate-400 text-end">
-      {!canvasModule && <div>Not in Canvas</div>}
+      {!canvasModule && <div className="text-rose-400">Not in Canvas</div>}
       {!canvasModule && (
         <button
           disabled={addToCanvas.isPending}
