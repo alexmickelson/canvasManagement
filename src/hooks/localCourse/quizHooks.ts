@@ -14,6 +14,7 @@ export const useQuizQuery = (moduleName: string, quizName: string) => {
 
 export const useQuizzesQueries = (moduleName: string) => {
   const { courseName } = useCourseContext();
+  // const trpc = usetrpc();
   return trpc.quiz.getAllQuizzes.useSuspenseQuery({
     courseName,
     moduleName,

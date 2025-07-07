@@ -21,6 +21,7 @@
     "@trpc/next": "^11.4.3",
     "@trpc/react-query": "11.4.3",
     "@trpc/server": "11.4.3",
+    "@trpc/tanstack-react-query": "^11.4.3",
     "@types/ws": "^8.18.1",
     "chokidar": "^4.0.3",
     "dotenv": "^17.0.1",
