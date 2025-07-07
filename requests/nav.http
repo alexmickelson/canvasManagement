@@ -1,0 +1,4 @@
+# https://developerdocs.instructure.com/services/canvas/file.all_resources/tabs#method.tabs.index
+###
+GET https://snow.instructure.com/api/v1/courses/1155200/tabs
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}

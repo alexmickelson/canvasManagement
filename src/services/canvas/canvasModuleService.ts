@@ -63,4 +63,5 @@ export const canvasModuleService = {
     const response = await axiosClient.post<CanvasModule>(url, body);
     return response.data.id;
   },
+
 };

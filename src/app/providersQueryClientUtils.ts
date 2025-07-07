@@ -14,7 +14,7 @@ export function makeQueryClient() {
         // refetchInterval: 7000, // debug only
         refetchOnWindowFocus: false,
         retry: 0,
-        refetchOnMount: false,
+        // refetchOnMount: false,
       },
       mutations: {
         onError: (error) => {
