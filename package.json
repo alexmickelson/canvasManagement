@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "devNoSocket": "next dev",
-    "dev": "node src/websocket.js",
+    "dev": "pnpm install --config.confirmModulesPurge=false && node src/websocket.js",
     "build": "next build",
     "startNoSocket": "next start",
     "start": "NODE_ENV=production node src/websocket.js",

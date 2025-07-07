@@ -27,13 +27,5 @@ docker run -it --rm \
   -v ~/projects/facultyFiles:/app/public/images/facultyFiles \
   node \
     sh -c "
-      mkdir -p ~/.npm-global && \
-      npm config set prefix '~/.npm-global' && \
-      export PATH=~/.npm-global/bin:\$PATH && \
-
-      npm install -g pnpm && \
-      pnpm install && pnpm dev
+      npx --yes pnpm dev
     "
-
-
-    # bash -c "npm i -g pnpm && pnpm i && pnpm run dev -- -H 0.0.0.0"
