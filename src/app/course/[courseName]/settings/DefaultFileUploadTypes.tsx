@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 import { settingsBox } from "./sharedSettings";
 
 export default function DefaultFileUploadTypes() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const [defaultFileUploadTypes, setDefaultFileUploadTypes] = useState<
     string[]
   >(settings.defaultFileUploadTypes);

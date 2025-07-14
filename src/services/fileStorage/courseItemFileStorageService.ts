@@ -120,7 +120,7 @@ export const courseItemFileStorageService = {
     );
 
     const markdownDictionary: {
-      [key in CourseItemType]: () => string;
+      [_key in CourseItemType]: () => string;
     } = {
       Assignment: () =>
         assignmentMarkdownSerializer.toMarkdown(item as LocalAssignment),

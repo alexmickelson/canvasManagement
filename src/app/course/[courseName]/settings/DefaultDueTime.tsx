@@ -10,7 +10,7 @@ import DefaultLockOffset from "./DefaultLockOffset";
 import { settingsBox } from "./sharedSettings";
 
 export default function DefaultDueTime() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const [haveLockOffset, setHaveLockOffset] = useState(
     typeof settings.defaultLockHoursOffset !== "undefined"

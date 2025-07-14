@@ -5,7 +5,7 @@ import { DragStyleContextProvider } from "./context/drag/dragStyleContext";
 import CollapsableSidebar from "./CollapsableSidebar";
 
 
-export default async function CoursePage({}: {}) {
+export default async function CoursePage() {
   return (
     <>
       <div className="h-full flex flex-col">

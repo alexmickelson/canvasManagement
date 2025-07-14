@@ -33,8 +33,12 @@ export const holidaysAreEqual = (
 ): boolean => {
   if (holidays1.length !== holidays2.length) return false;
 
-  const sortedObj1 = [...holidays1].sort((a, b) => a.name.localeCompare(b.name));
-  const sortedObj2 = [...holidays2].sort((a, b) => a.name.localeCompare(b.name));
+  const sortedObj1 = [...holidays1].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
+  const sortedObj2 = [...holidays2].sort((a, b) =>
+    a.name.localeCompare(b.name)
+  );
 
   for (let i = 0; i < sortedObj1.length; i++) {
     const holiday1 = sortedObj1[i];
@@ -63,7 +67,7 @@ export default function HolidayConfig() {
   );
 }
 function InnerHolidayConfig() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
 
   const [rawText, setRawText] = useState(holidaysToString(settings.holidays));
@@ -83,7 +87,7 @@ function InnerHolidayConfig() {
             },
           });
         }
-      } catch (error: any) {}
+      } catch {}
     }, 500);
     return () => clearTimeout(id);
   }, [rawText, settings.holidays, settings, updateSettings]);
@@ -127,7 +131,7 @@ function ParsedHolidaysDisplay({ value }: { value: string }) {
       const parsed = parseHolidays(value);
       setParsedHolidays(parsed);
       setError("");
-    } catch (error: any) {
+    } catch (error) {
       setError(error + "");
     }
   }, [value]);

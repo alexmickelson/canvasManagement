@@ -29,10 +29,10 @@ export function AssignmentFooterButtons({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { data: canvasAssignments, isFetching: canvasIsFetching } =
     useCanvasAssignmentsQuery();
-  const [assignment, { isFetching }] = useAssignmentQuery(
+  const { data: assignment, isFetching } = useAssignmentQuery(
     moduleName,
     assignmentName
   );

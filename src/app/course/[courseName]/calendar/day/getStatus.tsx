@@ -35,7 +35,6 @@ export const getStatus = ({
 
   if (type === "page") {
     const canvasPage = canvasItem as CanvasPage;
-    const page = item as LocalCoursePage;
 
     if (!canvasPage.published)
       return { status: "incomplete", message: "canvas page not published" };

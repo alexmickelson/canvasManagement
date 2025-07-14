@@ -1,8 +1,9 @@
 "use client";
 
-import { trpc } from "@/services/serverFunctions/trpcClient";
+import { useTRPC } from "@/services/serverFunctions/trpcClient";
 import React, { useCallback, useEffect, useState } from "react";
 import { io, Socket } from "socket.io-client";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ServerToClientEvents {
   message: (data: string) => void;
@@ -59,7 +60,8 @@ export function ClientCacheInvalidation() {
 }
 
 const useFilePathInvalidation = () => {
-  const utils = trpc.useUtils();
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
   return useCallback(
     (filePath: string) => {
       const [courseName, moduleOrLectures, itemType, itemFile] =
@@ -69,69 +71,88 @@ const useFilePathInvalidation = () => {
       const allParts = [courseName, moduleOrLectures, itemType, itemName];
 
       if (moduleOrLectures === "settings.yml") {
-        utils.settings.allCoursesSettings.invalidate();
-        utils.settings.courseSettings.invalidate({ courseName });
+        queryClient.invalidateQueries({
+          queryKey: trpc.settings.allCoursesSettings.queryKey(),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.settings.courseSettings.queryKey({ courseName }),
+        });
         return;
       }
 
       if (moduleOrLectures === "00 - lectures") {
         console.log("lecture updated on FS ", allParts);
-        utils.lectures.getLectures.invalidate({ courseName });
+        queryClient.invalidateQueries({
+          queryKey: trpc.lectures.getLectures.queryKey({ courseName }),
+        });
         return;
       }
 
       if (itemType === "assignments") {
         console.log("assignment updated on FS ", allParts);
-        utils.assignment.getAllAssignments.invalidate({
-          courseName,
-          moduleName: moduleOrLectures,
+        queryClient.invalidateQueries({
+          queryKey: trpc.assignment.getAllAssignments.queryKey({
+            courseName,
+            moduleName: moduleOrLectures,
+          }),
         });
-        utils.assignment.getAssignment.invalidate({
-          courseName,
-          moduleName: moduleOrLectures,
-          assignmentName: itemName,
+        queryClient.invalidateQueries({
+          queryKey: trpc.assignment.getAssignment.queryKey({
+            courseName,
+            moduleName: moduleOrLectures,
+            assignmentName: itemName,
+          }),
         });
         return;
       }
 
       if (itemType === "quizzes") {
         console.log("quiz updated on FS ", allParts);
-        utils.quiz.getAllQuizzes.invalidate({
-          courseName,
-          moduleName: moduleOrLectures,
+        queryClient.invalidateQueries({
+          queryKey: trpc.quiz.getAllQuizzes.queryKey({
+            courseName,
+            moduleName: moduleOrLectures,
+          }),
         });
-        utils.quiz.getQuiz.invalidate({
-          courseName,
-          moduleName: moduleOrLectures,
-          quizName: itemName,
+        queryClient.invalidateQueries({
+          queryKey: trpc.quiz.getQuiz.queryKey({
+            courseName,
+            moduleName: moduleOrLectures,
+            quizName: itemName,
+          }),
         });
         return;
       }
 
       if (itemType === "pages") {
         console.log("page updated on FS ", allParts);
-        utils.page.getAllPages.invalidate({
-          courseName,
-          moduleName: moduleOrLectures,
+        queryClient.invalidateQueries({
+          queryKey: trpc.page.getAllPages.queryKey({
+            courseName,
+            moduleName: moduleOrLectures,
+          }),
         });
-        utils.page.getPage.invalidate({
-          courseName,
-          moduleName: moduleOrLectures,
-          pageName: itemName,
+        queryClient.invalidateQueries({
+          queryKey: trpc.page.getPage.queryKey({
+            courseName,
+            moduleName: moduleOrLectures,
+            pageName: itemName,
+          }),
         });
         return;
       }
     },
     [
-      utils.assignment.getAllAssignments,
-      utils.assignment.getAssignment,
-      utils.lectures.getLectures,
-      utils.page.getAllPages,
-      utils.page.getPage,
-      utils.quiz.getAllQuizzes,
-      utils.quiz.getQuiz,
-      utils.settings.allCoursesSettings,
-      utils.settings.courseSettings,
+      queryClient,
+      trpc.assignment.getAllAssignments,
+      trpc.assignment.getAssignment,
+      trpc.lectures.getLectures,
+      trpc.page.getAllPages,
+      trpc.page.getPage,
+      trpc.quiz.getAllQuizzes,
+      trpc.quiz.getQuiz,
+      trpc.settings.allCoursesSettings,
+      trpc.settings.courseSettings,
     ]
   );
 };

@@ -33,10 +33,10 @@ const getNextUrl = (
   return nextUrl;
 };
 
-export async function paginatedRequest<T extends any[]>(request: {
+export async function paginatedRequest<T extends unknown[]>(request: {
   url: string;
 }): Promise<T> {
-  var requestCount = 1;
+  let requestCount = 1;
   const url = new URL(request.url);
   url.searchParams.set("per_page", "100");
 
@@ -44,8 +44,8 @@ export async function paginatedRequest<T extends any[]>(request: {
     url.toString()
   );
 
-  var returnData = Array.isArray(firstData) ? [...firstData] : [firstData]; // terms come across as nested objects {enrolmentTerms: terms[]}
-  var nextUrl = getNextUrl(firstHeaders);
+  let returnData = Array.isArray(firstData) ? [...firstData] : [firstData]; // terms come across as nested objects {enrolmentTerms: terms[]}
+  let nextUrl = getNextUrl(firstHeaders);
 
   while (nextUrl) {
     requestCount += 1;

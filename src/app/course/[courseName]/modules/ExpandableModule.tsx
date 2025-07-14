@@ -32,15 +32,15 @@ export default function ExpandableModule({
 }) {
   const { itemDropOnModule } = useDraggingContext();
   const { courseName } = useCourseContext();
-  const [assignmentNames] = useAssignmentNamesQuery(moduleName);
+  const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
 
   const [assignments] = trpc.useSuspenseQueries((t) =>
     assignmentNames.map((assignmentName) =>
       t.assignment.getAssignment({ courseName, moduleName, assignmentName })
     )
   );
-  const [quizzes] = useQuizzesQueries(moduleName);
-  const [pages] = usePagesQueries(moduleName);
+  const { data: quizzes } = useQuizzesQueries(moduleName);
+  const { data: pages } = usePagesQueries(moduleName);
   const modal = useModal();
 
   const moduleItems: {

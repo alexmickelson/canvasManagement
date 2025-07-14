@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { settingsBox } from "./sharedSettings";
 
 export default function SubmissionDefaults() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const [defaultSubmissionTypes, setDefaultSubmissionTypes] = useState<
     AssignmentSubmissionType[]
   >(settings.defaultAssignmentSubmissionTypes);

@@ -9,7 +9,7 @@ export const NavTabListItem: FC<{
   onDragStart: () => void;
   onDragOver: (e: React.DragEvent) => void;
   onDrop: () => void;
-}> = ({ tab, idx, onDragStart, onDragOver, onDrop }) => {
+}> = ({ tab, onDragStart, onDrop }) => {
   const updateTab = useUpdateCanvasTabMutation();
   const [isDragOver, setIsDragOver] = React.useState(false);
   const handleToggleVisibility = () => {
@@ -32,7 +32,7 @@ export const NavTabListItem: FC<{
         setIsDragOver(true);
       }}
       onDragLeave={() => setIsDragOver(false)}
-      onDrop={(e) => {
+      onDrop={() => {
         setIsDragOver(false);
         onDrop();
       }}

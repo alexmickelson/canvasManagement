@@ -7,7 +7,7 @@ import { getCourseSettingsUrl } from "@/services/urlUtils";
 
 export default function CourseSettingsLink() {
   const { courseName } = useCourseContext();
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   return (
     <div>
       {settings.name}

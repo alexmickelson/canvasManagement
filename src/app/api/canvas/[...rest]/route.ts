@@ -17,9 +17,10 @@ const getUrl = (params: { rest: string[] }, req: NextRequest) => {
 
   appendQueryParams(url, req);
 
-  return url;``
+  return url;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const proxyResponseHeaders = (response: any) => {
   const headers = new Headers();
   Object.entries(response.headers).forEach(([key, value]) => {
@@ -39,6 +40,7 @@ export async function GET(
     const response = await axiosClient.get(url.toString());
     const headers = proxyResponseHeaders(response);
     return NextResponse.json(response.data, { headers });
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     console.log("canvas get error", error, error?.message);
     return NextResponse.json(
@@ -61,6 +63,7 @@ export async function POST(
 
       const headers = proxyResponseHeaders(response);
       return new NextResponse(JSON.stringify(response.data), { headers });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (isAxiosError(error)) {
         console.log(url.toString(), body);
@@ -89,6 +92,7 @@ export async function PUT(
 
       const headers = proxyResponseHeaders(response);
       return new NextResponse(JSON.stringify(response.data), { headers });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (isAxiosError(error)) {
         console.log(url.toString(), body);
@@ -123,6 +127,7 @@ export async function DELETE(
 
       const headers = proxyResponseHeaders(response);
       return new NextResponse(JSON.stringify(response.data), { headers });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       return new NextResponse(
         JSON.stringify({

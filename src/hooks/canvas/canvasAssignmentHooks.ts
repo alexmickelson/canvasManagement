@@ -14,7 +14,7 @@ export const canvasAssignmentKeys = {
 };
 
 export const useCanvasAssignmentsQuery = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
 
   return useQuery({
     queryKey: canvasAssignmentKeys.assignments(settings.canvasId),
@@ -22,9 +22,8 @@ export const useCanvasAssignmentsQuery = () => {
   });
 };
 
-
 export const useAddAssignmentToCanvasMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { data: canvasModules } = useCanvasModulesQuery();
   const addModule = useAddCanvasModuleMutation();
   const queryClient = useQueryClient();
@@ -74,7 +73,7 @@ export const useAddAssignmentToCanvasMutation = () => {
 };
 
 export const useUpdateAssignmentInCanvasMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -105,7 +104,7 @@ export const useUpdateAssignmentInCanvasMutation = () => {
 };
 
 export const useDeleteAssignmentFromCanvasMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({

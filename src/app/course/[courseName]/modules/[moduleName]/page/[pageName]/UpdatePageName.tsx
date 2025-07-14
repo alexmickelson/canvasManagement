@@ -2,7 +2,10 @@ import { useCourseContext } from "@/app/course/[courseName]/context/courseContex
 import TextInput from "@/components/form/TextInput";
 import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
-import { usePageQuery, useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
+import {
+  usePageQuery,
+  useUpdatePageMutation,
+} from "@/hooks/localCourse/pageHooks";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -17,11 +20,11 @@ export function UpdatePageName({
   const modal = useModal();
   const { courseName } = useCourseContext();
   const router = useRouter();
-  const [page] = usePageQuery(moduleName, pageName);
+  const { data: page } = usePageQuery(moduleName, pageName);
   const updatePage = useUpdatePageMutation();
   const [name, setName] = useState(page.name);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   return (
     <div>
       <Modal
@@ -53,11 +56,7 @@ export function UpdatePageName({
               );
             }}
           >
-            <TextInput
-              value={name}
-              setValue={setName}
-              label={"Rename Page"}
-            />
+            <TextInput value={name} setValue={setName} label={"Rename Page"} />
             <button className="w-full my-3">Save New Name</button>
             {isLoading && <Spinner />}
           </form>

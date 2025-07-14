@@ -9,11 +9,6 @@ import {
 } from "./assignment/localAssignmentGroup";
 import { parse, stringify } from "yaml";
 
-// export interface LocalCourse {
-//   modules: LocalModule[];
-//   settings: LocalCourseSettings;
-// }
-
 export interface SimpleTimeOnly {
   hour: number;
   minute: number;
@@ -109,9 +104,9 @@ function lowercaseFirstLetter<T>(obj: T): T {
 
   if (Array.isArray(obj)) return obj.map(lowercaseFirstLetter) as unknown as T;
 
-  const result: Record<string, any> = {};
+  const result: Record<string, unknown> = {};
   Object.keys(obj).forEach((key) => {
-    const value = (obj as Record<string, any>)[key];
+    const value = (obj as Record<string, unknown>)[key];
     const newKey = key.charAt(0).toLowerCase() + key.slice(1);
 
     if (value && typeof value === "object") {

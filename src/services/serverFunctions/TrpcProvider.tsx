@@ -2,7 +2,7 @@
 import { useState } from "react";
 import superjson from "superjson";
 import { httpBatchLink } from "@trpc/client";
-import { trpc } from "./trpcClient";
+import { trpc, TRPCProvider } from "./trpcClient";
 import { getQueryClient } from "@/app/providersQueryClientUtils";
 import { isServer } from "@tanstack/react-query";
 
@@ -13,6 +13,7 @@ export default function TrpcProvider({
 }) {
   const url = isServer ? "http://localhost:3000/api/trpc/" : "/api/trpc";
 
+  const queryClient = getQueryClient();
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
@@ -25,9 +26,14 @@ export default function TrpcProvider({
     })
   );
 
+  // return (
+  //   <trpc.Provider client={trpcClient} queryClient={getQueryClient()}>
+  //     {children}
+  //   </trpc.Provider>
+  // );
   return (
-    <trpc.Provider client={trpcClient} queryClient={getQueryClient()}>
+    <TRPCProvider trpcClient={trpcClient} queryClient={queryClient}>
       {children}
-    </trpc.Provider>
+    </TRPCProvider>
   );
 }

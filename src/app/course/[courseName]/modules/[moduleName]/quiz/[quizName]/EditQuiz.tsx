@@ -75,10 +75,13 @@ export default function EditQuiz({
   moduleName: string;
 }) {
   const router = useRouter();
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
-  const [quiz, { dataUpdatedAt: serverDataUpdatedAt, isFetching }] =
-    useQuizQuery(moduleName, quizName);
+  const {
+    data: quiz,
+    dataUpdatedAt: serverDataUpdatedAt,
+    isFetching,
+  } = useQuizQuery(moduleName, quizName);
   const updateQuizMutation = useUpdateQuizMutation();
   const { clientIsAuthoritative, text, textUpdate, monacoKey } =
     useAuthoritativeUpdates({
@@ -122,6 +125,7 @@ export default function EditQuiz({
           }
         }
         setError("");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         setError(e.toString());
       }

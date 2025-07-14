@@ -24,10 +24,11 @@ export default function EditPage({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [page, { dataUpdatedAt, isFetching }] = usePageQuery(
-    moduleName,
-    pageName
-  );
+  const {
+    data: page,
+    dataUpdatedAt,
+    isFetching,
+  } = usePageQuery(moduleName, pageName);
   const updatePage = useUpdatePageMutation();
 
   const { clientIsAuthoritative, text, textUpdate, monacoKey } =
@@ -37,7 +38,7 @@ export default function EditPage({
     });
 
   const [error, setError] = useState("");
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
 
   useEffect(() => {
     const delay = 500;
@@ -85,6 +86,7 @@ export default function EditPage({
           }
         }
         setError("");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         setError(e.toString());
       }

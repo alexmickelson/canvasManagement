@@ -15,7 +15,7 @@ export default function InnerMonacoEditorOther({
 
   function handleEditorDidMount(editor: editor.IStandaloneCodeEditor) {
     editorRef.current = editor;
-    editor.onDidChangeModelContent((e) => {
+    editor.onDidChangeModelContent(() => {
       onChange(editorRef.current?.getModel()?.getValue() ?? "");
     });
   }

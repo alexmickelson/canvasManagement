@@ -10,7 +10,7 @@ export default function MarkdownDisplay({
   markdown: string;
   className?: string;
 }) {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   return (
     <SuspenseAndErrorHandling>
       <DangerousInnerMarkdown

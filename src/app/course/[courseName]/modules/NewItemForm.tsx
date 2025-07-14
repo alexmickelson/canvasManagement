@@ -27,9 +27,9 @@ export default function NewItemForm({
   creationDate?: string;
   onCreate?: () => void;
 }) {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
-  const [modules] = useModuleNamesQuery();
+  const { data: modules } = useModuleNamesQuery();
   const [type, setType] = useState<"Assignment" | "Quiz" | "Page">(
     "Assignment"
   );

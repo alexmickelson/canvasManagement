@@ -8,7 +8,7 @@ import {
 import React from "react";
 
 export default function DaysOfWeekSettings() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
 
   return (

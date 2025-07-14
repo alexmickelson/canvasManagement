@@ -15,7 +15,7 @@ import { getStatus } from "./getStatus";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 
 export function useTodaysItems(day: string) {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const dayAsDate = getDateFromStringOrThrow(
     day,
     "calculating same month in day items"

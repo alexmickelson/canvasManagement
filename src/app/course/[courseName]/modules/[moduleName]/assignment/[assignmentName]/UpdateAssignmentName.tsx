@@ -20,11 +20,11 @@ export function UpdateAssignmentName({
   const modal = useModal();
   const { courseName } = useCourseContext();
   const router = useRouter();
-  const [assignment] = useAssignmentQuery(moduleName, assignmentName);
+  const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
   const [name, setName] = useState(assignment.name);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   return (
     <div>
       <Modal

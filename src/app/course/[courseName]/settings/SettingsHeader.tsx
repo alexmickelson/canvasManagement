@@ -7,7 +7,7 @@ import { useCourseContext } from "../context/courseContext";
 
 export default function SettingsHeader() {
   const { courseName } = useCourseContext();
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   return (
     <>
       <div className="flex flex-row justify-between">

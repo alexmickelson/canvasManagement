@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useCanvasTabsQuery } from "@/hooks/canvas/canvasNavigationHooks";
-import { CanvasCourseTab } from "@/services/canvas/canvasNavigationService";
 import { useUpdateCanvasTabMutation } from "@/hooks/canvas/canvasNavigationHooks";
 import { Spinner } from "@/components/Spinner";
 import { NavTabListItem } from "./NavTabListItem";

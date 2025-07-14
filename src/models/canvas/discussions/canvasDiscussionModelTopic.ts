@@ -30,8 +30,8 @@ export interface CanvasDiscussionTopicModel {
   locked?: boolean;
   pinned?: boolean;
   locked_for_user?: boolean;
-  lock_info?: any;
-  group_topic_children?: any;
+  lock_info?: unknown;
+  group_topic_children?: unknown;
   root_topic_id?: number;
   group_category_id?: number;
   allow_rating?: boolean;

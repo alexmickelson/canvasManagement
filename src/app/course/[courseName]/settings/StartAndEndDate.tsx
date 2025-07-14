@@ -5,7 +5,7 @@ import React from "react";
 import { settingsBox } from "./sharedSettings";
 
 export default function StartAndEndDate() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const startDate = new Date(settings.startDate);
   const endDate = new Date(settings.endDate);
   return (

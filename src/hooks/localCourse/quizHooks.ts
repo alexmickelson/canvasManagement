@@ -1,62 +1,107 @@
 "use client";
-
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import { trpc } from "@/services/serverFunctions/trpcClient";
+import { useTRPC } from "@/services/serverFunctions/trpcClient";
+import {
+  useSuspenseQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 export const useQuizQuery = (moduleName: string, quizName: string) => {
   const { courseName } = useCourseContext();
-  return trpc.quiz.getQuiz.useSuspenseQuery({
-    courseName,
-    moduleName,
-    quizName,
-  });
+  const trpc = useTRPC();
+  return useSuspenseQuery(
+    trpc.quiz.getQuiz.queryOptions({
+      courseName,
+      moduleName,
+      quizName,
+    })
+  );
 };
 
 export const useQuizzesQueries = (moduleName: string) => {
   const { courseName } = useCourseContext();
-  // const trpc = usetrpc();
-  return trpc.quiz.getAllQuizzes.useSuspenseQuery({
-    courseName,
-    moduleName,
-  });
+  const trpc = useTRPC();
+  return useSuspenseQuery(
+    trpc.quiz.getAllQuizzes.queryOptions({
+      courseName,
+      moduleName,
+    })
+  );
 };
 
 export const useUpdateQuizMutation = () => {
-  const utils = trpc.useUtils();
-  return trpc.quiz.updateQuiz.useMutation({
-    onSuccess: (
-      _,
-      { courseName, moduleName, quizName, previousModuleName }
-    ) => {
-      if (moduleName !== previousModuleName)
-        utils.quiz.getAllQuizzes.invalidate({
-          courseName,
-          moduleName: previousModuleName,
-        },
-        { refetchType: "all" });
-      utils.quiz.getAllQuizzes.invalidate({ courseName, moduleName },
-        { refetchType: "all" });
-      utils.quiz.getQuiz.invalidate({ courseName, moduleName, quizName });
-    },
-  });
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  return useMutation(
+    trpc.quiz.updateQuiz.mutationOptions({
+      onSuccess: (
+        _,
+        { courseName, moduleName, quizName, previousModuleName }
+      ) => {
+        if (moduleName !== previousModuleName) {
+          queryClient.invalidateQueries({
+            queryKey: trpc.quiz.getAllQuizzes.queryKey({
+              courseName,
+              moduleName: previousModuleName,
+            }),
+          });
+        }
+        queryClient.invalidateQueries({
+          queryKey: trpc.quiz.getAllQuizzes.queryKey({
+            courseName,
+            moduleName,
+          }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.quiz.getQuiz.queryKey({
+            courseName,
+            moduleName,
+            quizName,
+          }),
+        });
+      },
+    })
+  );
 };
+
 export const useCreateQuizMutation = () => {
-  const utils = trpc.useUtils();
-  return trpc.quiz.createQuiz.useMutation({
-    onSuccess: (_, { courseName, moduleName }) => {
-      utils.quiz.getAllQuizzes.invalidate({ courseName, moduleName });
-    },
-  });
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  return useMutation(
+    trpc.quiz.createQuiz.mutationOptions({
+      onSuccess: (_, { courseName, moduleName }) => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.quiz.getAllQuizzes.queryKey({
+            courseName,
+            moduleName,
+          }),
+        });
+      },
+    })
+  );
 };
+
 export const useDeleteQuizMutation = () => {
-  const utils = trpc.useUtils();
-  return trpc.quiz.deleteQuiz.useMutation({
-    onSuccess: (_, { courseName, moduleName, quizName }) => {
-      utils.quiz.getAllQuizzes.invalidate(
-        { courseName, moduleName },
-        { refetchType: "all" }
-      );
-      utils.quiz.getQuiz.invalidate({ courseName, moduleName, quizName });
-    },
-  });
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  return useMutation(
+    trpc.quiz.deleteQuiz.mutationOptions({
+      onSuccess: (_, { courseName, moduleName, quizName }) => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.quiz.getAllQuizzes.queryKey({
+            courseName,
+            moduleName,
+          }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.quiz.getQuiz.queryKey({
+            courseName,
+            moduleName,
+            quizName,
+          }),
+        });
+      },
+    })
+  );
 };

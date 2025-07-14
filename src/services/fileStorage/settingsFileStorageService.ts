@@ -75,7 +75,7 @@ export const settingsFileStorageService = {
     const courseDirectory = path.join(basePath, courseName);
     const settingsPath = path.join(courseDirectory, "settings.yml");
 
-    const { name, ...settingsWithoutName } = settings;
+    const { name: _, ...settingsWithoutName } = settings;
 
     const settingsMarkdown =
       localCourseYamlUtils.settingsToYaml(settingsWithoutName);

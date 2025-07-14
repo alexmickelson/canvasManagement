@@ -34,11 +34,11 @@ function getTermName(startDate: string) {
 }
 
 export default function CourseList() {
-  const [allSettings] = useLocalCoursesSettingsQuery();
+  const { data: allSettings } = useLocalCoursesSettingsQuery();
 
   const coursesByStartDate = groupByStartDate(allSettings);
 
-  const sortedDates = Object.keys(coursesByStartDate).sort()
+  const sortedDates = Object.keys(coursesByStartDate).sort();
 
   return (
     <div className="flex flex-row ">

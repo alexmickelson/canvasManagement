@@ -13,7 +13,7 @@ describe("FileStorageTests", () => {
     try {
       await fs.access(storageDirectory);
       await fs.rm(storageDirectory, { recursive: true });
-    } catch (error) {}
+    } catch {}
     await fs.mkdir(storageDirectory, { recursive: true });
   });
 

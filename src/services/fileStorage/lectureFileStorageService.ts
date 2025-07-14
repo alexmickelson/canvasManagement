@@ -102,6 +102,7 @@ export async function deleteLecture(
     await fs.access(lecturePath); // throws error if no file
     await fs.unlink(lecturePath);
     console.log(`File deleted: ${lecturePath}`);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error?.code === "ENOENT") {
       console.log(`Cannot delete lecture, file does not exist: ${lecturePath}`);

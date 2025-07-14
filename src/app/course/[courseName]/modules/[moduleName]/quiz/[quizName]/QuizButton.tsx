@@ -27,10 +27,10 @@ export function QuizButtons({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { data: canvasQuizzes } = useCanvasQuizzesQuery();
 
-  const [quiz] = useQuizQuery(moduleName, quizName);
+  const { data: quiz } = useQuizQuery(moduleName, quizName);
   const addToCanvas = useAddQuizToCanvasMutation();
   const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
   const deleteLocal = useDeleteQuizMutation();
@@ -90,7 +90,11 @@ export function QuizButtons({
                 <div className="flex justify-around gap-3">
                   <button
                     onClick={async () => {
-                      await deleteLocal.mutateAsync({ moduleName, quizName, courseName });
+                      await deleteLocal.mutateAsync({
+                        moduleName,
+                        quizName,
+                        courseName,
+                      });
                       router.push(getCourseUrl(courseName));
                     }}
                     className="btn-danger"

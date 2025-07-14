@@ -1,33 +1,56 @@
 "use client";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import { trpc } from "@/services/serverFunctions/trpcClient";
+import { useTRPC } from "@/services/serverFunctions/trpcClient";
+import {
+  useSuspenseQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
-export const useLocalCoursesSettingsQuery = () =>
-  trpc.settings.allCoursesSettings.useSuspenseQuery();
+export const useLocalCoursesSettingsQuery = () => {
+  const trpc = useTRPC();
+  return useSuspenseQuery(trpc.settings.allCoursesSettings.queryOptions());
+};
 
 export const useLocalCourseSettingsQuery = () => {
   const { courseName } = useCourseContext();
-  return trpc.settings.courseSettings.useSuspenseQuery({ courseName });
+  const trpc = useTRPC();
+  return useSuspenseQuery(
+    trpc.settings.courseSettings.queryOptions({ courseName })
+  );
 };
 
 export const useCreateLocalCourseMutation = () => {
-  const utils = trpc.useUtils();
-  return trpc.settings.createCourse.useMutation({
-    onSuccess: () => {
-      utils.settings.allCoursesSettings.invalidate();
-      utils.directories.getEmptyDirectories.invalidate();
-    },
-  });
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  return useMutation(
+    trpc.settings.createCourse.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.settings.allCoursesSettings.queryKey(),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.directories.getEmptyDirectories.queryKey(),
+        });
+      },
+    })
+  );
 };
 
 export const useUpdateLocalCourseSettingsMutation = () => {
   const { courseName } = useCourseContext();
-  const utils = trpc.useUtils();
-
-  return trpc.settings.updateSettings.useMutation({
-    onSuccess: () => {
-      utils.settings.allCoursesSettings.invalidate();
-      utils.settings.courseSettings.invalidate({ courseName });
-    },
-  });
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  return useMutation(
+    trpc.settings.updateSettings.mutationOptions({
+      onSuccess: () => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.settings.allCoursesSettings.queryKey(),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.settings.courseSettings.queryKey({ courseName }),
+        });
+      },
+    })
+  );
 };

@@ -27,8 +27,8 @@ export default function EditPageButtons({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [settings] = useLocalCourseSettingsQuery();
-  const [page] = usePageQuery(moduleName, pageName);
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const { data: page } = usePageQuery(moduleName, pageName);
   const { data: canvasPages } = useCanvasPagesQuery();
   const createPageInCanvas = useCreateCanvasPageMutation();
   const updatePageInCanvas = useUpdateCanvasPageMutation();

@@ -7,7 +7,7 @@ import CourseContextProvider from "../course/[courseName]/context/CourseContextP
 import { Fragment } from "react";
 
 export default function TodaysLectures() {
-  const [allSettings] = useLocalCoursesSettingsQuery();
+  const { data: allSettings } = useLocalCoursesSettingsQuery();
   return (
     <div className="w-full">
       <div className="flex justify-around w-full">

@@ -11,7 +11,7 @@ import DownChevron from "@/components/icons/DownChevron";
 export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   // const weekInMilliseconds = 604_800_000;
   const four_days_in_milliseconds = 345_600_000;
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const startDate = getDateFromStringOrThrow(
     settings.startDate,
     "week calculation start date"
@@ -50,7 +50,9 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
               role="button"
             >
               {monthName}
-              <div className="my-auto">{isExpanded ? <UpChevron /> : <DownChevron />}</div>
+              <div className="my-auto">
+                {isExpanded ? <UpChevron /> : <DownChevron />}
+              </div>
             </h3>
           </div>
         )}

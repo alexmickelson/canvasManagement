@@ -1,5 +1,5 @@
 "use client";
-import { trpc } from "@/services/serverFunctions/trpcClient";
+import { useTRPC } from "@/services/serverFunctions/trpcClient";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import {
   useLocalCourseSettingsQuery,
@@ -10,18 +10,25 @@ import {
   markdownToHtmlNoImages,
 } from "@/services/htmlMarkdownUtils";
 import { useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import {
+  useMutation,
+  useQueryClient,
+  useSuspenseQuery,
+} from "@tanstack/react-query";
 
 export const useAssignmentQuery = (
   moduleName: string,
   assignmentName: string
 ) => {
   const { courseName } = useCourseContext();
-  return trpc.assignment.getAssignment.useSuspenseQuery({
-    moduleName,
-    courseName,
-    assignmentName,
-  });
+  const trpc = useTRPC();
+  return useSuspenseQuery(
+    trpc.assignment.getAssignment.queryOptions({
+      moduleName,
+      courseName,
+      assignmentName,
+    })
+  );
 };
 
 const enable_images = process.env.NEXT_PUBLIC_ENABLE_FILE_SYNC === "true";
@@ -33,13 +40,15 @@ export const useUpdateImageSettingsForAssignment = ({
   moduleName: string;
   assignmentName: string;
 }) => {
-  const [assignment] = useAssignmentQuery(moduleName, assignmentName);
+  const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
   const [isPending, setIsPending] = useState(false);
   const addNewImagesToCanvasMutation = useAddNewImagesToCanvasMutation();
 
   useEffect(() => {
     if (!enable_images) {
-      console.log("not uploading images, NEXT_PUBLIC_ENABLE_FILE_SYNC is not set to true");
+      console.log(
+        "not uploading images, NEXT_PUBLIC_ENABLE_FILE_SYNC is not set to true"
+      );
       return;
     }
 
@@ -62,9 +71,11 @@ export const useUpdateImageSettingsForAssignment = ({
 };
 
 export const useAddNewImagesToCanvasMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
-  const createCanvasUrlMutation =
-    trpc.canvasFile.getCanvasFileUrl.useMutation();
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const trpc = useTRPC();
+  const createCanvasUrlMutation = useMutation(
+    trpc.canvasFile.getCanvasFileUrl.mutationOptions()
+  );
   const updateSettings = useUpdateLocalCourseSettingsMutation();
 
   return useMutation({
@@ -103,81 +114,101 @@ export const useAddNewImagesToCanvasMutation = () => {
 
 export const useAssignmentNamesQuery = (moduleName: string) => {
   const { courseName } = useCourseContext();
-  return trpc.assignment.getAllAssignments.useSuspenseQuery(
-    {
+  const trpc = useTRPC();
+  return useSuspenseQuery({
+    ...trpc.assignment.getAllAssignments.queryOptions({
       moduleName,
       courseName,
-    },
-    {
-      select: (assignments) => assignments.map((a) => a.name),
-    }
-  );
+    }),
+    select: (assignments) => assignments.map((a) => a.name),
+  });
 };
 
 export const useUpdateAssignmentMutation = () => {
-  const utils = trpc.useUtils();
-  return trpc.assignment.updateAssignment.useMutation({
-    onSuccess: (
-      _,
-      {
-        courseName,
-        moduleName,
-        assignmentName,
-        previousAssignmentName,
-        previousModuleName,
-      }
-    ) => {
-      if (moduleName !== previousModuleName) {
-        utils.assignment.getAllAssignments.invalidate(
-          {
-            courseName,
-            moduleName: previousModuleName,
-          },
-          { refetchType: "all" }
-        );
-      }
-      utils.assignment.getAllAssignments.invalidate(
-        { courseName, moduleName },
-        { refetchType: "all" }
-      );
-      utils.assignment.getAssignment.invalidate({
-        courseName,
-        moduleName,
-        assignmentName,
-      });
-      utils.assignment.getAssignment.invalidate({
-        courseName,
-        moduleName,
-        assignmentName: previousAssignmentName,
-      });
-    },
-  });
-};
-
-export const useCreateAssignmentMutation = () => {
-  const utils = trpc.useUtils();
-  return trpc.assignment.createAssignment.useMutation({
-    onSuccess: (_, { courseName, moduleName }) => {
-      utils.assignment.getAllAssignments.invalidate({ courseName, moduleName });
-    },
-  });
-};
-
-export const useDeleteAssignmentMutation = () => {
-  const utils = trpc.useUtils();
-  return trpc.assignment.deleteAssignment.useMutation({
-    onSuccess: (_, { courseName, moduleName, assignmentName }) => {
-      utils.assignment.getAllAssignments.invalidate({ courseName, moduleName });
-      utils.assignment.getAssignment.invalidate(
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  return useMutation(
+    trpc.assignment.updateAssignment.mutationOptions({
+      onSuccess: (
+        _,
         {
           courseName,
           moduleName,
           assignmentName,
-        },
-        {
-          refetchType: "all",
+          previousAssignmentName,
+          previousModuleName,
         }
-      );
-    },
-  });
+      ) => {
+        if (moduleName !== previousModuleName) {
+          queryClient.invalidateQueries({
+            queryKey: trpc.assignment.getAllAssignments.queryKey({
+              courseName,
+              moduleName: previousModuleName,
+            }),
+          });
+        }
+        queryClient.invalidateQueries({
+          queryKey: trpc.assignment.getAllAssignments.queryKey({
+            courseName,
+            moduleName,
+          }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.assignment.getAssignment.queryKey({
+            courseName,
+            moduleName,
+            assignmentName,
+          }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.assignment.getAssignment.queryKey({
+            courseName,
+            moduleName,
+            assignmentName: previousAssignmentName,
+          }),
+        });
+      },
+    })
+  );
+};
+
+export const useCreateAssignmentMutation = () => {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  return useMutation(
+    trpc.assignment.createAssignment.mutationOptions({
+      onSuccess: (_result, { courseName, moduleName }) => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.assignment.getAllAssignments.queryKey({
+            courseName,
+            moduleName,
+          }),
+        });
+      },
+    })
+  );
+};
+
+export const useDeleteAssignmentMutation = () => {
+  const trpc = useTRPC();
+  const queryClient = useQueryClient();
+  return useMutation(
+    trpc.assignment.deleteAssignment.mutationOptions({
+      onSuccess: (_result, { courseName, moduleName, assignmentName }) => {
+        queryClient.invalidateQueries({
+          queryKey: trpc.assignment.getAllAssignments.queryKey({
+            courseName,
+            moduleName,
+          }),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.assignment.getAssignment.queryKey({
+            courseName,
+            moduleName,
+            assignmentName,
+          }),
+        });
+      },
+    })
+  );
 };

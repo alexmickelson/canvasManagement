@@ -3,7 +3,6 @@ import { QuestionType, zodQuestionType } from "../../quiz/localQuizQuestion";
 import { quizMarkdownUtils } from "../../quiz/utils/quizMarkdownUtils";
 import { quizQuestionMarkdownUtils } from "../../quiz/utils/quizQuestionMarkdownUtils";
 import { describe, it, expect } from "vitest";
-import { LocalCourseSettings } from "../../localCourseSettings";
 
 describe("TextAnswerTests", () => {
   it("can parse essay", () => {

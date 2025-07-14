@@ -12,7 +12,7 @@ import Link from "next/link";
 
 export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const modal = useModal();

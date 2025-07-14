@@ -11,7 +11,7 @@ export default function EditLectureTitle({
 }: {
   lectureDay: string;
 }) {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
   const lectureDate = getDateFromString(lectureDay);
   const lectureWeekName = getLectureWeekName(settings.startDate, lectureDay);

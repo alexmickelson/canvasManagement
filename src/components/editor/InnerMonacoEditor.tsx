@@ -38,7 +38,7 @@ export default function InnerMonacoEditor({
           };
 
           editorRef.current = monaco.editor.create(divRef.current, properties);
-          editorRef.current.onDidChangeModelContent((e) => {
+          editorRef.current.onDidChangeModelContent(() => {
             console.log("in on change", onChange);
             onChange(editorRef.current?.getModel()?.getValue() ?? "");
           });

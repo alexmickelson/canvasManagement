@@ -22,7 +22,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 
 export function CourseNavigation() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
 
   const queryClient = useQueryClient();
   const canvasAssignmentsQuery = useCanvasAssignmentsQuery();

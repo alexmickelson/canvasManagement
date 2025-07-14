@@ -1,8 +1,4 @@
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 import { canvasQuizService } from "@/services/canvas/canvasQuizService";
 import { LocalQuiz } from "@/models/local/quiz/localQuiz";
@@ -18,7 +14,7 @@ export const canvasQuizKeys = {
 };
 
 export const useCanvasQuizzesQuery = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
 
   return useQuery({
     queryKey: canvasQuizKeys.quizzes(settings.canvasId),
@@ -27,7 +23,7 @@ export const useCanvasQuizzesQuery = () => {
 };
 
 export const useAddQuizToCanvasMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   const { data: canvasModules } = useCanvasModulesQuery();
   const addModule = useAddCanvasModuleMutation();
@@ -76,7 +72,7 @@ export const useAddQuizToCanvasMutation = () => {
 };
 
 export const useDeleteQuizFromCanvasMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (canvasQuizId: number) => {

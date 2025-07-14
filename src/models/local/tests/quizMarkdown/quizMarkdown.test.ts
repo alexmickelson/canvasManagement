@@ -3,7 +3,7 @@ import { LocalQuiz } from "../../quiz/localQuiz";
 import { quizMarkdownUtils } from "../../quiz/utils/quizMarkdownUtils";
 import { QuestionType } from "@/models/local/quiz/localQuizQuestion";
 import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
-import { markdownToHtmlNoImages, markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
+import { markdownToHtmlNoImages } from "@/services/htmlMarkdownUtils";
 
 // Test suite for QuizMarkdown
 describe("QuizMarkdownTests", () => {
@@ -256,7 +256,6 @@ short answer
   });
 
   it("can parse quiz with latex in a question", () => {
-    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false

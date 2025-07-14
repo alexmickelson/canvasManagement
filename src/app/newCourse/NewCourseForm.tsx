@@ -99,7 +99,7 @@ export default function NewCourseForm() {
                     holidays: [],
                     assignmentGroups: courseToImport.assignmentGroups.map(
                       (assignmentGroup) => {
-                        const { canvasId, ...groupWithoutCanvas } =
+                        const { canvasId: _, ...groupWithoutCanvas } =
                           assignmentGroup;
                         return { ...groupWithoutCanvas, canvasId: undefined };
                       }
@@ -172,10 +172,10 @@ function OtherSettings({
   >;
 }) {
   const { data: canvasCourses } = useCourseListInTermQuery(selectedTerm.id);
-  const [allSettings] = useLocalCoursesSettingsQuery();
-  const [emptyDirectories] = useEmptyDirectoriesQuery();
+  const { data: allSettings } = useLocalCoursesSettingsQuery();
+  const { data: emptyDirectories } = useEmptyDirectoriesQuery();
 
-  const populatedCanvasCourseIds = allSettings.map((s) => s.canvasId);
+  const populatedCanvasCourseIds = allSettings?.map((s) => s.canvasId) ?? [];
   const availableCourses =
     canvasCourses?.filter(
       (canvas: CanvasCourseModel) =>

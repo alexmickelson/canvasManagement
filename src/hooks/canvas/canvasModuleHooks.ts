@@ -1,9 +1,5 @@
 import { canvasModuleService } from "@/services/canvas/canvasModuleService";
-import {
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
 
 export const canvasCourseModuleKeys = {
@@ -11,7 +7,7 @@ export const canvasCourseModuleKeys = {
 };
 
 export const useCanvasModulesQuery = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   return useQuery({
     queryKey: canvasCourseModuleKeys.modules(settings.canvasId),
     queryFn: async () =>
@@ -20,7 +16,7 @@ export const useCanvasModulesQuery = () => {
 };
 
 export const useAddCanvasModuleMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (moduleName: string) =>
@@ -32,4 +28,3 @@ export const useAddCanvasModuleMutation = () => {
     },
   });
 };
-

@@ -1,49 +1,50 @@
-import toast, { ErrorIcon, CheckmarkIcon } from "react-hot-toast";
+import toast, { CheckmarkIcon } from "react-hot-toast";
 import { ReactNode } from "react";
-import { MutationCache, QueryCache, QueryClient } from "@tanstack/react-query";
 
-const addErrorAsToast = async (error: any) => {
-  console.error("error from toast", error);
-  const message = getErrorMessage(error);
+// const addErrorAsToast = async (error: unknown) => {
+//   console.error("error from toast", error);
+//   const message = getErrorMessage(error);
 
-  toast(
-    (t: any) => (
-      <div className="row">
-        <div className="col-auto my-auto">
-          <ErrorIcon />
-        </div>
-        <div className="col my-auto">
-          <div className="white-space">{message}</div>
-          <div>
-            <a
-              href="https://snow.kualibuild.com/app/651eeebc32976c013a4c4739/run"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Report Bug
-            </a>
-          </div>
-        </div>
-        <div className="col-auto my-auto">
-          <button
-            onClick={() => toast.dismiss(t.id)}
-            className="btn btn-outline-secondary btn-sm"
-          >
-            <i className="bi bi-x"></i>
-          </button>
-        </div>
-      </div>
-    ),
-    {
-      duration: Infinity,
-    }
-  );
-};
+//   toast(
+//     (t) => (
+//       <div className="row">
+//         <div className="col-auto my-auto">
+//           <ErrorIcon />
+//         </div>
+//         <div className="col my-auto">
+//           <div className="white-space">{message}</div>
+//           <div>
+//             <a
+//               href="https://snow.kualibuild.com/app/651eeebc32976c013a4c4739/run"
+//               target="_blank"
+//               rel="noreferrer"
+//             >
+//               Report Bug
+//             </a>
+//           </div>
+//         </div>
+//         <div className="col-auto my-auto">
+//           <button
+//             onClick={() => toast.dismiss(t.id)}
+//             className="btn btn-outline-secondary btn-sm"
+//           >
+//             <i className="bi bi-x"></i>
+//           </button>
+//         </div>
+//       </div>
+//     ),
+//     {
+//       duration: Infinity,
+//     }
+//   );
+// };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getErrorMessage(error: any) {
   if (error?.response?.status === 422) {
     console.log(error.response.data.detail);
     const serializationMessages = error.response.data.detail.map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (d: any) => `${d.type} - ${d.loc[1]}`
     );
     return `Deserialization error on request:\n${serializationMessages.join(
@@ -66,12 +67,8 @@ export function createInfoToast(
   children: ReactNode,
   onClose: () => void = () => {}
 ) {
-  const closeHandler = (t: any) => {
-    toast.dismiss(t.id);
-    onClose();
-  };
   toast(
-    (t: any) => (
+    (t) => (
       <div className="row">
         <div className="col-auto my-auto">
           <i className="bi bi-info-circle-fill"></i>
@@ -79,7 +76,10 @@ export function createInfoToast(
         <div className="col my-auto">{children}</div>
         <div className="col-auto my-auto">
           <button
-            onClick={() => closeHandler(t)}
+            onClick={() => {
+              toast.dismiss(t.id);
+              onClose();
+            }}
             className="btn btn-outline-secondary py-1"
           >
             <i className="bi-x-lg" />
@@ -98,7 +98,7 @@ export function createInfoToast(
 
 export function createSuccessToast(message: string) {
   toast(
-    (t: any) => (
+    (t) => (
       <div className="row">
         <div className="col-auto my-auto">
           <CheckmarkIcon />

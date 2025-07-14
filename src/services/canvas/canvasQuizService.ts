@@ -72,6 +72,7 @@ const createQuestionOnly = async (
 const hackFixQuestionOrdering = async (
   canvasCourseId: number,
   canvasQuizId: number,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   questionAndPositions: Array<{ question: any; position: number }>
 ) => {
   console.log("Fixing question order");
@@ -149,6 +150,7 @@ export const canvasQuizService = {
           ? new Date(quiz.lock_at).toLocaleString()
           : undefined,
       }));
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       if (error?.response?.status === 403) {
         console.log(

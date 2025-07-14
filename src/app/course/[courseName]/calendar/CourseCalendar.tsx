@@ -5,10 +5,9 @@ import { CalendarMonth } from "./CalendarMonth";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useEffect, useMemo, useRef } from "react";
 import CalendarItemsContextProvider from "../context/CalendarItemsContextProvider";
-import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 
 export default function CourseCalendar() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
 
   const startDateTime = useMemo(
     () => getDateFromStringOrThrow(settings.startDate, "course start date"),

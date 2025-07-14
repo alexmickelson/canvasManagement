@@ -3,10 +3,9 @@ import TextInput from "@/components/form/TextInput";
 import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import {
-  useAssignmentQuery,
-  useUpdateAssignmentMutation,
-} from "@/hooks/localCourse/assignmentHooks";
-import { useQuizQuery, useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
+  useQuizQuery,
+  useUpdateQuizMutation,
+} from "@/hooks/localCourse/quizHooks";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,11 +20,11 @@ export function UpdateQuizName({
   const modal = useModal();
   const { courseName } = useCourseContext();
   const router = useRouter();
-  const [quiz] = useQuizQuery(moduleName, quizName);
+  const { data: quiz } = useQuizQuery(moduleName, quizName);
   const updateQuiz = useUpdateQuizMutation();
   const [name, setName] = useState(quiz.name);
   const [isLoading, setIsLoading] = useState(false);
-  
+
   return (
     <div>
       <Modal
@@ -57,11 +56,7 @@ export function UpdateQuizName({
               );
             }}
           >
-            <TextInput
-              value={name}
-              setValue={setName}
-              label={"Rename Quiz"}
-            />
+            <TextInput value={name} setValue={setName} label={"Rename Quiz"} />
             <button className="w-full my-3">Save New Name</button>
             {isLoading && <Spinner />}
           </form>

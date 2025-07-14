@@ -35,10 +35,9 @@ export function useItemDropOnDay({
   setIsLoading: Dispatch<SetStateAction<boolean>>;
   modal: { isOpen: boolean; openModal: () => void; closeModal: () => void };
 }) {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
-  // const { data: weeks } = useLecturesByWeekQuery();
-  const [weeks] = useLecturesSuspenseQuery();
+  const { data: weeks } = useLecturesSuspenseQuery();
   const updateQuizMutation = useUpdateQuizMutation();
   const updateLectureMutation = useLectureUpdateMutation();
   const updateAssignmentMutation = useUpdateAssignmentMutation();
@@ -72,7 +71,7 @@ export function useItemDropOnDay({
         return dayAsDate;
       }
       function updateLecture(dayAsDate: Date) {
-        const { dueAt, ...lecture } = itemBeingDragged.item as Lecture & {
+        const { dueAt: _, ...lecture } = itemBeingDragged.item as Lecture & {
           dueAt: string;
         };
         console.log("dropped lecture on day");

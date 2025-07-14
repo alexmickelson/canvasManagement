@@ -14,7 +14,7 @@ import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import MeatballIcon from "./MeatballIcon";
 
 export default function AssignmentGroupManagement() {
-  const [settings, { isPending }] = useLocalCourseSettingsQuery();
+  const { data: settings, isPending } = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const applyInCanvas = useSetAssignmentGroupsMutation(settings.canvasId);
 

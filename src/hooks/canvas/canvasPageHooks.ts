@@ -17,7 +17,7 @@ export const canvasPageKeys = {
 };
 
 export const useCanvasPagesQuery = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   return useQuery({
     queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),
     queryFn: async () => await canvasPageService.getAll(settings.canvasId),
@@ -25,7 +25,7 @@ export const useCanvasPagesQuery = () => {
 };
 
 export const useCreateCanvasPageMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   const { data: canvasModules } = useCanvasModulesQuery();
   const addModule = useAddCanvasModuleMutation();
@@ -44,7 +44,8 @@ export const useCreateCanvasPageMutation = () => {
       }
       const canvasPage = await canvasPageService.create(
         settings.canvasId,
-        page,settings
+        page,
+        settings
       );
 
       const canvasModule = canvasModules.find((c) => c.name === moduleName);
@@ -69,7 +70,7 @@ export const useCreateCanvasPageMutation = () => {
 };
 
 export const useUpdateCanvasPageMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
@@ -78,7 +79,8 @@ export const useUpdateCanvasPageMutation = () => {
     }: {
       page: LocalCoursePage;
       canvasPageId: number;
-    }) => canvasPageService.update(settings.canvasId, canvasPageId, page, settings),
+    }) =>
+      canvasPageService.update(settings.canvasId, canvasPageId, page, settings),
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: canvasPageKeys.pagesInCourse(settings.canvasId),
@@ -88,7 +90,7 @@ export const useUpdateCanvasPageMutation = () => {
 };
 
 export const useDeleteCanvasPageMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (canvasPageId: number) =>

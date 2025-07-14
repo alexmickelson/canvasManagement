@@ -23,7 +23,7 @@ export default async function LectureLayout({
   children: React.ReactNode;
   params: Promise<{ courseName: string; lectureDay: string }>;
 }) {
-  const { courseName, lectureDay } = await params;
+  const { courseName } = await params;
   const decodedCourseName = decodeURIComponent(courseName);
   if (courseName.includes(".js.map")) {
     console.log("cannot load course that is .js.map " + decodedCourseName);

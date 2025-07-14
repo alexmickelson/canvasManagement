@@ -12,7 +12,7 @@ export default function LecturePreviewPage({
   lectureDay: string;
 }) {
   const { courseName } = useCourseContext();
-  const [weeks] = useLecturesSuspenseQuery();
+  const { data: weeks } = useLecturesSuspenseQuery();
   const lecture = weeks
     .flatMap(({ lectures }) => lectures.map((lecture) => lecture))
     .find((l) => l.date === lectureDay);

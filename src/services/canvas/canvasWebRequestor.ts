@@ -1,8 +1,6 @@
 import { AxiosResponse } from "axios";
 import { axiosClient } from "../axiosUtils";
 
-type FetchOptions = Omit<RequestInit, "method">;
-
 const rateLimitRetryCount = 6;
 const rateLimitSleepInterval = 1000;
 
@@ -18,21 +16,21 @@ export const isRateLimited = async (
   );
 };
 
-const rateLimitAwarePost = async (url: string, body: any, retryCount = 0) => {
-  const response = await axiosClient.post(url, body);
+// const rateLimitAwarePost = async (url: string, body: unknown, retryCount = 0) => {
+//   const response = await axiosClient.post(url, body);
 
-  if (await isRateLimited(response)) {
-    if (retryCount < rateLimitRetryCount) {
-      console.info(
-        `Hit rate limit on post, retry count is ${retryCount} / ${rateLimitRetryCount}, retrying`
-      );
-      await sleep(rateLimitSleepInterval);
-      return await rateLimitAwarePost(url, body, retryCount + 1);
-    }
-  }
+//   if (await isRateLimited(response)) {
+//     if (retryCount < rateLimitRetryCount) {
+//       console.info(
+//         `Hit rate limit on post, retry count is ${retryCount} / ${rateLimitRetryCount}, retrying`
+//       );
+//       await sleep(rateLimitSleepInterval);
+//       return await rateLimitAwarePost(url, body, retryCount + 1);
+//     }
+//   }
 
-  return response;
-};
+//   return response;
+// };
 
 export const rateLimitAwareDelete = async (
   url: string,

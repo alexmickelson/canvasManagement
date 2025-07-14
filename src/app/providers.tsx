@@ -15,12 +15,12 @@ export default function Providers({ children }: { children: ReactNode }) {
 
   return (
     <SuspenseAndErrorHandling>
-      <TrpcProvider>
-        <QueryClientProvider client={queryClient}>
+      <QueryClientProvider client={queryClient}>
+        <TrpcProvider>
           {/* <ReactQueryDevtools initialIsOpen={false} /> */}
           {children}
-        </QueryClientProvider>
-      </TrpcProvider>
+        </TrpcProvider>
+      </QueryClientProvider>
     </SuspenseAndErrorHandling>
   );
 }

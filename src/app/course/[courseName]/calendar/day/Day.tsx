@@ -19,7 +19,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
     getDateOnlyMarkdownString(new Date()) ===
     getDateOnlyMarkdownString(dayAsDate);
 
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { itemDropOnDay } = useDraggingContext();
 
   const { todaysAssignments, todaysQuizzes, todaysPages } = useTodaysItems(day);

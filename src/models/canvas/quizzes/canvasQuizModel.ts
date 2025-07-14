@@ -37,7 +37,7 @@ export interface CanvasQuiz {
   speedgrader_url?: string;
   quiz_extensions_url?: string;
   permissions: CanvasQuizPermissions;
-  all_dates?: any; // Depending on the structure of the dates, this could be further specified
+  all_dates?: unknown; // Depending on the structure of the dates, this could be further specified
   version_number?: number;
   question_types?: string[];
   anonymous_submissions?: boolean;

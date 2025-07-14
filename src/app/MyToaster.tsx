@@ -1,10 +1,8 @@
 "use client";
 import React from "react";
-import { Toaster, ToastBar, useToaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export const MyToaster = () => {
-  const { toasts, handlers } = useToaster({ duration: Infinity });
-  const { startPause, endPause } = handlers;
 
   return (
     // <Toaster />

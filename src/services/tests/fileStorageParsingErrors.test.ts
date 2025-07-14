@@ -10,7 +10,7 @@ describe("FileStorageTests", () => {
     try {
       await fs.access(storageDirectory);
       await fs.rm(storageDirectory, { recursive: true });
-    } catch (error) {}
+    } catch {}
     await fs.mkdir(storageDirectory, { recursive: true });
   });
 
@@ -75,7 +75,7 @@ a) truthy
   //     `${basePath}/${courseName}/${moduleName}/quizzes/testQuiz.md`,
   //     invalidQuizMarkdown
   //   );
-    
+
   //   const invalidReasons = await fileStorageService.quizzes.getInvalidQuizzes(
   //     courseName,
   //     moduleName

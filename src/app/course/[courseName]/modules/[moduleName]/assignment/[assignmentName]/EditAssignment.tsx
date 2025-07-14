@@ -31,11 +31,12 @@ export default function EditAssignment({
 }) {
   const router = useRouter();
   const { courseName } = useCourseContext();
-  const [settings] = useLocalCourseSettingsQuery();
-  const [
-    assignment,
-    { dataUpdatedAt: serverDataUpdatedAt, isFetching: assignmentIsFetching },
-  ] = useAssignmentQuery(moduleName, assignmentName);
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const {
+    data: assignment,
+    dataUpdatedAt: serverDataUpdatedAt,
+    isFetching: assignmentIsFetching,
+  } = useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
   const { isPending: imageUpdateIsPending } =
     useUpdateImageSettingsForAssignment({ moduleName, assignmentName });
@@ -94,6 +95,7 @@ export default function EditAssignment({
           }
         }
         setError("");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         setError(e.toString());
       }

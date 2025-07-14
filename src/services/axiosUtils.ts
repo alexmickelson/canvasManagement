@@ -43,7 +43,8 @@ export function getAxiosErrorMessage(error: AxiosError) {
     console.log("response error", error.response);
     const responseErrorText =
       typeof error.response.data === "object"
-        ? (error.response.data as any).error
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (error.response.data as any).error
         : error.response.data;
 
     if (

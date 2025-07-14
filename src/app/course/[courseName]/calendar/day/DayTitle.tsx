@@ -13,7 +13,7 @@ import { useRef, useState } from "react";
 
 export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { courseName } = useCourseContext();
-  const [weeks] = useLecturesSuspenseQuery();
+  const { data: weeks } = useLecturesSuspenseQuery();
   const { setIsDragging } = useDragStyleContext();
   const todaysLecture = getLectureForDay(weeks, dayAsDate);
   const modal = useModal();

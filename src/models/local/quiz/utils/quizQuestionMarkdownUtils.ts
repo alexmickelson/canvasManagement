@@ -1,4 +1,3 @@
-import { LocalQuiz } from "../localQuiz";
 import { LocalQuizQuestion, QuestionType } from "../localQuizQuestion";
 import { LocalQuizQuestionAnswer } from "../localQuizQuestionAnswer";
 import { quizQuestionAnswerMarkdownUtils } from "./quizQuestionAnswerMarkdownUtils";
@@ -112,7 +111,7 @@ const getAnswers = (
     questionIndex
   );
 
-  const answers = answerLines.map((a, i) =>
+  const answers = answerLines.map((a) =>
     quizQuestionAnswerMarkdownUtils.parseMarkdown(a, questionType)
   );
   return answers;
@@ -215,7 +214,7 @@ export const quizQuestionMarkdownUtils = {
       ? linesWithoutAnswers
           .slice(0, linesWithoutPoints.length)
           .filter(
-            (line, index) =>
+            (line) =>
               !questionTypesWithoutAnswers.includes(line.toLowerCase())
           )
       : linesWithoutAnswers;

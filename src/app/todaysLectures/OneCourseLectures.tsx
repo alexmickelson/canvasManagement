@@ -9,7 +9,7 @@ import { getDateOnlyMarkdownString } from "@/models/local/utils/timeUtils";
 
 export default function OneCourseLectures() {
   const { courseName } = useCourseContext();
-  const [weeks] = useLecturesQuery();
+  const {data: weeks} = useLecturesQuery();
 
   const dayAsDate = new Date();
   const dayAsString = getDateOnlyMarkdownString(dayAsDate);

@@ -54,7 +54,7 @@ export interface CanvasAssignment {
   }[];
   post_to_sis?: boolean;
   integration_id?: string;
-  integration_data?: any;
+  integration_data?: unknown;
   muted?: boolean;
   points_possible?: number;
   has_submitted_submissions?: boolean;
@@ -69,7 +69,7 @@ export interface CanvasAssignment {
   frozen_attributes?: string[];
   submission?: CanvasSubmissionModel;
   use_rubric_for_grading?: boolean;
-  rubric_settings?: any;
+  rubric_settings?: unknown;
   rubric?: CanvasRubricCriteria[];
   assignment_visibility?: number[];
   overrides?: CanvasAssignmentOverride[];

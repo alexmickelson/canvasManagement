@@ -19,9 +19,12 @@ import { useAuthoritativeUpdates } from "../../utils/useAuthoritativeUpdates";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
-  const [settings] = useLocalCourseSettingsQuery();
-  const [weeks, { dataUpdatedAt: serverDataUpdatedAt, isFetching }] =
-    useLecturesSuspenseQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const {
+    data: weeks,
+    dataUpdatedAt: serverDataUpdatedAt,
+    isFetching,
+  } = useLecturesSuspenseQuery();
   const updateLecture = useLectureUpdateMutation();
 
   const lecture = weeks
@@ -63,6 +66,7 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
           }
         }
         setError("");
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         setError(e.toString());
       }

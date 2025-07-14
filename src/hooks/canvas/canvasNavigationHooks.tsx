@@ -7,7 +7,7 @@ export const canvasCourseTabKeys = {
 };
 
 export const useCanvasTabsQuery = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   return useQuery({
     queryKey: canvasCourseTabKeys.tabs(settings.canvasId),
     queryFn: async () =>
@@ -16,7 +16,7 @@ export const useCanvasTabsQuery = () => {
 };
 
 export const useUpdateCanvasTabMutation = () => {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async ({
@@ -35,7 +35,7 @@ export const useUpdateCanvasTabMutation = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: canvasCourseTabKeys.tabs(settings.canvasId),
-        refetchType: "all"
+        refetchType: "all",
       });
     },
   });

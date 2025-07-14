@@ -5,7 +5,7 @@ import { useCourseStudentsQuery } from "@/hooks/canvas/canvasCourseHooks";
 import { Spinner } from "@/components/Spinner";
 
 export default function GithubClassroomList() {
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
   const enrollmentsQuery = useCourseStudentsQuery(settings.canvasId);
 
   if (enrollmentsQuery.isLoading)

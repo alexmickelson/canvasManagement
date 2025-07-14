@@ -1,12 +1,10 @@
 import CheckIcon from "@/components/icons/CheckIcon";
 import MarkdownDisplay from "@/components/MarkdownDisplay";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
 import {
   LocalQuizQuestion,
   QuestionType,
 } from "@/models/local/quiz/localQuizQuestion";
-import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 import { escapeMatchingText } from "@/services/utils/questionHtmlUtils";
 
 export default function QuizPreview({
@@ -16,8 +14,7 @@ export default function QuizPreview({
   quizName: string;
   moduleName: string;
 }) {
-  const [quiz] = useQuizQuery(moduleName, quizName);
-  const [settings] = useLocalCourseSettingsQuery();
+  const { data: quiz } = useQuizQuery(moduleName, quizName);
   return (
     <div style={{ overflow: "scroll", height: "100%" }}>
       <div className="columns-2">
@@ -74,8 +71,6 @@ export default function QuizPreview({
 }
 
 function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
-  const [settings] = useLocalCourseSettingsQuery();
-
   return (
     <div className="rounded bg-slate-900 px-2">
       <div className="flex flex-row justify-between text-slate-400">
@@ -124,7 +119,10 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
                   <div></div>
                 )}
               </div>
-              <MarkdownDisplay markdown={answer.text} className="markdownQuizAnswerPreview" />
+              <MarkdownDisplay
+                markdown={answer.text}
+                className="markdownQuizAnswerPreview"
+              />
             </div>
           ))}
         </div>
