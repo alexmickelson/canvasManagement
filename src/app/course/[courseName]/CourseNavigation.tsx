@@ -32,7 +32,7 @@ export function CourseNavigation() {
   const canvasQuizzesQuery = useCanvasQuizzesQuery();
 
   return (
-    <div className="pb-1 ps-5 flex flex-row gap-3">
+    <div className="pb-1 flex flex-row gap-3">
       <Link href={"/"} className="btn" shallow={true}>
         Back to Course List
       </Link>
@@ -76,6 +76,24 @@ export function CourseNavigation() {
           Reload Canvas Data
         </button>
       )}
+      {settings?.startDate && (
+        <div className="my-auto text-slate-500">
+          {getSemesterName(settings.startDate)}
+        </div>
+      )}
     </div>
   );
+}
+function getSemesterName(startDate: string) {
+  const start = new Date(startDate);
+  const year = start.getFullYear();
+  const month = start.getMonth();
+
+  if (month < 4) {
+    return `Spring ${year}`;
+  } else if (month < 7) {
+    return `Summer ${year}`;
+  } else {
+    return `Fall ${year}`;
+  }
 }

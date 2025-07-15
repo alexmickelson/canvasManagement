@@ -20,7 +20,42 @@ AllowedFileUploadExtensions:
 
 description goes here
 
+
+## Markdown
+You can use markdown to format your assignment description. For example, you can make lists like this:
+- Item 1
+- Item 2
+- Item 3
+
+**Bold text**
+
+*Italic text*
+
+[Link to Canvas](https://canvas.instructure.com)
+
+\`Inline code\`
+
+> Blockquote
+
+---
+
+1. First item
+2. Second item
+3. Third item
+
+you can make mermaid diagrams like this:
+
+\`\`\`mermaid
+flowchart TD
+    A[Christmas] -->|Get money| B(Go shopping)
+    B --> C{Let me think}
+    C -->|One| D[Laptop]
+    C -->|Two| E[iPhone]
+    C -->|Three| F[fa:fa-car Car]
+\`\`\`
+
 ## Rubric
+
 - 1pt: singular point
 - 1pts: plural points
 - 10pts: (extra credit) extra credit points

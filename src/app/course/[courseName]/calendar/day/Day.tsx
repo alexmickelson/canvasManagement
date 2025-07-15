@@ -57,7 +57,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const meetingClasses =
     classOnThisDay && isInSemester && holidayNameToday.length === 0
       ? " bg-slate-900 "
-      : " ";
+      : " bg-gray-950";
 
   const todayClasses = isToday
     ? " border  border-blue-700 shadow-[0_0px_10px_0px] shadow-blue-500/50 "

@@ -131,9 +131,25 @@ export default function EditAssignment({
       Body={
         <>
           {showHelp && (
-            <pre className=" max-w-96">
-              <code>{getAssignmentHelpString(settings)}</code>
-            </pre>
+            <div className=" max-w-96">
+              <pre>
+                <code>{getAssignmentHelpString(settings)}</code>
+              </pre>
+              <a
+                href="https://www.markdownguide.org/cheat-sheet/"
+                target="_blank"
+                className="text-blue-400 underline"
+              >
+                Markdown Cheat Sheet
+              </a>
+              <a
+                href="https://mermaid.live/edit"
+                target="_blank"
+                className="text-blue-400 underline ps-3"
+              >
+                Mermaid Live Editor
+              </a>
+            </div>
           )}
           <div className="flex-1 h-full">
             <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
