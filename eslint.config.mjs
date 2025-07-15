@@ -12,7 +12,11 @@ const compat = new FlatCompat({
 const eslintConfig = [
   ...compat.config({
     extends: ["next/core-web-vitals", "next/typescript", "prettier"],
-    ignorePatterns: ["**/node_modules/**", "**/.next/**", "storage/**"],
+    ignores: [
+      "**/node_modules/**",
+      "**/.next/**",
+      "storage/**"
+    ],
     rules: {
       "react-refresh/only-export-components": "off", // Disabled the rule
       "@typescript-eslint/no-unused-vars": [

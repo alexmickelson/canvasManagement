@@ -23,22 +23,30 @@ import { Expandable } from "../../../../components/Expandable";
 import { useDragStyleContext } from "../context/drag/dragStyleContext";
 import { useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
 import { useAssignmentNamesQuery } from "@/hooks/localCourse/assignmentHooks";
-import { trpc } from "@/services/serverFunctions/trpcClient";
+import { useTRPC } from "@/services/serverFunctions/trpcClient";
+import { useSuspenseQueries } from "@tanstack/react-query";
 
 export default function ExpandableModule({
   moduleName,
 }: {
   moduleName: string;
 }) {
+  const trpc = useTRPC();
   const { itemDropOnModule } = useDraggingContext();
   const { courseName } = useCourseContext();
   const { data: assignmentNames } = useAssignmentNamesQuery(moduleName);
 
-  const [assignments] = trpc.useSuspenseQueries((t) =>
-    assignmentNames.map((assignmentName) =>
-      t.assignment.getAssignment({ courseName, moduleName, assignmentName })
-    )
-  );
+  const assignmentsQueries = useSuspenseQueries({
+    queries: assignmentNames.map((assignmentName) =>
+      trpc.assignment.getAssignment.queryOptions({
+        courseName,
+        moduleName,
+        assignmentName,
+      })
+    ),
+  });
+  const assignments = assignmentsQueries.map((result) => result.data);
+
   const { data: quizzes } = useQuizzesQueries(moduleName);
   const { data: pages } = usePagesQueries(moduleName);
   const modal = useModal();
