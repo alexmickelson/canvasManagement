@@ -5,8 +5,9 @@
 /* monaco editor */
 .monaco-editor-background,
 .monaco-editor .margin {
-  background-color: #020617 !important;
-  /* background-color: #18181b !important; */
+  /* background-color: #020617 !important; */
+  background-color: #030712 !important;
+  /* background-color: #101828 !important; */
 }
 .monaco-editor {
   position: absolute !important;

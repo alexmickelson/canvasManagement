@@ -21,6 +21,7 @@ import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuth
 import EditAssignmentHeader from "./EditAssignmentHeader";
 import { Spinner } from "@/components/Spinner";
 import { getAssignmentHelpString } from "./getAssignmentHelpString";
+import { EditLayout } from "@/components/EditLayout";
 
 export default function EditAssignment({
   moduleName,
@@ -95,7 +96,7 @@ export default function EditAssignment({
           }
         }
         setError("");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         setError(e.toString());
       }
@@ -120,47 +121,53 @@ export default function EditAssignment({
   ]);
 
   return (
-    <div className="h-full flex flex-col align-middle px-1">
-      <EditAssignmentHeader
-        moduleName={moduleName}
-        assignmentName={assignmentName}
-      />
-      <div className={"min-h-0 flex flex-row w-full flex-grow"}>
-        {showHelp && (
-          <pre className=" max-w-96">
-            <code>{getAssignmentHelpString(settings)}</code>
-          </pre>
-        )}
-        <div className="flex-1 h-full">
-          <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
-        </div>
-        <div className="flex-1 h-full">
-          <div className="text-red-300">{error && error}</div>
-
-          <div className="px-3 h-full">
-            <ClientOnly>
-              <SuspenseAndErrorHandling showToast={false}>
-                {imageUpdateIsPending && (
-                  <div className="flex justify-center">
-                    <Spinner /> images being uploaded to canvas
-                  </div>
-                )}
-
-                <AssignmentPreview assignment={assignment} />
-              </SuspenseAndErrorHandling>
-            </ClientOnly>
+    <EditLayout
+      Header={
+        <EditAssignmentHeader
+          moduleName={moduleName}
+          assignmentName={assignmentName}
+        />
+      }
+      Body={
+        <>
+          {showHelp && (
+            <pre className=" max-w-96">
+              <code>{getAssignmentHelpString(settings)}</code>
+            </pre>
+          )}
+          <div className="flex-1 h-full">
+            <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
           </div>
-        </div>
-      </div>
-      <ClientOnly>
-        <SuspenseAndErrorHandling>
-          <AssignmentFooterButtons
-            moduleName={moduleName}
-            assignmentName={assignmentName}
-            toggleHelp={() => setShowHelp((h) => !h)}
-          />
-        </SuspenseAndErrorHandling>
-      </ClientOnly>
-    </div>
+          <div className="flex-1 h-full">
+            <div className="text-red-300">{error && error}</div>
+
+            <div className="px-3 h-full ">
+              <ClientOnly>
+                <SuspenseAndErrorHandling showToast={false}>
+                  {imageUpdateIsPending && (
+                    <div className="flex justify-center">
+                      <Spinner /> images being uploaded to canvas
+                    </div>
+                  )}
+
+                  <AssignmentPreview assignment={assignment} />
+                </SuspenseAndErrorHandling>
+              </ClientOnly>
+            </div>
+          </div>
+        </>
+      }
+      Footer={
+        <ClientOnly>
+          <SuspenseAndErrorHandling>
+            <AssignmentFooterButtons
+              moduleName={moduleName}
+              assignmentName={assignmentName}
+              toggleHelp={() => setShowHelp((h) => !h)}
+            />
+          </SuspenseAndErrorHandling>
+        </ClientOnly>
+      }
+    />
   );
 }

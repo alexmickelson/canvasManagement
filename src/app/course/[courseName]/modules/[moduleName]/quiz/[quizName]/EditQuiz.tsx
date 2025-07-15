@@ -17,6 +17,7 @@ import { extractLabelValue } from "@/models/local/assignment/utils/markdownUtils
 import EditQuizHeader from "./EditQuizHeader";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { EditLayout } from "@/components/EditLayout";
 
 const helpString = (settings: LocalCourseSettings) => {
   const groupNames = settings.assignmentGroups.map((g) => g.name).join("\n- ");
@@ -148,31 +149,35 @@ export default function EditQuiz({
   ]);
 
   return (
-    <div className="h-full flex flex-col align-middle px-1">
-      <EditQuizHeader moduleName={moduleName} quizName={quizName} />
-      <div className={"min-h-96 h-full flex flex-row w-full"}>
-        {showHelp && (
-          <pre className=" max-w-96">
-            <code>{helpString(settings)}</code>
-          </pre>
-        )}
-        <div className="flex-1 h-full">
-          <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
-        </div>
-        <div className="flex-1 h-full">
-          <div className="text-red-300">{error && error}</div>
-          <QuizPreview moduleName={moduleName} quizName={quizName} />
-        </div>
-      </div>
-      <ClientOnly>
-        <SuspenseAndErrorHandling>
-          <QuizButtons
-            moduleName={moduleName}
-            quizName={quizName}
-            toggleHelp={() => setShowHelp((h) => !h)}
-          />
-        </SuspenseAndErrorHandling>
-      </ClientOnly>
-    </div>
+    <EditLayout
+      Header={<EditQuizHeader moduleName={moduleName} quizName={quizName} />}
+      Body={
+        <>
+          {showHelp && (
+            <pre className=" max-w-96">
+              <code>{helpString(settings)}</code>
+            </pre>
+          )}
+          <div className="flex-1 h-full">
+            <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
+          </div>
+          <div className="flex-1 h-full">
+            <div className="text-red-300">{error && error}</div>
+            <QuizPreview moduleName={moduleName} quizName={quizName} />
+          </div>
+        </>
+      }
+      Footer={
+        <ClientOnly>
+          <SuspenseAndErrorHandling>
+            <QuizButtons
+              moduleName={moduleName}
+              quizName={quizName}
+              toggleHelp={() => setShowHelp((h) => !h)}
+            />
+          </SuspenseAndErrorHandling>
+        </ClientOnly>
+      }
+    />
   );
 }

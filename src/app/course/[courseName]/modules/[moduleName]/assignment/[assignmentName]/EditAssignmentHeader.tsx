@@ -13,14 +13,14 @@ export default function EditAssignmentHeader({
   const { courseName } = useCourseContext();
   return (
     <div className="py-1 flex flex-row justify-start gap-3">
-      <Link className="btn btn-thin" href={getCourseUrl(courseName)} shallow={true}>
+      <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
         {courseName}
       </Link>
       <UpdateAssignmentName
         assignmentName={assignmentName}
         moduleName={moduleName}
       />
-      <div>{assignmentName}</div>
+      <div className="my-auto">{assignmentName}</div>
     </div>
   );
 }

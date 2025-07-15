@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 import EditPageHeader from "./EditPageHeader";
+import { EditLayout } from "@/components/EditLayout";
 
 export default function EditPage({
   moduleName,
@@ -67,17 +68,6 @@ export default function EditPage({
               previousPageName: pageName,
               courseName,
             });
-            // .then(() => {
-            //   if (updatedPage.name !== pageName)
-            //     router.replace(
-            //       getModuleItemUrl(
-            //         courseName,
-            //         moduleName,
-            //         "page",
-            //         updatedPage.name
-            //       )
-            //     );
-            // });
           } else {
             console.log(
               "client not authoritative, updating client with server page"
@@ -109,25 +99,31 @@ export default function EditPage({
   ]);
 
   return (
-    <div className="h-full flex flex-col">
-      <EditPageHeader pageName={pageName} moduleName={moduleName} />
-      <div className="columns-2 min-h-0 flex-1">
-        <div className="flex-1 h-full">
-          <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
-        </div>
-        <div className="h-full">
-          <div className="text-red-300">{error && error}</div>
-          <div className="h-full overflow-y-auto">
-            <br />
-            <PagePreview page={page} />
+    <EditLayout
+      Header={<EditPageHeader pageName={pageName} moduleName={moduleName} />}
+      Body={
+        <div className="columns-2 min-h-0 flex-1">
+          <div className="flex-1 h-full">
+            <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
+          </div>
+          <div className="h-full">
+            <div className="text-red-300">{error && error}</div>
+            <div className="h-full overflow-y-auto">
+              <br />
+              <PagePreview page={page} />
+            </div>
           </div>
         </div>
-      </div>
-      {settings.canvasId && (
-        <ClientOnly>
-          <EditPageButtons pageName={pageName} moduleName={moduleName} />
-        </ClientOnly>
-      )}
-    </div>
-  );
+      }
+      Footer={
+        <>
+          {settings.canvasId && (
+            <ClientOnly>
+              <EditPageButtons pageName={pageName} moduleName={moduleName} />
+            </ClientOnly>
+          )}
+        </>
+      }
+    />
+  )
 }

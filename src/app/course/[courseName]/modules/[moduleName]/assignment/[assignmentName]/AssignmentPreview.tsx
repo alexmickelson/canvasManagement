@@ -15,7 +15,7 @@ export default function AssignmentPreview({
     0
   );
   return (
-    <div className="h-full overflow-y-auto">
+    <div className="h-full overflow-y-auto ">
       <section>
         <div className="flex">
           <div className="flex-1 text-end pe-3">Due Date</div>

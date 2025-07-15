@@ -83,6 +83,7 @@ p {
 button,
 .btn {
   @apply font-bold py-1 px-3 rounded transition-all duration-200;
+  @apply cursor-pointer;
 }
 
 .btn-thin {
@@ -91,11 +92,12 @@ button,
 
 button:not(.unstyled):not(.btn-danger),
 .btn:not(.unstyled):not(.btn-danger) {
-  @apply bg-blue-900 hover:bg-blue-700 text-blue-50;
+  @apply bg-blue-900/80 hover:bg-blue-800/80 text-blue-50;
+  @apply cursor-pointer;
 }
 
 .btn-danger {
-  @apply bg-red-800 hover:bg-red-900 text-red-100;
+  @apply bg-red-800/60 hover:bg-red-900 text-red-100;
 }
 
 .btn-outline {
