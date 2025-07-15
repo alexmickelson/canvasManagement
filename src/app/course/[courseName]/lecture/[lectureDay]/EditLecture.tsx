@@ -16,6 +16,7 @@ import { useCourseContext } from "../../context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
 import { Lecture } from "@/models/local/lecture";
 import { useAuthoritativeUpdates } from "../../utils/useAuthoritativeUpdates";
+import { EditLayout } from "@/components/EditLayout";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
@@ -66,7 +67,7 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
           }
         }
         setError("");
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         setError(e.toString());
       }
@@ -85,21 +86,22 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
     textUpdate,
     updateLecture,
   ]);
-
   return (
-    <div className="h-full flex flex-col">
-      <EditLectureTitle lectureDay={lectureDay} />
-      <div className="sm:columns-2 min-h-0 flex-1">
-        <div className="flex-1 h-full">
-          <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
+    <EditLayout
+      Header={<EditLectureTitle lectureDay={lectureDay} />}
+      Body={
+        <div className="sm:columns-2 min-h-0 flex-1">
+          <div className="flex-1 h-full">
+            <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
+          </div>
+          <div className="h-full sm:block none overflow-auto">
+            <div className="text-red-300">{error && error}</div>
+            {lecture && <LecturePreview lecture={lecture} />}
+          </div>
         </div>
-        <div className="h-full sm:block none overflow-auto">
-          <div className="text-red-300">{error && error}</div>
-          {lecture && <LecturePreview lecture={lecture} />}
-        </div>
-      </div>
-      <LectureButtons lectureDay={lectureDay} />
-    </div>
+      }
+      Footer={<LectureButtons lectureDay={lectureDay} />}
+    />
   );
 }
 

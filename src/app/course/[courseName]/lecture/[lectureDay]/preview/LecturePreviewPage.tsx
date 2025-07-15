@@ -42,8 +42,8 @@ export default function LecturePreviewPage({
         <div
           className="
             w-full max-w-screen-lg 
-            border-slate-700 border-4 rounded-md
-            p-3 overflow-auto
+            border-slate-700 border-4 rounded-md bg-gray-900/50
+            p-3 overflow-auto 
           "
         >
           <LecturePreview lecture={lecture} />

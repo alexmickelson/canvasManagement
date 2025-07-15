@@ -23,7 +23,7 @@ const mermaidExtension = {
   },
   renderer(token: { text: string }) {
     const base64 = btoa(token.text);
-    const url = `https://mermaid.ink/img/${base64}?type=png`
+    const url = `https://mermaid.ink/img/${base64}?type=svg`
     console.log(token.text, url);
     return `<img src="${url}" alt="Mermaid diagram" />`;
   },
