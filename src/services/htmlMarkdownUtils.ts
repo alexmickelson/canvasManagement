@@ -1,8 +1,33 @@
 "use client";
-import { marked } from "marked";
+import { marked, MarkedExtension } from "marked";
 import DOMPurify from "isomorphic-dompurify";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import markedKatex from "marked-katex-extension";
+
+const mermaidExtension = {
+  name: "mermaid",
+  level: "block" as const,
+  start(src: string) {
+    return src.indexOf("```mermaid");
+  },
+  tokenizer(src: string) {
+    const rule = /^```mermaid\n([\s\S]+?)```(?:\n|$)/;
+    const match = rule.exec(src);
+    if (match) {
+      return {
+        type: "mermaid",
+        raw: match[0],
+        text: match[1].trim(),
+      };
+    }
+  },
+  renderer(token: { text: string }) {
+    const base64 = btoa(token.text);
+    const url = `https://mermaid.ink/img/${base64}?type=png`
+    console.log(token.text, url);
+    return `<img src="${url}" alt="Mermaid diagram" />`;
+  },
+};
 
 marked.use(
   markedKatex({
@@ -10,6 +35,8 @@ marked.use(
     output: "mathml",
   })
 );
+
+marked.use({ extensions: [mermaidExtension] });
 
 export function extractImageSources(htmlString: string) {
   const srcUrls = [];
@@ -22,6 +49,7 @@ export function extractImageSources(htmlString: string) {
 
   return srcUrls;
 }
+
 export function convertImagesToCanvasImages(
   html: string,
   settings: LocalCourseSettings
@@ -37,7 +65,9 @@ export function convertImagesToCanvasImages(
   for (const imageSrc of imageSources) {
     const destinationUrl = imageLookup[imageSrc];
     if (typeof destinationUrl === "undefined") {
-      console.log(`No image in settings for ${imageSrc}, do you have NEXT_PUBLIC_ENABLE_FILE_SYNC=true in your settings?`)
+      console.log(
+        `No image in settings for ${imageSrc}, do you have NEXT_PUBLIC_ENABLE_FILE_SYNC=true in your settings?`
+      );
     }
     // could error check here, but better to just not display an image...
     // if (typeof destinationUrl === "undefined") {

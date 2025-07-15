@@ -14,7 +14,7 @@ export default function EditQuizHeader({
   return (
     <div className="py-1 flex flex-row justify-start gap-3">
       <Link
-        className="btn btn-thin"
+        className="btn"
         href={getCourseUrl(courseName)}
         shallow={true}
       >

@@ -14,14 +14,14 @@ export default function EditPageHeader({
   return (
     <div className="py-1 flex flex-row justify-start gap-3">
       <Link
-        className="btn btn-thin"
+        className="btn"
         href={getCourseUrl(courseName)}
         shallow={true}
       >
         {courseName}
       </Link>
       <UpdatePageName pageName={pageName} moduleName={moduleName} />
-      <div>{pageName}</div>
+      <div className="my-auto">{pageName}</div>
     </div>
   );
 }

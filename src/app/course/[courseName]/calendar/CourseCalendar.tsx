@@ -45,10 +45,10 @@ export default function CourseCalendar() {
       className="
         min-h-0
         flex-grow
-        border-4
+        border-2
         border-gray-900
         rounded-lg
-        bg-slate-950
+        bg-slate-950/70
         sm:p-1
       "
     >

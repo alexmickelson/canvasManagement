@@ -2,6 +2,7 @@ import MarkdownDisplay from "@/components/MarkdownDisplay";
 import { LocalAssignment } from "@/models/local/assignment/localAssignment";
 import { rubricItemIsExtraCredit } from "@/models/local/assignment/rubricItem";
 import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
+import { formatHumanReadableDate } from "@/services/utils/dateFormat";
 import React, { Fragment } from "react";
 
 export default function AssignmentPreview({
@@ -19,11 +20,15 @@ export default function AssignmentPreview({
       <section>
         <div className="flex">
           <div className="flex-1 text-end pe-3">Due Date</div>
-          <div className="flex-1">{assignment.dueAt}</div>
+          <div className="flex-1">
+            {formatHumanReadableDate(assignment.dueAt)}
+          </div>
         </div>
         <div className="flex">
           <div className="flex-1 text-end pe-3">Lock Date</div>
-          <div className="flex-1">{assignment.lockAt}</div>
+          <div className="flex-1">
+            {assignment.lockAt && formatHumanReadableDate(assignment.lockAt)}
+          </div>
         </div>
         <div className="flex">
           <div className="flex-1 text-end pe-3">Assignment Group Name</div>
