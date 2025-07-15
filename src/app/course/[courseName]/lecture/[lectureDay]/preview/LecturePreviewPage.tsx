@@ -29,7 +29,7 @@ export default function LecturePreviewPage({
             href={getLectureUrl(courseName, lectureDay)}
             shallow={true}
           >
-            Edit Page
+            Edit Lecture
           </Link>
         </div>
         <div className="">

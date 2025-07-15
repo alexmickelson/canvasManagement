@@ -17,6 +17,8 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
     "week calculation start date"
   );
 
+  const isPastSemester = Date.now() > new Date(settings.endDate).getTime();
+  
   const pastWeekNumber = getWeekNumber(
     startDate,
     new Date(Date.now() - four_days_in_milliseconds)
@@ -27,7 +29,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
     new Date(month.year, month.month, 1)
   );
 
-  const isInPast = pastWeekNumber >= startOfMonthWeekNumber;
+  const shouldCollapse = (pastWeekNumber >= startOfMonthWeekNumber) && !isPastSemester;
 
   const monthName = new Date(month.year, month.month - 1, 1).toLocaleString(
     "default",
@@ -37,7 +39,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   return (
     <>
       <Expandable
-        defaultExpanded={!isInPast}
+        defaultExpanded={!shouldCollapse}
         ExpandableElement={({ setIsExpanded, isExpanded }) => (
           <div className="flex justify-center">
             <h3
