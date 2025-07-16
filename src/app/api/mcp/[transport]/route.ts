@@ -1,28 +1,45 @@
+import { LocalCourseSettings } from "@/models/local/localCourseSettings";
+import { groupByStartDate } from "@/models/local/utils/timeUtils";
+import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
+
 const handler = createMcpHandler(
   (server) => {
     server.tool(
-      "roll_dice",
-      "Rolls an N-sided die",
-      {
-        sides: z.number().int().min(2),
-      },
-      async ({ sides }) => {
-        const value = 1 + Math.floor(Math.random() * sides);
+      "get_current_courses",
+      "gets courses for the current term",
+      {},
+      async () => {
+        const settingsList =
+          await fileStorageService.settings.getAllCoursesSettings();
+
+        const coursesByStartDate = groupByStartDate(settingsList);
+
+        const sortedDates = Object.keys(coursesByStartDate).sort().reverse();
+
+        const mostRecentStartDate = sortedDates[0];
+
+        const courseNames = coursesByStartDate[mostRecentStartDate].map(
+          (settings) => settings.name
+        );
         return {
-          content: [{ type: "text", text: `🎲 You rolled a ${value}!` }],
+          content: courseNames.map((name) => ({
+            type: "text",
+            text: name,
+          })),
         };
       }
     );
   },
   {
-    // Optional server options
+    serverInfo: {
+      name: "Canvas Management MCP Server",
+      version: "2.0.0",
+    },
   },
   {
-    // Optional redis config
-    redisUrl: process.env.REDIS_URL,
-    basePath: "/api/mcp", // this needs to match where the [transport] is located.
+    basePath: "/api/mcp",
     maxDuration: 60,
     verboseLogs: true,
   }

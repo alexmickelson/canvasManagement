@@ -1,3 +1,5 @@
+import { LocalCourseSettings } from "../localCourseSettings";
+
 const _getDateFromAMPM = (
   datePart: string,
   timePart: string,
@@ -57,7 +59,8 @@ export const getDateFromString = (value: string): Date | undefined => {
   } else if (militaryDateRegex.test(value)) {
     const [datePart, timePart] = value.split(" ");
     return _getDateFromMilitary(datePart, timePart);
-  } if (dateOnlyRegex.test(value)) {
+  }
+  if (dateOnlyRegex.test(value)) {
     return _getDateFromDateOnly(value);
   } else {
     if (value) console.log("invalid date format", value);
@@ -104,3 +107,32 @@ export const dateToMarkdownString = (date: Date) => {
 export const getDateOnlyMarkdownString = (date: Date) => {
   return dateToMarkdownString(date).split(" ")[0];
 };
+
+export function getTermName(startDate: string) {
+  const [year, month, ..._rest] = startDate.split("-");
+  if (month < "04") return "Spring " + year;
+  if (month < "07") return "Summer " + year;
+  return "Fall " + year;
+}
+
+export function getDateKey(dateString: string) {
+  return dateString.split("T")[0];
+}
+export function groupByStartDate(courses: LocalCourseSettings[]): {
+  [key: string]: LocalCourseSettings[];
+} {
+  return courses.reduce(
+    (acc, course) => {
+      const { startDate } = course;
+      const key = getDateKey(startDate);
+      if (!acc[key]) {
+        acc[key] = [];
+      }
+      acc[key].push(course);
+      return acc;
+    },
+    {} as {
+      [key: string]: LocalCourseSettings[];
+    }
+  );
+}
