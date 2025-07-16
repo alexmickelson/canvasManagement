@@ -1,5 +1,7 @@
 #!/bin/bash
 
+docker rm -f canvas-manager-2 2>/dev/null || true
+
 docker run -it --rm \
   --name canvas-manager-2 \
   -e TZ=America/Denver \
