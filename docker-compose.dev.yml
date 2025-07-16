@@ -1,0 +1,57 @@
+services:
+  canvas_manager:
+    image: node
+    user: "1000:1000"
+    container_name: canvas-dev
+    command: npx --yes pnpm dev 
+    working_dir: /app
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
+    environment:
+      - storageDirectory=/app/storage
+      - TZ=America/Denver
+      - NEXT_PUBLIC_ENABLE_FILE_SYNC=true
+      - REDIS_URL=redis://redis:6379
+    volumes:
+      - .:/app
+      - ~/projects/faculty/1810/2025-spring-alex/in-person:/app/storage/intro_to_web_old
+      - ~/projects/faculty/1810/2025-fall-alex/modules:/app/storage/intro_to_web
+      - ~/projects/faculty/4850_AdvancedFE/2025-fall-alex/modules:/app/storage/advanced_frontend
+      - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend_old
+      - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/ux_old
+      - ~/projects/faculty/1430/2025-fall-alex/modules:/app/storage/ux
+      - ~/projects/faculty/1420/2024-fall/Modules:/app/storage/1420_old
+      - ~/projects/faculty/1420/2025-fall-alex/modules:/app/storage/1420
+      - ~/projects/faculty/1425/2024-fall/Modules:/app/storage/1425_old
+      - ~/projects/faculty/1425/2025-fall-alex/modules:/app/storage/1425
+      - ~/projects/facultyFiles:/app/public/images/facultyFiles
+
+  redis:
+    image: redis
+    container_name: canvas-dev-redis
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+
+  uvx_mcpo:
+    image: ghcr.io/astral-sh/uv:debian
+    container_name: canvas-dev-redis-mcpo
+    env_file:
+      - .env
+    command: |
+      bash -c '
+        uvx mcpo \
+        --port 8001 \
+        --api-key "$MCP_TOKEN" \
+        --server-type "streamable_http" \
+        --cors-allow-origins "*" \
+        -- http://canvas-dev:3000/api/mcp/mcp
+      '
+    working_dir: /app
+    ports:
+      - 8001:8001
+
+volumes:
+  redis-data:

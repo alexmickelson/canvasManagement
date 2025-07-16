@@ -13,6 +13,7 @@
     "test": "vitest"
   },
   "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.15.1",
     "@next/env": "^15.3.5",
     "@tailwindcss/postcss": "^4.1.11",
     "@tanstack/react-query": "^5.81.5",
@@ -29,6 +30,7 @@
     "form-data": "^4.0.3",
     "jsdom": "^26.1.0",
     "marked-katex-extension": "^5.1.5",
+    "mcp-handler": "^1.0.0",
     "next": "^15.3.5",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
