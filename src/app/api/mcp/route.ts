@@ -1,3 +1,4 @@
+import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { groupByStartDate } from "@/models/local/utils/timeUtils";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
@@ -8,7 +9,7 @@ import { z } from "zod";
 const handler = createMcpHandler(
   (server) => {
     server.tool(
-      "get_current_courses",
+      "list_current_courses",
       "gets courses for the current term",
       {},
       async () => {
@@ -27,13 +28,15 @@ const handler = createMcpHandler(
         return {
           content: courseNames.map((name) => ({
             type: "text",
-            text: name,
+            text: JSON.stringify({
+              courseName: name,
+            }),
           })),
         };
       }
     );
     server.tool(
-      "get_assignments_for_course",
+      "list_assignments_for_course",
       "gets assignments and modules for a course",
       {
         courseName: z.string(),
@@ -57,15 +60,61 @@ const handler = createMcpHandler(
             })
           )
         ).flat();
+        console.log("mcp got assignments", assignments);
 
         return {
+          //doesn't seem to work with many clients
+          // content: assignments.map((a) => ({
+          //   type: "resource_link",
+          //   uri: `canvas:///courses/${courseName}/module/${a.moduleName}/assignments/${a.assignmentName}`,
+          //   name: `${a.assignmentName}.md`,
+          //   mimeType: "text/markdown",
+          //   description: "An canvas assignment",
+          // })),
+
           content: assignments.map((a) => ({
-            type: "resource_link",
-            uri: `canvas:///courses/${courseName}/module/${a.moduleName}/assignments/${a.assignmentName}`,
-            name: `${a.assignmentName}.md`,
-            mimeType: "text/markdown",
-            description: "An canvas assignment",
+            type: "text",
+            text: JSON.stringify({
+              assignmentName: a.assignmentName,
+              moduleName: a.moduleName,
+            }),
           })),
+        };
+      }
+    );
+
+    server.tool(
+      "get_assignment",
+      "gets a markdown file defining the assignment",
+      {
+        courseName: z.string(),
+        moduleName: z.string(),
+        assignmentName: z.string(),
+      },
+      async ({ courseName, moduleName, assignmentName }) => {
+        if (
+          typeof courseName !== "string" ||
+          typeof moduleName !== "string" ||
+          typeof assignmentName !== "string"
+        ) {
+          throw new Error(
+            "courseName, moduleName, and assignmentName must be strings"
+          );
+        }
+        const assignment = await fileStorageService.assignments.getAssignment(
+          courseName,
+          moduleName,
+          assignmentName
+        );
+
+        console.log("mcp assignment", assignment);
+        return {
+          content: [
+            {
+              type: "text",
+              text: assignmentMarkdownSerializer.toMarkdown(assignment),
+            },
+          ],
         };
       }
     );
