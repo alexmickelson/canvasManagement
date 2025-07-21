@@ -30,6 +30,15 @@ export const canvasAssignmentService = {
     console.log(`Creating assignment: ${localAssignment.name}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/assignments`;
     const content = markdownToHTMLSafe(localAssignment.description, settings);
+
+    const contentWithClassroomLinks =
+      localAssignment.githubClassroomAssignmentShareLink
+        ? content.replaceAll(
+            "insert_github_classroom_url",
+            localAssignment.githubClassroomAssignmentShareLink
+          )
+        : content;
+
     const body = {
       assignment: {
         name: localAssignment.name,
@@ -39,7 +48,7 @@ export const canvasAssignmentService = {
         allowed_extensions: localAssignment.allowedFileUploadExtensions.map(
           (e) => e.toString()
         ),
-        description: content,
+        description: contentWithClassroomLinks,
         due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
         lock_at:
           localAssignment.lockAt &&
