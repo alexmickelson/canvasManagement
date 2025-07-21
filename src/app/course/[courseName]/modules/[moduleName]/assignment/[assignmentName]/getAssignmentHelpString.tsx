@@ -33,6 +33,7 @@ You can use markdown to format your assignment description. For example, you can
 
 [Link to Canvas](https://canvas.instructure.com)
 
+
 \`Inline code\`
 
 > Blockquote
@@ -53,6 +54,10 @@ flowchart TD
     C -->|Two| E[iPhone]
     C -->|Three| F[fa:fa-car Car]
 \`\`\`
+
+## github classroom links will be replaced by the GithubClassroomAssignmentShareLink setting
+
+[Github Classroom](insert_github_classroom_url)
 
 ## Rubric
 

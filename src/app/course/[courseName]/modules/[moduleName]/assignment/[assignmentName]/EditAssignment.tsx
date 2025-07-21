@@ -131,7 +131,7 @@ export default function EditAssignment({
       Body={
         <>
           {showHelp && (
-            <div className=" max-w-96">
+            <div className=" max-w-96 flex-1 h-full overflow-y-auto">
               <pre>
                 <code>{getAssignmentHelpString(settings)}</code>
               </pre>
