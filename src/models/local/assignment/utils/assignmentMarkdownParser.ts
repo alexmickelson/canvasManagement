@@ -52,6 +52,14 @@ const parseSettings = (input: string) => {
   const assignmentGroupName = extractLabelValue(input, "AssignmentGroupName");
   const submissionTypes = parseSubmissionTypes(input);
   const fileUploadExtensions = parseFileUploadExtensions(input);
+  const githubClassroomAssignmentShareLink = extractLabelValue(
+    input,
+    "GithubClassroomAssignmentShareLink"
+  );
+  const githubClassroomAssignmentLink = extractLabelValue(
+    input,
+    "GithubClassroomAssignmentLink"
+  );
 
   const dueAt = verifyDateOrThrow(rawDueAt, "DueAt");
   const lockAt = verifyDateStringOrUndefined(rawLockAt);
@@ -62,6 +70,8 @@ const parseSettings = (input: string) => {
     fileUploadExtensions,
     dueAt,
     lockAt,
+    githubClassroomAssignmentShareLink,
+    githubClassroomAssignmentLink,
   };
 };
 
@@ -111,12 +121,13 @@ export const assignmentMarkdownParser = {
   parseMarkdown(input: string, name: string): LocalAssignment {
     const settingsString = input.split("---")[0];
     const {
-      // name,
       assignmentGroupName,
       submissionTypes,
       fileUploadExtensions,
       dueAt,
       lockAt,
+      githubClassroomAssignmentShareLink,
+      githubClassroomAssignmentLink,
     } = parseSettings(settingsString);
 
     const description = input
@@ -139,6 +150,13 @@ export const assignmentMarkdownParser = {
       rubric: rubric,
       description: description,
     };
+    if (githubClassroomAssignmentShareLink) {
+      assignment.githubClassroomAssignmentShareLink =
+        githubClassroomAssignmentShareLink;
+    }
+    if (githubClassroomAssignmentLink) {
+      assignment.githubClassroomAssignmentLink = githubClassroomAssignmentLink;
+    }
     return assignment;
   },
 };

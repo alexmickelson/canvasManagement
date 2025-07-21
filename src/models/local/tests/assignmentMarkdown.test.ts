@@ -46,8 +46,10 @@ describe("AssignmentMarkdownTests", () => {
 
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
-    const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
 
     expect(parsedAssignment).toEqual(assignment);
   });
@@ -70,8 +72,10 @@ describe("AssignmentMarkdownTests", () => {
 
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
-    const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
 
     expect(parsedAssignment).toEqual(assignment);
   });
@@ -94,8 +98,10 @@ describe("AssignmentMarkdownTests", () => {
 
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
-    const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
 
     expect(parsedAssignment).toEqual(assignment);
   });
@@ -118,8 +124,10 @@ describe("AssignmentMarkdownTests", () => {
 
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
-    const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
 
     expect(parsedAssignment).toEqual(assignment);
   });
@@ -139,8 +147,10 @@ describe("AssignmentMarkdownTests", () => {
 
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
-    const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
 
     expect(parsedAssignment).toEqual(assignment);
   });
@@ -160,9 +170,67 @@ describe("AssignmentMarkdownTests", () => {
 
     const assignmentMarkdown =
       assignmentMarkdownSerializer.toMarkdown(assignment);
-    const parsedAssignment =
-      assignmentMarkdownParser.parseMarkdown(assignmentMarkdown, name);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
 
+    expect(parsedAssignment).toEqual(assignment);
+  });
+
+  it("assignment with githubClassroomAssignmentShareLink and githubClassroomAssignmentLink can be parsed", () => {
+    const name = "test assignment";
+    const assignment: LocalAssignment = {
+      name,
+      description: "here is the description",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
+      submissionTypes: [AssignmentSubmissionType.ONLINE_UPLOAD],
+      localAssignmentGroupName: "Final Project",
+      rubric: [],
+      allowedFileUploadExtensions: [],
+      githubClassroomAssignmentShareLink: "https://github.com/share-link",
+      githubClassroomAssignmentLink: "https://github.com/assignment-link",
+    };
+
+    const assignmentMarkdown =
+      assignmentMarkdownSerializer.toMarkdown(assignment);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
+
+    expect(parsedAssignment.githubClassroomAssignmentShareLink).toEqual(
+      "https://github.com/share-link"
+    );
+    expect(parsedAssignment.githubClassroomAssignmentLink).toEqual(
+      "https://github.com/assignment-link"
+    );
+    expect(parsedAssignment).toEqual(assignment);
+  });
+
+  it("assignment without githubClassroomAssignmentShareLink and githubClassroomAssignmentLink can be parsed", () => {
+    const name = "test assignment";
+    const assignment: LocalAssignment = {
+      name,
+      description: "here is the description",
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
+      submissionTypes: [AssignmentSubmissionType.ONLINE_UPLOAD],
+      localAssignmentGroupName: "Final Project",
+      rubric: [],
+      allowedFileUploadExtensions: [],
+    };
+
+    const assignmentMarkdown =
+      assignmentMarkdownSerializer.toMarkdown(assignment);
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      assignmentMarkdown,
+      name
+    );
+
+    expect(parsedAssignment.githubClassroomAssignmentShareLink).toBeUndefined();
+    expect(parsedAssignment.githubClassroomAssignmentLink).toBeUndefined();
     expect(parsedAssignment).toEqual(assignment);
   });
 });

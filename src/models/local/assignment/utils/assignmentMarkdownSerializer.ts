@@ -25,15 +25,16 @@ const settingsToMarkdown = (assignment: LocalAssignment) => {
       .map((fileExtension: string) => `- ${fileExtension}`)
       .join("\n");
 
-  const settingsMarkdown = [
+  const settingsMarkdownArr = [
     `LockAt: ${printableLockAt}`,
     `DueAt: ${printableDueDate}`,
     `AssignmentGroupName: ${assignment.localAssignmentGroupName}`,
     `SubmissionTypes:\n${submissionTypesMarkdown}`,
     `AllowedFileUploadExtensions:\n${allowedFileUploadExtensionsMarkdown}`,
-  ].join("\n");
-
-  return settingsMarkdown;
+    `GithubClassroomAssignmentShareLink: ${assignment.githubClassroomAssignmentShareLink ?? ""}`,
+    `GithubClassroomAssignmentLink: ${assignment.githubClassroomAssignmentLink ?? ""}`,
+  ];
+  return settingsMarkdownArr.join("\n");
 };
 
 export const assignmentMarkdownSerializer = {
