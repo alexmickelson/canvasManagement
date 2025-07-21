@@ -47,7 +47,7 @@ services:
         --api-key "$MCP_TOKEN" \
         --server-type "streamable_http" \
         --cors-allow-origins "*" \
-        -- http://canvas-dev:3000/api/mcp
+        -- http://canvas-dev:3000/api/mcp/mcp/
       '
     working_dir: /app
     ports:

@@ -1,10 +1,10 @@
 import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { groupByStartDate } from "@/models/local/utils/timeUtils";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
+import { githubClassroomUrlPrompt } from "./github-classroom-prompt";
 
 const handler = createMcpHandler(
   (server) => {
@@ -118,42 +118,58 @@ const handler = createMcpHandler(
         };
       }
     );
-
-    server.registerResource(
-      "course_assignment",
-      new ResourceTemplate(
-        "canvas:///courses/{courseName}/module/{moduleName}/assignments/{assignmentName}",
-        { list: undefined }
-      ),
-      {
-        title: "Course Assignment",
-        description: "Markdown representation of a course assignment",
-      },
-      async (uri, { courseName, moduleName, assignmentName }) => {
-        if (
-          typeof courseName !== "string" ||
-          typeof moduleName !== "string" ||
-          typeof assignmentName !== "string"
-        ) {
-          throw new Error(
-            "courseName, moduleName, and assignmentName must be strings"
-          );
-        }
-        const assignment = await fileStorageService.assignments.getAssignment(
-          courseName,
-          moduleName,
-          assignmentName
-        );
+    server.tool(
+      "get_github_classroom_url_instructions",
+      "gets instructions for creating a GitHub Classroom assignment, call this to get a prompt showing how to create a GitHub Classroom assignment",
+      {},
+      async () => {
         return {
-          contents: [
+          content: [
             {
-              uri: uri.href,
-              text: assignment.description,
+              type: "text",
+              text: githubClassroomUrlPrompt,
             },
           ],
         };
       }
     );
+
+    // resources dont integrate well right now
+    // server.registerResource(
+    //   "course_assignment",
+    //   new ResourceTemplate(
+    //     "canvas:///courses/{courseName}/module/{moduleName}/assignments/{assignmentName}",
+    //     { list: undefined }
+    //   ),
+    //   {
+    //     title: "Course Assignment",
+    //     description: "Markdown representation of a course assignment",
+    //   },
+    //   async (uri, { courseName, moduleName, assignmentName }) => {
+    //     if (
+    //       typeof courseName !== "string" ||
+    //       typeof moduleName !== "string" ||
+    //       typeof assignmentName !== "string"
+    //     ) {
+    //       throw new Error(
+    //         "courseName, moduleName, and assignmentName must be strings"
+    //       );
+    //     }
+    //     const assignment = await fileStorageService.assignments.getAssignment(
+    //       courseName,
+    //       moduleName,
+    //       assignmentName
+    //     );
+    //     return {
+    //       contents: [
+    //         {
+    //           uri: uri.href,
+    //           text: assignment.description,
+    //         },
+    //       ],
+    //     };
+    //   }
+    // );
   },
   {
     serverInfo: {
