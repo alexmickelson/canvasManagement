@@ -30,6 +30,8 @@ export const prepAssignmentForNewSemester = (
       oldSemesterStartDate,
       newSemesterStartDate
     ),
+    githubClassroomAssignmentLink: undefined,
+    githubClassroomAssignmentShareLink: undefined,
   };
 };
 

@@ -82,7 +82,7 @@ export const settingsRouter = router({
                 const newAssignment = prepAssignmentForNewSemester(
                   oldAssignment,
                   settingsFromCourseToImport.startDate,
-                  settings.startDate
+                  settings.startDate,
                 );
                 await fileStorageService.assignments.updateOrCreateAssignment({
                   courseName: newCourseName,
