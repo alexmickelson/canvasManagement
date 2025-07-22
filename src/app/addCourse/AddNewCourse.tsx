@@ -1,16 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
-import NewCourseForm from "./NewCourseForm";
+import AddNewCourseToGlobalSettingsForm from "./AddCourseToGlobalSettingsForm";
 import ClientOnly from "@/components/ClientOnly";
 
-export default function AddNewCourse() {
+export default function AddCourseToGlobalSettings() {
   const [showForm, setShowForm] = useState(false);
 
   return (
     <div>
       <div className="flex justify-center">
-        <button className="" onClick={() => setShowForm(true)}>
+        <button className="" onClick={() => setShowForm((i) => !i)}>
           Add New Course
         </button>
       </div>
@@ -18,7 +18,9 @@ export default function AddNewCourse() {
       <div className={" collapsible " + (showForm && "expand")}>
         <div className="border rounded-md p-3 m-3">
           <SuspenseAndErrorHandling>
-            <ClientOnly>{showForm && <NewCourseForm />}</ClientOnly>
+            <ClientOnly>
+              {showForm && <AddNewCourseToGlobalSettingsForm />}
+            </ClientOnly>
           </SuspenseAndErrorHandling>
         </div>
       </div>

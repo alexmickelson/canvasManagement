@@ -17,16 +17,17 @@ services:
     volumes:
       - ./globalSettings.yml:/app/globalSettings.yml
       - .:/app
-      - ~/projects/faculty/1810/2025-spring-alex/in-person:/app/storage/intro_to_web_old
-      - ~/projects/faculty/1810/2025-fall-alex/modules:/app/storage/intro_to_web
-      - ~/projects/faculty/4850_AdvancedFE/2025-fall-alex/modules:/app/storage/advanced_frontend
-      - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend_old
-      - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/ux_old
-      - ~/projects/faculty/1430/2025-fall-alex/modules:/app/storage/ux
-      - ~/projects/faculty/1420/2024-fall/Modules:/app/storage/1420_old
-      - ~/projects/faculty/1420/2025-fall-alex/modules:/app/storage/1420
-      - ~/projects/faculty/1425/2024-fall/Modules:/app/storage/1425_old
-      - ~/projects/faculty/1425/2025-fall-alex/modules:/app/storage/1425
+      - ~/projects/faculty:/app/storage
+      # - ~/projects/faculty/1810/2025-spring-alex/in-person:/app/storage/intro_to_web_old
+      # - ~/projects/faculty/1810/2025-fall-alex/modules:/app/storage/intro_to_web
+      # - ~/projects/faculty/4850_AdvancedFE/2025-fall-alex/modules:/app/storage/advanced_frontend
+      # - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend_old
+      # - ~/projects/faculty/1430/2024-fall-alex/modules:/app/storage/ux_old
+      # - ~/projects/faculty/1430/2025-fall-alex/modules:/app/storage/ux
+      # - ~/projects/faculty/1420/2024-fall/Modules:/app/storage/1420_old
+      # - ~/projects/faculty/1420/2025-fall-alex/modules:/app/storage/1420
+      # - ~/projects/faculty/1425/2024-fall/Modules:/app/storage/1425_old
+      # - ~/projects/faculty/1425/2025-fall-alex/modules:/app/storage/1425
       - ~/projects/facultyFiles:/app/public/images/facultyFiles
 
   redis:

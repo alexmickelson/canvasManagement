@@ -1,5 +1,6 @@
 import CourseList from "./CourseList";
-import AddNewCourse from "./newCourse/AddNewCourse";
+import { AddExistingCourseToGlobalSettings } from "./addCourse/AddExistingCourseToGlobalSettings";
+import AddCourseToGlobalSettings from "./addCourse/AddNewCourse";
 import TodaysLectures from "./todaysLectures/TodaysLectures";
 
 export default async function Home() {
@@ -18,7 +19,36 @@ export default async function Home() {
         <TodaysLectures />
         <br />
         <br />
-        <AddNewCourse />
+        <AddCourseToGlobalSettings />
+        <AddExistingCourseToGlobalSettings />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
+        <br />
       </div>
     </main>
   );

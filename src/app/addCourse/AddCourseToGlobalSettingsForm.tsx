@@ -1,4 +1,5 @@
 "use client";
+import ButtonSelect from "@/components/ButtonSelect";
 import { DayOfWeekInput } from "@/components/form/DayOfWeekInput";
 import SelectInput from "@/components/form/SelectInput";
 import { Spinner } from "@/components/Spinner";
@@ -37,7 +38,7 @@ const sampleCompose = `services:
       - ~/projects/faculty/4850_AdvancedFE/2024-fall-alex/modules:/app/storage/advanced_frontend
 `;
 
-export default function NewCourseForm() {
+export default function AddNewCourseToGlobalSettingsForm() {
   const router = useRouter();
   const today = useMemo(() => new Date(), []);
   const { data: canvasTerms } = useCanvasTermsQuery(today);
@@ -61,12 +62,13 @@ export default function NewCourseForm() {
 
   return (
     <div>
-      <SelectInput
-        value={selectedTerm}
-        setValue={setSelectedTerm}
-        label={"Canvas Term"}
+      <ButtonSelect
         options={canvasTerms}
-        getOptionName={(t) => t.name}
+        getOptionName={(t) => t?.name ?? ""}
+        setValue={setSelectedTerm}
+        value={selectedTerm}
+        label={"Canvas Term"}
+        center={true}
       />
       <SuspenseAndErrorHandling>
         {selectedTerm && (
@@ -184,12 +186,13 @@ function OtherSettings({
 
   return (
     <>
-      <SelectInput
+      <ButtonSelect
         value={selectedCanvasCourse}
         setValue={setSelectedCanvasCourse}
         label={"Course"}
         options={availableCourses}
-        getOptionName={(c) => c.name}
+        getOptionName={(c) => c?.name ?? ""}
+        center={true}
       />
       <SelectInput
         value={selectedDirectory}

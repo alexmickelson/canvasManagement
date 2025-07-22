@@ -153,9 +153,9 @@ export default function NewItemForm({
       <div>
         <ButtonSelect<"Assignment" | "Quiz" | "Page">
           options={["Assignment", "Quiz", "Page"]}
-          getName={(o) => o?.toString() ?? ""}
-          setSelectedOption={(t) => setType(t ?? "Assignment")}
-          selectedOption={type}
+          getOptionName={(o) => o?.toString() ?? ""}
+          setValue={(t) => setType(t ?? "Assignment")}
+          value={type}
           label="Type"
         />
       </div>
@@ -166,9 +166,9 @@ export default function NewItemForm({
         {type !== "Page" && (
           <ButtonSelect
             options={settings.assignmentGroups}
-            getName={(g) => g?.name ?? ""}
-            setSelectedOption={setAssignmentGroup}
-            selectedOption={assignmentGroup}
+            getOptionName={(g) => g?.name ?? ""}
+            setValue={setAssignmentGroup}
+            value={assignmentGroup}
             label="Assignment Group"
           />
         )}

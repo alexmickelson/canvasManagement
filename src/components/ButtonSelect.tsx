@@ -2,34 +2,41 @@ import React from "react";
 
 export default function ButtonSelect<T>({
   options,
-  getName,
-  setSelectedOption,
-  selectedOption,
-  label
+  getOptionName,
+  setValue,
+  value,
+  label,
+  center = false,
 }: {
   options: T[];
-  getName: (value: T | undefined) => string;
-  setSelectedOption: (value: T | undefined) => void;
-  selectedOption: T | undefined;
+  getOptionName: (value: T | undefined) => string;
+  setValue: (value: T | undefined) => void;
+  value: T | undefined;
   label: string;
+  center?: boolean;
 }) {
   return (
-    <div>
+    <div className={center ? "text-center" : ""}>
       <label>{label}</label>
-      <div  className="flex flex-row gap-3 flex-wrap">
-
-      {options.map((o) => (
-        <button
-        type="button"
-        key={getName(o)}
+      <div
         className={
-          getName(o) === getName(selectedOption) ? "  " : "unstyled btn-outline"
+          "flex flex-row gap-3 flex-wrap " + (center ? "justify-center" : "")
         }
-        onClick={() => setSelectedOption(o)}
-        >
-          {getName(o)}
-        </button>
-      ))}
+      >
+        {options.map((o) => (
+          <button
+            type="button"
+            key={getOptionName(o)}
+            className={
+              getOptionName(o) === getOptionName(value)
+                ? "  "
+                : "unstyled btn-outline"
+            }
+            onClick={() => setValue(o)}
+          >
+            {getOptionName(o)}
+          </button>
+        ))}
       </div>
     </div>
   );

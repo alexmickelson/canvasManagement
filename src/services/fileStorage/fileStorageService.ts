@@ -52,4 +52,25 @@ export const fileStorageService = {
 
     await fs.mkdir(courseDirectory, { recursive: true });
   },
+
+  async getDirectoryContents(
+    relativePath: string
+  ): Promise<{ files: string[]; folders: string[] }> {
+    const fullPath = path.join(basePath, relativePath);
+    if (!(await directoryOrFileExists(fullPath))) {
+      throw new Error(`Directory ${fullPath} does not exist`);
+    }
+
+    const contents = await fs.readdir(fullPath, { withFileTypes: true });
+    const files: string[] = [];
+    const folders: string[] = [];
+    for (const dirent of contents) {
+      if (dirent.isDirectory()) {
+        folders.push(dirent.name);
+      } else if (dirent.isFile()) {
+        files.push(dirent.name);
+      }
+    }
+    return { files, folders };
+  },
 };
