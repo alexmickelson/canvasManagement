@@ -1,6 +1,5 @@
 
 import path from "path";
-import { basePath } from "./utils/fileSystemUtils";
 import fs from "fs/promises";
 import {
   getLectureWeekName,
@@ -14,9 +13,11 @@ import {
   LocalCourseSettings,
 } from "@/models/local/localCourseSettings";
 import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
+import { getCoursePathByName } from "./globalSettingsFileStorageService";
 
 export async function getLectures(courseName: string) {
-  const courseLectureRoot = path.join(basePath, courseName, lectureFolderName);
+  const courseDirectory = await getCoursePathByName(courseName);
+  const courseLectureRoot = path.join(courseDirectory, lectureFolderName);
   if (!(await directoryExists(courseLectureRoot))) {
     return [];
   }
@@ -53,7 +54,8 @@ export async function updateLecture(
   courseSettings: LocalCourseSettings,
   lecture: Lecture
 ) {
-  const courseLectureRoot = path.join(basePath, courseName, lectureFolderName);
+  const courseDirectory = await getCoursePathByName(courseName);
+  const courseLectureRoot = path.join(courseDirectory, lectureFolderName);
   const lectureDate = getDateFromStringOrThrow(
     lecture.date,
     "lecture start date in update lecture"
@@ -92,7 +94,8 @@ export async function deleteLecture(
     dayAsString
   );
 
-  const courseLectureRoot = path.join(basePath, courseName, lectureFolderName);
+  const courseDirectory = await getCoursePathByName(courseName);
+  const courseLectureRoot = path.join(courseDirectory, lectureFolderName);
   const weekPath = path.join(courseLectureRoot, weekFolderName);
   const lecturePath = path.join(
     weekPath,

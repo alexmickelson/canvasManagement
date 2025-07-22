@@ -7,6 +7,9 @@ describe("FileStorageTests", () => {
   beforeEach(async () => {
     const storageDirectory =
       process.env.STORAGE_DIRECTORY ?? "/tmp/canvasManagerTests";
+    process.env.GLOBAL_SETTINGS = `courses:
+      - path: testCourse
+        name: testCourse`;
     try {
       await fs.access(storageDirectory);
       await fs.rm(storageDirectory, { recursive: true });

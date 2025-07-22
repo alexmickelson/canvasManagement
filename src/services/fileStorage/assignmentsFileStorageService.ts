@@ -4,12 +4,14 @@ import {
 } from "@/models/local/assignment/localAssignment";
 import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
 import path from "path";
-import { basePath, directoryOrFileExists } from "./utils/fileSystemUtils";
+import { directoryOrFileExists } from "./utils/fileSystemUtils";
 import { promises as fs } from "fs";
 import { courseItemFileStorageService } from "./courseItemFileStorageService";
+import { getCoursePathByName } from "./globalSettingsFileStorageService";
 
 const getAssignmentNames = async (courseName: string, moduleName: string) => {
-  const filePath = path.join(basePath, courseName, moduleName, "assignments");
+  const courseDirectory = await getCoursePathByName(courseName);
+  const filePath = path.join(courseDirectory, moduleName, "assignments");
   if (!(await directoryOrFileExists(filePath))) {
     console.log(
       `Error loading course by name, assignments folder does not exist in ${filePath}`
@@ -26,9 +28,9 @@ const getAssignment = async (
   moduleName: string,
   assignmentName: string
 ) => {
+  const courseDirectory = await getCoursePathByName(courseName);
   const filePath = path.join(
-    basePath,
-    courseName,
+    courseDirectory,
     moduleName,
     "assignments",
     assignmentName + ".md"
@@ -58,12 +60,12 @@ export const assignmentsFileStorageService = {
     assignmentName: string;
     assignment: LocalAssignment;
   }) {
-    const folder = path.join(basePath, courseName, moduleName, "assignments");
+    const courseDirectory = await getCoursePathByName(courseName);
+    const folder = path.join(courseDirectory, moduleName, "assignments");
     await fs.mkdir(folder, { recursive: true });
 
     const filePath = path.join(
-      basePath,
-      courseName,
+      courseDirectory,
       moduleName,
       "assignments",
       assignmentName + ".md"
@@ -75,7 +77,7 @@ export const assignmentsFileStorageService = {
 
     await fs.writeFile(filePath, assignmentMarkdown);
   },
-  
+
   async delete({
     courseName,
     moduleName,
@@ -85,9 +87,9 @@ export const assignmentsFileStorageService = {
     moduleName: string;
     assignmentName: string;
   }) {
+    const courseDirectory = await getCoursePathByName(courseName);
     const filePath = path.join(
-      basePath,
-      courseName,
+      courseDirectory,
       moduleName,
       "assignments",
       assignmentName + ".md"

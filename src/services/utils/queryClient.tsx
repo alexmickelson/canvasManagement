@@ -1,5 +1,7 @@
 import toast, { CheckmarkIcon } from "react-hot-toast";
 import { ReactNode } from "react";
+import { getHTTPStatusCodeFromError } from "@trpc/server/http";
+import { TRPCError } from "@trpc/server";
 
 // const addErrorAsToast = async (error: unknown) => {
 //   console.error("error from toast", error);
@@ -41,6 +43,12 @@ import { ReactNode } from "react";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getErrorMessage(error: any) {
+  if (error instanceof TRPCError) {
+    const httpCode = getHTTPStatusCodeFromError(error);
+    console.log("trpc error", httpCode, error); // 400
+    return `TRPC Error: ${error.message} (HTTP ${httpCode})`;
+  }
+
   if (error?.response?.status === 422) {
     console.log(error.response.data.detail);
     const serializationMessages = error.response.data.detail.map(
@@ -59,7 +67,9 @@ export function getErrorMessage(error: any) {
       return error.response?.data.detail;
     } else return JSON.stringify(error.response?.data.detail);
   }
-  console.log(error);
+  console.log("error message: ", error);
+  if(error.message )
+    return error.message;
   return "Error With Request";
 }
 

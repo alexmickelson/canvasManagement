@@ -10,6 +10,9 @@ describe("FileStorageTests", () => {
   beforeEach(async () => {
     const storageDirectory =
       process.env.STORAGE_DIRECTORY ?? "/tmp/canvasManagerTests";
+    process.env.GLOBAL_SETTINGS = `courses:
+      - path: test empty course
+        name: test empty course`;
     try {
       await fs.access(storageDirectory);
       await fs.rm(storageDirectory, { recursive: true });
@@ -31,14 +34,15 @@ describe("FileStorageTests", () => {
       defaultAssignmentSubmissionTypes: [],
       defaultFileUploadTypes: [],
       holidays: [],
-      assets: []
+      assets: [],
     };
 
     await fileStorageService.settings.updateCourseSettings(name, settings);
 
-    const loadedSettings = await fileStorageService.settings.getCourseSettings(
-      name
-    );
+    const loadedSettings = await fileStorageService.settings.getCourseSettings({
+      name,
+      path: name,
+    });
 
     expect(loadedSettings).toEqual(settings);
   });

@@ -1,5 +1,5 @@
 import path from "path";
-import { basePath, directoryOrFileExists } from "./utils/fileSystemUtils";
+import { directoryOrFileExists } from "./utils/fileSystemUtils";
 import fs from "fs/promises";
 import {
   LocalAssignment,
@@ -20,14 +20,16 @@ import {
   CourseItemType,
   typeToFolder,
 } from "@/models/local/courseItemTypes";
+import { getCoursePathByName } from "./globalSettingsFileStorageService";
 
 const getItemFileNames = async (
   courseName: string,
   moduleName: string,
   type: CourseItemType
 ) => {
+  const courseDirectory = await getCoursePathByName(courseName);
   const folder = typeToFolder[type];
-  const filePath = path.join(basePath, courseName, moduleName, folder);
+  const filePath = path.join(courseDirectory, moduleName, folder);
   if (!(await directoryOrFileExists(filePath))) {
     console.log(
       `Error loading ${type}, ${folder} folder does not exist in ${filePath}`
@@ -45,14 +47,9 @@ const getItem = async <T extends CourseItemType>(
   name: string,
   type: T
 ): Promise<CourseItemReturnType<T>> => {
+  const courseDirectory = await getCoursePathByName(courseName);
   const folder = typeToFolder[type];
-  const filePath = path.join(
-    basePath,
-    courseName,
-    moduleName,
-    folder,
-    name + ".md"
-  );
+  const filePath = path.join(courseDirectory, moduleName, folder, name + ".md");
   const rawFile = (await fs.readFile(filePath, "utf-8")).replace(/\r\n/g, "\n");
   if (type === "Assignment") {
     return localAssignmentMarkdown.parseMarkdown(
@@ -61,11 +58,13 @@ const getItem = async <T extends CourseItemType>(
     ) as CourseItemReturnType<T>;
   } else if (type === "Quiz") {
     return localQuizMarkdownUtils.parseMarkdown(
-      rawFile, name
+      rawFile,
+      name
     ) as CourseItemReturnType<T>;
   } else if (type === "Page") {
     return localPageMarkdownUtils.parseMarkdown(
-      rawFile, name
+      rawFile,
+      name
     ) as CourseItemReturnType<T>;
   }
 
@@ -107,13 +106,13 @@ export const courseItemFileStorageService = {
     item: LocalAssignment | LocalQuiz | LocalCoursePage;
     type: CourseItemType;
   }) {
+    const courseDirectory = await getCoursePathByName(courseName);
     const typeFolder = typeToFolder[type];
-    const folder = path.join(basePath, courseName, moduleName, typeFolder);
+    const folder = path.join(courseDirectory, moduleName, typeFolder);
     await fs.mkdir(folder, { recursive: true });
 
     const filePath = path.join(
-      basePath,
-      courseName,
+      courseDirectory,
       moduleName,
       typeFolder,
       name + ".md"

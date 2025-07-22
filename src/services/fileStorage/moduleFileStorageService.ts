@@ -1,11 +1,11 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { basePath } from "./utils/fileSystemUtils";
 import { lectureFolderName } from "./utils/lectureUtils";
+import { getCoursePathByName } from "./globalSettingsFileStorageService";
 
 export const moduleFileStorageService = {
   async getModuleNames(courseName: string) {
-    const courseDirectory = path.join(basePath, courseName);
+    const courseDirectory = await getCoursePathByName(courseName);
     const moduleDirectories = await fs.readdir(courseDirectory, {
       withFileTypes: true,
     });
@@ -21,7 +21,7 @@ export const moduleFileStorageService = {
     return modulesWithoutLectures.sort((a, b) => a.localeCompare(b));
   },
   async createModule(courseName: string, moduleName: string) {
-    const courseDirectory = path.join(basePath, courseName);
+    const courseDirectory = await getCoursePathByName(courseName);
 
     await fs.mkdir(courseDirectory + "/" + moduleName, { recursive: true });
   },

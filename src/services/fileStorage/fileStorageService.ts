@@ -6,6 +6,7 @@ import { quizFileStorageService } from "./quizFileStorageService";
 import { pageFileStorageService } from "./pageFileStorageService";
 import { moduleFileStorageService } from "./moduleFileStorageService";
 import { settingsFileStorageService } from "./settingsFileStorageService";
+import { getCoursePathByName } from "./globalSettingsFileStorageService";
 
 export const fileStorageService = {
   settings: settingsFileStorageService,
@@ -42,7 +43,7 @@ export const fileStorageService = {
   },
 
   async createCourseFolderForTesting(courseName: string) {
-    const courseDirectory = path.join(basePath, courseName);
+    const courseDirectory = await getCoursePathByName(courseName);
 
     await fs.mkdir(courseDirectory, { recursive: true });
   },

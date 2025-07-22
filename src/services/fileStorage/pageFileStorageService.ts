@@ -4,8 +4,8 @@ import {
 } from "@/models/local/page/localCoursePage";
 import { promises as fs } from "fs";
 import path from "path";
-import { basePath } from "./utils/fileSystemUtils";
 import { courseItemFileStorageService } from "./courseItemFileStorageService";
+import { getCoursePathByName } from "./globalSettingsFileStorageService";
 
 export const pageFileStorageService = {
   getPage: async (courseName: string, moduleName: string, name: string) =>
@@ -29,12 +29,12 @@ export const pageFileStorageService = {
     pageName: string;
     page: LocalCoursePage;
   }) {
-    const folder = path.join(basePath, courseName, moduleName, "pages");
+    const courseDirectory = await getCoursePathByName(courseName);
+    const folder = path.join(courseDirectory, moduleName, "pages");
     await fs.mkdir(folder, { recursive: true });
 
     const filePath = path.join(
-      basePath,
-      courseName,
+      courseDirectory,
       moduleName,
       "pages",
       pageName + ".md"
@@ -53,9 +53,9 @@ export const pageFileStorageService = {
     moduleName: string;
     pageName: string;
   }) {
+    const courseDirectory = await getCoursePathByName(courseName);
     const filePath = path.join(
-      basePath,
-      courseName,
+      courseDirectory,
       moduleName,
       "pages",
       pageName + ".md"
