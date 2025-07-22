@@ -7,3 +7,5 @@ courses:
     name: Web Intro
   - path: ./1430/2025-fall-alex/modules/
     name: UX
+  - path: ./1420/2025-fall-alex/labModules
+    name: "1425"

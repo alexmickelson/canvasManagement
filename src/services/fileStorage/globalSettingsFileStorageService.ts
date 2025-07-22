@@ -1,4 +1,7 @@
-import { GlobalSettings } from "@/models/local/globalSettings";
+import {
+  GlobalSettings,
+  zodGlobalSettings,
+} from "@/models/local/globalSettings";
 import {
   globalSettingsToYaml,
   parseGlobalSettingsYaml,
@@ -39,6 +42,15 @@ export const getCoursePathByName = async (courseName: string) => {
 };
 
 export const updateGlobalSettings = async (globalSettings: GlobalSettings) => {
-  const globalSettingsString = globalSettingsToYaml(globalSettings);
+  const globalSettingsString = globalSettingsToYaml(
+    zodGlobalSettings.parse(globalSettings)
+  );
   await fs.writeFile(SETTINGS_FILE_PATH, globalSettingsString, "utf-8");
+
+  // await Promise.all(
+  //   globalSettings.courses.map(async (course) => {
+  //     const coursePath = await getCoursePathByName(course.name);
+  //     await fs.mkdir(coursePath, { recursive: true });
+  //   })
+  // );
 };

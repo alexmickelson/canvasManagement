@@ -2,15 +2,24 @@
 import ButtonSelect from "@/components/ButtonSelect";
 import { DayOfWeekInput } from "@/components/form/DayOfWeekInput";
 import SelectInput from "@/components/form/SelectInput";
+import { StoragePathSelector } from "@/components/form/StoragePathSelector";
+import TextInput from "@/components/form/TextInput";
 import { Spinner } from "@/components/Spinner";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import { useCourseListInTermQuery } from "@/hooks/canvas/canvasCourseHooks";
 import { useCanvasTermsQuery } from "@/hooks/canvas/canvasHooks";
 import {
+  useGlobalSettingsQuery,
+  useUpdateGlobalSettingsMutation,
+} from "@/hooks/localCourse/globalSettingsHooks";
+import {
   useCreateLocalCourseMutation,
   useLocalCoursesSettingsQuery,
 } from "@/hooks/localCourse/localCoursesHooks";
-import { useEmptyDirectoriesQuery } from "@/hooks/localCourse/storageDirectoryHooks";
+import {
+  useDirectoryIsCourseQuery,
+  useEmptyDirectoriesQuery,
+} from "@/hooks/localCourse/storageDirectoryHooks";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
 import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
@@ -20,7 +29,7 @@ import {
 } from "@/models/local/localCourseSettings";
 import { getCourseUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
-import React, { useMemo, useState } from "react";
+import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 
 const sampleCompose = `services:
   canvas_manager:
@@ -55,6 +64,7 @@ export default function AddNewCourseToGlobalSettingsForm() {
   const [courseToImport, setCourseToImport] = useState<
     LocalCourseSettings | undefined
   >();
+  const [name, setName] = useState("");
   const createCourse = useCreateLocalCourseMutation();
 
   const formIsComplete =
@@ -82,6 +92,8 @@ export default function AddNewCourseToGlobalSettingsForm() {
             setSelectedDaysOfWeek={setSelectedDaysOfWeek}
             courseToImport={courseToImport}
             setCourseToImport={setCourseToImport}
+            name={name}
+            setName={setName}
           />
         )}
       </SuspenseAndErrorHandling>
@@ -90,6 +102,7 @@ export default function AddNewCourseToGlobalSettingsForm() {
           disabled={!formIsComplete || createCourse.isPending}
           onClick={async () => {
             if (formIsComplete) {
+              console.log("Creating course with settings:", selectedDirectory);
               const newSettings: LocalCourseSettings = courseToImport
                 ? {
                     ...courseToImport,
@@ -128,8 +141,10 @@ export default function AddNewCourseToGlobalSettingsForm() {
               await createCourse.mutateAsync({
                 settings: newSettings,
                 settingsFromCourseToImport: courseToImport,
+                name,
+                directory: selectedDirectory,
               });
-              router.push(getCourseUrl(selectedDirectory));
+              router.push(getCourseUrl(name));
             }
           }}
         >
@@ -156,26 +171,29 @@ function OtherSettings({
   setSelectedDaysOfWeek,
   courseToImport,
   setCourseToImport,
+  name,
+  setName,
 }: {
   selectedTerm: CanvasEnrollmentTermModel;
   selectedCanvasCourse: CanvasCourseModel | undefined;
-  setSelectedCanvasCourse: React.Dispatch<
-    React.SetStateAction<CanvasCourseModel | undefined>
+  setSelectedCanvasCourse: Dispatch<
+    SetStateAction<CanvasCourseModel | undefined>
   >;
   selectedDirectory: string | undefined;
-  setSelectedDirectory: React.Dispatch<
-    React.SetStateAction<string | undefined>
-  >;
+  setSelectedDirectory: Dispatch<SetStateAction<string | undefined>>;
   selectedDaysOfWeek: DayOfWeek[];
-  setSelectedDaysOfWeek: React.Dispatch<React.SetStateAction<DayOfWeek[]>>;
+  setSelectedDaysOfWeek: Dispatch<SetStateAction<DayOfWeek[]>>;
   courseToImport: LocalCourseSettings | undefined;
-  setCourseToImport: React.Dispatch<
-    React.SetStateAction<LocalCourseSettings | undefined>
-  >;
+  setCourseToImport: Dispatch<SetStateAction<LocalCourseSettings | undefined>>;
+  name: string;
+  setName: Dispatch<SetStateAction<string>>;
 }) {
   const { data: canvasCourses } = useCourseListInTermQuery(selectedTerm.id);
   const { data: allSettings } = useLocalCoursesSettingsQuery();
-  const { data: emptyDirectories } = useEmptyDirectoriesQuery();
+  const [directory, setDirectory] = useState("./");
+  // const directoryIsCourseQuery = useDirectoryIsCourseQuery(
+  //   selectedDirectory ?? "./"
+  // );
 
   const populatedCanvasCourseIds = allSettings?.map((s) => s.canvasId) ?? [];
   const availableCourses =
@@ -194,18 +212,13 @@ function OtherSettings({
         getOptionName={(c) => c?.name ?? ""}
         center={true}
       />
-      <SelectInput
-        value={selectedDirectory}
-        setValue={setSelectedDirectory}
+
+      <StoragePathSelector
+        value={directory}
+        setValue={setDirectory}
+        setLastTypedValue={setSelectedDirectory}
         label={"Storage Folder"}
-        options={emptyDirectories ?? []}
-        getOptionName={(d) => d}
-        emptyOptionText="--- add a new folder to your docker compose to add more folders ---"
       />
-      <div className="px-5">
-        New folders will not be created automatically, you are expected to mount
-        a docker volume for each courses.
-      </div>
       <br />
       <div className="flex justify-center">
         <DayOfWeekInput
@@ -228,6 +241,7 @@ function OtherSettings({
         options={allSettings}
         getOptionName={(c) => c.name}
       />
+      <TextInput value={name} setValue={setName} label={"Display Name"} />
       <div className="px-5">
         Assignments, Quizzes, Pages, and Lectures will have their due dates
         moved based on how far they are from the start of the semester.

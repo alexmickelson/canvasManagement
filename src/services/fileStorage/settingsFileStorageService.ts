@@ -86,6 +86,26 @@ export const settingsFileStorageService = {
     console.log(`Saving settings ${settingsPath}`);
     await fs.writeFile(settingsPath, settingsMarkdown);
   },
+  async createCourseSettings(settings: LocalCourseSettings, directory: string) {
+    const courseDirectory = path.join(basePath, directory);
+
+    if (await directoryOrFileExists(courseDirectory)) {
+      throw new Error(
+        `Course path "${courseDirectory}" already exists. Create course in a new folder.`
+      );
+    }
+
+    await fs.mkdir(courseDirectory, { recursive: true });
+    const settingsPath = path.join(courseDirectory, "settings.yml");
+
+    const { name: _, ...settingsWithoutName } = settings;
+
+    const settingsMarkdown =
+      localCourseYamlUtils.settingsToYaml(settingsWithoutName);
+
+    console.log(`Saving settings ${settingsPath}`);
+    await fs.writeFile(settingsPath, settingsMarkdown);
+  },
   async folderIsCourse(folderPath: string) {
     const settingsPath = path.join(basePath, folderPath, "settings.yml");
     if (!(await directoryOrFileExists(settingsPath))) {

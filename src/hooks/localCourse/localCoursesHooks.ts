@@ -6,6 +6,7 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useGlobalSettingsQuery } from "./globalSettingsHooks";
 
 export const useLocalCoursesSettingsQuery = () => {
   const trpc = useTRPC();
@@ -23,6 +24,7 @@ export const useLocalCourseSettingsQuery = () => {
 export const useCreateLocalCourseMutation = () => {
   const trpc = useTRPC();
   const queryClient = useQueryClient();
+
   return useMutation(
     trpc.settings.createCourse.mutationOptions({
       onSuccess: () => {
@@ -31,6 +33,9 @@ export const useCreateLocalCourseMutation = () => {
         });
         queryClient.invalidateQueries({
           queryKey: trpc.directories.getEmptyDirectories.queryKey(),
+        });
+        queryClient.invalidateQueries({
+          queryKey: trpc.globalSettings.getGlobalSettings.queryKey(),
         });
       },
     })

@@ -7,11 +7,13 @@ export function StoragePathSelector({
   setValue,
   label,
   className,
+  setLastTypedValue,
 }: {
   value: string;
   setValue: (newValue: string) => void;
   label: string;
   className?: string;
+  setLastTypedValue?: (value: string) => void;
 }) {
   const [path, setPath] = useState(value);
   const { data: directoryContents } = useDirectoryContentsQuery(value);
@@ -24,6 +26,10 @@ export function StoragePathSelector({
   useEffect(() => {
     setPath(value);
   }, [value]);
+
+  useEffect(() => {
+    if (setLastTypedValue) setLastTypedValue(path);
+  }, [path, setLastTypedValue]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isFocused || filteredFolders.length === 0) return;

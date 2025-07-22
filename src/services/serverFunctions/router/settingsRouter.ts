@@ -13,6 +13,13 @@ import {
   prepPageForNewSemester,
   prepQuizForNewSemester,
 } from "@/models/local/utils/semesterTransferUtils";
+import {
+  getGlobalSettings,
+  updateGlobalSettings,
+} from "@/services/fileStorage/globalSettingsFileStorageService";
+import { promises as fs } from "fs";
+import { basePath } from "@/services/fileStorage/utils/fileSystemUtils";
+import path from "path";
 
 export const settingsRouter = router({
   allCoursesSettings: publicProcedure.query(async () => {
@@ -37,101 +44,123 @@ export const settingsRouter = router({
   createCourse: publicProcedure
     .input(
       z.object({
+        name: z.string(),
+        directory: z.string(),
         settings: zodLocalCourseSettings,
         settingsFromCourseToImport: zodLocalCourseSettings.optional(),
       })
     )
-    .mutation(async ({ input: { settings, settingsFromCourseToImport } }) => {
-      await fileStorageService.settings.updateCourseSettings(
-        settings.name,
-        settings
-      );
-
-      if (settingsFromCourseToImport) {
-        const oldCourseName = settingsFromCourseToImport.name;
-        const newCourseName = settings.name;
-        const oldModules = await fileStorageService.modules.getModuleNames(
-          oldCourseName
+    .mutation(
+      async ({
+        input: { settings, settingsFromCourseToImport, name, directory },
+      }) => {
+        console.log("creating in directory", directory);
+        await fileStorageService.settings.createCourseSettings(
+          settings,
+          directory
         );
-        await Promise.all(
-          oldModules.map(async (moduleName) => {
-            await fileStorageService.modules.createModule(
-              newCourseName,
-              moduleName
-            );
 
-            const [oldAssignments, oldQuizzes, oldPages, oldLecturesByWeek] =
+        const globalSettings = await getGlobalSettings();
+
+        await updateGlobalSettings({
+          ...globalSettings,
+          courses: [
+            ...globalSettings.courses,
+            {
+              name,
+              path: directory,
+            },
+          ],
+        });
+
+        if (settingsFromCourseToImport) {
+          const oldCourseName = settingsFromCourseToImport.name;
+          const newCourseName = settings.name;
+          const oldModules = await fileStorageService.modules.getModuleNames(
+            oldCourseName
+          );
+          await Promise.all(
+            oldModules.map(async (moduleName) => {
+              await fileStorageService.modules.createModule(
+                newCourseName,
+                moduleName
+              );
+
+              const [oldAssignments, oldQuizzes, oldPages, oldLecturesByWeek] =
+                await Promise.all([
+                  fileStorageService.assignments.getAssignments(
+                    oldCourseName,
+                    moduleName
+                  ),
+                  await fileStorageService.quizzes.getQuizzes(
+                    oldCourseName,
+                    moduleName
+                  ),
+                  await fileStorageService.pages.getPages(
+                    oldCourseName,
+                    moduleName
+                  ),
+                  await getLectures(oldCourseName),
+                ]);
+
               await Promise.all([
-                fileStorageService.assignments.getAssignments(
-                  oldCourseName,
-                  moduleName
-                ),
-                await fileStorageService.quizzes.getQuizzes(
-                  oldCourseName,
-                  moduleName
-                ),
-                await fileStorageService.pages.getPages(
-                  oldCourseName,
-                  moduleName
-                ),
-                await getLectures(oldCourseName),
-              ]);
-
-            await Promise.all([
-              ...oldAssignments.map(async (oldAssignment) => {
-                const newAssignment = prepAssignmentForNewSemester(
-                  oldAssignment,
-                  settingsFromCourseToImport.startDate,
-                  settings.startDate,
-                );
-                await fileStorageService.assignments.updateOrCreateAssignment({
-                  courseName: newCourseName,
-                  moduleName,
-                  assignmentName: newAssignment.name,
-                  assignment: newAssignment,
-                });
-              }),
-              ...oldQuizzes.map(async (oldQuiz) => {
-                const newQuiz = prepQuizForNewSemester(
-                  oldQuiz,
-                  settingsFromCourseToImport.startDate,
-                  settings.startDate
-                );
-                await fileStorageService.quizzes.updateQuiz({
-                  courseName: newCourseName,
-                  moduleName,
-                  quizName: newQuiz.name,
-                  quiz: newQuiz,
-                });
-              }),
-              ...oldPages.map(async (oldPage) => {
-                const newPage = prepPageForNewSemester(
-                  oldPage,
-                  settingsFromCourseToImport.startDate,
-                  settings.startDate
-                );
-                await fileStorageService.pages.updatePage({
-                  courseName: newCourseName,
-                  moduleName,
-                  pageName: newPage.name,
-                  page: newPage,
-                });
-              }),
-              ...oldLecturesByWeek.flatMap(async (oldLectureByWeek) =>
-                oldLectureByWeek.lectures.map(async (oldLecture) => {
-                  const newLecture = prepLectureForNewSemester(
-                    oldLecture,
+                ...oldAssignments.map(async (oldAssignment) => {
+                  const newAssignment = prepAssignmentForNewSemester(
+                    oldAssignment,
                     settingsFromCourseToImport.startDate,
                     settings.startDate
                   );
-                  await updateLecture(newCourseName, settings, newLecture);
-                })
-              ),
-            ]);
-          })
-        );
+                  await fileStorageService.assignments.updateOrCreateAssignment(
+                    {
+                      courseName: newCourseName,
+                      moduleName,
+                      assignmentName: newAssignment.name,
+                      assignment: newAssignment,
+                    }
+                  );
+                }),
+                ...oldQuizzes.map(async (oldQuiz) => {
+                  const newQuiz = prepQuizForNewSemester(
+                    oldQuiz,
+                    settingsFromCourseToImport.startDate,
+                    settings.startDate
+                  );
+                  await fileStorageService.quizzes.updateQuiz({
+                    courseName: newCourseName,
+                    moduleName,
+                    quizName: newQuiz.name,
+                    quiz: newQuiz,
+                  });
+                }),
+                ...oldPages.map(async (oldPage) => {
+                  const newPage = prepPageForNewSemester(
+                    oldPage,
+                    settingsFromCourseToImport.startDate,
+                    settings.startDate
+                  );
+                  await fileStorageService.pages.updatePage({
+                    courseName: newCourseName,
+                    moduleName,
+                    pageName: newPage.name,
+                    page: newPage,
+                  });
+                }),
+                ...oldLecturesByWeek.flatMap(async (oldLectureByWeek) =>
+                  oldLectureByWeek.lectures.map(async (oldLecture) => {
+                    const newLecture = prepLectureForNewSemester(
+                      oldLecture,
+                      settingsFromCourseToImport.startDate,
+                      settings.startDate
+                    );
+                    await updateLecture(newCourseName, settings, newLecture);
+                  })
+                ),
+              ]);
+            })
+          );
+        }
       }
-    }),
+    ),
   updateSettings: publicProcedure
     .input(
       z.object({
