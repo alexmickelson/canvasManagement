@@ -18,7 +18,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
   );
 
   const isPastSemester = Date.now() > new Date(settings.endDate).getTime();
-  
+
   const pastWeekNumber = getWeekNumber(
     startDate,
     new Date(Date.now() - four_days_in_milliseconds)
@@ -29,7 +29,8 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
     new Date(month.year, month.month, 1)
   );
 
-  const shouldCollapse = (pastWeekNumber >= startOfMonthWeekNumber) && !isPastSemester;
+  const shouldCollapse =
+    pastWeekNumber >= startOfMonthWeekNumber && !isPastSemester;
 
   const monthName = new Date(month.year, month.month - 1, 1).toLocaleString(
     "default",

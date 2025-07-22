@@ -1,1 +1,9 @@
-courses: []
+courses:
+  - path: ./4850_AdvancedFE/2025-fall-alex/modules/
+    name: Distributed 2025
+  - path: ./1420/2025-fall-alex/modules/
+    name: "1420"
+  - path: ./1810/2025-fall-alex/modules/
+    name: Web Intro
+  - path: ./1430/2025-fall-alex/modules/
+    name: UX

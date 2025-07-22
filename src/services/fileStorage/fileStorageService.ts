@@ -47,6 +47,7 @@ export const fileStorageService = {
 
     await fs.mkdir(courseDirectory, { recursive: true });
   },
+
   async createModuleFolderForTesting(courseName: string, moduleName: string) {
     const courseDirectory = path.join(basePath, courseName, moduleName);
 
@@ -57,6 +58,12 @@ export const fileStorageService = {
     relativePath: string
   ): Promise<{ files: string[]; folders: string[] }> {
     const fullPath = path.join(basePath, relativePath);
+    // Security: ensure fullPath is inside basePath
+    const resolvedBase = path.resolve(basePath);
+    const resolvedFull = path.resolve(fullPath);
+    if (!resolvedFull.startsWith(resolvedBase)) {
+      return { files: [], folders: [] };
+    }
     if (!(await directoryOrFileExists(fullPath))) {
       throw new Error(`Directory ${fullPath} does not exist`);
     }

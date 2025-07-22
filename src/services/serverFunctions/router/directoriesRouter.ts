@@ -16,4 +16,13 @@ export const directoriesRouter = router({
     .query(async ({ input: { relativePath } }) => {
       return await fileStorageService.getDirectoryContents(relativePath);
     }),
+  directoryIsCourse: publicProcedure
+    .input(
+      z.object({
+        folderPath: z.string(),
+      })
+    )
+    .query(async ({ input: { folderPath } }) => {
+      return await fileStorageService.settings.folderIsCourse(folderPath);
+    }),
 });

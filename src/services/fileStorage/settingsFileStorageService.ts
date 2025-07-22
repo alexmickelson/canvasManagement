@@ -86,4 +86,11 @@ export const settingsFileStorageService = {
     console.log(`Saving settings ${settingsPath}`);
     await fs.writeFile(settingsPath, settingsMarkdown);
   },
+  async folderIsCourse(folderPath: string) {
+    const settingsPath = path.join(basePath, folderPath, "settings.yml");
+    if (!(await directoryOrFileExists(settingsPath))) {
+      return false;
+    }
+    return true;
+  },
 };

@@ -16,3 +16,10 @@ export const useDirectoryContentsQuery = (relativePath: string) => {
     trpc.directories.getDirectoryContents.queryOptions({ relativePath })
   );
 };
+
+export const useDirectoryIsCourseQuery = (folderPath: string) => {
+  const trpc = useTRPC();
+  return useQuery(
+    trpc.directories.directoryIsCourse.queryOptions({ folderPath })
+  );
+};

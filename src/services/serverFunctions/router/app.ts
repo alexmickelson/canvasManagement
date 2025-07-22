@@ -3,6 +3,7 @@ import { createCallerFactory, router } from "../trpcSetup";
 import { assignmentRouter } from "./assignmentRouter";
 import { canvasFileRouter } from "./canvasFileRouter";
 import { directoriesRouter } from "./directoriesRouter";
+import { globalSettingsRouter } from "./globalSettingsRouter";
 import { lectureRouter } from "./lectureRouter";
 import { moduleRouter } from "./moduleRouter";
 import { pageRouter } from "./pageRouter";
@@ -18,6 +19,7 @@ export const trpcAppRouter = router({
   module: moduleRouter,
   directories: directoriesRouter,
   canvasFile: canvasFileRouter,
+  globalSettings: globalSettingsRouter,
 });
 
 export const createCaller = createCallerFactory(trpcAppRouter);

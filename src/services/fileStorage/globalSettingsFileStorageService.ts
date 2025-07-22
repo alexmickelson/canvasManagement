@@ -1,5 +1,8 @@
 import { GlobalSettings } from "@/models/local/globalSettings";
-import { parseGlobalSettingsYaml } from "@/models/local/globalSettingsUtils";
+import {
+  globalSettingsToYaml,
+  parseGlobalSettingsYaml,
+} from "@/models/local/globalSettingsUtils";
 import { promises as fs } from "fs";
 import path from "path";
 import { basePath } from "./utils/fileSystemUtils";
@@ -33,4 +36,9 @@ export const getCoursePathByName = async (courseName: string) => {
     );
   }
   return path.join(basePath, course.path);
+};
+
+export const updateGlobalSettings = async (globalSettings: GlobalSettings) => {
+  const globalSettingsString = globalSettingsToYaml(globalSettings);
+  await fs.writeFile(SETTINGS_FILE_PATH, globalSettingsString, "utf-8");
 };

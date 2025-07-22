@@ -3,25 +3,27 @@ import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 export function StoragePathSelector({
-  startingValue,
-  submitValue,
+  value,
+  setValue,
   label,
   className,
 }: {
-  startingValue: string;
-  submitValue: (newValue: string) => void;
+  value: string;
+  setValue: (newValue: string) => void;
   label: string;
   className?: string;
 }) {
-  const [path, setPath] = useState(startingValue);
-  const [lastCorrectPath, setLastCorrectPath] = useState(startingValue);
-  const { data: directoryContents } =
-    useDirectoryContentsQuery(lastCorrectPath);
+  const [path, setPath] = useState(value);
+  const { data: directoryContents } = useDirectoryContentsQuery(value);
   const [isFocused, setIsFocused] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number>(-1);
   const [arrowUsed, setArrowUsed] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setPath(value);
+  }, [value]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!isFocused || filteredFolders.length === 0) return;
@@ -88,13 +90,12 @@ export function StoragePathSelector({
       newPath += "/";
     }
     setPath(newPath);
-    setLastCorrectPath(newPath);
+    setValue(newPath);
     setArrowUsed(false);
     setHighlightedIndex(-1);
     if (shouldFocus) {
       setTimeout(() => inputRef.current?.focus(), 0);
     }
-    submitValue(newPath);
   };
 
   // Scroll highlighted option into view when it changes
@@ -116,12 +117,12 @@ export function StoragePathSelector({
       <br />
       <input
         ref={inputRef}
-        className="bg-slate-800 border border-slate-500 rounded-md w-full px-1"
+        className="bg-slate-800  w-full px-1"
         value={path}
         onChange={(e) => {
           setPath(e.target.value);
           if (e.target.value.endsWith("/")) {
-            setLastCorrectPath(e.target.value);
+            setValue(e.target.value);
             setTimeout(() => inputRef.current?.focus(), 0);
           }
         }}
@@ -130,9 +131,6 @@ export function StoragePathSelector({
         onKeyDown={handleKeyDown}
         autoComplete="off"
       />
-      <div className="text-xs text-slate-400 mt-1">
-        Last valid path: {lastCorrectPath}
-      </div>
       {isFocused &&
         createPortal(
           <div className=" ">

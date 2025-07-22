@@ -1,6 +1,10 @@
 "use client";
 import { useLocalCoursesSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { getDateKey, getTermName, groupByStartDate } from "@/models/local/utils/timeUtils";
+import {
+  getDateKey,
+  getTermName,
+  groupByStartDate,
+} from "@/models/local/utils/timeUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 
