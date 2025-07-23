@@ -17,6 +17,7 @@ export const getGlobalSettings = async (): Promise<GlobalSettings> => {
   try {
     await fs.access(SETTINGS_FILE_PATH);
   } catch (err) {
+    console.log(err);
     throw new Error(
       `Global Settings file does not exist at path: ${SETTINGS_FILE_PATH}`
     );

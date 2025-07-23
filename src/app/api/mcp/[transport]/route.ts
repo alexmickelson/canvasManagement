@@ -1,7 +1,6 @@
 import { assignmentMarkdownSerializer } from "@/features/local/assignments/models/utils/assignmentMarkdownSerializer";
 import { groupByStartDate } from "@/models/local/utils/timeUtils";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
-import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
 import { githubClassroomUrlPrompt } from "./github-classroom-prompt";

@@ -1,10 +1,10 @@
+import { QuestionType, zodQuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
+import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "@/features/local/quizzes/models/utils/quizQuestionMarkdownUtils";
 import {
   getAnswers,
   getQuestionType,
 } from "@/services/canvas/canvasQuizService";
-import { QuestionType, zodQuestionType } from "../../models/localQuizQuestion";
-import { quizMarkdownUtils } from "../../models/utils/quizMarkdownUtils";
-import { quizQuestionMarkdownUtils } from "../../models/utils/quizQuestionMarkdownUtils";
 import { describe, it, expect } from "vitest";
 
 describe("TextAnswerTests", () => {

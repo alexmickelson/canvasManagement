@@ -1,7 +1,7 @@
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
+import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 import { describe, it, expect } from "vitest";
-import { LocalQuiz } from "../../models/localQuiz";
-import { quizMarkdownUtils } from "../../models/utils/quizMarkdownUtils";
-import { QuestionType } from "@/models/local/models/localQuizQuestion";
 
 // Test suite for deterministic checks on LocalQuiz
 describe("QuizDeterministicChecks", () => {

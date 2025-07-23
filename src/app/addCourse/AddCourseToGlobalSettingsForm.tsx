@@ -9,17 +9,9 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import { useCourseListInTermQuery } from "@/hooks/canvas/canvasCourseHooks";
 import { useCanvasTermsQuery } from "@/hooks/canvas/canvasHooks";
 import {
-  useGlobalSettingsQuery,
-  useUpdateGlobalSettingsMutation,
-} from "@/hooks/localCourse/globalSettingsHooks";
-import {
   useCreateLocalCourseMutation,
   useLocalCoursesSettingsQuery,
 } from "@/hooks/localCourse/localCoursesHooks";
-import {
-  useDirectoryIsCourseQuery,
-  useEmptyDirectoriesQuery,
-} from "@/hooks/localCourse/storageDirectoryHooks";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
 import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
@@ -165,7 +157,7 @@ function OtherSettings({
   selectedTerm,
   selectedCanvasCourse,
   setSelectedCanvasCourse,
-  selectedDirectory,
+  selectedDirectory: _,
   setSelectedDirectory,
   selectedDaysOfWeek,
   setSelectedDaysOfWeek,

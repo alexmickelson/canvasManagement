@@ -1,5 +1,5 @@
 "use client";
-import { marked, MarkedExtension } from "marked";
+import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import markedKatex from "marked-katex-extension";

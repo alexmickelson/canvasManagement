@@ -31,7 +31,7 @@ export const AddExistingCourseToGlobalSettings = () => {
   );
 };
 
-const ExistingCourseForm: FC<{}> = () => {
+const ExistingCourseForm: FC<object> = () => {
   const [path, setPath] = useState("./");
   const [name, setName] = useState("");
   const nameInputRef = useRef<HTMLInputElement>(null);

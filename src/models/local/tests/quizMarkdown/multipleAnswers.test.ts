@@ -1,8 +1,8 @@
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
+import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "@/features/local/quizzes/models/utils/quizQuestionMarkdownUtils";
 import { describe, it, expect } from "vitest";
-import { LocalQuiz } from "../../models/localQuiz";
-import { QuestionType } from "../../models/localQuizQuestion";
-import { quizMarkdownUtils } from "@/models/local/models/utils/quizMarkdownUtils";
-import { quizQuestionMarkdownUtils } from "@/models/local/models/utils/quizQuestionMarkdownUtils";
 
 describe("MultipleAnswersTests", () => {
   it("quiz markdown includes multiple answer question", () => {

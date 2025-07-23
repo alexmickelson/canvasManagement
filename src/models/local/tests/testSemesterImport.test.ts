@@ -6,9 +6,9 @@ import {
   prepPageForNewSemester,
   prepQuizForNewSemester,
 } from "../utils/semesterTransferUtils";
-import { LocalQuiz } from "../models/localQuiz";
-import { LocalCoursePage } from "../page/localCoursePage";
 import { Lecture } from "../lecture";
+import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 describe("can take an assignment and template it for a new semester", () => {
   it("can sanitize assignment github classroom repo url", () => {

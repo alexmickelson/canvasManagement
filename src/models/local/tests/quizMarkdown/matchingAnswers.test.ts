@@ -1,7 +1,7 @@
+import { QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
+import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "@/features/local/quizzes/models/utils/quizQuestionMarkdownUtils";
 import { describe, it, expect } from "vitest";
-import { QuestionType } from "../../models/localQuizQuestion";
-import { quizMarkdownUtils } from "@/models/local/models/utils/quizMarkdownUtils";
-import { quizQuestionMarkdownUtils } from "@/models/local/models/utils/quizQuestionMarkdownUtils";
 
 describe("MatchingTests", () => {
   it("can parse matching question", () => {

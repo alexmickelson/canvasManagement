@@ -17,9 +17,6 @@ import {
   getGlobalSettings,
   updateGlobalSettings,
 } from "@/services/fileStorage/globalSettingsFileStorageService";
-import { promises as fs } from "fs";
-import { basePath } from "@/services/fileStorage/utils/fileSystemUtils";
-import path from "path";
 
 export const settingsRouter = router({
   allCoursesSettings: publicProcedure.query(async () => {

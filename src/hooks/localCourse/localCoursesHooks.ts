@@ -6,7 +6,6 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { useGlobalSettingsQuery } from "./globalSettingsHooks";
 
 export const useLocalCoursesSettingsQuery = () => {
   const trpc = useTRPC();

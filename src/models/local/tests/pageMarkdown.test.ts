@@ -1,5 +1,5 @@
+import { LocalCoursePage, localPageMarkdownUtils } from "@/features/local/pages/localCoursePageModels";
 import { describe, it, expect } from "vitest";
-import { LocalCoursePage, localPageMarkdownUtils } from "../page/localCoursePage";
 
 describe("PageMarkdownTests", () => {
   it("can parse page", () => {

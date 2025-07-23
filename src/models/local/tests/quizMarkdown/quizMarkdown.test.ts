@@ -1,9 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { LocalQuiz } from "../../models/localQuiz";
-import { quizMarkdownUtils } from "../../models/utils/quizMarkdownUtils";
-import { QuestionType } from "@/models/local/models/localQuizQuestion";
-import { quizQuestionMarkdownUtils } from "@/models/local/models/utils/quizQuestionMarkdownUtils";
 import { markdownToHtmlNoImages } from "@/services/htmlMarkdownUtils";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
+import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "@/features/local/quizzes/models/utils/quizQuestionMarkdownUtils";
 
 // Test suite for QuizMarkdown
 describe("QuizMarkdownTests", () => {

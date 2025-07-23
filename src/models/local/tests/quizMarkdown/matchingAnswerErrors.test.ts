@@ -1,5 +1,5 @@
+import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 import { describe, it, expect } from "vitest";
-import { quizMarkdownUtils } from "@/models/local/models/utils/quizMarkdownUtils";
 
 describe("Matching Answer Error Messages", () => {
   it("can parse matching question", () => {
