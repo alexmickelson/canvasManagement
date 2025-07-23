@@ -7,7 +7,7 @@ import path from "path";
 import { promises as fs } from "fs";
 import { courseItemFileStorageService } from "@/features/local/course/courseItemFileStorageService";
 import { getCoursePathByName } from "@/features/local/globalSettings/globalSettingsFileStorageService";
-import { directoryOrFileExists } from "@/services/fileStorage/utils/fileSystemUtils";
+import { directoryOrFileExists } from "@/features/local/utils/fileSystemUtils";
 
 const getAssignmentNames = async (courseName: string, moduleName: string) => {
   const courseDirectory = await getCoursePathByName(courseName);

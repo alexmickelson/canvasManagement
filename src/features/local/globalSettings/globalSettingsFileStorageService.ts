@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { basePath } from "../../../services/fileStorage/utils/fileSystemUtils";
+import { basePath } from "../utils/fileSystemUtils";
 import {
   GlobalSettings,
   zodGlobalSettings,

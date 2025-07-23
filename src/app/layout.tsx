@@ -5,7 +5,7 @@ import { Suspense } from "react";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { MyToaster } from "./MyToaster";
 import { createServerSideHelpers } from "@trpc/react-query/server";
-import { trpcAppRouter } from "@/services/serverFunctions/router/appRouter";
+import { trpcAppRouter } from "@/services/serverFunctions/appRouter";
 import { createTrpcContext } from "@/services/serverFunctions/context";
 import superjson from "superjson";
 import { fileStorageService } from "@/features/local/utils/fileStorageService";

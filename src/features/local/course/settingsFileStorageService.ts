@@ -1,9 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import {
-  basePath,
-  directoryOrFileExists,
-} from "../../../services/fileStorage/utils/fileSystemUtils";
+import { basePath, directoryOrFileExists } from "../utils/fileSystemUtils";
 import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 import {
   getCoursePathByName,

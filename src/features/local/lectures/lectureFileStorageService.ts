@@ -8,7 +8,7 @@ import {
   parseLecture,
   getLectureWeekName,
   lectureToString,
-} from "@/services/fileStorage/utils/lectureUtils";
+} from "@/features/local/lectures/lectureUtils";
 import {
   LocalCourseSettings,
   getDayOfWeek,

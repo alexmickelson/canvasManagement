@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { promises as fs } from "fs";
 import { fileStorageService } from "../../features/local/utils/fileStorageService";
-import { basePath } from "../fileStorage/utils/fileSystemUtils";
+import { basePath } from "../../features/local/utils/fileSystemUtils";
 
 describe("FileStorageTests", () => {
   beforeEach(async () => {

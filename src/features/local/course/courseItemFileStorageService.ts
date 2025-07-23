@@ -1,5 +1,5 @@
 import path from "path";
-import { directoryOrFileExists } from "../../../services/fileStorage/utils/fileSystemUtils";
+import { directoryOrFileExists } from "../utils/fileSystemUtils";
 import fs from "fs/promises";
 import {
   LocalAssignment,

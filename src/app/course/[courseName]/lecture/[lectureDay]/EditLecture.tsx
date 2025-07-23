@@ -7,7 +7,7 @@ import {
 import {
   lectureToString,
   parseLecture,
-} from "@/services/fileStorage/utils/lectureUtils";
+} from "@/features/local/lectures/lectureUtils";
 import { useEffect, useState } from "react";
 import LecturePreview from "./LecturePreview";
 import EditLectureTitle from "./EditLectureTitle";

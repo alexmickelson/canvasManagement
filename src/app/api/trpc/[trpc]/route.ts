@@ -1,5 +1,5 @@
 import { createTrpcContext } from "@/services/serverFunctions/context";
-import { trpcAppRouter } from "@/services/serverFunctions/router/appRouter";
+import { trpcAppRouter } from "@/services/serverFunctions/appRouter";
 import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 
 const handler = async (request: Request) => {

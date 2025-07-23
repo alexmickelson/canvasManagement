@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { lectureToString } from "../fileStorage/utils/lectureUtils";
-import { parseLecture } from "../fileStorage/utils/lectureUtils";
+import { lectureToString } from "../../features/local/lectures/lectureUtils";
+import { parseLecture } from "../../features/local/lectures/lectureUtils";
 import { Lecture } from "@/features/local/lectures/lectureModel";
 
 describe("can parse and stringify lectures", () => {

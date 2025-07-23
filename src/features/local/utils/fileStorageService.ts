@@ -1,9 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import {
-  basePath,
-  directoryOrFileExists,
-} from "../../../services/fileStorage/utils/fileSystemUtils";
+import { basePath, directoryOrFileExists } from "./fileSystemUtils";
 import { quizFileStorageService } from "../quizzes/quizFileStorageService";
 import { pageFileStorageService } from "../pages/pageFileStorageService";
 import { moduleFileStorageService } from "../modules/moduleFileStorageService";

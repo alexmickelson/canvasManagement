@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import { lectureFolderName } from "../../../services/fileStorage/utils/lectureUtils";
+import { lectureFolderName } from "../lectures/lectureUtils";
 import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
 
 export const moduleFileStorageService = {
