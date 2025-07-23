@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { promises as fs } from "fs";
-import { fileStorageService } from "../../features/local/utils/fileStorageService";
-import { basePath } from "../../features/local/utils/fileSystemUtils";
+import { fileStorageService } from "../fileStorageService";
+import { basePath } from "../fileSystemUtils";
 import { courseItemFileStorageService } from "@/features/local/course/courseItemFileStorageService";
 import { createModuleFile } from "@/features/local/modules/moduleRouter";
 
