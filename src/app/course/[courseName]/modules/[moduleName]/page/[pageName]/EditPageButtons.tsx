@@ -4,15 +4,15 @@ import { Spinner } from "@/components/Spinner";
 import {
   useCanvasPagesQuery,
   useCreateCanvasPageMutation,
-  useDeleteCanvasPageMutation,
   useUpdateCanvasPageMutation,
-} from "@/hooks/canvas/canvasPageHooks";
+  useDeleteCanvasPageMutation,
+} from "@/features/canvas/hooks/canvasPageHooks";
+import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import {
   useDeletePageMutation,
   usePageQuery,
 } from "@/features/local/pages/pageHooks";
-import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

@@ -6,14 +6,12 @@ import { StoragePathSelector } from "@/components/form/StoragePathSelector";
 import TextInput from "@/components/form/TextInput";
 import { Spinner } from "@/components/Spinner";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
-import { useCourseListInTermQuery } from "@/hooks/canvas/canvasCourseHooks";
-import { useCanvasTermsQuery } from "@/hooks/canvas/canvasHooks";
 import {
   useCreateLocalCourseMutation,
   useLocalCoursesSettingsQuery,
 } from "@/features/local/course/localCoursesHooks";
-import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
-import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
+import { CanvasCourseModel } from "@/features/canvas/models/courses/canvasCourseModel";
+import { CanvasEnrollmentTermModel } from "@/features/canvas/models/enrollmentTerms/canvasEnrollmentTermModel";
 import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 import { getCourseUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
@@ -22,6 +20,8 @@ import {
   DayOfWeek,
   LocalCourseSettings,
 } from "@/features/local/course/localCourseSettings";
+import { useCourseListInTermQuery } from "@/features/canvas/hooks/canvasCourseHooks";
+import { useCanvasTermsQuery } from "@/features/canvas/hooks/canvasHooks";
 
 const sampleCompose = `services:
   canvas_manager:

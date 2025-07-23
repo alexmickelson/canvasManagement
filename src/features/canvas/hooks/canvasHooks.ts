@@ -1,5 +1,5 @@
-import { canvasService } from "@/services/canvas/canvasService";
 import { useSuspenseQuery } from "@tanstack/react-query";
+import { canvasService } from "../services/canvasService";
 
 export const canvasKeys = {
   allTerms: ["all canvas terms"] as const,

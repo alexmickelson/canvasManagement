@@ -1,7 +1,7 @@
 // services/canvasServiceUtils.ts
 
+import { axiosClient } from "@/services/axiosUtils";
 import { AxiosResponseHeaders, RawAxiosResponseHeaders } from "axios";
-import { axiosClient } from "../axiosUtils";
 
 export const baseCanvasUrl = "https://snow.instructure.com";
 export const canvasApi = baseCanvasUrl + "/api/v1";

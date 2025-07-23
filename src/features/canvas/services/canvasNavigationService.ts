@@ -1,4 +1,4 @@
-import { axiosClient } from "../axiosUtils";
+import { axiosClient } from "@/services/axiosUtils";
 import { canvasApi } from "./canvasServiceUtils";
 
 export interface CanvasCourseTab {

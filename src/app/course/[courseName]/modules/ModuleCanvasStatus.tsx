@@ -2,9 +2,9 @@
 import CheckIcon from "@/components/icons/CheckIcon";
 import { Spinner } from "@/components/Spinner";
 import {
-  useAddCanvasModuleMutation,
   useCanvasModulesQuery,
-} from "@/hooks/canvas/canvasModuleHooks";
+  useAddCanvasModuleMutation,
+} from "@/features/canvas/hooks/canvasModuleHooks";
 
 export function ModuleCanvasStatus({ moduleName }: { moduleName: string }) {
   const { data: canvasModules } = useCanvasModulesQuery();

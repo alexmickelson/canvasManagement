@@ -7,11 +7,11 @@ import {
 import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
 import { useEffect, useState } from "react";
 import TextInput from "../../../../components/form/TextInput";
-import { useSetAssignmentGroupsMutation } from "@/hooks/canvas/canvasCourseHooks";
 import { settingsBox } from "./sharedSettings";
 import { Spinner } from "@/components/Spinner";
-import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import MeatballIcon from "./MeatballIcon";
+import { useSetAssignmentGroupsMutation } from "@/features/canvas/hooks/canvasCourseHooks";
+import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
 
 export default function AssignmentGroupManagement() {
   const { data: settings, isPending } = useLocalCourseSettingsQuery();

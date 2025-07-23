@@ -5,13 +5,13 @@ import {
   useCanvasQuizzesQuery,
   useAddQuizToCanvasMutation,
   useDeleteQuizFromCanvasMutation,
-} from "@/hooks/canvas/canvasQuizHooks";
+} from "@/features/canvas/hooks/canvasQuizHooks";
+import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import {
   useDeleteQuizMutation,
   useQuizQuery,
 } from "@/features/local/quizzes/quizHooks";
-import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

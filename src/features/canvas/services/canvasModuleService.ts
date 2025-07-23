@@ -1,8 +1,8 @@
-import { CanvasModuleItem } from "@/models/canvas/modules/canvasModuleItems";
-import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
-import { axiosClient } from "../axiosUtils";
+import { CanvasModuleItem } from "@/features/canvas/models/modules/canvasModuleItems";
+import { CanvasPage } from "@/features/canvas/models/pages/canvasPageModel";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
-import { CanvasModule } from "@/models/canvas/modules/canvasModule";
+import { CanvasModule } from "@/features/canvas/models/modules/canvasModule";
+import { axiosClient } from "@/services/axiosUtils";
 
 export const canvasModuleService = {
   async updateModuleItem(
@@ -63,5 +63,4 @@ export const canvasModuleService = {
     const response = await axiosClient.post<CanvasModule>(url, body);
     return response.data.id;
   },
-
 };

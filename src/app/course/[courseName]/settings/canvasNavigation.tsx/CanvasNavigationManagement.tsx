@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { useCanvasTabsQuery } from "@/hooks/canvas/canvasNavigationHooks";
-import { useUpdateCanvasTabMutation } from "@/hooks/canvas/canvasNavigationHooks";
 import { Spinner } from "@/components/Spinner";
 import { NavTabListItem } from "./NavTabListItem";
+import {
+  useCanvasTabsQuery,
+  useUpdateCanvasTabMutation,
+} from "@/features/canvas/hooks/canvasNavigationHooks";
 
 export const CanvasNavigationManagement = () => {
   const { data: tabs, isLoading, isError } = useCanvasTabsQuery();

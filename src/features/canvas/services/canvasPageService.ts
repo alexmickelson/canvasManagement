@@ -1,10 +1,10 @@
-import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
+import { CanvasPage } from "@/features/canvas/models/pages/canvasPageModel";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
-import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
-import { axiosClient } from "../axiosUtils";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
+import { axiosClient } from "@/services/axiosUtils";
+import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {

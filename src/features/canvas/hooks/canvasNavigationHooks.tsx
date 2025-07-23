@@ -1,6 +1,6 @@
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import { useLocalCourseSettingsQuery } from "../../features/local/course/localCoursesHooks";
-import { canvasNavigationService } from "@/services/canvas/canvasNavigationService";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { canvasNavigationService } from "../services/canvasNavigationService";
 
 export const canvasCourseTabKeys = {
   tabs: (canvasId: number) => ["canvas", canvasId, "tabs list"] as const,

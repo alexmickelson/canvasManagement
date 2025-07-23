@@ -1,7 +1,5 @@
 "use client";
-import { useCanvasAssignmentsQuery } from "@/hooks/canvas/canvasAssignmentHooks";
-import { useCanvasPagesQuery } from "@/hooks/canvas/canvasPageHooks";
-import { useCanvasQuizzesQuery } from "@/hooks/canvas/canvasQuizHooks";
+
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import {
   getDateFromStringOrThrow,
@@ -13,6 +11,9 @@ import { getStatus } from "./getStatus";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { useCanvasAssignmentsQuery } from "@/features/canvas/hooks/canvasAssignmentHooks";
+import { useCanvasPagesQuery } from "@/features/canvas/hooks/canvasPageHooks";
+import { useCanvasQuizzesQuery } from "@/features/canvas/hooks/canvasQuizHooks";
 
 export function useTodaysItems(day: string) {
   const { data: settings } = useLocalCourseSettingsQuery();

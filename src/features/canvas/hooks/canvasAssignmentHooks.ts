@@ -1,12 +1,12 @@
-import { canvasAssignmentService } from "@/services/canvas/canvasAssignmentService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalCourseSettingsQuery } from "../../features/local/course/localCoursesHooks";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
-import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 import {
   useAddCanvasModuleMutation,
   useCanvasModulesQuery,
 } from "./canvasModuleHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { canvasModuleService } from "../services/canvasModuleService";
+import { canvasAssignmentService } from "../services/canvasAssignmentService";
 
 export const canvasAssignmentKeys = {
   assignments: (canvasCourseId: number) =>

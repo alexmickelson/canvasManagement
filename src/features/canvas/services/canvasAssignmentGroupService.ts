@@ -1,8 +1,8 @@
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
-import { axiosClient } from "../axiosUtils";
-import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
+import { CanvasAssignmentGroup } from "@/features/canvas/models/assignments/canvasAssignmentGroup";
 import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
+import { axiosClient } from "@/services/axiosUtils";
 
 export const canvasAssignmentGroupService = {
   async getAll(courseId: number): Promise<CanvasAssignmentGroup[]> {

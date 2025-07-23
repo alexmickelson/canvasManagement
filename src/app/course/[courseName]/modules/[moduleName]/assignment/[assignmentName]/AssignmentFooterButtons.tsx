@@ -2,17 +2,17 @@ import { useCourseContext } from "@/app/course/[courseName]/context/courseContex
 import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import {
-  useAssignmentQuery,
-  useDeleteAssignmentMutation,
-} from "@/features/local/assignments/assignmentHooks";
-import {
   useCanvasAssignmentsQuery,
   useAddAssignmentToCanvasMutation,
   useDeleteAssignmentFromCanvasMutation,
   useUpdateAssignmentInCanvasMutation,
-} from "@/hooks/canvas/canvasAssignmentHooks";
+} from "@/features/canvas/hooks/canvasAssignmentHooks";
+import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
+import {
+  useAssignmentQuery,
+  useDeleteAssignmentMutation,
+} from "@/features/local/assignments/assignmentHooks";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
-import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

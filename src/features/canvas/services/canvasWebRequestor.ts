@@ -1,5 +1,5 @@
+import { axiosClient } from "@/services/axiosUtils";
 import { AxiosResponse } from "axios";
-import { axiosClient } from "../axiosUtils";
 
 const rateLimitRetryCount = 6;
 const rateLimitSleepInterval = 1000;

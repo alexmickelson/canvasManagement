@@ -1,6 +1,6 @@
-import { canvasModuleService } from "@/services/canvas/canvasModuleService";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalCourseSettingsQuery } from "../../features/local/course/localCoursesHooks";
+import { canvasModuleService } from "../services/canvasModuleService";
 
 export const canvasCourseModuleKeys = {
   modules: (canvasId: number) => ["canvas", canvasId, "module list"] as const,

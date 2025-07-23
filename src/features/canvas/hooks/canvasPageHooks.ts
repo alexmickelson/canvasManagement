@@ -1,12 +1,12 @@
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
-import { canvasPageService } from "@/services/canvas/canvasPageService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalCourseSettingsQuery } from "../../features/local/course/localCoursesHooks";
-import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 import {
   useCanvasModulesQuery,
   useAddCanvasModuleMutation,
 } from "./canvasModuleHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { canvasModuleService } from "../services/canvasModuleService";
+import { canvasPageService } from "../services/canvasPageService";
 
 export const canvasPageKeys = {
   pagesInCourse: (courseCanvasId: number) => [

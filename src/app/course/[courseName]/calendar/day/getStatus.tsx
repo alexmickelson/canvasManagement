@@ -1,7 +1,7 @@
 "use client";
-import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
-import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
-import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
+import { CanvasAssignment } from "@/features/canvas/models/assignments/canvasAssignment";
+import { CanvasPage } from "@/features/canvas/models/pages/canvasPageModel";
+import { CanvasQuiz } from "@/features/canvas/models/quizzes/canvasQuizModel";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import {
   dateToMarkdownString,

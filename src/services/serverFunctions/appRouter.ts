@@ -8,7 +8,7 @@ import { pageRouter } from "../../features/local/pages/pageRouter";
 import { quizRouter } from "../../features/local/quizzes/quizRouter";
 import { settingsRouter } from "../../features/local/course/settingsRouter";
 import { moduleRouter } from "@/features/local/modules/moduleRouter";
-import { canvasFileRouter } from "../canvas/canvasFileRouter";
+import { canvasFileRouter } from "@/features/canvas/services/canvasFileRouter";
 
 export const trpcAppRouter = router({
   assignment: assignmentRouter,

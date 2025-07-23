@@ -1,13 +1,13 @@
-import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
+import { CanvasAssignment } from "@/features/canvas/models/assignments/canvasAssignment";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
-import { axiosClient } from "../axiosUtils";
-import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
-import { CanvasRubricCreationResponse } from "@/models/canvas/assignments/canvasRubricCreationResponse";
+import { CanvasRubricCreationResponse } from "@/features/canvas/models/assignments/canvasRubricCreationResponse";
 import { assignmentPoints } from "@/features/local/assignments/models/utils/assignmentPointsUtils";
 import { getDateFromString } from "@/features/local/utils/timeUtils";
 import { getRubricCriterion } from "./canvasRubricUtils";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
+import { axiosClient } from "@/services/axiosUtils";
+import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {

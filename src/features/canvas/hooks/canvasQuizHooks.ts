@@ -1,12 +1,12 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalCourseSettingsQuery } from "../../features/local/course/localCoursesHooks";
-import { canvasQuizService } from "@/services/canvas/canvasQuizService";
 import {
   useAddCanvasModuleMutation,
   useCanvasModulesQuery,
 } from "./canvasModuleHooks";
-import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { canvasModuleService } from "../services/canvasModuleService";
+import { canvasQuizService } from "../services/canvasQuizService";
 
 export const canvasQuizKeys = {
   quizzes: (canvasCourseId: number) =>

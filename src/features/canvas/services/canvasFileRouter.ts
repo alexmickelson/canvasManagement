@@ -1,12 +1,7 @@
+import publicProcedure from "@/services/serverFunctions/publicProcedure";
+import { router } from "@/services/serverFunctions/trpcSetup";
 import { z } from "zod";
-import {
-  downloadUrlToTempDirectory,
-  uploadToCanvasPart1,
-  uploadToCanvasPart2,
-} from "@/services/canvas/files/canvasFileService";
-import { router } from "../serverFunctions/trpcSetup";
-import publicProcedure from "../serverFunctions/publicProcedure";
-
+import { downloadUrlToTempDirectory, uploadToCanvasPart1, uploadToCanvasPart2 } from "./files/canvasFileService";
 const fileStorageLocation = process.env.FILE_STORAGE_LOCATION ?? "/app/public";
 
 export const canvasFileRouter = router({

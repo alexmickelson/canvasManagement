@@ -1,6 +1,6 @@
 import { Spinner } from "@/components/Spinner";
-import { useUpdateCanvasTabMutation } from "@/hooks/canvas/canvasNavigationHooks";
-import { CanvasCourseTab } from "@/services/canvas/canvasNavigationService";
+import { useUpdateCanvasTabMutation } from "@/features/canvas/hooks/canvasNavigationHooks";
+import { CanvasCourseTab } from "@/features/canvas/services/canvasNavigationService";
 import React, { FC } from "react";
 
 export const NavTabListItem: FC<{
