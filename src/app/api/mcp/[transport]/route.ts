@@ -1,9 +1,11 @@
 import { assignmentMarkdownSerializer } from "@/features/local/assignments/models/utils/assignmentMarkdownSerializer";
 import { groupByStartDate } from "@/features/local/utils/timeUtils";
-import { fileStorageService } from "@/features/local/utils/fileStorageService";
 import { createMcpHandler } from "mcp-handler";
 import { z } from "zod";
 import { githubClassroomUrlPrompt } from "./github-classroom-prompt";
+import { courseItemFileStorageService } from "@/features/local/course/courseItemFileStorageService";
+import { fileStorageService } from "@/features/local/utils/fileStorageService";
+import { getModuleNamesFromFiles } from "@/features/local/modules/moduleRouter";
 
 const handler = createMcpHandler(
   (server) => {
@@ -41,17 +43,17 @@ const handler = createMcpHandler(
         courseName: z.string(),
       },
       async ({ courseName }) => {
-        const modules = await fileStorageService.modules.getModuleNames(
+        const modules = await getModuleNamesFromFiles(
           courseName
         );
         const assignments = (
           await Promise.all(
             modules.map(async (moduleName) => {
-              const assignments =
-                await fileStorageService.assignments.getAssignments(
-                  courseName,
-                  moduleName
-                );
+              const assignments = await courseItemFileStorageService.getItems({
+                courseName,
+                moduleName,
+                type: "Assignment",
+              });
               return assignments.map((assignment) => ({
                 assignmentName: assignment.name,
                 moduleName,
@@ -100,11 +102,12 @@ const handler = createMcpHandler(
             "courseName, moduleName, and assignmentName must be strings"
           );
         }
-        const assignment = await fileStorageService.assignments.getAssignment(
+        const assignment = await courseItemFileStorageService.getItem({
           courseName,
           moduleName,
-          assignmentName
-        );
+          name: assignmentName,
+          type: "Assignment",
+        });
 
         console.log("mcp assignment", assignment);
         return {

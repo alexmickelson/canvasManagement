@@ -2,6 +2,8 @@ import { describe, it, expect, beforeEach } from "vitest";
 import { promises as fs } from "fs";
 import { fileStorageService } from "../../features/local/utils/fileStorageService";
 import { basePath } from "../../features/local/utils/fileSystemUtils";
+import { courseItemFileStorageService } from "@/features/local/course/courseItemFileStorageService";
+import { createModuleFile } from "@/features/local/modules/moduleRouter";
 
 describe("FileStorageTests", () => {
   beforeEach(async () => {
@@ -40,7 +42,7 @@ a) truthy
 `;
     const invalidQuizMarkdown = "name: testQuiz\n---\nnot a quiz";
     await fileStorageService.createCourseFolderForTesting(courseName);
-    await fileStorageService.modules.createModule(courseName, moduleName);
+    await createModuleFile(courseName, moduleName);
 
     await fs.mkdir(`${basePath}/${courseName}/${moduleName}/quizzes`, {
       recursive: true,
@@ -54,39 +56,16 @@ a) truthy
       validQuizMarkdown
     );
 
-    const quizzes = await fileStorageService.quizzes.getQuizzes(
+    const quizzes = await courseItemFileStorageService.getItems({
       courseName,
-      moduleName
-    );
+      moduleName,
+      type: "Quiz",
+    });
     const quizNames = quizzes.map((q) => q.name);
 
     expect(quizNames).not.includes("testQuiz");
     expect(quizNames).include("validQuiz");
   });
-
-  // it("invalid quizes give error messages", async () => {
-  //   const courseName = "testCourse";
-  //   const moduleName = "testModule";
-  //   const invalidQuizMarkdown = "name: testQuiz\n---\nnot a quiz";
-  //   await fileStorageService.createCourseFolderForTesting(courseName);
-  //   await fileStorageService.modules.createModule(courseName, moduleName);
-
-  //   await fs.mkdir(`${basePath}/${courseName}/${moduleName}/quizzes`, {
-  //     recursive: true,
-  //   });
-  //   await fs.writeFile(
-  //     `${basePath}/${courseName}/${moduleName}/quizzes/testQuiz.md`,
-  //     invalidQuizMarkdown
-  //   );
-
-  //   const invalidReasons = await fileStorageService.quizzes.getInvalidQuizzes(
-  //     courseName,
-  //     moduleName
-  //   );
-  //   const invalidQuiz = invalidReasons.filter((q) => q.quizName === "testQuiz");
-
-  //   expect(invalidQuiz.reason).is("testQuiz");
-  // });
 
   it("invalid assignments dont get loaded", async () => {
     const courseName = "testCourse";
@@ -107,7 +86,7 @@ this is the test description
 `;
     const invalidAssignment = "name: invalidAssignment\n---\nnot an assignment";
     await fileStorageService.createCourseFolderForTesting(courseName);
-    await fileStorageService.modules.createModule(courseName, moduleName);
+    await createModuleFile(courseName, moduleName);
 
     await fs.mkdir(`${basePath}/${courseName}/${moduleName}/assignments`, {
       recursive: true,
@@ -121,10 +100,11 @@ this is the test description
       invalidAssignment
     );
 
-    const assignments = await fileStorageService.assignments.getAssignments(
+    const assignments = await courseItemFileStorageService.getItems({
       courseName,
-      moduleName
-    );
+      moduleName,
+      type: "Assignment",
+    });
     const assignmentNames = assignments.map((q) => q.name);
 
     expect(assignmentNames).not.includes("invalidAssignment");
@@ -144,7 +124,7 @@ DueDateFo59:00
 ---
 # Deploying React`;
     await fileStorageService.createCourseFolderForTesting(courseName);
-    await fileStorageService.modules.createModule(courseName, moduleName);
+    await createModuleFile(courseName, moduleName);
 
     await fs.mkdir(`${basePath}/${courseName}/${moduleName}/pages`, {
       recursive: true,
@@ -158,10 +138,11 @@ DueDateFo59:00
       invalidPageMarkdown
     );
 
-    const pages = await fileStorageService.pages.getPages(
+    const pages = await courseItemFileStorageService.getItems({
       courseName,
-      moduleName
-    );
+      moduleName,
+      type: "Page",
+    });
     const assignmentNames = pages.map((q) => q.name);
 
     expect(assignmentNames).include("validPage");

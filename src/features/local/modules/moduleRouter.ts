@@ -1,7 +1,9 @@
 import { z } from "zod";
-import { fileStorageService } from "@/features/local/utils/fileStorageService";
 import { router } from "@/services/serverFunctions/trpcSetup";
 import publicProcedure from "@/services/serverFunctions/publicProcedure";
+import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
+import { promises as fs } from "fs";
+import { lectureFolderName } from "../lectures/lectureUtils";
 
 export const moduleRouter = router({
   getModuleNames: publicProcedure
@@ -11,7 +13,7 @@ export const moduleRouter = router({
       })
     )
     .query(async ({ input: { courseName } }) => {
-      return await fileStorageService.modules.getModuleNames(courseName);
+      return await getModuleNamesFromFiles(courseName);
     }),
   createModule: publicProcedure
     .input(
@@ -21,6 +23,27 @@ export const moduleRouter = router({
       })
     )
     .mutation(async ({ input: { courseName, moduleName } }) => {
-      await fileStorageService.modules.createModule(courseName, moduleName);
+      await createModuleFile(courseName, moduleName);
     }),
 });
+
+export async function createModuleFile(courseName: string, moduleName: string) {
+  const courseDirectory = await getCoursePathByName(courseName);
+
+  await fs.mkdir(courseDirectory + "/" + moduleName, { recursive: true });
+}
+
+export async function getModuleNamesFromFiles(courseName: string) {
+  const courseDirectory = await getCoursePathByName(courseName);
+  const moduleDirectories = await fs.readdir(courseDirectory, {
+    withFileTypes: true,
+  });
+
+  const modulePromises = moduleDirectories
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name);
+
+  const modules = await Promise.all(modulePromises);
+  const modulesWithoutLectures = modules.filter((m) => m !== lectureFolderName);
+  return modulesWithoutLectures.sort((a, b) => a.localeCompare(b));
+}

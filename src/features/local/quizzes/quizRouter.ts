@@ -1,8 +1,15 @@
 import publicProcedure from "../../../services/serverFunctions/publicProcedure";
 import { z } from "zod";
 import { router } from "../../../services/serverFunctions/trpcSetup";
-import { fileStorageService } from "@/features/local/utils/fileStorageService";
-import { zodLocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import {
+  LocalQuiz,
+  zodLocalQuiz,
+} from "@/features/local/quizzes/models/localQuiz";
+import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
+import path from "path";
+import { promises as fs } from "fs";
+import { quizMarkdownUtils } from "./models/utils/quizMarkdownUtils";
+import { courseItemFileStorageService } from "../course/courseItemFileStorageService";
 
 export const quizRouter = router({
   getQuiz: publicProcedure
@@ -14,11 +21,12 @@ export const quizRouter = router({
       })
     )
     .query(async ({ input: { courseName, moduleName, quizName } }) => {
-      return await fileStorageService.quizzes.getQuiz(
+      return await courseItemFileStorageService.getItem({
         courseName,
         moduleName,
-        quizName
-      );
+        name: quizName,
+        type: "Quiz",
+      });
     }),
 
   getAllQuizzes: publicProcedure
@@ -29,10 +37,11 @@ export const quizRouter = router({
       })
     )
     .query(async ({ input: { courseName, moduleName } }) => {
-      return await fileStorageService.quizzes.getQuizzes(
+      return await courseItemFileStorageService.getItems({
         courseName,
-        moduleName
-      );
+        moduleName,
+        type: "Quiz",
+      });
     }),
   createQuiz: publicProcedure
     .input(
@@ -44,7 +53,7 @@ export const quizRouter = router({
       })
     )
     .mutation(async ({ input: { courseName, moduleName, quizName, quiz } }) => {
-      await fileStorageService.quizzes.updateQuiz({
+      await updateQuizFile({
         courseName,
         moduleName,
         quizName,
@@ -73,7 +82,7 @@ export const quizRouter = router({
           previousQuizName,
         },
       }) => {
-        await fileStorageService.quizzes.updateQuiz({
+        await updateQuizFile({
           courseName,
           moduleName,
           quizName,
@@ -84,7 +93,7 @@ export const quizRouter = router({
           quizName !== previousQuizName ||
           moduleName !== previousModuleName
         ) {
-          await fileStorageService.quizzes.delete({
+          await deleteQuizFile({
             courseName,
             moduleName: previousModuleName,
             quizName: previousQuizName,
@@ -101,10 +110,56 @@ export const quizRouter = router({
       })
     )
     .mutation(async ({ input: { courseName, moduleName, quizName } }) => {
-      await fileStorageService.quizzes.delete({
+      await deleteQuizFile({
         courseName,
         moduleName,
         quizName,
       });
     }),
 });
+
+export async function deleteQuizFile({
+  courseName,
+  moduleName,
+  quizName,
+}: {
+  courseName: string;
+  moduleName: string;
+  quizName: string;
+}) {
+  const courseDirectory = await getCoursePathByName(courseName);
+  const filePath = path.join(
+    courseDirectory,
+    moduleName,
+    "quizzes",
+    quizName + ".md"
+  );
+  console.log("removing quiz", filePath);
+  await fs.unlink(filePath);
+}
+
+export async function updateQuizFile({
+  courseName,
+  moduleName,
+  quizName,
+  quiz,
+}: {
+  courseName: string;
+  moduleName: string;
+  quizName: string;
+  quiz: LocalQuiz;
+}) {
+  const courseDirectory = await getCoursePathByName(courseName);
+  const folder = path.join(courseDirectory, moduleName, "quizzes");
+  await fs.mkdir(folder, { recursive: true });
+  const filePath = path.join(
+    courseDirectory,
+    moduleName,
+    "quizzes",
+    quizName + ".md"
+  );
+
+  const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
+  console.log(`Saving quiz ${filePath}`);
+  await fs.writeFile(filePath, quizMarkdown);
+}

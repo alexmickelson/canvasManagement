@@ -1,8 +1,11 @@
 import publicProcedure from "../../../services/serverFunctions/publicProcedure";
 import { z } from "zod";
 import { router } from "../../../services/serverFunctions/trpcSetup";
-import { fileStorageService } from "@/features/local/utils/fileStorageService";
-import { zodLocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { LocalCoursePage, localPageMarkdownUtils, zodLocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { courseItemFileStorageService } from "../course/courseItemFileStorageService";
+import { promises as fs } from "fs";
+import path from "path";
+import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
 
 export const pageRouter = router({
   getPage: publicProcedure
@@ -14,11 +17,12 @@ export const pageRouter = router({
       })
     )
     .query(async ({ input: { courseName, moduleName, pageName } }) => {
-      return await fileStorageService.pages.getPage(
+      return await courseItemFileStorageService.getItem({
         courseName,
         moduleName,
-        pageName
-      );
+        name: pageName,
+        type: "Page",
+      });
     }),
 
   getAllPages: publicProcedure
@@ -29,7 +33,11 @@ export const pageRouter = router({
       })
     )
     .query(async ({ input: { courseName, moduleName } }) => {
-      return await fileStorageService.pages.getPages(courseName, moduleName);
+      return await courseItemFileStorageService.getItems({
+        courseName,
+        moduleName,
+        type: "Page",
+      });
     }),
   createPage: publicProcedure
     .input(
@@ -41,7 +49,7 @@ export const pageRouter = router({
       })
     )
     .mutation(async ({ input: { courseName, moduleName, pageName, page } }) => {
-      await fileStorageService.pages.updatePage({
+      await updatePageFile({
         courseName,
         moduleName,
         pageName,
@@ -70,7 +78,7 @@ export const pageRouter = router({
           previousPageName,
         },
       }) => {
-        await fileStorageService.pages.updatePage({
+        await updatePageFile({
           courseName,
           moduleName,
           pageName,
@@ -81,7 +89,7 @@ export const pageRouter = router({
           pageName !== previousPageName ||
           moduleName !== previousModuleName
         ) {
-          await fileStorageService.pages.delete({
+          await deletePageFile({
             courseName,
             moduleName: previousModuleName,
             pageName: previousPageName,
@@ -98,10 +106,56 @@ export const pageRouter = router({
       })
     )
     .mutation(async ({ input: { courseName, moduleName, pageName } }) => {
-      await fileStorageService.pages.delete({
+      await deletePageFile({
         courseName,
         moduleName,
         pageName,
       });
     }),
 });
+
+export async function updatePageFile({
+    courseName,
+    moduleName,
+    pageName,
+    page,
+  }: {
+    courseName: string;
+    moduleName: string;
+    pageName: string;
+    page: LocalCoursePage;
+  }) {
+    const courseDirectory = await getCoursePathByName(courseName);
+    const folder = path.join(courseDirectory, moduleName, "pages");
+    await fs.mkdir(folder, { recursive: true });
+
+    const filePath = path.join(
+      courseDirectory,
+      moduleName,
+      "pages",
+      pageName + ".md"
+    );
+
+    const pageMarkdown = localPageMarkdownUtils.toMarkdown(page);
+    console.log(`Saving page ${filePath}`);
+    await fs.writeFile(filePath, pageMarkdown);
+  }
+async function deletePageFile({
+  courseName,
+  moduleName,
+  pageName,
+}: {
+  courseName: string;
+  moduleName: string;
+  pageName: string;
+}) {
+  const courseDirectory = await getCoursePathByName(courseName);
+  const filePath = path.join(
+    courseDirectory,
+    moduleName,
+    "pages",
+    pageName + ".md"
+  );
+  console.log("removing page", filePath);
+  await fs.unlink(filePath);
+}

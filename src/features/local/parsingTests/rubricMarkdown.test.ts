@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import {
   RubricItem,
   rubricItemIsExtraCredit,
-} from "../../../features/local/assignments/models/rubricItem";
-import { assignmentMarkdownParser } from "../../../features/local/assignments/models/utils/assignmentMarkdownParser";
+} from "../assignments/models/rubricItem";
+import { assignmentMarkdownParser } from "../assignments/models/utils/assignmentMarkdownParser";
 
 describe("RubricMarkdownTests", () => {
   it("can parse one item", () => {

@@ -13,10 +13,18 @@ import {
   updateGlobalSettings,
 } from "@/features/local/globalSettings/globalSettingsFileStorageService";
 import {
-  getLectures,
-  updateLecture,
-} from "@/features/local/lectures/lectureFileStorageService";
-import { zodLocalCourseSettings } from "@/features/local/course/localCourseSettings";
+  LocalCourseSettings,
+  zodLocalCourseSettings,
+} from "@/features/local/course/localCourseSettings";
+import { courseItemFileStorageService } from "./courseItemFileStorageService";
+import { updateOrCreateAssignmentFile } from "../assignments/assignmentRouter";
+import { updateQuizFile } from "../quizzes/quizRouter";
+import { updatePageFile } from "../pages/pageRouter";
+import { getLectures, updateLecture } from "../lectures/lectureRouter";
+import {
+  createModuleFile,
+  getModuleNamesFromFiles,
+} from "../modules/moduleRouter";
 
 export const settingsRouter = router({
   allCoursesSettings: publicProcedure.query(async () => {
@@ -71,90 +79,7 @@ export const settingsRouter = router({
         });
 
         if (settingsFromCourseToImport) {
-          const oldCourseName = settingsFromCourseToImport.name;
-          const newCourseName = settings.name;
-          const oldModules = await fileStorageService.modules.getModuleNames(
-            oldCourseName
-          );
-          await Promise.all(
-            oldModules.map(async (moduleName) => {
-              await fileStorageService.modules.createModule(
-                newCourseName,
-                moduleName
-              );
-
-              const [oldAssignments, oldQuizzes, oldPages, oldLecturesByWeek] =
-                await Promise.all([
-                  fileStorageService.assignments.getAssignments(
-                    oldCourseName,
-                    moduleName
-                  ),
-                  await fileStorageService.quizzes.getQuizzes(
-                    oldCourseName,
-                    moduleName
-                  ),
-                  await fileStorageService.pages.getPages(
-                    oldCourseName,
-                    moduleName
-                  ),
-                  await getLectures(oldCourseName),
-                ]);
-
-              await Promise.all([
-                ...oldAssignments.map(async (oldAssignment) => {
-                  const newAssignment = prepAssignmentForNewSemester(
-                    oldAssignment,
-                    settingsFromCourseToImport.startDate,
-                    settings.startDate
-                  );
-                  await fileStorageService.assignments.updateOrCreateAssignment(
-                    {
-                      courseName: newCourseName,
-                      moduleName,
-                      assignmentName: newAssignment.name,
-                      assignment: newAssignment,
-                    }
-                  );
-                }),
-                ...oldQuizzes.map(async (oldQuiz) => {
-                  const newQuiz = prepQuizForNewSemester(
-                    oldQuiz,
-                    settingsFromCourseToImport.startDate,
-                    settings.startDate
-                  );
-                  await fileStorageService.quizzes.updateQuiz({
-                    courseName: newCourseName,
-                    moduleName,
-                    quizName: newQuiz.name,
-                    quiz: newQuiz,
-                  });
-                }),
-                ...oldPages.map(async (oldPage) => {
-                  const newPage = prepPageForNewSemester(
-                    oldPage,
-                    settingsFromCourseToImport.startDate,
-                    settings.startDate
-                  );
-                  await fileStorageService.pages.updatePage({
-                    courseName: newCourseName,
-                    moduleName,
-                    pageName: newPage.name,
-                    page: newPage,
-                  });
-                }),
-                ...oldLecturesByWeek.flatMap(async (oldLectureByWeek) =>
-                  oldLectureByWeek.lectures.map(async (oldLecture) => {
-                    const newLecture = prepLectureForNewSemester(
-                      oldLecture,
-                      settingsFromCourseToImport.startDate,
-                      settings.startDate
-                    );
-                    await updateLecture(newCourseName, settings, newLecture);
-                  })
-                ),
-              ]);
-            })
-          );
+          await migrateCourseContent(settingsFromCourseToImport, settings);
         }
       }
     ),
@@ -171,3 +96,96 @@ export const settingsRouter = router({
       );
     }),
 });
+
+async function migrateCourseContent(
+  settingsFromCourseToImport: LocalCourseSettings,
+  settings: LocalCourseSettings
+) {
+  const oldCourseName = settingsFromCourseToImport.name;
+  const newCourseName = settings.name;
+  const oldModules = await getModuleNamesFromFiles(oldCourseName);
+  await Promise.all(
+    oldModules.map(async (moduleName) => {
+      await createModuleFile(newCourseName, moduleName);
+      const [oldAssignments, oldQuizzes, oldPages, oldLecturesByWeek] =
+        await Promise.all([
+          await courseItemFileStorageService.getItems({
+            courseName: oldCourseName,
+            moduleName,
+            type: "Assignment",
+          }),
+          await courseItemFileStorageService.getItems({
+            courseName: oldCourseName,
+            moduleName,
+            type: "Quiz",
+          }),
+          await courseItemFileStorageService.getItems({
+            courseName: oldCourseName,
+            moduleName,
+            type: "Page",
+          }),
+          await getLectures(oldCourseName),
+        ]);
+
+      const updateAssignmentPromises = oldAssignments.map(
+        async (oldAssignment) => {
+          const newAssignment = prepAssignmentForNewSemester(
+            oldAssignment,
+            settingsFromCourseToImport.startDate,
+            settings.startDate
+          );
+          await updateOrCreateAssignmentFile({
+            courseName: newCourseName,
+            moduleName,
+            assignmentName: newAssignment.name,
+            assignment: newAssignment,
+          });
+        }
+      );
+      const updateQuizzesPromises = oldQuizzes.map(async (oldQuiz) => {
+        const newQuiz = prepQuizForNewSemester(
+          oldQuiz,
+          settingsFromCourseToImport.startDate,
+          settings.startDate
+        );
+        await updateQuizFile({
+          courseName: newCourseName,
+          moduleName,
+          quizName: newQuiz.name,
+          quiz: newQuiz,
+        });
+      });
+      const updatePagesPromises = oldPages.map(async (oldPage) => {
+        const newPage = prepPageForNewSemester(
+          oldPage,
+          settingsFromCourseToImport.startDate,
+          settings.startDate
+        );
+        await updatePageFile({
+          courseName: newCourseName,
+          moduleName,
+          pageName: newPage.name,
+          page: newPage,
+        });
+      });
+      const updateLecturePromises = oldLecturesByWeek.flatMap(
+        async (oldLectureByWeek) =>
+          oldLectureByWeek.lectures.map(async (oldLecture) => {
+            const newLecture = prepLectureForNewSemester(
+              oldLecture,
+              settingsFromCourseToImport.startDate,
+              settings.startDate
+            );
+            await updateLecture(newCourseName, settings, newLecture);
+          })
+      );
+
+      await Promise.all([
+        ...updateAssignmentPromises,
+        ...updateQuizzesPromises,
+        ...updatePagesPromises,
+        ...updateLecturePromises,
+      ]);
+    })
+  );
+}

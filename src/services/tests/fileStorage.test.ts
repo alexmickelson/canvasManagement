@@ -5,6 +5,10 @@ import {
   LocalCourseSettings,
   DayOfWeek,
 } from "@/features/local/course/localCourseSettings";
+import {
+  createModuleFile,
+  getModuleNamesFromFiles,
+} from "@/features/local/modules/moduleRouter";
 
 describe("FileStorageTests", () => {
   beforeEach(async () => {
@@ -51,11 +55,9 @@ describe("FileStorageTests", () => {
     const courseName = "test empty course";
     const moduleName = "test module 1";
 
-    await fileStorageService.modules.createModule(courseName, moduleName);
+    await createModuleFile(courseName, moduleName);
 
-    const moduleNames = await fileStorageService.modules.getModuleNames(
-      courseName
-    );
+    const moduleNames = await getModuleNamesFromFiles(courseName);
 
     expect(moduleNames).toContain(moduleName);
   });

@@ -1,19 +1,11 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { basePath, directoryOrFileExists } from "./fileSystemUtils";
-import { quizFileStorageService } from "../quizzes/quizFileStorageService";
-import { pageFileStorageService } from "../pages/pageFileStorageService";
-import { moduleFileStorageService } from "../modules/moduleFileStorageService";
 import { settingsFileStorageService } from "../course/settingsFileStorageService";
 import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
-import { assignmentsFileStorageService } from "@/features/local/assignments/assignmentsFileStorageService";
 
 export const fileStorageService = {
   settings: settingsFileStorageService,
-  modules: moduleFileStorageService,
-  assignments: assignmentsFileStorageService,
-  quizzes: quizFileStorageService,
-  pages: pageFileStorageService,
 
   async getEmptyDirectories(): Promise<string[]> {
     if (!(await directoryOrFileExists(basePath))) {
