@@ -4,7 +4,7 @@ import {
   getDateKey,
   getTermName,
   groupByStartDate,
-} from "@/models/local/utils/timeUtils";
+} from "@/features/local/utils/timeUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 

@@ -1,15 +1,18 @@
 import path from "path";
 import fs from "fs/promises";
 import { Lecture } from "@/features/local/lectures/lectureModel";
-import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
-import { getCoursePathByName } from "@/services/fileStorage/globalSettingsFileStorageService";
+import { getDateFromStringOrThrow } from "@/features/local/utils/timeUtils";
+import { getCoursePathByName } from "@/features/local/globalSettings/globalSettingsFileStorageService";
 import {
   lectureFolderName,
   parseLecture,
   getLectureWeekName,
   lectureToString,
 } from "@/services/fileStorage/utils/lectureUtils";
-import { LocalCourseSettings, getDayOfWeek } from "../course/localCourseSettings";
+import {
+  LocalCourseSettings,
+  getDayOfWeek,
+} from "../course/localCourseSettings";
 
 export async function getLectures(courseName: string) {
   const courseDirectory = await getCoursePathByName(courseName);

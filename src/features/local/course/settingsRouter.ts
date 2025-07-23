@@ -1,18 +1,21 @@
-import publicProcedure from "../procedures/public";
+import publicProcedure from "../../../services/serverFunctions/publicProcedure";
 import { z } from "zod";
-import { router } from "../trpcSetup";
-import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { router } from "../../../services/serverFunctions/trpcSetup";
+import { fileStorageService } from "@/features/local/utils/fileStorageService";
 import {
   prepAssignmentForNewSemester,
   prepLectureForNewSemester,
   prepPageForNewSemester,
   prepQuizForNewSemester,
-} from "@/models/local/utils/semesterTransferUtils";
+} from "@/features/local/utils/semesterTransferUtils";
 import {
   getGlobalSettings,
   updateGlobalSettings,
-} from "@/services/fileStorage/globalSettingsFileStorageService";
-import { getLectures, updateLecture } from "@/features/local/lectures/lectureFileStorageService";
+} from "@/features/local/globalSettings/globalSettingsFileStorageService";
+import {
+  getLectures,
+  updateLecture,
+} from "@/features/local/lectures/lectureFileStorageService";
 import { zodLocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export const settingsRouter = router({

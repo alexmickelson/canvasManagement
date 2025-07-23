@@ -1,4 +1,4 @@
-import { useDirectoryContentsQuery } from "@/hooks/localCourse/storageDirectoryHooks";
+import { useDirectoryContentsQuery } from "@/features/local/utils/storageDirectoryHooks";
 import { useState, useRef, useEffect } from "react";
 import { createPortal } from "react-dom";
 

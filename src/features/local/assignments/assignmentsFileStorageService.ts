@@ -6,7 +6,7 @@ import { assignmentMarkdownSerializer } from "@/features/local/assignments/model
 import path from "path";
 import { promises as fs } from "fs";
 import { courseItemFileStorageService } from "@/features/local/course/courseItemFileStorageService";
-import { getCoursePathByName } from "@/services/fileStorage/globalSettingsFileStorageService";
+import { getCoursePathByName } from "@/features/local/globalSettings/globalSettingsFileStorageService";
 import { directoryOrFileExists } from "@/services/fileStorage/utils/fileSystemUtils";
 
 const getAssignmentNames = async (courseName: string, moduleName: string) => {

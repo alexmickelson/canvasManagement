@@ -6,7 +6,7 @@ import { LocalAssignment } from "@/features/local/assignments/models/localAssign
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
-} from "@/models/local/utils/timeUtils";
+} from "@/features/local/utils/timeUtils";
 import { ReactNode } from "react";
 import { useCalendarItemsContext } from "../../context/calendarItemsContext";
 import { getStatus } from "./getStatus";

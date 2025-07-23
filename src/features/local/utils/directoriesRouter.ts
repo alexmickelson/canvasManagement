@@ -1,7 +1,7 @@
 import z from "zod";
-import publicProcedure from "../procedures/public";
-import { router } from "../trpcSetup";
-import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import publicProcedure from "../../../services/serverFunctions/publicProcedure";
+import { router } from "../../../services/serverFunctions/trpcSetup";
+import { fileStorageService } from "@/features/local/utils/fileStorageService";
 
 export const directoriesRouter = router({
   getEmptyDirectories: publicProcedure.query(async () => {

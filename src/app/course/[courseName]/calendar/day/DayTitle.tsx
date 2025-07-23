@@ -5,7 +5,7 @@ import { useCourseContext } from "../../context/courseContext";
 import NewItemForm from "../../modules/NewItemForm";
 import { DraggableItem } from "../../context/drag/draggingContext";
 import { useDragStyleContext } from "../../context/drag/dragStyleContext";
-import { getLectureForDay } from "@/models/local/utils/lectureUtils";
+import { getLectureForDay } from "@/features/local/utils/lectureUtils";
 import { useLecturesSuspenseQuery } from "@/features/local/lectures/lectureHooks";
 import ClientOnly from "@/components/ClientOnly";
 import { Tooltip } from "@/components/Tooltip";

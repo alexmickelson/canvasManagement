@@ -3,7 +3,7 @@ import { CalendarMonthModel, getWeekNumber } from "./calendarMonthUtils";
 import { Expandable } from "@/components/Expandable";
 import { CalendarWeek } from "./CalendarWeek";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
-import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
+import { getDateFromStringOrThrow } from "@/features/local/utils/timeUtils";
 import UpChevron from "@/components/icons/UpChevron";
 import DownChevron from "@/components/icons/DownChevron";
 import { DayOfWeek } from "@/features/local/course/localCourseSettings";

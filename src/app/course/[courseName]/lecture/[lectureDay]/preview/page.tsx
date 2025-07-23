@@ -1,7 +1,7 @@
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
-} from "@/models/local/utils/timeUtils";
+} from "@/features/local/utils/timeUtils";
 import LecturePreviewPage from "./LecturePreviewPage";
 export const dynamic = "force-dynamic";
 

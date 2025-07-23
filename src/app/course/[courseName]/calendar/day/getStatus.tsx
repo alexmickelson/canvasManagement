@@ -6,7 +6,7 @@ import { LocalAssignment } from "@/features/local/assignments/models/localAssign
 import {
   dateToMarkdownString,
   getDateFromStringOrThrow,
-} from "@/models/local/utils/timeUtils";
+} from "@/features/local/utils/timeUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 import { htmlIsCloseEnough } from "@/services/utils/htmlIsCloseEnough";
 import { ReactNode } from "react";

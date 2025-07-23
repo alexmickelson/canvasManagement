@@ -1,5 +1,5 @@
 import { z } from "zod";
-import publicProcedure from "../../../services/serverFunctions/procedures/public";
+import publicProcedure from "../../../services/serverFunctions/publicProcedure";
 import { router } from "../../../services/serverFunctions/trpcSetup";
 import { zodLecture } from "@/features/local/lectures/lectureModel";
 import {

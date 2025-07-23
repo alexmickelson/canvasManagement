@@ -1,9 +1,6 @@
+import { GlobalSettings } from "@/features/local/globalSettings/globalSettingsModels";
+import { globalSettingsToYaml, parseGlobalSettingsYaml } from "@/features/local/globalSettings/globalSettingsUtils";
 import { describe, it, expect } from "vitest";
-import { GlobalSettings } from "../globalSettings";
-import {
-  globalSettingsToYaml,
-  parseGlobalSettingsYaml,
-} from "../globalSettingsUtils";
 
 describe("GlobalSettingsMarkdownTests", () => {
   it("can parse global settings", () => {

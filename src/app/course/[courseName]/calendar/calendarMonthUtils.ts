@@ -1,7 +1,7 @@
 import {
   dateToMarkdownString,
   getDateFromStringOrThrow,
-} from "@/models/local/utils/timeUtils";
+} from "@/features/local/utils/timeUtils";
 
 export interface CalendarMonthModel {
   year: number;

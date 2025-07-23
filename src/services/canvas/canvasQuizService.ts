@@ -2,12 +2,15 @@ import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
 import { axiosClient } from "../axiosUtils";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
-import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
+import { getDateFromStringOrThrow } from "@/features/local/utils/timeUtils";
 import { canvasAssignmentService } from "./canvasAssignmentService";
 import { CanvasQuizQuestion } from "@/models/canvas/quizzes/canvasQuizQuestionModel";
 import { escapeMatchingText } from "../utils/questionHtmlUtils";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
-import { LocalQuizQuestion, QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
+import {
+  LocalQuizQuestion,
+  QuestionType,
+} from "@/features/local/quizzes/models/localQuizQuestion";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export const getAnswers = (

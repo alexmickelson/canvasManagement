@@ -1,8 +1,8 @@
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
-import { LocalAssignment } from "../../../features/local/assignments/models/localAssignment";
-import { Lecture } from "../../../features/local/lectures/lectureModel";
-import { dateToMarkdownString, getDateFromStringOrThrow } from "./timeUtils";
+import { LocalAssignment } from "../assignments/models/localAssignment";
+import { Lecture } from "../lectures/lectureModel";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { getDateFromStringOrThrow, dateToMarkdownString } from "./timeUtils";
 
 export const prepAssignmentForNewSemester = (
   assignment: LocalAssignment,

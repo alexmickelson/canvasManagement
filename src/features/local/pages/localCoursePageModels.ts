@@ -1,5 +1,5 @@
 import { IModuleItem } from "@/features/local/modules/IModuleItem";
-import { verifyDateOrThrow } from "@/models/local/utils/timeUtils";
+import { verifyDateOrThrow } from "@/features/local/utils/timeUtils";
 import { z } from "zod";
 import { extractLabelValue } from "../assignments/models/utils/markdownUtils";
 

@@ -1,4 +1,7 @@
-import { verifyDateOrThrow, verifyDateStringOrUndefined } from "@/models/local/utils/timeUtils";
+import {
+  verifyDateOrThrow,
+  verifyDateStringOrUndefined,
+} from "@/features/local/utils/timeUtils";
 import { LocalQuiz } from "../localQuiz";
 import { quizQuestionMarkdownUtils } from "./quizQuestionMarkdownUtils";
 
@@ -38,7 +41,6 @@ const parseNumberOrThrow = (value: string, label: string): number => {
   return parsed;
 };
 const getQuizWithOnlySettings = (settings: string, name: string): LocalQuiz => {
-
   const rawShuffleAnswers = extractLabelValue(settings, "ShuffleAnswers");
   const shuffleAnswers = parseBooleanOrThrow(
     rawShuffleAnswers,

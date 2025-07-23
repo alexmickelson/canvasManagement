@@ -1,7 +1,10 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { promises as fs } from "fs";
-import { fileStorageService } from "../fileStorage/fileStorageService";
-import { LocalCourseSettings, DayOfWeek } from "@/features/local/course/localCourseSettings";
+import { fileStorageService } from "../../features/local/utils/fileStorageService";
+import {
+  LocalCourseSettings,
+  DayOfWeek,
+} from "@/features/local/course/localCourseSettings";
 
 describe("FileStorageTests", () => {
   beforeEach(async () => {

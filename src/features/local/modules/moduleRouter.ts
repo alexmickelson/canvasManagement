@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { fileStorageService } from "@/features/local/utils/fileStorageService";
 import { router } from "@/services/serverFunctions/trpcSetup";
-import publicProcedure from "@/services/serverFunctions/procedures/public";
+import publicProcedure from "@/services/serverFunctions/publicProcedure";
 
 export const moduleRouter = router({
   getModuleNames: publicProcedure

@@ -1,11 +1,11 @@
-import { zodGlobalSettings } from "@/models/local/globalSettings";
-import { router } from "../trpcSetup";
+import { router } from "../../../services/serverFunctions/trpcSetup";
 import z from "zod";
-import publicProcedure from "../procedures/public";
+import publicProcedure from "../../../services/serverFunctions/publicProcedure";
 import {
   getGlobalSettings,
   updateGlobalSettings,
-} from "@/services/fileStorage/globalSettingsFileStorageService";
+} from "@/features/local/globalSettings/globalSettingsFileStorageService";
+import { zodGlobalSettings } from "./globalSettingsModels";
 
 export const globalSettingsRouter = router({
   getGlobalSettings: publicProcedure.query(async () => {

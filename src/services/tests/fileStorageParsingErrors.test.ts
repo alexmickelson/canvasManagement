@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { promises as fs } from "fs";
-import { fileStorageService } from "../fileStorage/fileStorageService";
+import { fileStorageService } from "../../features/local/utils/fileStorageService";
 import { basePath } from "../fileStorage/utils/fileSystemUtils";
 
 describe("FileStorageTests", () => {

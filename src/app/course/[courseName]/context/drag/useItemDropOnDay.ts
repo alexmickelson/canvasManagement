@@ -7,12 +7,12 @@ import { useLocalCourseSettingsQuery } from "@/features/local/course/localCourse
 import { useUpdatePageMutation } from "@/features/local/pages/pageHooks";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { Lecture } from "@/features/local/lectures/lectureModel";
-import { getLectureForDay } from "@/models/local/utils/lectureUtils";
+import { getLectureForDay } from "@/features/local/utils/lectureUtils";
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
   dateToMarkdownString,
-} from "@/models/local/utils/timeUtils";
+} from "@/features/local/utils/timeUtils";
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";

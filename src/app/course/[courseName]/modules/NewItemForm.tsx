@@ -15,7 +15,7 @@ import {
   getDateFromString,
   dateToMarkdownString,
   getDateFromStringOrThrow,
-} from "@/models/local/utils/timeUtils";
+} from "@/features/local/utils/timeUtils";
 import { useCreateAssignmentMutation } from "@/features/local/assignments/assignmentHooks";
 
 export default function NewItemForm({

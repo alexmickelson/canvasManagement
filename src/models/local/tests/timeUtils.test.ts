@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { dateToMarkdownString, getDateFromString } from "../utils/timeUtils";
+import {
+  dateToMarkdownString,
+  getDateFromString,
+} from "../../../features/local/utils/timeUtils";
 
 describe("Can properly handle expected date formats", () => {
   it("can use AM/PM dates", () => {
@@ -48,25 +51,24 @@ describe("Can properly handle expected date formats", () => {
     const dateString = "08/27/2024 23:59:00";
     const dateObject = getDateFromString(dateString);
 
-    expect(dateObject).not.toBeUndefined()
-    const updatedString = dateToMarkdownString(dateObject!)
-    expect(updatedString).toBe(dateString)
+    expect(dateObject).not.toBeUndefined();
+    const updatedString = dateToMarkdownString(dateObject!);
+    expect(updatedString).toBe(dateString);
   });
   it("can handle canvas time format", () => {
     const dateString = "8/29/2024, 5:00:00 PM";
     const dateObject = getDateFromString(dateString);
 
-    expect(dateObject).not.toBeUndefined()
-    const updatedString = dateToMarkdownString(dateObject!)
-    expect(updatedString).toBe("08/29/2024 17:00:00")
-    
-  })
+    expect(dateObject).not.toBeUndefined();
+    const updatedString = dateToMarkdownString(dateObject!);
+    expect(updatedString).toBe("08/29/2024 17:00:00");
+  });
   it("can handle date without time", () => {
     const dateString = "8/29/2024";
     const dateObject = getDateFromString(dateString);
 
-    expect(dateObject).not.toBeUndefined()
-    const updatedString = dateToMarkdownString(dateObject!)
-    expect(updatedString).toBe("08/29/2024 00:00:00")
-  })
+    expect(dateObject).not.toBeUndefined();
+    const updatedString = dateToMarkdownString(dateObject!);
+    expect(updatedString).toBe("08/29/2024 00:00:00");
+  });
 });

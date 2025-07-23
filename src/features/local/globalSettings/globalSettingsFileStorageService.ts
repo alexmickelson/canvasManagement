@@ -1,14 +1,14 @@
+import { promises as fs } from "fs";
+import path from "path";
+import { basePath } from "../../../services/fileStorage/utils/fileSystemUtils";
 import {
   GlobalSettings,
   zodGlobalSettings,
-} from "@/models/local/globalSettings";
+} from "@/features/local/globalSettings/globalSettingsModels";
 import {
-  globalSettingsToYaml,
   parseGlobalSettingsYaml,
-} from "@/models/local/globalSettingsUtils";
-import { promises as fs } from "fs";
-import path from "path";
-import { basePath } from "./utils/fileSystemUtils";
+  globalSettingsToYaml,
+} from "@/features/local/globalSettings/globalSettingsUtils";
 
 const SETTINGS_FILE_PATH =
   process.env.SETTINGS_FILE_PATH || "./globalSettings.yml";

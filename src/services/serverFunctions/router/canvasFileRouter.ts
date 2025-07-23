@@ -1,4 +1,4 @@
-import publicProcedure from "../procedures/public";
+import publicProcedure from "../publicProcedure";
 import { z } from "zod";
 import { router } from "../trpcSetup";
 import {

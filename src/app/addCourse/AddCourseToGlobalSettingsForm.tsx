@@ -18,7 +18,10 @@ import { AssignmentSubmissionType } from "@/features/local/assignments/models/as
 import { getCourseUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
-import { DayOfWeek, LocalCourseSettings } from "@/features/local/course/localCourseSettings";
+import {
+  DayOfWeek,
+  LocalCourseSettings,
+} from "@/features/local/course/localCourseSettings";
 
 const sampleCompose = `services:
   canvas_manager:

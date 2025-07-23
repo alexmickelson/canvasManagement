@@ -1,4 +1,4 @@
-import { procedure } from "../trpcSetup";
+import { procedure } from "./trpcSetup";
 
 const publicProcedure = procedure;
 

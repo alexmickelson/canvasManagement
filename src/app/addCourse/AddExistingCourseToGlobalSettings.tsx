@@ -6,8 +6,8 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import {
   useGlobalSettingsQuery,
   useUpdateGlobalSettingsMutation,
-} from "@/hooks/localCourse/globalSettingsHooks";
-import { useDirectoryIsCourseQuery } from "@/hooks/localCourse/storageDirectoryHooks";
+} from "@/features/local/globalSettings/globalSettingsHooks";
+import { useDirectoryIsCourseQuery } from "@/features/local/utils/storageDirectoryHooks";
 import { FC, useEffect, useRef, useState } from "react";
 
 export const AddExistingCourseToGlobalSettings = () => {

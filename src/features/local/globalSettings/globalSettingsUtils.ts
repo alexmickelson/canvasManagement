@@ -1,4 +1,4 @@
-import { GlobalSettings, zodGlobalSettings } from "./globalSettings";
+import { GlobalSettings, zodGlobalSettings } from "./globalSettingsModels";
 import { parse, stringify } from "yaml";
 
 export const globalSettingsToYaml = (settings: GlobalSettings) => {
@@ -14,4 +14,3 @@ export const parseGlobalSettingsYaml = (yaml: string): GlobalSettings => {
     throw new Error(`Error parsing global settings, got ${yaml}, ${e}`);
   }
 };
-

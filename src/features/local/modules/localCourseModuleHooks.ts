@@ -4,7 +4,7 @@ import { CalendarItemsInterface } from "@/app/course/[courseName]/context/calend
 import {
   getDateOnlyMarkdownString,
   getDateFromStringOrThrow,
-} from "@/models/local/utils/timeUtils";
+} from "@/features/local/utils/timeUtils";
 import {
   useSuspenseQuery,
   useMutation,
@@ -92,10 +92,7 @@ export const useCoursePagesByModuleByDateQuery = () => {
     }
   );
   const pagesByModuleByDate = pagesAndModules.reduce(
-    (
-      previous,
-      { page, moduleName }
-    ) => {
+    (previous, { page, moduleName }) => {
       const dueDay = getDateOnlyMarkdownString(
         getDateFromStringOrThrow(page.dueAt, "due at for page in items context")
       );
@@ -129,9 +126,7 @@ export const useCourseAssignmentsByModuleByDateQuery = () => {
       trpc.assignment.getAllAssignments.queryOptions({ courseName, moduleName })
     ),
   });
-  const assignments = assignmentsResults.map(
-    (result) => result.data
-  );
+  const assignments = assignmentsResults.map((result) => result.data);
   const assignmentsAndModules = moduleNames.flatMap(
     (moduleName: string, index: number) => {
       return assignments[index].map((assignment) => ({
@@ -141,10 +136,7 @@ export const useCourseAssignmentsByModuleByDateQuery = () => {
     }
   );
   const assignmentsByModuleByDate = assignmentsAndModules.reduce(
-    (
-      previous,
-      { assignment, moduleName }
-    ) => {
+    (previous, { assignment, moduleName }) => {
       const dueDay = getDateOnlyMarkdownString(
         getDateFromStringOrThrow(
           assignment.dueAt,

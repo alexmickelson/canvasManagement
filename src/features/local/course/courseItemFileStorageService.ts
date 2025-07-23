@@ -11,7 +11,7 @@ import {
   CourseItemType,
   typeToFolder,
 } from "@/features/local/course/courseItemTypes";
-import { getCoursePathByName } from "../../../services/fileStorage/globalSettingsFileStorageService";
+import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
 import {
   localPageMarkdownUtils,
   LocalCoursePage,

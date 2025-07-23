@@ -6,12 +6,12 @@ import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
 } from "@/features/local/course/localCoursesHooks";
-import { getDateFromString } from "@/models/local/utils/timeUtils";
+import { getDateFromString } from "@/features/local/utils/timeUtils";
 import { useEffect, useState } from "react";
 import {
   holidaysToString,
   parseHolidays,
-} from "../../../../models/local/utils/settingsUtils";
+} from "../../../../features/local/utils/settingsUtils";
 import { settingsBox } from "./sharedSettings";
 
 const exampleString = `springBreak:

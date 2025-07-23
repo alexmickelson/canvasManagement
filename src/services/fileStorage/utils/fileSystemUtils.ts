@@ -1,5 +1,5 @@
 import { promises as fs } from "fs";
-import { getGlobalSettings } from "../globalSettingsFileStorageService";
+import { getGlobalSettings } from "../../../features/local/globalSettings/globalSettingsFileStorageService";
 
 export const directoryOrFileExists = async (
   directoryPath: string

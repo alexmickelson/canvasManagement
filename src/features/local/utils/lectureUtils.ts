@@ -1,4 +1,4 @@
-import { Lecture } from "../../../features/local/lectures/lectureModel";
+import { Lecture } from "../lectures/lectureModel";
 import { getDateOnlyMarkdownString } from "./timeUtils";
 
 export function getLectureForDay(

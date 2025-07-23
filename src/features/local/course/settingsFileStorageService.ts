@@ -8,12 +8,12 @@ import { AssignmentSubmissionType } from "@/features/local/assignments/models/as
 import {
   getCoursePathByName,
   getGlobalSettings,
-} from "../../../services/fileStorage/globalSettingsFileStorageService";
-import { GlobalSettingsCourse } from "@/models/local/globalSettings";
+} from "../globalSettings/globalSettingsFileStorageService";
 import {
   LocalCourseSettings,
   localCourseYamlUtils,
 } from "@/features/local/course/localCourseSettings";
+import { GlobalSettingsCourse } from "../globalSettings/globalSettingsModels";
 
 const getCourseSettings = async (
   course: GlobalSettingsCourse

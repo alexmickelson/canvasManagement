@@ -1,7 +1,7 @@
-import publicProcedure from "../../../services/serverFunctions/procedures/public";
+import publicProcedure from "../../../services/serverFunctions/publicProcedure";
 import { z } from "zod";
 import { router } from "../../../services/serverFunctions/trpcSetup";
-import { fileStorageService } from "@/services/fileStorage/fileStorageService";
+import { fileStorageService } from "@/features/local/utils/fileStorageService";
 import { zodLocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 export const quizRouter = router({
