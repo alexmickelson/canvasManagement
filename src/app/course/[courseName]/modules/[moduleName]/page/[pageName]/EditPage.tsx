@@ -2,7 +2,7 @@
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import { useEffect, useState } from "react";
 import PagePreview from "./PagePreview";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import EditPageButtons from "./EditPageButtons";
 import ClientOnly from "@/components/ClientOnly";
 import { useRouter } from "next/navigation";

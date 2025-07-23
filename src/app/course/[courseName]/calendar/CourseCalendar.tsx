@@ -2,7 +2,7 @@
 import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
 import { getMonthsBetweenDates } from "./calendarMonthUtils";
 import { CalendarMonth } from "./CalendarMonth";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useEffect, useMemo, useRef } from "react";
 import CalendarItemsContextProvider from "../context/CalendarItemsContextProvider";
 

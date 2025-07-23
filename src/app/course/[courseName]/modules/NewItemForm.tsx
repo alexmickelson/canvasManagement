@@ -3,14 +3,14 @@ import ButtonSelect from "@/components/ButtonSelect";
 import SelectInput from "@/components/form/SelectInput";
 import TextInput from "@/components/form/TextInput";
 import { Spinner } from "@/components/Spinner";
-import { useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useModuleNamesQuery } from "@/features/local/modules/localCourseModuleHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useCreatePageMutation } from "@/features/local/pages/pageHooks";
 import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
 
 import React, { useState } from "react";
 import { useCourseContext } from "../context/courseContext";
-import { useCreateQuizMutation } from "@/hooks/localCourse/quizHooks";
+import { useCreateQuizMutation } from "@/features/local/quizzes/quizHooks";
 import {
   getDateFromString,
   dateToMarkdownString,

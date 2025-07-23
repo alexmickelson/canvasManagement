@@ -1,6 +1,6 @@
 import { Expandable } from "@/components/Expandable";
 import TextInput from "@/components/form/TextInput";
-import { useCreateModuleMutation } from "@/hooks/localCourse/localCourseModuleHooks";
+import { useCreateModuleMutation } from "@/features/local/modules/localCourseModuleHooks";
 import React, { useState } from "react";
 import { useCourseContext } from "../context/courseContext";
 

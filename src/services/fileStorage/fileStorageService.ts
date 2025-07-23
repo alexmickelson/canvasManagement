@@ -1,12 +1,12 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { basePath, directoryOrFileExists } from "./utils/fileSystemUtils";
-import { assignmentsFileStorageService } from "./assignmentsFileStorageService";
-import { quizFileStorageService } from "./quizFileStorageService";
+import { quizFileStorageService } from "../../features/local/quizzes/quizFileStorageService";
 import { pageFileStorageService } from "../../features/local/pages/pageFileStorageService";
-import { moduleFileStorageService } from "./moduleFileStorageService";
-import { settingsFileStorageService } from "./settingsFileStorageService";
+import { moduleFileStorageService } from "../../features/local/modules/moduleFileStorageService";
+import { settingsFileStorageService } from "../../features/local/course/settingsFileStorageService";
 import { getCoursePathByName } from "./globalSettingsFileStorageService";
+import { assignmentsFileStorageService } from "@/features/local/assignments/assignmentsFileStorageService";
 
 export const fileStorageService = {
   settings: settingsFileStorageService,

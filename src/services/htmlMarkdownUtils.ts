@@ -1,8 +1,8 @@
 "use client";
 import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import markedKatex from "marked-katex-extension";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 const mermaidExtension = {
   name: "mermaid",

@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { courseItemFileStorageService } from "../../../services/fileStorage/courseItemFileStorageService";
+import { courseItemFileStorageService } from "../course/courseItemFileStorageService";
 import { getCoursePathByName } from "../../../services/fileStorage/globalSettingsFileStorageService";
 import {
   LocalCoursePage,

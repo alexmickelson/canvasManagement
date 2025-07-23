@@ -10,7 +10,7 @@ import {
 import { ReactNode } from "react";
 import { useCalendarItemsContext } from "../../context/calendarItemsContext";
 import { getStatus } from "./getStatus";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 

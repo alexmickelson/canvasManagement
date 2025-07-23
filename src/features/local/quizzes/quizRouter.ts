@@ -1,6 +1,6 @@
-import publicProcedure from "../procedures/public";
+import publicProcedure from "../../../services/serverFunctions/procedures/public";
 import { z } from "zod";
-import { router } from "../trpcSetup";
+import { router } from "../../../services/serverFunctions/trpcSetup";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { zodLocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 

@@ -5,7 +5,7 @@ import { Spinner } from "@/components/Spinner";
 import {
   useQuizQuery,
   useUpdateQuizMutation,
-} from "@/hooks/localCourse/quizHooks";
+} from "@/features/local/quizzes/quizHooks";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

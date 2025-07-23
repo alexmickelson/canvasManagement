@@ -1,5 +1,5 @@
 import MarkdownDisplay from "@/components/MarkdownDisplay";
-import { Lecture } from "@/models/local/lecture";
+import { Lecture } from "@/features/local/lectures/lectureModel";
 
 export default function LecturePreview({ lecture }: { lecture: Lecture }) {
   return (

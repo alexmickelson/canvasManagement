@@ -1,7 +1,7 @@
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { canvasPageService } from "@/services/canvas/canvasPageService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "../../features/local/course/localCoursesHooks";
 import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 import {
   useCanvasModulesQuery,

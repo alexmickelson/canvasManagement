@@ -4,7 +4,7 @@ import { Spinner } from "@/components/Spinner";
 import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
-} from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/course/localCoursesHooks";
 import React from "react";
 
 export default function DaysOfWeekSettings() {

@@ -1,7 +1,7 @@
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { SuspenseAndErrorHandling } from "./SuspenseAndErrorHandling";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export default function MarkdownDisplay({
   markdown,

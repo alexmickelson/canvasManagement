@@ -1,4 +1,4 @@
-import { LocalCourseSettings } from "../localCourseSettings";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 const _getDateFromAMPM = (
   datePart: string,

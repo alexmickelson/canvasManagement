@@ -7,7 +7,7 @@ import {
   useDeleteCanvasPageMutation,
   useUpdateCanvasPageMutation,
 } from "@/hooks/canvas/canvasPageHooks";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import {
   useDeletePageMutation,
   usePageQuery,

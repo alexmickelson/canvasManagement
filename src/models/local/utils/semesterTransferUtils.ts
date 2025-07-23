@@ -1,6 +1,6 @@
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { LocalAssignment } from "../../../features/local/assignments/models/localAssignment";
-import { Lecture } from "../lecture";
+import { Lecture } from "../../../features/local/lectures/lectureModel";
 import { dateToMarkdownString, getDateFromStringOrThrow } from "./timeUtils";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 

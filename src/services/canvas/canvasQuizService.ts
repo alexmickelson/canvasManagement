@@ -5,10 +5,10 @@ import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
 import { canvasAssignmentService } from "./canvasAssignmentService";
 import { CanvasQuizQuestion } from "@/models/canvas/quizzes/canvasQuizQuestionModel";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { escapeMatchingText } from "../utils/questionHtmlUtils";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 import { LocalQuizQuestion, QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export const getAnswers = (
   question: LocalQuizQuestion,

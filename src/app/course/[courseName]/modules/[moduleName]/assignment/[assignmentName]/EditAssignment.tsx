@@ -7,7 +7,7 @@ import {
 import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import { useRouter } from "next/navigation";

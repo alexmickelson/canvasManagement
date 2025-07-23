@@ -1,5 +1,5 @@
 "use client";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { settingsBox } from "./sharedSettings";
 import { useCourseStudentsQuery } from "@/hooks/canvas/canvasCourseHooks";
 import { Spinner } from "@/components/Spinner";

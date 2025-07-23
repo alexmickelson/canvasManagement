@@ -3,7 +3,7 @@ import TextInput from "@/components/form/TextInput";
 import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
-} from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/course/localCoursesHooks";
 import { useState, useEffect } from "react";
 import { settingsBox } from "./sharedSettings";
 

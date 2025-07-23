@@ -1,4 +1,4 @@
-import { IModuleItem } from "../../../../models/local/IModuleItem";
+import { IModuleItem } from "../../modules/IModuleItem";
 import {
   AssignmentSubmissionType,
   zodAssignmentSubmissionType,

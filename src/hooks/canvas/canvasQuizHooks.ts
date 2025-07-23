@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "../../features/local/course/localCoursesHooks";
 import { canvasQuizService } from "@/services/canvas/canvasQuizService";
 import {
   useAddCanvasModuleMutation,

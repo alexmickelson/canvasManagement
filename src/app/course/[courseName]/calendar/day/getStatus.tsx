@@ -3,7 +3,6 @@ import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import {
   dateToMarkdownString,
   getDateFromStringOrThrow,
@@ -13,6 +12,7 @@ import { htmlIsCloseEnough } from "@/services/utils/htmlIsCloseEnough";
 import { ReactNode } from "react";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export const getStatus = ({
   item,

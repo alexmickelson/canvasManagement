@@ -1,5 +1,5 @@
 "use client";
-import { useLocalCoursesSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCoursesSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import {
   getDateKey,
   getTermName,

@@ -1,6 +1,6 @@
 "use client";
 import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export function getAssignmentHelpString(settings: LocalCourseSettings) {
   const groupNames = settings.assignmentGroups.map((g) => g.name).join("\n- ");

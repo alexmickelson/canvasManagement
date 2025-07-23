@@ -3,7 +3,7 @@ import SelectInput from "@/components/form/SelectInput";
 import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
-} from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/course/localCoursesHooks";
 import {
   AssignmentSubmissionType,
   AssignmentSubmissionTypeList,

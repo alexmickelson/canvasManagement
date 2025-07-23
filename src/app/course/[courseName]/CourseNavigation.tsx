@@ -17,7 +17,7 @@ import {
   canvasQuizKeys,
   useCanvasQuizzesQuery,
 } from "@/hooks/canvas/canvasQuizHooks";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 

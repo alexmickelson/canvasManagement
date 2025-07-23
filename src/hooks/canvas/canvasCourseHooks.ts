@@ -1,11 +1,11 @@
 import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { canvasAssignmentGroupService } from "@/services/canvas/canvasAssignmentGroupService";
 import { canvasService } from "@/services/canvas/canvasService";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { useUpdateLocalCourseSettingsMutation } from "../localCourse/localCoursesHooks";
+import { useUpdateLocalCourseSettingsMutation } from "../../features/local/course/localCoursesHooks";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export const canvasCourseKeys = {
   courseDetails: (canavasId: number) =>

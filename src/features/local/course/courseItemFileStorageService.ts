@@ -1,5 +1,5 @@
 import path from "path";
-import { directoryOrFileExists } from "./utils/fileSystemUtils";
+import { directoryOrFileExists } from "../../../services/fileStorage/utils/fileSystemUtils";
 import fs from "fs/promises";
 import {
   LocalAssignment,
@@ -10,13 +10,16 @@ import {
   CourseItemReturnType,
   CourseItemType,
   typeToFolder,
-} from "@/models/local/courseItemTypes";
-import { getCoursePathByName } from "./globalSettingsFileStorageService";
+} from "@/features/local/course/courseItemTypes";
+import { getCoursePathByName } from "../../../services/fileStorage/globalSettingsFileStorageService";
 import {
   localPageMarkdownUtils,
   LocalCoursePage,
 } from "@/features/local/pages/localCoursePageModels";
-import { LocalQuiz, localQuizMarkdownUtils } from "@/features/local/quizzes/models/localQuiz";
+import {
+  LocalQuiz,
+  localQuizMarkdownUtils,
+} from "@/features/local/quizzes/models/localQuiz";
 import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 
 const getItemFileNames = async (

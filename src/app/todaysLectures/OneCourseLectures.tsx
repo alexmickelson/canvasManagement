@@ -3,7 +3,7 @@
 import { getLecturePreviewUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useCourseContext } from "../course/[courseName]/context/courseContext";
-import { useLecturesSuspenseQuery as useLecturesQuery } from "@/hooks/localCourse/lectureHooks";
+import { useLecturesSuspenseQuery as useLecturesQuery } from "@/features/local/lectures/lectureHooks";
 import { getLectureForDay } from "@/models/local/utils/lectureUtils";
 import { getDateOnlyMarkdownString } from "@/models/local/utils/timeUtils";
 

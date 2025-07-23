@@ -8,7 +8,7 @@ import {
   useCourseQuizzesByModuleByDateQuery,
   useCourseAssignmentsByModuleByDateQuery,
   useCoursePagesByModuleByDateQuery,
-} from "@/hooks/localCourse/localCourseModuleHooks";
+} from "@/features/local/modules/localCourseModuleHooks";
 
 export default function CalendarItemsContextProvider({
   children,

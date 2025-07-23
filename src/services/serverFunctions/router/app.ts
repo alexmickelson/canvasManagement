@@ -4,11 +4,11 @@ import { assignmentRouter } from "../../../features/local/assignments/assignment
 import { canvasFileRouter } from "./canvasFileRouter";
 import { directoriesRouter } from "./directoriesRouter";
 import { globalSettingsRouter } from "./globalSettingsRouter";
-import { lectureRouter } from "./lectureRouter";
-import { moduleRouter } from "./moduleRouter";
+import { lectureRouter } from "../../../features/local/lectures/lectureRouter";
 import { pageRouter } from "../../../features/local/pages/pageRouter";
-import { quizRouter } from "./quizRouter";
+import { quizRouter } from "../../../features/local/quizzes/quizRouter";
 import { settingsRouter } from "./settingsRouter";
+import { moduleRouter } from "@/features/local/modules/moduleRouter";
 
 export const trpcAppRouter = router({
   assignment: assignmentRouter,

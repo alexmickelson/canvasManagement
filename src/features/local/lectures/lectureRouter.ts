@@ -1,13 +1,13 @@
 import { z } from "zod";
-import publicProcedure from "../procedures/public";
-import { router } from "../trpcSetup";
+import publicProcedure from "../../../services/serverFunctions/procedures/public";
+import { router } from "../../../services/serverFunctions/trpcSetup";
+import { zodLecture } from "@/features/local/lectures/lectureModel";
 import {
-  deleteLecture,
   getLectures,
   updateLecture,
-} from "@/services/fileStorage/lectureFileStorageService";
-import { zodLecture } from "@/models/local/lecture";
-import { zodLocalCourseSettings } from "@/models/local/localCourseSettings";
+  deleteLecture,
+} from "./lectureFileStorageService";
+import { zodLocalCourseSettings } from "../course/localCourseSettings";
 
 export const lectureRouter = router({
   getLectures: publicProcedure

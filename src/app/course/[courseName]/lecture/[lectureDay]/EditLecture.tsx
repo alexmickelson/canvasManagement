@@ -3,7 +3,7 @@ import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import {
   useLecturesSuspenseQuery,
   useLectureUpdateMutation,
-} from "@/hooks/localCourse/lectureHooks";
+} from "@/features/local/lectures/lectureHooks";
 import {
   lectureToString,
   parseLecture,
@@ -13,8 +13,8 @@ import LecturePreview from "./LecturePreview";
 import EditLectureTitle from "./EditLectureTitle";
 import LectureButtons from "./LectureButtons";
 import { useCourseContext } from "../../context/courseContext";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { Lecture } from "@/models/local/lecture";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { Lecture } from "@/features/local/lectures/lectureModel";
 import { useAuthoritativeUpdates } from "../../utils/useAuthoritativeUpdates";
 import { EditLayout } from "@/components/EditLayout";
 

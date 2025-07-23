@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { LocalQuizQuestion, zodLocalQuizQuestion } from "./localQuizQuestion";
 import { quizMarkdownUtils } from "./utils/quizMarkdownUtils";
-import { IModuleItem } from "@/models/local/IModuleItem";
+import { IModuleItem } from "@/features/local/modules/IModuleItem";
 
 export interface LocalQuiz extends IModuleItem {
   name: string;

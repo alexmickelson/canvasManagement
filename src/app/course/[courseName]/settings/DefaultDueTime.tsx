@@ -3,7 +3,7 @@
 import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
-} from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/course/localCoursesHooks";
 import { TimePicker } from "../../../../components/TimePicker";
 import { useState } from "react";
 import DefaultLockOffset from "./DefaultLockOffset";

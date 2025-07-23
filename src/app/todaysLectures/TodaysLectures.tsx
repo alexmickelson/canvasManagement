@@ -1,6 +1,6 @@
 "use client";
 
-import { useLocalCoursesSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCoursesSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import OneCourseLectures from "./OneCourseLectures";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 import CourseContextProvider from "../course/[courseName]/context/CourseContextProvider";

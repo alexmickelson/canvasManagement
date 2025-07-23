@@ -1,5 +1,5 @@
 "use client";
-import { useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks";
+import { useModuleNamesQuery } from "@/features/local/modules/localCourseModuleHooks";
 import ExpandableModule from "./ExpandableModule";
 import CreateModule from "./CreateModule";
 

@@ -1,10 +1,10 @@
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { getDayOfWeek } from "@/models/local/localCourseSettings";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { getDateFromString } from "@/models/local/utils/timeUtils";
 import { getLectureWeekName } from "@/services/fileStorage/utils/lectureUtils";
 import { getCourseUrl, getLecturePreviewUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../../context/courseContext";
 import Link from "next/link";
+import { getDayOfWeek } from "@/features/local/course/localCourseSettings";
 
 export default function EditLectureTitle({
   lectureDay,

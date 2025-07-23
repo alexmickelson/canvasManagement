@@ -1,13 +1,13 @@
 import { z } from "zod";
+import { parse, stringify } from "yaml";
 import {
   AssignmentSubmissionType,
   zodAssignmentSubmissionType,
-} from "../../features/local/assignments/models/assignmentSubmissionType";
+} from "../assignments/models/assignmentSubmissionType";
 import {
   LocalAssignmentGroup,
   zodLocalAssignmentGroup,
-} from "../../features/local/assignments/models/localAssignmentGroup";
-import { parse, stringify } from "yaml";
+} from "../assignments/models/localAssignmentGroup";
 
 export interface SimpleTimeOnly {
   hour: number;

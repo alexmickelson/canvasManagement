@@ -1,6 +1,6 @@
 import { getWeekNumber } from "@/app/course/[courseName]/calendar/calendarMonthUtils";
 import { extractLabelValue } from "@/features/local/assignments/models/utils/markdownUtils";
-import { Lecture } from "@/models/local/lecture";
+import { Lecture } from "@/features/local/lectures/lectureModel";
 import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
 
 export function parseLecture(fileContent: string): Lecture {

@@ -1,5 +1,5 @@
 "use client";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import React from "react";

@@ -4,7 +4,7 @@ import LecturePreview from "../LecturePreview";
 import { getCourseUrl, getLectureUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../../../context/courseContext";
 import Link from "next/link";
-import { useLecturesSuspenseQuery } from "@/hooks/localCourse/lectureHooks";
+import { useLecturesSuspenseQuery } from "@/features/local/lectures/lectureHooks";
 
 export default function LecturePreviewPage({
   lectureDay,

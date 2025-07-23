@@ -6,7 +6,7 @@ import {
   prepPageForNewSemester,
   prepQuizForNewSemester,
 } from "../utils/semesterTransferUtils";
-import { Lecture } from "../lecture";
+import { Lecture } from "../../../features/local/lectures/lectureModel";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 

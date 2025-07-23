@@ -1,19 +1,15 @@
-
 import path from "path";
 import fs from "fs/promises";
-import {
-  getLectureWeekName,
-  lectureFolderName,
-  lectureToString,
-  parseLecture,
-} from "./utils/lectureUtils";
-import { Lecture } from "@/models/local/lecture";
-import {
-  getDayOfWeek,
-  LocalCourseSettings,
-} from "@/models/local/localCourseSettings";
+import { Lecture } from "@/features/local/lectures/lectureModel";
 import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
-import { getCoursePathByName } from "./globalSettingsFileStorageService";
+import { getCoursePathByName } from "@/services/fileStorage/globalSettingsFileStorageService";
+import {
+  lectureFolderName,
+  parseLecture,
+  getLectureWeekName,
+  lectureToString,
+} from "@/services/fileStorage/utils/lectureUtils";
+import { LocalCourseSettings, getDayOfWeek } from "../course/localCourseSettings";
 
 export async function getLectures(courseName: string) {
   const courseDirectory = await getCoursePathByName(courseName);
@@ -105,7 +101,7 @@ export async function deleteLecture(
     await fs.access(lecturePath); // throws error if no file
     await fs.unlink(lecturePath);
     console.log(`File deleted: ${lecturePath}`);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     if (error?.code === "ENOENT") {
       console.log(`Cannot delete lecture, file does not exist: ${lecturePath}`);

@@ -3,7 +3,7 @@
 import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
-} from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/course/localCoursesHooks";
 import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
 import { useEffect, useState } from "react";
 import TextInput from "../../../../components/form/TextInput";

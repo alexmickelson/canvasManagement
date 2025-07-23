@@ -1,5 +1,5 @@
 "use client";
-import { IModuleItem } from "@/models/local/IModuleItem";
+import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import { createContext, useContext, DragEvent } from "react";
 
 export interface DraggableItem {

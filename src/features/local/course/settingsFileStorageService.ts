@@ -1,16 +1,19 @@
-import {
-  LocalCourseSettings,
-  localCourseYamlUtils,
-} from "@/models/local/localCourseSettings";
 import { promises as fs } from "fs";
 import path from "path";
-import { basePath, directoryOrFileExists } from "./utils/fileSystemUtils";
+import {
+  basePath,
+  directoryOrFileExists,
+} from "../../../services/fileStorage/utils/fileSystemUtils";
 import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 import {
   getCoursePathByName,
   getGlobalSettings,
-} from "./globalSettingsFileStorageService";
+} from "../../../services/fileStorage/globalSettingsFileStorageService";
 import { GlobalSettingsCourse } from "@/models/local/globalSettings";
+import {
+  LocalCourseSettings,
+  localCourseYamlUtils,
+} from "@/features/local/course/localCourseSettings";
 
 const getCourseSettings = async (
   course: GlobalSettingsCourse

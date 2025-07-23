@@ -5,7 +5,7 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
-} from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/course/localCoursesHooks";
 import { getDateFromString } from "@/models/local/utils/timeUtils";
 import { useEffect, useState } from "react";
 import {

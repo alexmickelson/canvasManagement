@@ -1,7 +1,7 @@
 import path from "path";
 import { promises as fs } from "fs";
-import { courseItemFileStorageService } from "./courseItemFileStorageService";
-import { getCoursePathByName } from "./globalSettingsFileStorageService";
+import { courseItemFileStorageService } from "../course/courseItemFileStorageService";
+import { getCoursePathByName } from "../../../services/fileStorage/globalSettingsFileStorageService";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 

@@ -14,7 +14,7 @@ import {
 import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
-} from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/course/localCoursesHooks";
 
 export const useAssignmentQuery = (
   moduleName: string,

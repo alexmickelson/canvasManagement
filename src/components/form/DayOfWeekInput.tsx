@@ -1,4 +1,4 @@
-import { DayOfWeek } from "@/models/local/localCourseSettings";
+import { DayOfWeek } from "@/features/local/course/localCourseSettings";
 
 export function DayOfWeekInput({
   selectedDays,

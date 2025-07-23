@@ -4,10 +4,10 @@ import {
 } from "@/features/local/assignments/models/localAssignment";
 import { assignmentMarkdownSerializer } from "@/features/local/assignments/models/utils/assignmentMarkdownSerializer";
 import path from "path";
-import { directoryOrFileExists } from "./utils/fileSystemUtils";
 import { promises as fs } from "fs";
-import { courseItemFileStorageService } from "./courseItemFileStorageService";
-import { getCoursePathByName } from "./globalSettingsFileStorageService";
+import { courseItemFileStorageService } from "@/features/local/course/courseItemFileStorageService";
+import { getCoursePathByName } from "@/services/fileStorage/globalSettingsFileStorageService";
+import { directoryOrFileExists } from "@/services/fileStorage/utils/fileSystemUtils";
 
 const getAssignmentNames = async (courseName: string, moduleName: string) => {
   const courseDirectory = await getCoursePathByName(courseName);

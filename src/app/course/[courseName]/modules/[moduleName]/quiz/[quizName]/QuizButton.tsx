@@ -6,11 +6,11 @@ import {
   useAddQuizToCanvasMutation,
   useDeleteQuizFromCanvasMutation,
 } from "@/hooks/canvas/canvasQuizHooks";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import {
   useDeleteQuizMutation,
   useQuizQuery,
-} from "@/hooks/localCourse/quizHooks";
+} from "@/features/local/quizzes/quizHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";

@@ -10,14 +10,14 @@ import { useCourseContext } from "@/app/course/[courseName]/context/courseContex
 import {
   useQuizQuery,
   useUpdateQuizMutation,
-} from "@/hooks/localCourse/quizHooks";
+} from "@/features/local/quizzes/quizHooks";
 import { useAuthoritativeUpdates } from "../../../../utils/useAuthoritativeUpdates";
 import { extractLabelValue } from "@/features/local/assignments/models/utils/markdownUtils";
 import EditQuizHeader from "./EditQuizHeader";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { EditLayout } from "@/components/EditLayout";
 import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 const helpString = (settings: LocalCourseSettings) => {
   const groupNames = settings.assignmentGroups.map((g) => g.name).join("\n- ");

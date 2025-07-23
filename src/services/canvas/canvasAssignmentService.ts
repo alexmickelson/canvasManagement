@@ -7,7 +7,7 @@ import { CanvasRubricCreationResponse } from "@/models/canvas/assignments/canvas
 import { assignmentPoints } from "@/features/local/assignments/models/utils/assignmentPointsUtils";
 import { getDateFromString } from "@/models/local/utils/timeUtils";
 import { getRubricCriterion } from "./canvasRubricUtils";
-import { LocalCourseSettings } from "@/models/local/localCourseSettings";
+import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {

@@ -4,11 +4,11 @@ import {
   getDateOnlyMarkdownString,
 } from "@/models/local/utils/timeUtils";
 import { useDraggingContext } from "../../context/drag/draggingContext";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { getDayOfWeek } from "@/models/local/localCourseSettings";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { ItemInDay } from "./ItemInDay";
 import { useTodaysItems } from "./useTodaysItems";
 import { DayTitle } from "./DayTitle";
+import { getDayOfWeek } from "@/features/local/course/localCourseSettings";
 
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(

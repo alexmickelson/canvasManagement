@@ -1,5 +1,5 @@
 "use client";
-import { SimpleTimeOnly } from "@/models/local/localCourseSettings";
+import { SimpleTimeOnly } from "@/features/local/course/localCourseSettings";
 import { FC } from "react";
 
 export const TimePicker: FC<{

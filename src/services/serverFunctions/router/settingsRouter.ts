@@ -2,11 +2,6 @@ import publicProcedure from "../procedures/public";
 import { z } from "zod";
 import { router } from "../trpcSetup";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
-import { zodLocalCourseSettings } from "@/models/local/localCourseSettings";
-import {
-  getLectures,
-  updateLecture,
-} from "@/services/fileStorage/lectureFileStorageService";
 import {
   prepAssignmentForNewSemester,
   prepLectureForNewSemester,
@@ -17,6 +12,8 @@ import {
   getGlobalSettings,
   updateGlobalSettings,
 } from "@/services/fileStorage/globalSettingsFileStorageService";
+import { getLectures, updateLecture } from "@/features/local/lectures/lectureFileStorageService";
+import { zodLocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 export const settingsRouter = router({
   allCoursesSettings: publicProcedure.query(async () => {

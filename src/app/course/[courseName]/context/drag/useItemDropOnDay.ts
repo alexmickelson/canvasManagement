@@ -2,11 +2,11 @@
 import {
   useLecturesSuspenseQuery,
   useLectureUpdateMutation,
-} from "@/hooks/localCourse/lectureHooks";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/lectures/lectureHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useUpdatePageMutation } from "@/features/local/pages/pageHooks";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
-import { Lecture } from "@/models/local/lecture";
+import { Lecture } from "@/features/local/lectures/lectureModel";
 import { getLectureForDay } from "@/models/local/utils/lectureUtils";
 import {
   getDateFromStringOrThrow,
@@ -16,7 +16,7 @@ import {
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
-import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
+import { useUpdateQuizMutation } from "@/features/local/quizzes/quizHooks";
 import { useCourseContext } from "../courseContext";
 import { useUpdateAssignmentMutation } from "@/features/local/assignments/assignmentHooks";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";

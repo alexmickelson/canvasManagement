@@ -6,8 +6,8 @@ import { getCourseUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useCourseContext } from "../../context/courseContext";
-import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { useDeleteLectureMutation } from "@/hooks/localCourse/lectureHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { useDeleteLectureMutation } from "@/features/local/lectures/lectureHooks";
 import Link from "next/link";
 
 export default function LectureButtons({ lectureDay }: { lectureDay: string }) {

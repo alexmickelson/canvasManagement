@@ -1,4 +1,4 @@
-import { IModuleItem } from "@/models/local/IModuleItem";
+import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { ReactNode, useRef, useState } from "react";

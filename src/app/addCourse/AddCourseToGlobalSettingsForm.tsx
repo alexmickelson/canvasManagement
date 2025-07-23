@@ -11,17 +11,14 @@ import { useCanvasTermsQuery } from "@/hooks/canvas/canvasHooks";
 import {
   useCreateLocalCourseMutation,
   useLocalCoursesSettingsQuery,
-} from "@/hooks/localCourse/localCoursesHooks";
+} from "@/features/local/course/localCoursesHooks";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
 import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
-import {
-  DayOfWeek,
-  LocalCourseSettings,
-} from "@/models/local/localCourseSettings";
 import { getCourseUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { DayOfWeek, LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 const sampleCompose = `services:
   canvas_manager:

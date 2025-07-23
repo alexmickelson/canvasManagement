@@ -4,7 +4,7 @@ import { LocalAssignment } from "@/features/local/assignments/models/localAssign
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { useCourseContext } from "../courseContext";
-import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
+import { useUpdateQuizMutation } from "@/features/local/quizzes/quizHooks";
 import { useUpdateAssignmentMutation } from "@/features/local/assignments/assignmentHooks";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";

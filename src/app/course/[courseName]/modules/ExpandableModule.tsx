@@ -1,6 +1,6 @@
 "use client";
 import { usePagesQueries } from "@/features/local/pages/pageHooks";
-import { IModuleItem } from "@/models/local/IModuleItem";
+import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import {
   getDateFromString,
   getDateFromStringOrThrow,
@@ -21,7 +21,7 @@ import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
 import { useDragStyleContext } from "../context/drag/dragStyleContext";
-import { useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
+import { useQuizzesQueries } from "@/features/local/quizzes/quizHooks";
 import { useTRPC } from "@/services/serverFunctions/trpcClient";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import { useAssignmentNamesQuery } from "@/features/local/assignments/assignmentHooks";
