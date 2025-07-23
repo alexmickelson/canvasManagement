@@ -2,9 +2,7 @@
 import { useCanvasAssignmentsQuery } from "@/hooks/canvas/canvasAssignmentHooks";
 import { useCanvasPagesQuery } from "@/hooks/canvas/canvasPageHooks";
 import { useCanvasQuizzesQuery } from "@/hooks/canvas/canvasQuizHooks";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
-import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
+import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
@@ -13,6 +11,8 @@ import { ReactNode } from "react";
 import { useCalendarItemsContext } from "../../context/calendarItemsContext";
 import { getStatus } from "./getStatus";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
+import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 export function useTodaysItems(day: string) {
   const { data: settings } = useLocalCourseSettingsQuery();

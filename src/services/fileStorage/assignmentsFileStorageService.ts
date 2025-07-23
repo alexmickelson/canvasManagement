@@ -1,8 +1,8 @@
 import {
   localAssignmentMarkdown,
   LocalAssignment,
-} from "@/models/local/assignment/localAssignment";
-import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
+} from "@/features/local/assignments/models/localAssignment";
+import { assignmentMarkdownSerializer } from "@/features/local/assignments/models/utils/assignmentMarkdownSerializer";
 import path from "path";
 import { directoryOrFileExists } from "./utils/fileSystemUtils";
 import { promises as fs } from "fs";

@@ -2,11 +2,11 @@ import { z } from "zod";
 import {
   AssignmentSubmissionType,
   zodAssignmentSubmissionType,
-} from "./assignment/assignmentSubmissionType";
+} from "../../features/local/assignments/models/assignmentSubmissionType";
 import {
   LocalAssignmentGroup,
   zodLocalAssignmentGroup,
-} from "./assignment/localAssignmentGroup";
+} from "../../features/local/assignments/models/localAssignmentGroup";
 import { parse, stringify } from "yaml";
 
 export interface SimpleTimeOnly {

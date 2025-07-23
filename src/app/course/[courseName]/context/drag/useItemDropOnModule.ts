@@ -1,13 +1,13 @@
 "use client";
-import { useUpdateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
-import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
-import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
+import { useUpdatePageMutation } from "@/features/local/pages/pageHooks";
+import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { Dispatch, SetStateAction, useCallback, DragEvent } from "react";
 import { DraggableItem } from "./draggingContext";
 import { useCourseContext } from "../courseContext";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
+import { useUpdateAssignmentMutation } from "@/features/local/assignments/assignmentHooks";
+import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 export function useItemDropOnModule({
   setIsDragging,

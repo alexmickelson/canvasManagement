@@ -1,6 +1,6 @@
 import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
-import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
+import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { canvasAssignmentGroupService } from "@/services/canvas/canvasAssignmentGroupService";
 import { canvasService } from "@/services/canvas/canvasService";

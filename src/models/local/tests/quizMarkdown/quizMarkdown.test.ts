@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { LocalQuiz } from "../../quiz/localQuiz";
-import { quizMarkdownUtils } from "../../quiz/utils/quizMarkdownUtils";
-import { QuestionType } from "@/models/local/quiz/localQuizQuestion";
-import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
+import { LocalQuiz } from "../../models/localQuiz";
+import { quizMarkdownUtils } from "../../models/utils/quizMarkdownUtils";
+import { QuestionType } from "@/models/local/models/localQuizQuestion";
+import { quizQuestionMarkdownUtils } from "@/models/local/models/utils/quizQuestionMarkdownUtils";
 import { markdownToHtmlNoImages } from "@/services/htmlMarkdownUtils";
 
 // Test suite for QuizMarkdown
@@ -281,5 +281,4 @@ b) false
     expect(quizHtml).toContain("<mi>x</mi>");
     expect(quizHtml).not.toContain("x_2");
   });
-
 });

@@ -1,5 +1,5 @@
 "use client";
-import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
+import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 
 export function getAssignmentHelpString(settings: LocalCourseSettings) {

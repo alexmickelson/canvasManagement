@@ -3,11 +3,10 @@ import ButtonSelect from "@/components/ButtonSelect";
 import SelectInput from "@/components/form/SelectInput";
 import TextInput from "@/components/form/TextInput";
 import { Spinner } from "@/components/Spinner";
-import { useCreateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
 import { useModuleNamesQuery } from "@/hooks/localCourse/localCourseModuleHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { useCreatePageMutation } from "@/hooks/localCourse/pageHooks";
-import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
+import { useCreatePageMutation } from "@/features/local/pages/pageHooks";
+import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
 
 import React, { useState } from "react";
 import { useCourseContext } from "../context/courseContext";
@@ -17,6 +16,7 @@ import {
   dateToMarkdownString,
   getDateFromStringOrThrow,
 } from "@/models/local/utils/timeUtils";
+import { useCreateAssignmentMutation } from "@/features/local/assignments/assignmentHooks";
 
 export default function NewItemForm({
   moduleName: defaultModuleName,

@@ -11,7 +11,7 @@ import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHoo
 import {
   useDeletePageMutation,
   usePageQuery,
-} from "@/hooks/localCourse/pageHooks";
+} from "@/features/local/pages/pageHooks";
 import { baseCanvasUrl } from "@/services/canvas/canvasServiceUtils";
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";

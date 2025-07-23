@@ -1,16 +1,14 @@
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { axiosClient } from "../axiosUtils";
 import { CanvasAssignmentGroup } from "@/models/canvas/assignments/canvasAssignmentGroup";
-import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
+import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
 import { rateLimitAwareDelete } from "./canvasWebRequestor";
 
 export const canvasAssignmentGroupService = {
   async getAll(courseId: number): Promise<CanvasAssignmentGroup[]> {
     console.log("Requesting assignment groups");
     const url = `${canvasApi}/courses/${courseId}/assignment_groups`;
-    const assignmentGroups = await paginatedRequest<
-      CanvasAssignmentGroup[]
-    >({
+    const assignmentGroups = await paginatedRequest<CanvasAssignmentGroup[]>({
       url,
     });
     return assignmentGroups.flatMap((groupList) => groupList);
@@ -40,7 +38,9 @@ export const canvasAssignmentGroupService = {
     canvasCourseId: number,
     localAssignmentGroup: LocalAssignmentGroup
   ): Promise<void> {
-    console.log(`Updating assignment group: ${localAssignmentGroup.name}, ${localAssignmentGroup.canvasId}`);
+    console.log(
+      `Updating assignment group: ${localAssignmentGroup.name}, ${localAssignmentGroup.canvasId}`
+    );
     if (!localAssignmentGroup.canvasId) {
       throw new Error("Cannot update assignment group if canvas ID is null");
     }

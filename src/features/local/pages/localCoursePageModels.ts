@@ -1,7 +1,7 @@
+import { IModuleItem } from "@/models/local/IModuleItem";
+import { verifyDateOrThrow } from "@/models/local/utils/timeUtils";
 import { z } from "zod";
-import { extractLabelValue } from "../assignment/utils/markdownUtils";
-import { IModuleItem } from "../IModuleItem";
-import { verifyDateOrThrow } from "../utils/timeUtils";
+import { extractLabelValue } from "../assignments/models/utils/markdownUtils";
 
 export interface LocalCoursePage extends IModuleItem {
   name: string;

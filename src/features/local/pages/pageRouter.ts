@@ -1,8 +1,8 @@
-import publicProcedure from "../procedures/public";
+import publicProcedure from "../../../services/serverFunctions/procedures/public";
 import { z } from "zod";
-import { router } from "../trpcSetup";
+import { router } from "../../../services/serverFunctions/trpcSetup";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
-import { zodLocalCoursePage } from "@/models/local/page/localCoursePage";
+import { zodLocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 
 export const pageRouter = router({
   getPage: publicProcedure

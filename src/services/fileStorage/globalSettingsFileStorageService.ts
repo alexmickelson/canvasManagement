@@ -46,11 +46,4 @@ export const updateGlobalSettings = async (globalSettings: GlobalSettings) => {
     zodGlobalSettings.parse(globalSettings)
   );
   await fs.writeFile(SETTINGS_FILE_PATH, globalSettingsString, "utf-8");
-
-  // await Promise.all(
-  //   globalSettings.courses.map(async (course) => {
-  //     const coursePath = await getCoursePathByName(course.name);
-  //     await fs.mkdir(coursePath, { recursive: true });
-  //   })
-  // );
 };

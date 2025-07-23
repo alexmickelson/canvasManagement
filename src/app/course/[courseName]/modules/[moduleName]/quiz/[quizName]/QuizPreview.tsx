@@ -1,10 +1,7 @@
 import CheckIcon from "@/components/icons/CheckIcon";
 import MarkdownDisplay from "@/components/MarkdownDisplay";
+import { LocalQuizQuestion, QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
 import { useQuizQuery } from "@/hooks/localCourse/quizHooks";
-import {
-  LocalQuizQuestion,
-  QuestionType,
-} from "@/models/local/quiz/localQuizQuestion";
 import { escapeMatchingText } from "@/services/utils/questionHtmlUtils";
 
 export default function QuizPreview({

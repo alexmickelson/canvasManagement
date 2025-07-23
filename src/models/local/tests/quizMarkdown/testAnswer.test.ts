@@ -1,12 +1,15 @@
-import { getAnswers, getQuestionType } from "@/services/canvas/canvasQuizService";
-import { QuestionType, zodQuestionType } from "../../quiz/localQuizQuestion";
-import { quizMarkdownUtils } from "../../quiz/utils/quizMarkdownUtils";
-import { quizQuestionMarkdownUtils } from "../../quiz/utils/quizQuestionMarkdownUtils";
+import {
+  getAnswers,
+  getQuestionType,
+} from "@/services/canvas/canvasQuizService";
+import { QuestionType, zodQuestionType } from "../../models/localQuizQuestion";
+import { quizMarkdownUtils } from "../../models/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "../../models/utils/quizQuestionMarkdownUtils";
 import { describe, it, expect } from "vitest";
 
 describe("TextAnswerTests", () => {
   it("can parse essay", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -31,7 +34,7 @@ essay
   });
 
   it("can parse short answer", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -56,8 +59,7 @@ short answer
   });
 
   it("short answer to markdown is correct", () => {
-
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -85,8 +87,7 @@ short_answer`;
   });
 
   it("short_answer= to markdown is correct", () => {
-
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -118,7 +119,7 @@ short_answer=`;
   });
 
   it("essay question to markdown is correct", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -146,7 +147,7 @@ essay`;
   });
 
   it("Can parse short answer with auto graded answers", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -166,14 +167,16 @@ short_answer=
 
     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
-    expect(firstQuestion.questionType).toBe(QuestionType.SHORT_ANSWER_WITH_ANSWERS)
+    expect(firstQuestion.questionType).toBe(
+      QuestionType.SHORT_ANSWER_WITH_ANSWERS
+    );
     expect(firstQuestion.answers.length).toBe(2);
     expect(firstQuestion.answers[0].text).toBe("test");
     expect(firstQuestion.answers[1].text).toBe("other");
   });
 
   it("Can parse short answer with auto graded answers", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -193,18 +196,22 @@ short_answer=
 
     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
-    expect(firstQuestion.questionType).toBe(QuestionType.SHORT_ANSWER_WITH_ANSWERS)
+    expect(firstQuestion.questionType).toBe(
+      QuestionType.SHORT_ANSWER_WITH_ANSWERS
+    );
     expect(firstQuestion.answers.length).toBe(2);
     expect(firstQuestion.answers[0].text).toBe("test");
     expect(firstQuestion.answers[1].text).toBe("other");
   });
 
   it("Has short_answer= type at the same position in types and zod types", () => {
-    expect(Object.values(zodQuestionType.Enum)).toEqual(Object.values(QuestionType));
+    expect(Object.values(zodQuestionType.Enum)).toEqual(
+      Object.values(QuestionType)
+    );
   });
 
   it("Associates short_answer= questions with short_answer_question canvas question type", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -228,7 +235,7 @@ short_answer=
   });
 
   it("Includes answer_text in answers sent to canvas", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -246,27 +253,26 @@ Which events are triggered when the user clicks on an input field?
 short_answer=
 `;
 
-  const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
-  const firstQuestion = quiz.questions[0];
-  const answers = getAnswers(firstQuestion, {
-    name: "",
-    assignmentGroups: [],
-    daysOfWeek: [],
-    canvasId: 0,
-    startDate: "",
-    endDate: "",
-    defaultDueTime: {
-      hour: 0,
-      minute: 0
-    },
-    defaultAssignmentSubmissionTypes: [],
-    defaultFileUploadTypes: [],
-    holidays: [],
-    assets: []
-  })
-  expect(answers).toHaveLength(2);
-  const firstAnswer = answers[0];
-  expect(firstAnswer).toHaveProperty("answer_text");
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
+    const firstQuestion = quiz.questions[0];
+    const answers = getAnswers(firstQuestion, {
+      name: "",
+      assignmentGroups: [],
+      daysOfWeek: [],
+      canvasId: 0,
+      startDate: "",
+      endDate: "",
+      defaultDueTime: {
+        hour: 0,
+        minute: 0,
+      },
+      defaultAssignmentSubmissionTypes: [],
+      defaultFileUploadTypes: [],
+      holidays: [],
+      assets: [],
+    });
+    expect(answers).toHaveLength(2);
+    const firstAnswer = answers[0];
+    expect(firstAnswer).toHaveProperty("answer_text");
   });
-
 });

@@ -1,17 +1,14 @@
 import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
 import { axiosClient } from "../axiosUtils";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { getDateFromStringOrThrow } from "@/models/local/utils/timeUtils";
 import { canvasAssignmentService } from "./canvasAssignmentService";
-import {
-  LocalQuizQuestion,
-  QuestionType,
-} from "@/models/local/quiz/localQuizQuestion";
 import { CanvasQuizQuestion } from "@/models/canvas/quizzes/canvasQuizQuestionModel";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
 import { escapeMatchingText } from "../utils/questionHtmlUtils";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { LocalQuizQuestion, QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
 
 export const getAnswers = (
   question: LocalQuizQuestion,

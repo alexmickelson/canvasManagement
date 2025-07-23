@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest";
-import { QuestionType } from "../../quiz/localQuizQuestion";
-import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
-import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
+import { QuestionType } from "../../models/localQuizQuestion";
+import { quizMarkdownUtils } from "@/models/local/models/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "@/models/local/models/utils/quizQuestionMarkdownUtils";
 
 describe("MatchingTests", () => {
   it("can parse matching question", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -33,7 +33,7 @@ Match the following terms & definitions
   });
 
   it("can create markdown for matching question", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -65,7 +65,7 @@ Match the following terms & definitions
   });
 
   it("whitespace is optional", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -85,7 +85,7 @@ Match the following terms & definitions
   });
 
   it("can have distractors", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -108,7 +108,7 @@ Match the following terms & definitions
   });
 
   it("can have distractors and be persisted", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -132,7 +132,7 @@ Match the following terms & definitions
     );
   });
   it("can escape - characters", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -149,18 +149,17 @@ Match the following terms & definitions
 
     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
 
-    
     const firstQuestion = quiz.questions[0];
 
     expect(firstQuestion.answers[0].text).toBe("git add --all");
-    expect(firstQuestion.answers[0].matchedText).toBe("start tracking all files in the current directory and subdirectories");
-
-
+    expect(firstQuestion.answers[0].matchedText).toBe(
+      "start tracking all files in the current directory and subdirectories"
+    );
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
 
     expect(quizMarkdown).toContain(
-      "^ git add \-\-all - start tracking all files in the current directory and subdirectories"
+      "^ git add --all - start tracking all files in the current directory and subdirectories"
     );
   });
 });

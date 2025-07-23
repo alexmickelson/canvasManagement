@@ -1,8 +1,8 @@
-import { LocalAssignment } from "./assignment/localAssignment";
+import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { LocalAssignment } from "../../features/local/assignments/models/localAssignment";
 import { IModuleItem } from "./IModuleItem";
-import { LocalCoursePage } from "./page/localCoursePage";
-import { LocalQuiz } from "./quiz/localQuiz";
 import { getDateFromString } from "./utils/timeUtils";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 export interface LocalModule {
   name: string;

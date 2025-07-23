@@ -4,7 +4,7 @@ import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
 } from "@/hooks/localCourse/localCoursesHooks";
-import { LocalAssignmentGroup } from "@/models/local/assignment/localAssignmentGroup";
+import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
 import { useEffect, useState } from "react";
 import TextInput from "../../../../components/form/TextInput";
 import { useSetAssignmentGroupsMutation } from "@/hooks/canvas/canvasCourseHooks";

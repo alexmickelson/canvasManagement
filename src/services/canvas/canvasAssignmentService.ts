@@ -1,10 +1,10 @@
 import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { axiosClient } from "../axiosUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { CanvasRubricCreationResponse } from "@/models/canvas/assignments/canvasRubricCreationResponse";
-import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
+import { assignmentPoints } from "@/features/local/assignments/models/utils/assignmentPointsUtils";
 import { getDateFromString } from "@/models/local/utils/timeUtils";
 import { getRubricCriterion } from "./canvasRubricUtils";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";

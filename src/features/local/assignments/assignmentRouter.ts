@@ -1,8 +1,8 @@
-import publicProcedure from "../procedures/public";
+import publicProcedure from "../../../services/serverFunctions/procedures/public";
 import { z } from "zod";
-import { router } from "../trpcSetup";
+import { router } from "../../../services/serverFunctions/trpcSetup";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
-import { zodLocalAssignment } from "@/models/local/assignment/localAssignment";
+import { zodLocalAssignment } from "@/features/local/assignments/models/localAssignment";
 
 export const assignmentRouter = router({
   getAssignment: publicProcedure

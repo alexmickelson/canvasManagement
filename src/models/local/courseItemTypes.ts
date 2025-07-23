@@ -1,14 +1,14 @@
-import { LocalAssignment } from "./assignment/localAssignment";
-import { LocalCoursePage } from "./page/localCoursePage";
-import { LocalQuiz } from "./quiz/localQuiz";
+import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { LocalAssignment } from "../../features/local/assignments/models/localAssignment";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 export type CourseItemType = "Assignment" | "Quiz" | "Page";
-export type CourseItemReturnType<T extends CourseItemType> = T extends "Assignment"
-  ? LocalAssignment
-  : T extends "Quiz"
-  ? LocalQuiz
-  : LocalCoursePage;
-
+export type CourseItemReturnType<T extends CourseItemType> =
+  T extends "Assignment"
+    ? LocalAssignment
+    : T extends "Quiz"
+    ? LocalQuiz
+    : LocalCoursePage;
 
 export const typeToFolder = {
   Assignment: "assignments",

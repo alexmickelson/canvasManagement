@@ -3,7 +3,7 @@ import path from "path";
 import { basePath, directoryOrFileExists } from "./utils/fileSystemUtils";
 import { assignmentsFileStorageService } from "./assignmentsFileStorageService";
 import { quizFileStorageService } from "./quizFileStorageService";
-import { pageFileStorageService } from "./pageFileStorageService";
+import { pageFileStorageService } from "../../features/local/pages/pageFileStorageService";
 import { moduleFileStorageService } from "./moduleFileStorageService";
 import { settingsFileStorageService } from "./settingsFileStorageService";
 import { getCoursePathByName } from "./globalSettingsFileStorageService";

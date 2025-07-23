@@ -5,7 +5,7 @@ import { Spinner } from "@/components/Spinner";
 import {
   usePageQuery,
   useUpdatePageMutation,
-} from "@/hooks/localCourse/pageHooks";
+} from "@/features/local/pages/pageHooks";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

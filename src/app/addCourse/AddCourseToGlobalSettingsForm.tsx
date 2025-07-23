@@ -22,7 +22,7 @@ import {
 } from "@/hooks/localCourse/storageDirectoryHooks";
 import { CanvasCourseModel } from "@/models/canvas/courses/canvasCourseModel";
 import { CanvasEnrollmentTermModel } from "@/models/canvas/enrollmentTerms/canvasEnrollmentTermModel";
-import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
+import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 import {
   DayOfWeek,
   LocalCourseSettings,

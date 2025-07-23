@@ -2,10 +2,8 @@
 import { CanvasAssignment } from "@/models/canvas/assignments/canvasAssignment";
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
 import { CanvasQuiz } from "@/models/canvas/quizzes/canvasQuizModel";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { LocalCourseSettings } from "@/models/local/localCourseSettings";
-import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   dateToMarkdownString,
   getDateFromStringOrThrow,
@@ -13,6 +11,8 @@ import {
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 import { htmlIsCloseEnough } from "@/services/utils/htmlIsCloseEnough";
 import { ReactNode } from "react";
+import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 export const getStatus = ({
   item,

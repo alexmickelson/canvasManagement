@@ -4,23 +4,20 @@ import fs from "fs/promises";
 import {
   LocalAssignment,
   localAssignmentMarkdown,
-} from "@/models/local/assignment/localAssignment";
-import {
-  LocalQuiz,
-  localQuizMarkdownUtils,
-} from "@/models/local/quiz/localQuiz";
-import {
-  LocalCoursePage,
-  localPageMarkdownUtils,
-} from "@/models/local/page/localCoursePage";
-import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
-import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
+} from "@/features/local/assignments/models/localAssignment";
+import { assignmentMarkdownSerializer } from "@/features/local/assignments/models/utils/assignmentMarkdownSerializer";
 import {
   CourseItemReturnType,
   CourseItemType,
   typeToFolder,
 } from "@/models/local/courseItemTypes";
 import { getCoursePathByName } from "./globalSettingsFileStorageService";
+import {
+  localPageMarkdownUtils,
+  LocalCoursePage,
+} from "@/features/local/pages/localCoursePageModels";
+import { LocalQuiz, localQuizMarkdownUtils } from "@/features/local/quizzes/models/localQuiz";
+import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 
 const getItemFileNames = async (
   courseName: string,

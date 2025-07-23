@@ -1,9 +1,9 @@
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
-import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
 import path from "path";
 import { promises as fs } from "fs";
 import { courseItemFileStorageService } from "./courseItemFileStorageService";
 import { getCoursePathByName } from "./globalSettingsFileStorageService";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 
 export const quizFileStorageService = {
   getQuiz: async (courseName: string, moduleName: string, quizName: string) =>

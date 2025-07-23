@@ -1,12 +1,12 @@
 import { describe, it, expect } from "vitest";
-import { LocalAssignment } from "../assignment/localAssignment";
+import { LocalAssignment } from "../../../features/local/assignments/models/localAssignment";
 import {
   prepAssignmentForNewSemester,
   prepLectureForNewSemester,
   prepPageForNewSemester,
   prepQuizForNewSemester,
 } from "../utils/semesterTransferUtils";
-import { LocalQuiz } from "../quiz/localQuiz";
+import { LocalQuiz } from "../models/localQuiz";
 import { LocalCoursePage } from "../page/localCoursePage";
 import { Lecture } from "../lecture";
 

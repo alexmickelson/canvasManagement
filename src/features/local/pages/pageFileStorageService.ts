@@ -1,11 +1,11 @@
-import {
-  localPageMarkdownUtils,
-  LocalCoursePage,
-} from "@/models/local/page/localCoursePage";
 import { promises as fs } from "fs";
 import path from "path";
-import { courseItemFileStorageService } from "./courseItemFileStorageService";
-import { getCoursePathByName } from "./globalSettingsFileStorageService";
+import { courseItemFileStorageService } from "../../../services/fileStorage/courseItemFileStorageService";
+import { getCoursePathByName } from "../../../services/fileStorage/globalSettingsFileStorageService";
+import {
+  LocalCoursePage,
+  localPageMarkdownUtils,
+} from "@/features/local/pages/localCoursePageModels";
 
 export const pageFileStorageService = {
   getPage: async (courseName: string, moduleName: string, name: string) =>

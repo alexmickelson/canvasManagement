@@ -1,7 +1,4 @@
-import {
-  verifyDateOrThrow,
-  verifyDateStringOrUndefined,
-} from "../../utils/timeUtils";
+import { verifyDateOrThrow, verifyDateStringOrUndefined } from "@/models/local/utils/timeUtils";
 import { LocalQuiz } from "../localQuiz";
 import { quizQuestionMarkdownUtils } from "./quizQuestionMarkdownUtils";
 

@@ -7,7 +7,7 @@ import {
 import {
   AssignmentSubmissionType,
   AssignmentSubmissionTypeList,
-} from "@/models/local/assignment/assignmentSubmissionType";
+} from "@/features/local/assignments/models/assignmentSubmissionType";
 import React, { useEffect, useState } from "react";
 import { settingsBox } from "./sharedSettings";
 

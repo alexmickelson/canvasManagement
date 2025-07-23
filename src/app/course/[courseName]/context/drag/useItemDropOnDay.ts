@@ -1,16 +1,13 @@
 "use client";
-import { useUpdateAssignmentMutation } from "@/hooks/localCourse/assignmentHooks";
 import {
   useLecturesSuspenseQuery,
   useLectureUpdateMutation,
 } from "@/hooks/localCourse/lectureHooks";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
-import { useUpdatePageMutation } from "@/hooks/localCourse/pageHooks";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { useUpdatePageMutation } from "@/features/local/pages/pageHooks";
+import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { Lecture } from "@/models/local/lecture";
 import { getLectureForDay } from "@/models/local/utils/lectureUtils";
-import { LocalCoursePage } from "@/models/local/page/localCoursePage";
-import { LocalQuiz } from "@/models/local/quiz/localQuiz";
 import {
   getDateFromStringOrThrow,
   getDateOnlyMarkdownString,
@@ -21,6 +18,9 @@ import { DraggableItem } from "./draggingContext";
 import { getNewLockDate } from "./getNewLockDate";
 import { useUpdateQuizMutation } from "@/hooks/localCourse/quizHooks";
 import { useCourseContext } from "../courseContext";
+import { useUpdateAssignmentMutation } from "@/features/local/assignments/assignmentHooks";
+import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 export function useItemDropOnDay({
   setIsDragging,

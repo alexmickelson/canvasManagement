@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { LocalQuiz } from "../../quiz/localQuiz";
-import { QuestionType } from "../../quiz/localQuizQuestion";
-import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
-import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
+import { LocalQuiz } from "../../models/localQuiz";
+import { QuestionType } from "../../models/localQuizQuestion";
+import { quizMarkdownUtils } from "@/models/local/models/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "@/models/local/models/utils/quizQuestionMarkdownUtils";
 
 describe("MultipleAnswersTests", () => {
   it("quiz markdown includes multiple answer question", () => {
@@ -41,7 +41,7 @@ oneline question
   });
 
   it("can parse question with multiple answers", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -79,7 +79,7 @@ Which events are triggered when the user clicks on an input field?
   });
 
   it("can parse question with multiple answers without a space in false answers", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false
@@ -102,10 +102,10 @@ Which events are triggered when the user clicks on an input field?
     expect(firstQuestion.answers.length).toBe(2);
     expect(firstQuestion.answers[0].correct).toBe(true);
     expect(firstQuestion.answers[1].correct).toBe(false);
-  });  
-  
+  });
+
   it("can parse question with multiple answers without a space in false answers other example", () => {
-    const name = "Test Quiz"
+    const name = "Test Quiz";
     const rawMarkdownQuiz = `
 ShuffleAnswers: true
 OneQuestionAtATime: false

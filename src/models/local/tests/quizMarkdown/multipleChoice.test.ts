@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { LocalQuiz } from "../../quiz/localQuiz";
-import { QuestionType } from "../../quiz/localQuizQuestion";
-import { quizMarkdownUtils } from "@/models/local/quiz/utils/quizMarkdownUtils";
-import { quizQuestionMarkdownUtils } from "@/models/local/quiz/utils/quizQuestionMarkdownUtils";
+import { LocalQuiz } from "../../models/localQuiz";
+import { QuestionType } from "../../models/localQuizQuestion";
+import { quizMarkdownUtils } from "@/models/local/models/utils/quizMarkdownUtils";
+import { quizQuestionMarkdownUtils } from "@/models/local/models/utils/quizQuestionMarkdownUtils";
 
 describe("MultipleChoiceTests", () => {
   it("quiz markdown includes multiple choice question", () => {

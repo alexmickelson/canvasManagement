@@ -1,4 +1,4 @@
-import { assignmentMarkdownSerializer } from "@/models/local/assignment/utils/assignmentMarkdownSerializer";
+import { assignmentMarkdownSerializer } from "@/features/local/assignments/models/utils/assignmentMarkdownSerializer";
 import { groupByStartDate } from "@/models/local/utils/timeUtils";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
 import { ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";

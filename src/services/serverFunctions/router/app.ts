@@ -1,12 +1,12 @@
 import { createTrpcContext } from "../context";
 import { createCallerFactory, router } from "../trpcSetup";
-import { assignmentRouter } from "./assignmentRouter";
+import { assignmentRouter } from "../../../features/local/assignments/assignmentRouter";
 import { canvasFileRouter } from "./canvasFileRouter";
 import { directoriesRouter } from "./directoriesRouter";
 import { globalSettingsRouter } from "./globalSettingsRouter";
 import { lectureRouter } from "./lectureRouter";
 import { moduleRouter } from "./moduleRouter";
-import { pageRouter } from "./pageRouter";
+import { pageRouter } from "../../../features/local/pages/pageRouter";
 import { quizRouter } from "./quizRouter";
 import { settingsRouter } from "./settingsRouter";
 

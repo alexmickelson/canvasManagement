@@ -1,7 +1,7 @@
 import { canvasAssignmentService } from "@/services/canvas/canvasAssignmentService";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocalCourseSettingsQuery } from "../localCourse/localCoursesHooks";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
+import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { canvasModuleService } from "@/services/canvas/canvasModuleService";
 import {
   useAddCanvasModuleMutation,

@@ -1,7 +1,7 @@
 import MarkdownDisplay from "@/components/MarkdownDisplay";
-import { LocalAssignment } from "@/models/local/assignment/localAssignment";
-import { rubricItemIsExtraCredit } from "@/models/local/assignment/rubricItem";
-import { assignmentPoints } from "@/models/local/assignment/utils/assignmentPointsUtils";
+import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
+import { rubricItemIsExtraCredit } from "@/features/local/assignments/models/rubricItem";
+import { assignmentPoints } from "@/features/local/assignments/models/utils/assignmentPointsUtils";
 import { formatHumanReadableDate } from "@/services/utils/dateFormat";
 import React, { Fragment } from "react";
 

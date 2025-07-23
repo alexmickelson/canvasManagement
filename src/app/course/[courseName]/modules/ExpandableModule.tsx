@@ -1,5 +1,5 @@
 "use client";
-import { usePagesQueries } from "@/hooks/localCourse/pageHooks";
+import { usePagesQueries } from "@/features/local/pages/pageHooks";
 import { IModuleItem } from "@/models/local/IModuleItem";
 import {
   getDateFromString,
@@ -22,9 +22,9 @@ import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
 import { useDragStyleContext } from "../context/drag/dragStyleContext";
 import { useQuizzesQueries } from "@/hooks/localCourse/quizHooks";
-import { useAssignmentNamesQuery } from "@/hooks/localCourse/assignmentHooks";
 import { useTRPC } from "@/services/serverFunctions/trpcClient";
 import { useSuspenseQueries } from "@tanstack/react-query";
+import { useAssignmentNamesQuery } from "@/features/local/assignments/assignmentHooks";
 
 export default function ExpandableModule({
   moduleName,

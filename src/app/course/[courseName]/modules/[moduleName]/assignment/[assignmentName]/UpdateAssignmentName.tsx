@@ -5,7 +5,7 @@ import { Spinner } from "@/components/Spinner";
 import {
   useAssignmentQuery,
   useUpdateAssignmentMutation,
-} from "@/hooks/localCourse/assignmentHooks";
+} from "@/features/local/assignments/assignmentHooks";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

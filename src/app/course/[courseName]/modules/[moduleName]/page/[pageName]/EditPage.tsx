@@ -1,10 +1,5 @@
 "use client";
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
-import {
-  usePageQuery,
-  useUpdatePageMutation,
-} from "@/hooks/localCourse/pageHooks";
-import { localPageMarkdownUtils } from "@/models/local/page/localCoursePage";
 import { useEffect, useState } from "react";
 import PagePreview from "./PagePreview";
 import { useLocalCourseSettingsQuery } from "@/hooks/localCourse/localCoursesHooks";
@@ -15,6 +10,11 @@ import { useCourseContext } from "@/app/course/[courseName]/context/courseContex
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 import EditPageHeader from "./EditPageHeader";
 import { EditLayout } from "@/components/EditLayout";
+import { localPageMarkdownUtils } from "@/features/local/pages/localCoursePageModels";
+import {
+  usePageQuery,
+  useUpdatePageMutation,
+} from "@/features/local/pages/pageHooks";
 
 export default function EditPage({
   moduleName,

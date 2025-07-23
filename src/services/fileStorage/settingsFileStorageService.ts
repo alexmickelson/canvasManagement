@@ -5,7 +5,7 @@ import {
 import { promises as fs } from "fs";
 import path from "path";
 import { basePath, directoryOrFileExists } from "./utils/fileSystemUtils";
-import { AssignmentSubmissionType } from "@/models/local/assignment/assignmentSubmissionType";
+import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 import {
   getCoursePathByName,
   getGlobalSettings,

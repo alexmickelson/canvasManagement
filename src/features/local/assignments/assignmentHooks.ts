@@ -2,10 +2,6 @@
 import { useTRPC } from "@/services/serverFunctions/trpcClient";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import {
-  useLocalCourseSettingsQuery,
-  useUpdateLocalCourseSettingsMutation,
-} from "./localCoursesHooks";
-import {
   extractImageSources,
   markdownToHtmlNoImages,
 } from "@/services/htmlMarkdownUtils";
@@ -15,6 +11,10 @@ import {
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
+import {
+  useLocalCourseSettingsQuery,
+  useUpdateLocalCourseSettingsMutation,
+} from "@/hooks/localCourse/localCoursesHooks";
 
 export const useAssignmentQuery = (
   moduleName: string,

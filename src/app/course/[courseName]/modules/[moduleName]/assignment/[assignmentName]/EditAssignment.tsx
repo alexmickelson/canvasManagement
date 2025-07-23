@@ -1,14 +1,9 @@
 "use client";
 import { MonacoEditor } from "@/components/editor/MonacoEditor";
 import {
-  useAssignmentQuery,
-  useUpdateAssignmentMutation,
-  useUpdateImageSettingsForAssignment,
-} from "@/hooks/localCourse/assignmentHooks";
-import {
   LocalAssignment,
   localAssignmentMarkdown,
-} from "@/models/local/assignment/localAssignment";
+} from "@/features/local/assignments/models/localAssignment";
 import { useEffect, useState } from "react";
 import AssignmentPreview from "./AssignmentPreview";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
@@ -22,6 +17,11 @@ import EditAssignmentHeader from "./EditAssignmentHeader";
 import { Spinner } from "@/components/Spinner";
 import { getAssignmentHelpString } from "./getAssignmentHelpString";
 import { EditLayout } from "@/components/EditLayout";
+import {
+  useAssignmentQuery,
+  useUpdateAssignmentMutation,
+  useUpdateImageSettingsForAssignment,
+} from "@/features/local/assignments/assignmentHooks";
 
 export default function EditAssignment({
   moduleName,

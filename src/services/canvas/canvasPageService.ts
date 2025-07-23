@@ -1,5 +1,5 @@
 import { CanvasPage } from "@/models/canvas/pages/canvasPageModel";
-import { LocalCoursePage } from "@/models/local/page/localCoursePage";
+import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { markdownToHTMLSafe } from "../htmlMarkdownUtils";
 import { axiosClient } from "../axiosUtils";
@@ -10,21 +10,21 @@ export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {
     console.log("requesting pages");
     try {
-    const url = `${canvasApi}/courses/${courseId}/pages`;
-    const pages = await paginatedRequest<CanvasPage[]>({
-      url,
-    });
-    return pages.flatMap((pageList) => pageList);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } catch (error: any) {
-    if (error?.response?.status === 403) {
-      console.log(
-        "Canvas API error: 403 Forbidden for pages. Returning empty array."
-      );
-      return [];
+      const url = `${canvasApi}/courses/${courseId}/pages`;
+      const pages = await paginatedRequest<CanvasPage[]>({
+        url,
+      });
+      return pages.flatMap((pageList) => pageList);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      if (error?.response?.status === 403) {
+        console.log(
+          "Canvas API error: 403 Forbidden for pages. Returning empty array."
+        );
+        return [];
+      }
+      throw error;
     }
-    throw error;
-  }
   },
 
   async create(

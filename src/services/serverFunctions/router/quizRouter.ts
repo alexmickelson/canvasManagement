@@ -2,7 +2,7 @@ import publicProcedure from "../procedures/public";
 import { z } from "zod";
 import { router } from "../trpcSetup";
 import { fileStorageService } from "@/services/fileStorage/fileStorageService";
-import { zodLocalQuiz } from "@/models/local/quiz/localQuiz";
+import { zodLocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 
 export const quizRouter = router({
   getQuiz: publicProcedure
