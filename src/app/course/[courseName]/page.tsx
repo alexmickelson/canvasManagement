@@ -11,7 +11,7 @@ export default async function CoursePage() {
       <div className="h-full flex flex-col">
         <DragStyleContextProvider>
           <DraggingContextProvider>
-            <div className="flex sm:flex-row h-full flex-col max-w-[2400px] mx-auto">
+            <div className="flex sm:flex-row h-full flex-col max-w-[2400px] w-full mx-auto">
               <div className="flex-1 h-full flex flex-col">
                 <CourseNavigation />
                 <CourseCalendar />

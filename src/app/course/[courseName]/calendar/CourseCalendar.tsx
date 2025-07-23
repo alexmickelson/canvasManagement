@@ -43,15 +43,15 @@ export default function CourseCalendar() {
   return (
     <div
       className="
-      min-h-0
-      flex-grow
-      border-2
-      border-gray-900
-      rounded-lg
-      bg-linear-to-br
-      from-blue-950/30
-      to-fuchsia-950/10 to-60%
-      sm:p-1
+        min-h-0
+        flex-grow
+        border-2
+        border-gray-900
+        rounded-lg
+        bg-linear-to-br
+        from-blue-950/30
+        to-fuchsia-950/10 to-60%
+        sm:p-1
       "
     >
       <div

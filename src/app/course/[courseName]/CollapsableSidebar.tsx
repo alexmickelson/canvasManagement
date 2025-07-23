@@ -1,25 +1,61 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CourseSettingsLink from "./CourseSettingsLink";
 import ModuleList from "./modules/ModuleList";
 import LeftChevron from "@/components/icons/LeftChevron";
 import RightChevron from "@/components/icons/RightChevron";
 
-export default function CollapsableSidebar() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+const collapseThreshold = 1400;
 
-  const widthClass = isCollapsed ? "w-0" : "w-96";
-  const visibilityClass = isCollapsed ? "invisible " : "visible";
+export default function CollapsableSidebar() {
+  const [windowCollapseRecommended, setWindowCollapseRecommended] =
+    useState(window.innerWidth <= collapseThreshold);
+  const [userCollapsed, setUserCollapsed] = useState<
+    "unset" | "collapsed" | "uncollapsed"
+  >("unset");
+
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth <= collapseThreshold) {
+        setWindowCollapseRecommended(true);
+      } else {
+        setWindowCollapseRecommended(false);
+      }
+    }
+    handleResize(); // Set initial state
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  let collapsed;
+  if (userCollapsed === "unset") {
+    collapsed = windowCollapseRecommended;
+  } else {
+    collapsed = userCollapsed === "collapsed";
+  }
+
+  const widthClass = collapsed ? "w-0" : "w-96";
+  const visibilityClass = collapsed ? "invisible " : "visible";
+
   return (
     <div className="h-full flex flex-col">
       <div className="flex flex-row justify-between mb-2">
         <div className="visible mx-3 mt-2">
-          <button onClick={() => setIsCollapsed((i) => !i)}>
-            {isCollapsed ? <LeftChevron /> : <RightChevron />}
+          <button
+            onClick={() => {
+              setUserCollapsed((prev) => {
+                if (prev === "unset") {
+                  return collapsed ? "uncollapsed" : "collapsed";
+                }
+                return prev === "collapsed" ? "uncollapsed" : "collapsed";
+              });
+            }}
+          >
+            {collapsed ? <LeftChevron /> : <RightChevron />}
           </button>
         </div>
-        <div className={" " + (isCollapsed ? "w-0 invisible hidden" : "")}>
+        <div className={" " + (collapsed ? "w-0 invisible hidden" : "")}>
           <CourseSettingsLink />
         </div>
       </div>
