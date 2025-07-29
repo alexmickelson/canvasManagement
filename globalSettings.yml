@@ -13,3 +13,5 @@ courses:
     name: 1405_old
   - path: ./3840_Telemetry/2025_spring_alex/modules/
     name: Telem and Ops
+  - path: ./4850_AdvancedFE/2024-fall-alex/modules/
+    name: Old Adv Frontend
