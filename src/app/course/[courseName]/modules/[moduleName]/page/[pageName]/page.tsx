@@ -14,8 +14,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { courseName, pageName } = await params;
   const decodedPageName = decodeURIComponent(pageName);
+  const decodedCourseName = decodeURIComponent(courseName);
   return {
-    title: getTitle(`${decodedPageName}, ${courseName}`),
+    title: getTitle(`${decodedPageName}, ${decodedCourseName}`),
   };
 }
 

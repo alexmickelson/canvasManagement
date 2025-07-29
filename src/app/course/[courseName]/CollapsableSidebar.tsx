@@ -23,7 +23,6 @@ export default function CollapsableSidebar() {
         setWindowCollapseRecommended(false);
       }
     }
-    handleResize(); // Set initial state
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);

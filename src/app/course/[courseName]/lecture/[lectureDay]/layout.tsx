@@ -11,8 +11,9 @@ export async function generateMetadata({
   const { courseName, lectureDay } = await params;
   const decodedDay = decodeURIComponent(lectureDay);
   const dayOnly = decodedDay.split(" ")[0];
+  const decodedCourseName = decodeURIComponent(getTitle(courseName));
   return {
-    title: getTitle(`${courseName} lecture ${dayOnly}`),
+    title: getTitle(`${decodedCourseName} lecture ${dayOnly}`),
   };
 }
 

@@ -59,6 +59,12 @@ flowchart TD
 
 [Github Classroom](insert_github_classroom_url)
 
+## Files
+
+If you have mounted a folder in the /app/public/images directory, you can link to files like this:
+
+![formulas](/images/facultyFiles/1405/lab-04-simple-math-formulas.png)
+
 ## Rubric
 
 - 1pt: singular point

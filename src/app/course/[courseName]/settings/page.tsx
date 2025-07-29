@@ -8,8 +8,9 @@ export async function generateMetadata({
   params: Promise<{ courseName: string }>;
 }): Promise<Metadata> {
   const { courseName } = await params;
+  const decodedCourseName = decodeURIComponent(courseName);
   return {
-    title: getTitle(courseName) + " Settings",
+    title: getTitle(decodedCourseName) + " Settings",
   };
 }
 
