@@ -20,6 +20,13 @@ export const canvasModuleService = {
     if (!data) throw new Error("Something went wrong updating module item");
   },
 
+  async getModuleWithItems(canvasCourseId: number, moduleId: number) {
+    const url = `${canvasApi}/courses/${canvasCourseId}/modules/${moduleId}`;
+    const params = { include: ["items"] };
+    const response = await axiosClient.get<CanvasModule>(url, { params });
+    return response.data;
+  },
+
   async createModuleItem(
     canvasCourseId: number,
     canvasModuleId: number,
@@ -62,5 +69,22 @@ export const canvasModuleService = {
     };
     const response = await axiosClient.post<CanvasModule>(url, body);
     return response.data.id;
+  },
+
+  async reorderModuleItems(
+    canvasCourseId: number,
+    canvasModuleId: number,
+    itemIds: number[]
+  ) {
+    for (let i = 0; i < itemIds.length; i++) {
+      const itemId = itemIds[i];
+      const url = `${canvasApi}/courses/${canvasCourseId}/modules/${canvasModuleId}/items/${itemId}`;
+      const body = {
+        module_item: {
+          position: i + 1,
+        },
+      };
+      await axiosClient.put(url, body);
+    }
   },
 };

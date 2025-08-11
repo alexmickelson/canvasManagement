@@ -15,6 +15,8 @@ export default function CourseList() {
 
   const sortedDates = Object.keys(coursesByStartDate).sort();
 
+  console.log(allSettings, coursesByStartDate);
+
   return (
     <div className="flex flex-row ">
       {sortedDates.map((startDate) => (
@@ -29,10 +31,10 @@ export default function CourseList() {
                 href={getCourseUrl(settings.name)}
                 shallow={true}
                 className="
-              font-bold text-xl block
-              transition-all hover:scale-105 hover:underline hover:text-slate-200
-              mb-3
-            "
+                  font-bold text-xl block
+                  transition-all hover:scale-105 hover:underline hover:text-slate-200
+                  mb-3
+                "
               >
                 {settings.name}
               </Link>

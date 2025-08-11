@@ -15,7 +15,7 @@ import { GlobalSettingsCourse } from "../globalSettings/globalSettingsModels";
 const getCourseSettings = async (
   course: GlobalSettingsCourse
 ): Promise<LocalCourseSettings> => {
-  const courseDirectory = await getCoursePathByName(course.name);
+  const courseDirectory = path.join(basePath, course.path);
   const settingsPath = path.join(courseDirectory, "settings.yml");
   if (!(await directoryOrFileExists(settingsPath))) {
     const errorMessage = `could not find settings for ${course.name}, settings file ${settingsPath}`;

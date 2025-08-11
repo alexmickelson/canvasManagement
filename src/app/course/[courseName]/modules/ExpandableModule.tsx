@@ -25,6 +25,9 @@ import { useQuizzesQueries } from "@/features/local/quizzes/quizHooks";
 import { useTRPC } from "@/services/serverFunctions/trpcClient";
 import { useSuspenseQueries } from "@tanstack/react-query";
 import { useAssignmentNamesQuery } from "@/features/local/assignments/assignmentHooks";
+import { useReorderCanvasModuleItemsMutation } from "@/features/canvas/hooks/canvasModuleHooks";
+import { useCanvasModulesQuery } from "@/features/canvas/hooks/canvasModuleHooks";
+import { Spinner } from "@/components/Spinner";
 
 export default function ExpandableModule({
   moduleName,
@@ -50,6 +53,8 @@ export default function ExpandableModule({
   const { data: quizzes } = useQuizzesQueries(moduleName);
   const { data: pages } = usePagesQueries(moduleName);
   const modal = useModal();
+  const reorderMutation = useReorderCanvasModuleItemsMutation();
+  const { data: canvasModules } = useCanvasModulesQuery();
 
   const moduleItems: {
     type: "assignment" | "quiz" | "page";
@@ -110,6 +115,30 @@ export default function ExpandableModule({
             )}
           >
             <>
+              {!reorderMutation.isPending && (
+                <button
+                  className=" me-3"
+                  onClick={() => {
+                    const canvasModuleId = canvasModules?.find(
+                      (m) => m.name === moduleName
+                    )?.id;
+                    if (!canvasModuleId) {
+                      console.error(
+                        "Canvas module ID not found for",
+                        moduleName
+                      );
+                      return;
+                    }
+                    reorderMutation.mutate({
+                      moduleId: canvasModuleId,
+                      items: moduleItems.map((item) => item.item),
+                    });
+                  }}
+                >
+                  Sort by Due Date
+                </button>
+              )}
+              {reorderMutation.isPending && <Spinner />}
               <Modal
                 modalControl={modal}
                 buttonText="New Item"

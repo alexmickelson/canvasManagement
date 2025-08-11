@@ -1,0 +1,12 @@
+
+### doesn't work, there is a form request that does thi son the site, but this isn't it
+POST https://snow.instructure.com/api/v1/courses/1154759/modules/3965250/reorder
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+Content-Type: application/json
+
+{
+  "order": [
+    29273428, 29274455, 29272498, 29274867, 29272743, 29273425
+  ]
+}
+

@@ -1,0 +1,5 @@
+courses:
+  - path: ./3820_BackEnd/2025-fall/Modules/
+    name: Back-End
+  - path: ./3820_BackEnd/2024-fall/Modules/
+    name: Back-End
