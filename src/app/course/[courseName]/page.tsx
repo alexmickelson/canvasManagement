@@ -3,7 +3,6 @@ import DraggingContextProvider from "./context/drag/DraggingContextProvider";
 import { CourseNavigation } from "./CourseNavigation";
 import { DragStyleContextProvider } from "./context/drag/dragStyleContext";
 import CollapsableSidebar from "./CollapsableSidebar";
-import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
 
 export default async function CoursePage() {
   return (
@@ -13,10 +12,8 @@ export default async function CoursePage() {
           <DraggingContextProvider>
             <div className="flex sm:flex-row h-full flex-col max-w-[2400px] w-full mx-auto">
               <div className="flex-1 h-full flex flex-col">
-                <SuspenseAndErrorHandling>
-                  <CourseNavigation />
-                  <CourseCalendar />
-                </SuspenseAndErrorHandling>
+                <CourseNavigation />
+                <CourseCalendar />
               </div>
               <CollapsableSidebar />
             </div>

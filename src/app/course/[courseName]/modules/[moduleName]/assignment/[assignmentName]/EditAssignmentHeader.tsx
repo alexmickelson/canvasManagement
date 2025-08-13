@@ -13,7 +13,12 @@ export default function EditAssignmentHeader({
   const { courseName } = useCourseContext();
   return (
     <div className="py-1 flex flex-row justify-start gap-3">
-      <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+      <Link
+        className="btn"
+        href={getCourseUrl(courseName)}
+        shallow={true}
+        prefetch={true}
+      >
         {courseName}
       </Link>
       <UpdateAssignmentName

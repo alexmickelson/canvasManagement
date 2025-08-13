@@ -17,6 +17,7 @@ export default function EditPageHeader({
         className="btn"
         href={getCourseUrl(courseName)}
         shallow={true}
+        prefetch={true}
       >
         {courseName}
       </Link>

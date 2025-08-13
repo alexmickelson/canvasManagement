@@ -30,6 +30,7 @@ export default function CourseList() {
               <Link
                 href={getCourseUrl(settings.name)}
                 shallow={true}
+                prefetch={true}
                 className="
                   font-bold text-xl block
                   transition-all hover:scale-105 hover:underline hover:text-slate-200

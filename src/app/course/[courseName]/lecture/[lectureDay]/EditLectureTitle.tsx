@@ -22,6 +22,7 @@ export default function EditLectureTitle({
           className="btn hidden sm:inline"
           href={getCourseUrl(courseName)}
           shallow={true}
+          prefetch={true}
         >
           {courseName}
         </Link>

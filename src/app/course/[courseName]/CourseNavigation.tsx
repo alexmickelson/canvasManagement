@@ -1,10 +1,22 @@
 "use client";
 import { Spinner } from "@/components/Spinner";
-import { useCanvasAssignmentsQuery, canvasAssignmentKeys } from "@/features/canvas/hooks/canvasAssignmentHooks";
+import {
+  useCanvasAssignmentsQuery,
+  canvasAssignmentKeys,
+} from "@/features/canvas/hooks/canvasAssignmentHooks";
 import { canvasCourseKeys } from "@/features/canvas/hooks/canvasCourseHooks";
-import { useCanvasModulesQuery, canvasCourseModuleKeys } from "@/features/canvas/hooks/canvasModuleHooks";
-import { useCanvasPagesQuery, canvasPageKeys } from "@/features/canvas/hooks/canvasPageHooks";
-import { useCanvasQuizzesQuery, canvasQuizKeys } from "@/features/canvas/hooks/canvasQuizHooks";
+import {
+  useCanvasModulesQuery,
+  canvasCourseModuleKeys,
+} from "@/features/canvas/hooks/canvasModuleHooks";
+import {
+  useCanvasPagesQuery,
+  canvasPageKeys,
+} from "@/features/canvas/hooks/canvasPageHooks";
+import {
+  useCanvasQuizzesQuery,
+  canvasQuizKeys,
+} from "@/features/canvas/hooks/canvasQuizHooks";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
