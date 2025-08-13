@@ -1,3 +1,4 @@
+"use client"
 import { getErrorMessage } from "@/services/utils/queryClient";
 import { QueryErrorResetBoundary } from "@tanstack/react-query";
 import { FC, ReactNode, Suspense } from "react";

@@ -3,44 +3,6 @@ import { ReactNode } from "react";
 import { getHTTPStatusCodeFromError } from "@trpc/server/http";
 import { TRPCError } from "@trpc/server";
 
-// const addErrorAsToast = async (error: unknown) => {
-//   console.error("error from toast", error);
-//   const message = getErrorMessage(error);
-
-//   toast(
-//     (t) => (
-//       <div className="row">
-//         <div className="col-auto my-auto">
-//           <ErrorIcon />
-//         </div>
-//         <div className="col my-auto">
-//           <div className="white-space">{message}</div>
-//           <div>
-//             <a
-//               href="https://snow.kualibuild.com/app/651eeebc32976c013a4c4739/run"
-//               target="_blank"
-//               rel="noreferrer"
-//             >
-//               Report Bug
-//             </a>
-//           </div>
-//         </div>
-//         <div className="col-auto my-auto">
-//           <button
-//             onClick={() => toast.dismiss(t.id)}
-//             className="btn btn-outline-secondary btn-sm"
-//           >
-//             <i className="bi bi-x"></i>
-//           </button>
-//         </div>
-//       </div>
-//     ),
-//     {
-//       duration: Infinity,
-//     }
-//   );
-// };
-
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function getErrorMessage(error: any) {
   if (error instanceof TRPCError) {
@@ -68,8 +30,7 @@ export function getErrorMessage(error: any) {
     } else return JSON.stringify(error.response?.data.detail);
   }
   console.log("error message: ", error);
-  if(error.message )
-    return error.message;
+  if (error.message) return error.message;
   return "Error With Request";
 }
 
