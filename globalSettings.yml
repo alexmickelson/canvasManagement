@@ -15,3 +15,5 @@ courses:
     name: Telem and Ops
   - path: ./4850_AdvancedFE/2024-fall-alex/modules/
     name: Old Adv Frontend
+  - path: ./1430/2025-spring-jonathan/Modules/
+    name: Jonathan UX

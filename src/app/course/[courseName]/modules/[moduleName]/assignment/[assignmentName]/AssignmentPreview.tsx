@@ -60,12 +60,6 @@ export default function AssignmentPreview({
       <br />
       <section>
         <MarkdownDisplay markdown={assignment.description} />
-        {/* <div
-          className="markdownPreview"
-          dangerouslySetInnerHTML={{
-            __html: htmlPreview,
-          }}
-        ></div> */}
       </section>
       <hr />
       <section>

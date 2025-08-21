@@ -105,7 +105,10 @@ export const getStatus = ({
 
     try {
       const htmlIsSame = htmlIsCloseEnough(
-        markdownToHTMLSafe(assignment.description, settings),
+        markdownToHTMLSafe({
+          markdownString: assignment.description,
+          settings,
+        }),
         canvasAssignment.description
       );
       if (!htmlIsSame)

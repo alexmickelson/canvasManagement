@@ -1,4 +1,3 @@
-import { CanvasModuleItem } from "@/features/canvas/models/modules/canvasModuleItems";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { canvasModuleService } from "../services/canvasModuleService";

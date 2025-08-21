@@ -30,7 +30,7 @@ export const getAnswers = (
     });
 
   return question.answers.map((answer) => ({
-    answer_html: markdownToHTMLSafe(answer.text, settings),
+    answer_html: markdownToHTMLSafe({ markdownString: answer.text, settings }),
     answer_weight: answer.correct ? 100 : 0,
     answer_text: answer.text,
   }));
@@ -53,7 +53,10 @@ const createQuestionOnly = async (
 
   const body = {
     question: {
-      question_text: markdownToHTMLSafe(question.text, settings),
+      question_text: markdownToHTMLSafe({
+        markdownString: question.text,
+        settings,
+      }),
       question_type: getQuestionType(question),
       points_possible: question.points,
       position,
@@ -175,7 +178,10 @@ export const canvasQuizService = {
     const body = {
       quiz: {
         title: localQuiz.name,
-        description: markdownToHTMLSafe(localQuiz.description, settings),
+        description: markdownToHTMLSafe({
+          markdownString: localQuiz.description,
+          settings,
+        }),
         shuffle_answers: localQuiz.shuffleAnswers,
         access_code: localQuiz.password,
         show_correct_answers: localQuiz.showCorrectAnswers,

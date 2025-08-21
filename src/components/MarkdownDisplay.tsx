@@ -35,7 +35,7 @@ function DangerousInnerMarkdown({
     <div
       className={"markdownPreview " + className}
       dangerouslySetInnerHTML={{
-        __html: markdownToHTMLSafe(markdown, settings),
+        __html: markdownToHTMLSafe({ markdownString: markdown, settings }),
       }}
     ></div>
   );

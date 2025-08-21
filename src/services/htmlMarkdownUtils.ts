@@ -23,7 +23,7 @@ const mermaidExtension = {
   },
   renderer(token: { text: string }) {
     const base64 = btoa(token.text);
-    const url = `https://mermaid.ink/img/${base64}?type=svg`
+    const url = `https://mermaid.ink/img/${base64}?type=svg`;
     console.log(token.text, url);
     return `<img src="${url}" alt="Mermaid diagram" />`;
   },
@@ -78,14 +78,27 @@ export function convertImagesToCanvasImages(
   return mutableHtml;
 }
 
-export function markdownToHTMLSafe(
-  markdownString: string,
-  settings: LocalCourseSettings,
-  convertImages: boolean = true
-) {
+export function markdownToHTMLSafe({
+  markdownString,
+  settings,
+  convertImages = true,
+  replaceText = [],
+}: {
+  markdownString: string;
+  settings: LocalCourseSettings;
+  convertImages?: boolean;
+  replaceText?: { source: string; destination: string }[];
+}) {
   const html = markdownToHtmlNoImages(markdownString);
   if (convertImages) return convertImagesToCanvasImages(html, settings);
-  else return html;
+
+
+  const replacedHtml = replaceText.reduce(
+    (acc, { source, destination }) => acc.replaceAll(source, destination),
+    html
+  );
+  return html;
+  return replacedHtml;
 }
 
 export function markdownToHtmlNoImages(markdownString: string) {

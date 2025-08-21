@@ -37,7 +37,7 @@ export const canvasPageService = {
     const body = {
       wiki_page: {
         title: page.name,
-        body: markdownToHTMLSafe(page.text, settings),
+        body: markdownToHTMLSafe({ markdownString: page.text, settings }),
       },
     };
 
@@ -59,7 +59,7 @@ export const canvasPageService = {
     const body = {
       wiki_page: {
         title: page.name,
-        body: markdownToHTMLSafe(page.text, settings),
+        body: markdownToHTMLSafe({ markdownString: page.text, settings }),
       },
     };
     await axiosClient.put(url, body);
