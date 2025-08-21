@@ -32,15 +32,13 @@ export const canvasAssignmentService = {
     const content = markdownToHTMLSafe({
       markdownString: localAssignment.description,
       settings,
+      replaceText: [
+        {
+          source: "insert_github_classroom_url",
+          destination: localAssignment.githubClassroomAssignmentShareLink || "",
+        },
+      ],
     });
-
-    const contentWithClassroomLinks =
-      localAssignment.githubClassroomAssignmentShareLink
-        ? content.replaceAll(
-            "insert_github_classroom_url",
-            localAssignment.githubClassroomAssignmentShareLink
-          )
-        : content;
 
     const body = {
       assignment: {
@@ -51,7 +49,7 @@ export const canvasAssignmentService = {
         allowed_extensions: localAssignment.allowedFileUploadExtensions.map(
           (e) => e.toString()
         ),
-        description: contentWithClassroomLinks,
+        description: content,
         due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
         lock_at:
           localAssignment.lockAt &&
@@ -90,6 +88,13 @@ export const canvasAssignmentService = {
         description: markdownToHTMLSafe({
           markdownString: localAssignment.description,
           settings,
+          replaceText: [
+            {
+              source: "insert_github_classroom_url",
+              destination:
+                localAssignment.githubClassroomAssignmentShareLink || "",
+            },
+          ],
         }),
         due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
         lock_at:

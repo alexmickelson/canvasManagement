@@ -90,14 +90,12 @@ export function markdownToHTMLSafe({
   replaceText?: { source: string; destination: string }[];
 }) {
   const html = markdownToHtmlNoImages(markdownString);
-  if (convertImages) return convertImagesToCanvasImages(html, settings);
-
-
   const replacedHtml = replaceText.reduce(
     (acc, { source, destination }) => acc.replaceAll(source, destination),
     html
   );
-  // return html;
+
+  if (convertImages) return convertImagesToCanvasImages(replacedHtml, settings);
   return replacedHtml;
 }
 

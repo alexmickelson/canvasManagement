@@ -6,9 +6,14 @@ import { LocalCourseSettings } from "@/features/local/course/localCourseSettings
 export default function MarkdownDisplay({
   markdown,
   className = "",
+  replaceText = [],
 }: {
   markdown: string;
   className?: string;
+  replaceText?: {
+    source: string;
+    destination: string;
+  }[];
 }) {
   const { data: settings } = useLocalCourseSettingsQuery();
   return (
@@ -17,6 +22,7 @@ export default function MarkdownDisplay({
         markdown={markdown}
         settings={settings}
         className={className}
+        replaceText={replaceText}
       />
     </SuspenseAndErrorHandling>
   );
@@ -26,16 +32,25 @@ function DangerousInnerMarkdown({
   markdown,
   settings,
   className,
+  replaceText,
 }: {
   markdown: string;
   settings: LocalCourseSettings;
   className: string;
+  replaceText: {
+    source: string;
+    destination: string;
+  }[];
 }) {
   return (
     <div
       className={"markdownPreview " + className}
       dangerouslySetInnerHTML={{
-        __html: markdownToHTMLSafe({ markdownString: markdown, settings }),
+        __html: markdownToHTMLSafe({
+          markdownString: markdown,
+          settings,
+          replaceText,
+        }),
       }}
     ></div>
   );

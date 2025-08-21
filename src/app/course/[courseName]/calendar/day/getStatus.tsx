@@ -108,6 +108,12 @@ export const getStatus = ({
         markdownToHTMLSafe({
           markdownString: assignment.description,
           settings,
+          replaceText: [
+            {
+              source: "insert_github_classroom_url",
+              destination: assignment.githubClassroomAssignmentShareLink || "",
+            },
+          ],
         }),
         canvasAssignment.description
       );

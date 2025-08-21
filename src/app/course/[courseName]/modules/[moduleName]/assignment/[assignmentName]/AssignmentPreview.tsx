@@ -59,7 +59,15 @@ export default function AssignmentPreview({
       <hr />
       <br />
       <section>
-        <MarkdownDisplay markdown={assignment.description} />
+        <MarkdownDisplay
+          markdown={assignment.description}
+          replaceText={[
+            {
+              source: "insert_github_classroom_url",
+              destination: assignment.githubClassroomAssignmentShareLink || "",
+            },
+          ]}
+        />
       </section>
       <hr />
       <section>
