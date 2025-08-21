@@ -97,7 +97,7 @@ export function markdownToHTMLSafe({
     (acc, { source, destination }) => acc.replaceAll(source, destination),
     html
   );
-  return html;
+  // return html;
   return replacedHtml;
 }
 
