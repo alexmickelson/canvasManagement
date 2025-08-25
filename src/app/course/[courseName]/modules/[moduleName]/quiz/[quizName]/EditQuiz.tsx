@@ -61,6 +61,11 @@ points: 4
 the underscore is optional
 short answer
 ---
+short answer with auto-graded responses
+*a) answer 1
+*b) other valid answer
+short_answer=
+---
 this is a matching question
 ^ left answer - right dropdown
 ^ other thing -  another option
