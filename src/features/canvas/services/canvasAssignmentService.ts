@@ -36,6 +36,7 @@ export const canvasAssignmentService = {
         {
           source: "insert_github_classroom_url",
           destination: localAssignment.githubClassroomAssignmentShareLink || "",
+          strict: true,
         },
       ],
     });
@@ -93,6 +94,7 @@ export const canvasAssignmentService = {
               source: "insert_github_classroom_url",
               destination:
                 localAssignment.githubClassroomAssignmentShareLink || "",
+              strict: true,
             },
           ],
         }),

@@ -17,3 +17,5 @@ courses:
     name: Old Adv Frontend
   - path: ./1430/2025-spring-jonathan/Modules/
     name: Jonathan UX
+  - path: ./1400/2025_spring_alex/modules/
+    name: 1400-spring

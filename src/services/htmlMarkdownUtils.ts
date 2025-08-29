@@ -87,11 +87,25 @@ export function markdownToHTMLSafe({
   markdownString: string;
   settings: LocalCourseSettings;
   convertImages?: boolean;
-  replaceText?: { source: string; destination: string }[];
+  replaceText?: { source: string; destination: string; strict?: boolean }[];
 }) {
   const html = markdownToHtmlNoImages(markdownString);
   const replacedHtml = replaceText.reduce(
-    (acc, { source, destination }) => acc.replaceAll(source, destination),
+    (acc, { source, destination, strict = false }) => {
+      if (strict) {
+        if (typeof destination === "undefined" || destination === null) {
+          throw new Error(
+            `Text replacement failed: destination is undefined for source "${source}"`
+          );
+        }
+        if (destination === "") {
+          throw new Error(
+            `Text replacement failed: destination is empty string for source "${source}"`
+          );
+        }
+      }
+      return acc.replaceAll(source, destination);
+    },
     html
   );
 
