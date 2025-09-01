@@ -92,7 +92,7 @@ export function markdownToHTMLSafe({
   const html = markdownToHtmlNoImages(markdownString);
   const replacedHtml = replaceText.reduce(
     (acc, { source, destination, strict = false }) => {
-      if (strict) {
+      if (strict && acc.includes(source)) {
         if (typeof destination === "undefined" || destination === null) {
           throw new Error(
             `Text replacement failed: destination is undefined for source "${source}"`
