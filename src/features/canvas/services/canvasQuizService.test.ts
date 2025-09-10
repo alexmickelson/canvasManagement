@@ -131,7 +131,7 @@ describe("canvasQuizService", () => {
   describe("Question order verification (integration test concept)", () => {
     it("should detect correct question order", async () => {
       // This is a conceptual test showing what the verification should validate
-      const localQuiz: LocalQuiz = {
+      const _localQuiz: LocalQuiz = {
         name: "Test Quiz",
         description: "A test quiz",
         dueAt: "2023-12-01T23:59:00Z",

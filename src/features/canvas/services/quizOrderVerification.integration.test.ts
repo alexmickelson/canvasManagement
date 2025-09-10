@@ -1,6 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 import { QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
+import { DayOfWeek } from "@/features/local/course/localCourseSettings";
+import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 
 // Mock the dependencies
 vi.mock("@/services/axiosUtils", () => ({
@@ -122,6 +124,14 @@ describe("Quiz Order Verification Integration", () => {
       name: "Test Course",
       canvasId: 12345,
       assignmentGroups: [],
+      daysOfWeek: [DayOfWeek.Monday, DayOfWeek.Wednesday, DayOfWeek.Friday],
+      startDate: "2023-08-15",
+      endDate: "2023-12-15",
+      defaultDueTime: { hour: 23, minute: 59 },
+      defaultAssignmentSubmissionTypes: [AssignmentSubmissionType.ONLINE_TEXT_ENTRY],
+      defaultFileUploadTypes: [],
+      holidays: [],
+      assets: []
     });
 
     // Verify the quiz was created
