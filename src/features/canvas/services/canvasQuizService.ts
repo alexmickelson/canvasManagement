@@ -89,6 +89,68 @@ const hackFixQuestionOrdering = async (
   await axiosClient.post(url, { order });
 };
 
+const verifyQuestionOrder = async (
+  canvasCourseId: number,
+  canvasQuizId: number,
+  localQuiz: LocalQuiz
+): Promise<boolean> => {
+  console.log("Verifying question order in Canvas quiz");
+  
+  try {
+    const canvasQuestions = await canvasQuizService.getQuizQuestions(
+      canvasCourseId,
+      canvasQuizId
+    );
+
+    // Check if the number of questions matches
+    if (canvasQuestions.length !== localQuiz.questions.length) {
+      console.error(
+        `Question count mismatch: Canvas has ${canvasQuestions.length}, local quiz has ${localQuiz.questions.length}`
+      );
+      return false;
+    }
+
+    // Verify that questions are in the correct order by comparing text content
+    // We'll use a simple approach: strip HTML tags and compare the core text content
+    const stripHtml = (html: string): string => {
+      return html.replace(/<[^>]*>/g, '').trim();
+    };
+
+    for (let i = 0; i < localQuiz.questions.length; i++) {
+      const localQuestion = localQuiz.questions[i];
+      const canvasQuestion = canvasQuestions[i];
+      
+      const localQuestionText = localQuestion.text.trim();
+      const canvasQuestionText = stripHtml(canvasQuestion.question_text).trim();
+
+      // Check if the question text content matches (allowing for HTML conversion differences)
+      if (!canvasQuestionText.includes(localQuestionText) && 
+          !localQuestionText.includes(canvasQuestionText)) {
+        console.error(
+          `Question order mismatch at position ${i}:`,
+          `Local: "${localQuestionText}"`,
+          `Canvas: "${canvasQuestionText}"`
+        );
+        return false;
+      }
+
+      // Verify position is correct
+      if (canvasQuestion.position !== undefined && canvasQuestion.position !== i + 1) {
+        console.error(
+          `Question position mismatch at index ${i}: Canvas position is ${canvasQuestion.position}, expected ${i + 1}`
+        );
+        return false;
+      }
+    }
+
+    console.log("Question order verification successful");
+    return true;
+  } catch (error) {
+    console.error("Error during question order verification:", error);
+    return false;
+  }
+};
+
 const hackFixRedundantAssignments = async (canvasCourseId: number) => {
   console.log("hack fixing redundant quiz assignments that are auto-created");
   const assignments = await canvasAssignmentService.getAll(canvasCourseId);
@@ -137,6 +199,19 @@ const createQuizQuestions = async (
     questionAndPositions
   );
   await hackFixRedundantAssignments(canvasCourseId);
+
+  // Verify that the question order in Canvas matches the local quiz order
+  const orderVerified = await verifyQuestionOrder(
+    canvasCourseId,
+    canvasQuizId,
+    localQuiz
+  );
+
+  if (!orderVerified) {
+    console.warn(
+      "Question order verification failed! The quiz was created but the question order may not match the intended order."
+    );
+  }
 };
 
 export const canvasQuizService = {
@@ -161,6 +236,21 @@ export const canvasQuizService = {
         );
         return [];
       }
+      throw error;
+    }
+  },
+
+  async getQuizQuestions(
+    canvasCourseId: number,
+    canvasQuizId: number
+  ): Promise<CanvasQuizQuestion[]> {
+    try {
+      const url = `${canvasApi}/courses/${canvasCourseId}/quizzes/${canvasQuizId}/questions`;
+      const questions = await paginatedRequest<CanvasQuizQuestion[]>({ url });
+      // Sort by position to ensure correct order
+      return questions.sort((a, b) => (a.position || 0) - (b.position || 0));
+    } catch (error) {
+      console.error("Error fetching quiz questions from Canvas:", error);
       throw error;
     }
   },
