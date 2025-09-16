@@ -55,6 +55,22 @@ flowchart TD
     C -->|Three| F[fa:fa-car Car]
 \`\`\`
 
+## LaTeX Math
+
+**Inline math:** The Fibonacci sequence is defined as: \$F(n) = F(n-1) + F(n-2)\$ where \$F(0) = 0\$ and \$F(1) = 1\$.
+
+**Block math:**
+\$\$F(n) = F(n-1) + F(n-2)\$\$
+
+**Complex equations:**
+\$\$
+F(n) = \\begin{cases} 
+0 & \\text{if } n = 0 \\\\
+1 & \\text{if } n = 1 \\\\
+F(n-1) + F(n-2) & \\text{if } n > 1
+\\end{cases}
+\$\$
+
 ## github classroom links will be replaced by the GithubClassroomAssignmentShareLink setting
 
 [Github Classroom](insert_github_classroom_url)
