@@ -89,29 +89,6 @@ mermaid charts:
 remember expanded modules as well as scorll position
 
 
-## Automated Docker Hub Deployment
-
-This repository includes a GitHub Actions workflow that automatically builds and deploys Docker images to Docker Hub when code is pushed to the `main` branch.
-
-### Required Secrets
-
-To enable automated deployment, add the following secrets to your GitHub repository:
-
-- `DOCKERHUB_USERNAME`: Your Docker Hub username
-- `DOCKERHUB_TOKEN`: Your Docker Hub access token (not password)
-
-### How it works
-
-The workflow:
-1. Triggers on any push to the `main` branch
-2. Checks out the code
-3. Sets up Docker Buildx
-4. Authenticates to Docker Hub using the provided secrets
-5. Runs the existing `build.sh` script with tag and push flags to build and deploy the image
-
-The deployed image will be available at `alexmickelson/canvas_management` with appropriate version tags.
-
-
 ## Features
 - websocket server to watch file system for changes, notify frontend it should invalidate cache
     - files can be edited in any text editor on the computer and changes are reflected in real time on the site
