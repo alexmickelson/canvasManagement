@@ -12,11 +12,13 @@ import { Spinner } from "@/components/Spinner";
 import MeatballIcon from "./MeatballIcon";
 import { useSetAssignmentGroupsMutation } from "@/features/canvas/hooks/canvasCourseHooks";
 import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
+import Modal, { useModal } from "@/components/Modal";
 
 export default function AssignmentGroupManagement() {
   const { data: settings, isPending } = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const applyInCanvas = useSetAssignmentGroupsMutation(settings.canvasId);
+  const modal = useModal();
 
   const [assignmentGroups, setAssignmentGroups] = useState<
     LocalAssignmentGroup[]
@@ -104,17 +106,46 @@ export default function AssignmentGroupManagement() {
       </div>
       <br />
       <div className="flex justify-end">
-        <button
-          onClick={async () => {
-            const newSettings = await applyInCanvas.mutateAsync(settings);
-
-            // prevent debounce from resetting
-            if (newSettings) setAssignmentGroups(newSettings.assignmentGroups);
-          }}
-          disabled={applyInCanvas.isPending}
+        <Modal
+          modalControl={modal}
+          buttonText="Update Assignment Groups In Canvas"
+          buttonClass="btn-"
+          modalWidth="w-1/5"
         >
-          Update Assignment Groups In Canvas
-        </button>
+          {({ closeModal }) => (
+            <div>
+              <div className="text-center font-bold">
+                DANGER: updating assignment groups can delete assignments and grades from canvas.
+              </div>
+              <div className="text-center">
+                This is only recommended to do at the beginning of a semester. Are you sure you want to continue?
+              </div>
+              <br />
+              <div className="flex justify-around gap-3">
+                <button
+                  onClick={async () => {
+                    const newSettings = await applyInCanvas.mutateAsync(
+                      settings
+                    );
+
+                    // prevent debounce from resetting
+                    if (newSettings)
+                      setAssignmentGroups(newSettings.assignmentGroups);
+                  }}
+                  disabled={applyInCanvas.isPending}
+                  className="btn-danger"
+                >
+                  Yes
+                </button>
+                <button onClick={closeModal} disabled={applyInCanvas.isPending}>
+                  No
+                </button>
+              </div>
+              {applyInCanvas.isPending && <Spinner />}
+            </div>
+          )}
+        </Modal>
+      
       </div>
       {applyInCanvas.isPending && <Spinner />}
       {applyInCanvas.isSuccess && (

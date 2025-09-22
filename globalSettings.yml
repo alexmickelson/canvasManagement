@@ -19,3 +19,5 @@ courses:
     name: Jonathan UX
   - path: ./1400/2025_spring_alex/modules/
     name: 1400-spring
+  - path: ./1420/2024-fall/Modules/
+    name: 1420_old
