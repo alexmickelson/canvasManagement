@@ -48,7 +48,7 @@ export const uploadToCanvasPart1 = async (
 
     const response = await rateLimitAwarePost<{
       upload_url: string;
-      upload_params: string;
+      upload_params: { [key: string]: string };
     }>(url, formData);
 
     const upload_url = response.data.upload_url;

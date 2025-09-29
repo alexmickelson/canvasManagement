@@ -9,7 +9,6 @@ import {
   QuestionType,
 } from "@/features/local/quizzes/models/localQuizQuestion";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
-import { axiosClient } from "@/services/axiosUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 import { escapeMatchingText } from "@/services/utils/questionHtmlUtils";
 import { rateLimitAwareDelete, rateLimitAwarePost } from "./canvasWebRequestUtils";
