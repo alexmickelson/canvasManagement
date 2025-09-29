@@ -8,6 +8,7 @@ import { getRubricCriterion } from "./canvasRubricUtils";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 import { axiosClient } from "@/services/axiosUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
+import { rateLimitAwarePost } from "./canvasWebRequestUtils";
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {
@@ -60,7 +61,7 @@ export const canvasAssignmentService = {
       },
     };
 
-    const response = await axiosClient.post<CanvasAssignment>(url, body);
+    const response = await rateLimitAwarePost<CanvasAssignment>(url, body);
     const canvasAssignment = response.data;
 
     await createRubric(canvasCourseId, canvasAssignment.id, localAssignment);
@@ -152,7 +153,7 @@ const createRubric = async (
   };
 
   const rubricUrl = `${canvasApi}/courses/${courseId}/rubrics`;
-  const rubricResponse = await axiosClient.post<CanvasRubricCreationResponse>(
+  const rubricResponse = await rateLimitAwarePost<CanvasRubricCreationResponse>(
     rubricUrl,
     rubricBody
   );

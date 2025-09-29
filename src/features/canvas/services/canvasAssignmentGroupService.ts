@@ -1,7 +1,7 @@
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { CanvasAssignmentGroup } from "@/features/canvas/models/assignments/canvasAssignmentGroup";
 import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
-import { rateLimitAwareDelete } from "./canvasWebRequestor";
+import { rateLimitAwareDelete, rateLimitAwarePost } from "./canvasWebRequestUtils";
 import { axiosClient } from "@/services/axiosUtils";
 
 export const canvasAssignmentGroupService = {
@@ -26,7 +26,7 @@ export const canvasAssignmentGroupService = {
     };
 
     const { data: canvasAssignmentGroup } =
-      await axiosClient.post<CanvasAssignmentGroup>(url, body);
+      await rateLimitAwarePost<CanvasAssignmentGroup>(url, body);
 
     return {
       ...localAssignmentGroup,

@@ -1,7 +1,7 @@
 import { CanvasPage } from "@/features/canvas/models/pages/canvasPageModel";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
-import { rateLimitAwareDelete } from "./canvasWebRequestor";
+import { rateLimitAwareDelete, rateLimitAwarePost } from "./canvasWebRequestUtils";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 import { axiosClient } from "@/services/axiosUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
@@ -41,7 +41,7 @@ export const canvasPageService = {
       },
     };
 
-    const { data: canvasPage } = await axiosClient.post<CanvasPage>(url, body);
+    const { data: canvasPage } = await rateLimitAwarePost<CanvasPage>(url, body);
     if (!canvasPage) {
       throw new Error("Created canvas course page was null");
     }

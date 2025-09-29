@@ -4,10 +4,11 @@ import axios from "axios";
 import { canvasApi } from "../canvasServiceUtils";
 import { axiosClient } from "@/services/axiosUtils";
 import FormData from "form-data";
+import { rateLimitAwarePost } from "../canvasWebRequestUtils";
 
 export const downloadUrlToTempDirectory = async (
   sourceUrl: string
-): Promise<{fileName: string, success: boolean}> => {
+): Promise<{ fileName: string; success: boolean }> => {
   try {
     const fileName =
       path.basename(new URL(sourceUrl).pathname) || `tempfile-${Date.now()}`;
@@ -16,10 +17,10 @@ export const downloadUrlToTempDirectory = async (
       responseType: "arraybuffer",
     });
     await fs.writeFile(tempFilePath, response.data);
-    return {fileName: tempFilePath, success: true};
+    return { fileName: tempFilePath, success: true };
   } catch (error) {
     console.log("Error downloading or saving the file:", sourceUrl, error);
-    return {fileName: sourceUrl, success: false};
+    return { fileName: sourceUrl, success: false };
   }
 };
 
@@ -45,7 +46,10 @@ export const uploadToCanvasPart1 = async (
     formData.append("name", path.basename(pathToUpload));
     formData.append("size", (await getFileSize(pathToUpload)).toString());
 
-    const response = await axiosClient.post(url, formData);
+    const response = await rateLimitAwarePost<{
+      upload_url: string;
+      upload_params: string;
+    }>(url, formData);
 
     const upload_url = response.data.upload_url;
     const upload_params = response.data.upload_params;
@@ -77,10 +81,14 @@ export const uploadToCanvasPart2 = async ({
     const fileName = path.basename(pathToUpload);
     formData.append("file", fileBuffer, fileName);
 
-    const response = await axiosClient.post(upload_url, formData, {
-      headers: formData.getHeaders(),
-      validateStatus: (status) => status < 500,
-    });
+    const response = await rateLimitAwarePost<{ url: string }>(
+      upload_url,
+      formData,
+      {
+        headers: formData.getHeaders(),
+        validateStatus: (status) => status < 500,
+      }
+    );
 
     if (response.status === 301) {
       const redirectUrl = response.headers.location;

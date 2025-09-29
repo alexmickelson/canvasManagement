@@ -12,6 +12,7 @@ import { LocalCourseSettings } from "@/features/local/course/localCourseSettings
 import { axiosClient } from "@/services/axiosUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 import { escapeMatchingText } from "@/services/utils/questionHtmlUtils";
+import { rateLimitAwareDelete, rateLimitAwarePost } from "./canvasWebRequestUtils";
 
 export const getAnswers = (
   question: LocalQuizQuestion,
@@ -64,7 +65,7 @@ const createQuestionOnly = async (
     },
   };
 
-  const response = await axiosClient.post<CanvasQuizQuestion>(url, body);
+  const response = await rateLimitAwarePost<CanvasQuizQuestion>(url, body);
   const newQuestion = response.data;
 
   if (!newQuestion) throw new Error("Created question is null");
@@ -86,7 +87,7 @@ const hackFixQuestionOrdering = async (
   }));
 
   const url = `${canvasApi}/courses/${canvasCourseId}/quizzes/${canvasQuizId}/reorder`;
-  await axiosClient.post(url, { order });
+  await rateLimitAwarePost(url, { order });
 };
 
 const verifyQuestionOrder = async (
@@ -95,7 +96,7 @@ const verifyQuestionOrder = async (
   localQuiz: LocalQuiz
 ): Promise<boolean> => {
   console.log("Verifying question order in Canvas quiz");
-  
+
   try {
     const canvasQuestions = await canvasQuizService.getQuizQuestions(
       canvasCourseId,
@@ -113,19 +114,21 @@ const verifyQuestionOrder = async (
     // Verify that questions are in the correct order by comparing text content
     // We'll use a simple approach: strip HTML tags and compare the core text content
     const stripHtml = (html: string): string => {
-      return html.replace(/<[^>]*>/g, '').trim();
+      return html.replace(/<[^>]*>/g, "").trim();
     };
 
     for (let i = 0; i < localQuiz.questions.length; i++) {
       const localQuestion = localQuiz.questions[i];
       const canvasQuestion = canvasQuestions[i];
-      
+
       const localQuestionText = localQuestion.text.trim();
       const canvasQuestionText = stripHtml(canvasQuestion.question_text).trim();
 
       // Check if the question text content matches (allowing for HTML conversion differences)
-      if (!canvasQuestionText.includes(localQuestionText) && 
-          !localQuestionText.includes(canvasQuestionText)) {
+      if (
+        !canvasQuestionText.includes(localQuestionText) &&
+        !localQuestionText.includes(canvasQuestionText)
+      ) {
         console.error(
           `Question order mismatch at position ${i}:`,
           `Local: "${localQuestionText}"`,
@@ -135,9 +138,14 @@ const verifyQuestionOrder = async (
       }
 
       // Verify position is correct
-      if (canvasQuestion.position !== undefined && canvasQuestion.position !== i + 1) {
+      if (
+        canvasQuestion.position !== undefined &&
+        canvasQuestion.position !== i + 1
+      ) {
         console.error(
-          `Question position mismatch at index ${i}: Canvas position is ${canvasQuestion.position}, expected ${i + 1}`
+          `Question position mismatch at index ${i}: Canvas position is ${
+            canvasQuestion.position
+          }, expected ${i + 1}`
         );
         return false;
       }
@@ -294,7 +302,10 @@ export const canvasQuizService = {
       },
     };
 
-    const { data: canvasQuiz } = await axiosClient.post<CanvasQuiz>(url, body);
+    const { data: canvasQuiz } = await rateLimitAwarePost<CanvasQuiz>(
+      url,
+      body
+    );
     await createQuizQuestions(
       canvasCourseId,
       canvasQuiz.id,
@@ -305,6 +316,6 @@ export const canvasQuizService = {
   },
   async delete(canvasCourseId: number, canvasQuizId: number) {
     const url = `${canvasApi}/courses/${canvasCourseId}/quizzes/${canvasQuizId}`;
-    await axiosClient.delete(url);
+    await rateLimitAwareDelete(url);
   },
 };

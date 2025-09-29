@@ -1,5 +1,5 @@
 import { axiosClient } from "@/services/axiosUtils";
-import { AxiosResponse } from "axios";
+import { AxiosResponse, AxiosRequestConfig } from "axios";
 
 const rateLimitRetryCount = 6;
 const rateLimitSleepInterval = 1000;
@@ -16,21 +16,26 @@ export const isRateLimited = async (
   );
 };
 
-// const rateLimitAwarePost = async (url: string, body: unknown, retryCount = 0) => {
-//   const response = await axiosClient.post(url, body);
+export const rateLimitAwarePost = async <T>(
+  url: string,
+  body: unknown,
+  config?: AxiosRequestConfig,
+  retryCount = 0
+): Promise<AxiosResponse<T>> => {
+  const response = await axiosClient.post<T>(url, body, config);
 
-//   if (await isRateLimited(response)) {
-//     if (retryCount < rateLimitRetryCount) {
-//       console.info(
-//         `Hit rate limit on post, retry count is ${retryCount} / ${rateLimitRetryCount}, retrying`
-//       );
-//       await sleep(rateLimitSleepInterval);
-//       return await rateLimitAwarePost(url, body, retryCount + 1);
-//     }
-//   }
+  if (await isRateLimited(response)) {
+    if (retryCount < rateLimitRetryCount) {
+      console.info(
+        `Hit rate limit on post, retry count is ${retryCount} / ${rateLimitRetryCount}, retrying`
+      );
+      await sleep(rateLimitSleepInterval);
+      return await rateLimitAwarePost<T>(url, body, config, retryCount + 1);
+    }
+  }
 
-//   return response;
-// };
+  return response;
+};
 
 export const rateLimitAwareDelete = async (
   url: string,

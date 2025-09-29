@@ -3,6 +3,7 @@ import { CanvasPage } from "@/features/canvas/models/pages/canvasPageModel";
 import { canvasApi, paginatedRequest } from "./canvasServiceUtils";
 import { CanvasModule } from "@/features/canvas/models/modules/canvasModule";
 import { axiosClient } from "@/services/axiosUtils";
+import { rateLimitAwarePost } from "./canvasWebRequestUtils";
 
 export const canvasModuleService = {
   async updateModuleItem(
@@ -37,7 +38,7 @@ export const canvasModuleService = {
     console.log(`Creating new module item ${title}`);
     const url = `${canvasApi}/courses/${canvasCourseId}/modules/${canvasModuleId}/items`;
     const body = { module_item: { title, type, content_id: contentId } };
-    await axiosClient.post(url, body);
+    await rateLimitAwarePost(url, body);
   },
 
   async createPageModuleItem(
@@ -51,7 +52,7 @@ export const canvasModuleService = {
     const body = {
       module_item: { title, type: "Page", page_url: canvasPage.url },
     };
-    await axiosClient.post<CanvasModuleItem>(url, body);
+    await rateLimitAwarePost<CanvasModuleItem>(url, body);
   },
 
   async getCourseModules(canvasCourseId: number) {
@@ -67,7 +68,7 @@ export const canvasModuleService = {
         name: moduleName,
       },
     };
-    const response = await axiosClient.post<CanvasModule>(url, body);
+    const response = await rateLimitAwarePost<CanvasModule>(url, body);
     return response.data.id;
   },
 
