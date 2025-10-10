@@ -19,15 +19,15 @@ services:
       - ~/projects/facultyFiles:/app/public/images/facultyFiles
 
 
-  redis:
-    image: redis
-    container_name: redis
-    volumes:
-      - redis-data:/data
-    restart: unless-stopped
+#   redis:
+#     image: redis
+#     container_name: redis
+#     volumes:
+#       - redis-data:/data
+#     restart: unless-stopped
 
-volumes:
-  redis-data:
+# volumes:
+#   redis-data:
       
   # https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/
   # https://github.com/jonas-merkle/container-cloudflare-tunnel

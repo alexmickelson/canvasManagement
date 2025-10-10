@@ -30,6 +30,9 @@ export interface LocalQuizQuestion {
   points: number;
   answers: LocalQuizQuestionAnswer[];
   matchDistractors: string[];
+  correctComments?: string;
+  incorrectComments?: string;
+  neutralComments?: string;
 }
 export const zodLocalQuizQuestion = z.object({
   text: z.string(),
@@ -37,4 +40,7 @@ export const zodLocalQuizQuestion = z.object({
   points: z.number(),
   answers: zodLocalQuizQuestionAnswer.array(),
   matchDistractors: z.array(z.string()),
+  correctComments: z.string().optional(),
+  incorrectComments: z.string().optional(),
+  neutralComments: z.string().optional(),
 });

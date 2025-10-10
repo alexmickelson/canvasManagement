@@ -70,7 +70,29 @@ this is a matching question
 ^ left answer - right dropdown
 ^ other thing -  another option
 ^ - distractor
-^ - other distractor`;
+^ - other distractor
+---
+Points: 3
+FEEDBACK EXAMPLE
+What is 2+3?
++ Correct! Good job
+- Incorrect, try again
+... This is general feedback shown regardless
+*a) 4
+*b) 5
+c) 6
+---
+Points: 2
+FEEDBACK EXAMPLE
+Multiline feedback example
++
+Great work!
+You understand the concept.
+-
+Not quite right.
+Review the material and try again.
+*a) correct answer
+b) wrong answer`;
 };
 
 export default function EditQuiz({

@@ -80,6 +80,42 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
         </div>
       </div>
       <MarkdownDisplay markdown={question.text} className="ms-4 mb-2" />
+
+      {/* Feedback Section */}
+      {(question.correctComments ||
+        question.incorrectComments ||
+        question.neutralComments) && (
+        <div className=" m-2 ps-2 py-1 rounded flex bg-slate-950/50">
+          <div>Feedback</div>
+          <div className="mx-4 space-y-1">
+            {question.correctComments && (
+              <div className="border-l-2 border-green-700 pl-2 py-1">
+                <span className="text-green-500">+ </span>
+                <span className="text-slate-300">
+                  {question.correctComments}
+                </span>
+              </div>
+            )}
+            {question.incorrectComments && (
+              <div className="border-l-2 border-red-700 pl-2 py-1">
+                <span className="text-red-500">- </span>
+                <span className="text-slate-300">
+                  {question.incorrectComments}
+                </span>
+              </div>
+            )}
+            {question.neutralComments && (
+              <div className="border-l-2 border-blue-800 pl-2 py-1">
+                <span className="text-blue-500">... </span>
+                <span className="text-slate-300">
+                  {question.neutralComments}
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {question.questionType === QuestionType.MATCHING && (
         <div>
           {question.answers.map((answer) => (
