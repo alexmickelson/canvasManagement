@@ -11,7 +11,10 @@ import {
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 import { escapeMatchingText } from "@/services/utils/questionHtmlUtils";
-import { rateLimitAwareDelete, rateLimitAwarePost } from "./canvasWebRequestUtils";
+import {
+  rateLimitAwareDelete,
+  rateLimitAwarePost,
+} from "./canvasWebRequestUtils";
 
 export const getAnswers = (
   question: LocalQuizQuestion,
@@ -51,6 +54,7 @@ const createQuestionOnly = async (
 
   const url = `${canvasApi}/courses/${canvasCourseId}/quizzes/${canvasQuizId}/questions`;
 
+  console.log(question);
   const body = {
     question: {
       question_text: markdownToHTMLSafe({
@@ -61,6 +65,9 @@ const createQuestionOnly = async (
       points_possible: question.points,
       position,
       answers: getAnswers(question, settings),
+      correct_comments: question.incorrectComments,
+      incorrect_comments: question.incorrectComments,
+      neutral_comments: question.neutralComments,
     },
   };
 
