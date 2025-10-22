@@ -181,7 +181,7 @@ export default function EditQuiz({
       Body={
         <>
           {showHelp && (
-            <pre className=" max-w-96">
+            <pre className=" max-w-96 h-full overflow-y-auto">
               <code>{helpString(settings)}</code>
             </pre>
           )}
