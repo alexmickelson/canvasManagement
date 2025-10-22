@@ -1,6 +1,7 @@
 import { LocalQuizQuestion, QuestionType } from "../localQuizQuestion";
 import { LocalQuizQuestionAnswer } from "../localQuizQuestionAnswer";
 import { quizQuestionAnswerMarkdownUtils } from "./quizQuestionAnswerMarkdownUtils";
+import { quizFeedbackMarkdownUtils } from "./quizFeedbackMarkdownUtils";
 
 const _validFirstAnswerDelimiters = [
   "*a)",
@@ -14,97 +15,11 @@ const _validFirstAnswerDelimiters = [
 ];
 const _multipleChoicePrefix = ["a)", "*a)", "*)", ")"];
 const _multipleAnswerPrefix = ["[ ]", "[*]", "[]"];
-const _feedbackPrefixes = ["+", "-", "..."];
 
-const extractFeedback = (
-  linesWithoutPoints: string[]
-): {
-  correctComments?: string;
-  incorrectComments?: string;
-  neutralComments?: string;
-  linesWithoutFeedback: string[];
-} => {
-  let correctComments: string | undefined;
-  let incorrectComments: string | undefined;
-  let neutralComments: string | undefined;
-  const linesWithoutFeedback: string[] = [];
-
-  let currentFeedbackType: "+" | "-" | "..." | null = null;
-  let currentFeedbackLines: string[] = [];
-
-  for (const line of linesWithoutPoints) {
-    const trimmed = line.trim();
-
-    // Check if this is a new feedback line
-    if (trimmed.startsWith("+ ") || trimmed === "+") {
-      // Save previous feedback if any
-      if (currentFeedbackType && currentFeedbackLines.length > 0) {
-        const feedbackText = currentFeedbackLines.join("\n");
-        if (currentFeedbackType === "+") correctComments = feedbackText;
-        else if (currentFeedbackType === "-") incorrectComments = feedbackText;
-        else if (currentFeedbackType === "...") neutralComments = feedbackText;
-      }
-
-      currentFeedbackType = "+";
-      currentFeedbackLines = trimmed === "+" ? [] : [trimmed.substring(2)]; // Remove "+ " or handle standalone "+"
-    } else if (trimmed.startsWith("- ") || trimmed === "-") {
-      // Save previous feedback if any
-      if (currentFeedbackType && currentFeedbackLines.length > 0) {
-        const feedbackText = currentFeedbackLines.join("\n");
-        if (currentFeedbackType === "+") correctComments = feedbackText;
-        else if (currentFeedbackType === "-") incorrectComments = feedbackText;
-        else if (currentFeedbackType === "...") neutralComments = feedbackText;
-      }
-
-      currentFeedbackType = "-";
-      currentFeedbackLines = trimmed === "-" ? [] : [trimmed.substring(2)]; // Remove "- " or handle standalone "-"
-    } else if (trimmed.startsWith("... ") || trimmed === "...") {
-      // Save previous feedback if any
-      if (currentFeedbackType && currentFeedbackLines.length > 0) {
-        const feedbackText = currentFeedbackLines.join("\n");
-        if (currentFeedbackType === "+") correctComments = feedbackText;
-        else if (currentFeedbackType === "-") incorrectComments = feedbackText;
-        else if (currentFeedbackType === "...") neutralComments = feedbackText;
-      }
-
-      currentFeedbackType = "...";
-      currentFeedbackLines = trimmed === "..." ? [] : [trimmed.substring(4)]; // Remove "... " or handle standalone "..."
-    } else if (
-      currentFeedbackType &&
-      !_validFirstAnswerDelimiters.some((prefix) => trimmed.startsWith(prefix))
-    ) {
-      // This is a continuation of the current feedback
-      currentFeedbackLines.push(line);
-    } else {
-      // Save any pending feedback
-      if (currentFeedbackType && currentFeedbackLines.length > 0) {
-        const feedbackText = currentFeedbackLines.join("\n");
-        if (currentFeedbackType === "+") correctComments = feedbackText;
-        else if (currentFeedbackType === "-") incorrectComments = feedbackText;
-        else if (currentFeedbackType === "...") neutralComments = feedbackText;
-        currentFeedbackType = null;
-        currentFeedbackLines = [];
-      }
-
-      // This is a regular line
-      linesWithoutFeedback.push(line);
-    }
-  }
-
-  // Save any remaining feedback
-  if (currentFeedbackType && currentFeedbackLines.length > 0) {
-    const feedbackText = currentFeedbackLines.join("\n");
-    if (currentFeedbackType === "+") correctComments = feedbackText;
-    else if (currentFeedbackType === "-") incorrectComments = feedbackText;
-    else if (currentFeedbackType === "...") neutralComments = feedbackText;
-  }
-
-  return {
-    correctComments,
-    incorrectComments,
-    neutralComments,
-    linesWithoutFeedback,
-  };
+const isAnswerLine = (trimmedLine: string): boolean => {
+  return _validFirstAnswerDelimiters.some((prefix) =>
+    trimmedLine.startsWith(prefix)
+  );
 };
 
 const getAnswerStringsWithMultilineSupport = (
@@ -246,16 +161,11 @@ export const quizQuestionMarkdownUtils = {
         : "";
 
     // Build feedback lines
-    let feedbackText = "";
-    if (question.correctComments) {
-      feedbackText += `+ ${question.correctComments}\n`;
-    }
-    if (question.incorrectComments) {
-      feedbackText += `- ${question.incorrectComments}\n`;
-    }
-    if (question.neutralComments) {
-      feedbackText += `... ${question.neutralComments}\n`;
-    }
+    const feedbackText = quizFeedbackMarkdownUtils.formatFeedback(
+      question.correctComments,
+      question.incorrectComments,
+      question.neutralComments
+    );
 
     const answersText = answerArray.join("\n");
     const questionTypeIndicator =
@@ -292,7 +202,10 @@ export const quizQuestionMarkdownUtils = {
       incorrectComments,
       neutralComments,
       linesWithoutFeedback,
-    } = extractFeedback(linesWithoutPoints);
+    } = quizFeedbackMarkdownUtils.extractFeedback(
+      linesWithoutPoints,
+      isAnswerLine
+    );
 
     const { linesWithoutAnswers } = linesWithoutFeedback.reduce(
       ({ linesWithoutAnswers, taking }, currentLine) => {

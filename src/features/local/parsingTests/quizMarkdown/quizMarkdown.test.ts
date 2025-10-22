@@ -5,7 +5,6 @@ import { QuestionType } from "@/features/local/quizzes/models/localQuizQuestion"
 import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 import { quizQuestionMarkdownUtils } from "@/features/local/quizzes/models/utils/quizQuestionMarkdownUtils";
 
-// Test suite for QuizMarkdown
 describe("QuizMarkdownTests", () => {
   it("can serialize quiz to markdown", () => {
     const quiz: LocalQuiz = {
