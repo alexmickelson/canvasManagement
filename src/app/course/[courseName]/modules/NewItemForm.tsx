@@ -39,6 +39,27 @@ export default function NewItemForm({
   );
 
   const [name, setName] = useState("");
+  const [nameError, setNameError] = useState("");
+
+  const validateFileName = (fileName: string): string => {
+    // Check for invalid file system characters
+    const invalidChars = [":", "/", "\\", "*", '"', "<", ">", "|"];
+
+    for (const char of fileName) {
+      if (invalidChars.includes(char)) {
+        return `Name contains invalid character: "${char}". Please avoid: ${invalidChars.join(
+          " "
+        )}`;
+      }
+    }
+    return "";
+  };
+
+  const handleNameChange = (newName: string) => {
+    setName(newName);
+    const error = validateFileName(newName);
+    setNameError(error);
+  };
 
   const defaultDate = getDateFromString(
     creationDate ? creationDate : dateToMarkdownString(new Date())
@@ -65,6 +86,12 @@ export default function NewItemForm({
       className="flex flex-col gap-3"
       onSubmit={(e) => {
         e.preventDefault();
+
+        // Validate name before submission
+        if (nameError) {
+          return;
+        }
+
         const dueAt =
           dueDate === ""
             ? dueDate
@@ -160,7 +187,16 @@ export default function NewItemForm({
         />
       </div>
       <div>
-        <TextInput label={type + " Name"} value={name} setValue={setName} />
+        <TextInput
+          label={type + " Name"}
+          value={name}
+          setValue={handleNameChange}
+        />
+        {nameError && (
+          <div className="text-red-300 bg-red-950/50 border p-1 rounded border-red-900/50 text-sm mt-1">
+            {nameError}
+          </div>
+        )}
       </div>
       <div>
         {type !== "Page" && (
@@ -178,7 +214,9 @@ export default function NewItemForm({
           No assignment groups created, create them in the course settings page
         </div>
       )}
-      <button type="submit">Create</button>
+      <button disabled={!!nameError} type="submit">
+        Create
+      </button>
       {isPending && <Spinner />}
     </form>
   );
