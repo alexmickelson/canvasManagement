@@ -1,13 +1,5 @@
 type FeedbackType = "+" | "-" | "...";
 
-const isFeedbackStart = (
-  trimmedLine: string,
-  feedbackType: FeedbackType
-): boolean => {
-  const prefix = feedbackType === "..." ? "... " : `${feedbackType} `;
-  return trimmedLine.startsWith(prefix) || trimmedLine === feedbackType;
-};
-
 const extractFeedbackContent = (
   trimmedLine: string,
   feedbackType: FeedbackType
@@ -39,69 +31,65 @@ const saveFeedback = (
   }
 };
 
+type feedbackTypeOptions = "correct" | "incorrect" | "neutral" | "none";
+
 export const quizFeedbackMarkdownUtils = {
-  extractFeedback(
-    linesWithoutPoints: string[],
-    isAnswerLine: (trimmedLine: string) => boolean
-  ): {
+  extractFeedback(lines: string[]): {
     correctComments?: string;
     incorrectComments?: string;
     neutralComments?: string;
-    linesWithoutFeedback: string[];
+    otherLines: string[];
   } {
-    const comments: {
-      correct?: string;
-      incorrect?: string;
-      neutral?: string;
-    } = {};
-    const linesWithoutFeedback: string[] = [];
+    const comments = {
+      correct: [] as string[],
+      incorrect: [] as string[],
+      neutral: [] as string[],
+    };
 
-    let currentFeedbackType: FeedbackType | null = null;
-    let currentFeedbackLines: string[] = [];
+    const otherLines: string[] = [];
 
-    for (const line of linesWithoutPoints) {
-      const trimmed = line.trim();
+    const feedbackIndicators = {
+      correct: "+",
+      incorrect: "-",
+      neutral: "...",
+    };
 
-      // Check if this is a new feedback line
-      let newFeedbackType: FeedbackType | null = null;
-      if (isFeedbackStart(trimmed, "+")) {
-        newFeedbackType = "+";
-      } else if (isFeedbackStart(trimmed, "-")) {
-        newFeedbackType = "-";
-      } else if (isFeedbackStart(trimmed, "...")) {
-        newFeedbackType = "...";
-      }
+    let currentFeedbackType: feedbackTypeOptions = "none";
 
-      if (newFeedbackType) {
-        // Save previous feedback if any
-        saveFeedback(currentFeedbackType, currentFeedbackLines, comments);
+    for (const line of lines.map((l) => l)) {
+      const lineFeedbackType: feedbackTypeOptions = line.startsWith("+")
+        ? "correct"
+        : line.startsWith("-")
+        ? "incorrect"
+        : line.startsWith("...")
+        ? "neutral"
+        : "none";
 
-        // Start new feedback
-        currentFeedbackType = newFeedbackType;
-        const content = extractFeedbackContent(trimmed, newFeedbackType);
-        currentFeedbackLines = content ? [content] : [];
-      } else if (currentFeedbackType && !isAnswerLine(trimmed)) {
-        // This is a continuation of the current feedback
-        currentFeedbackLines.push(line);
+      if (lineFeedbackType === "none" && currentFeedbackType !== "none") {
+        const lineWithoutIndicator = line
+          .replace(feedbackIndicators[currentFeedbackType], "")
+          .trim();
+        comments[currentFeedbackType].push(lineWithoutIndicator);
+      } else if (lineFeedbackType !== "none") {
+        const lineWithoutIndicator = line
+          .replace(feedbackIndicators[lineFeedbackType], "")
+          .trim();
+        currentFeedbackType = lineFeedbackType;
+        comments[lineFeedbackType].push(lineWithoutIndicator);
       } else {
-        // Save any pending feedback
-        saveFeedback(currentFeedbackType, currentFeedbackLines, comments);
-        currentFeedbackType = null;
-        currentFeedbackLines = [];
-
-        // This is a regular line
-        linesWithoutFeedback.push(line);
+        otherLines.push(line);
       }
     }
 
-    // Save any remaining feedback
-    saveFeedback(currentFeedbackType, currentFeedbackLines, comments);
+    const correctComments = comments.correct.filter((l) => l).join("\n");
+    const incorrectComments = comments.incorrect.filter((l) => l).join("\n");
+    const neutralComments = comments.neutral.filter((l) => l).join("\n");
 
     return {
-      correctComments: comments.correct,
-      incorrectComments: comments.incorrect,
-      neutralComments: comments.neutral,
-      linesWithoutFeedback,
+      correctComments: correctComments || undefined,
+      incorrectComments: incorrectComments || undefined,
+      neutralComments: neutralComments || undefined,
+      otherLines,
     };
   },
 

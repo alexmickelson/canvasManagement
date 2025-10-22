@@ -195,6 +195,7 @@ describe("QuizDeterministicChecks", () => {
       ],
       allowedAttempts: -1,
       showCorrectAnswers: true,
+      
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);

@@ -39,7 +39,7 @@ export const getAnswers = (
   }));
 };
 
-export const getQuestionType = (question: LocalQuizQuestion) => {
+export const getQuestionTypeForCanvas = (question: LocalQuizQuestion) => {
   return `${question.questionType.replace("=", "")}_question`;
 };
 
@@ -61,7 +61,7 @@ const createQuestionOnly = async (
         markdownString: question.text,
         settings,
       }),
-      question_type: getQuestionType(question),
+      question_type: getQuestionTypeForCanvas(question),
       points_possible: question.points,
       position,
       answers: getAnswers(question, settings),

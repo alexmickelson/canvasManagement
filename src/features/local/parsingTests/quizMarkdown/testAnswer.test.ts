@@ -1,4 +1,7 @@
-import { getQuestionType, getAnswers } from "@/features/canvas/services/canvasQuizService";
+import {
+  getQuestionTypeForCanvas,
+  getAnswers,
+} from "@/features/canvas/services/canvasQuizService";
 import {
   QuestionType,
   zodQuestionType,
@@ -232,7 +235,9 @@ short_answer=
 
     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
-    expect(getQuestionType(firstQuestion)).toBe("short_answer_question");
+    expect(getQuestionTypeForCanvas(firstQuestion)).toBe(
+      "short_answer_question"
+    );
   });
 
   it("Includes answer_text in answers sent to canvas", () => {

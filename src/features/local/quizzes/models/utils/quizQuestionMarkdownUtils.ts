@@ -1,153 +1,11 @@
 import { LocalQuizQuestion, QuestionType } from "../localQuizQuestion";
-import { LocalQuizQuestionAnswer } from "../localQuizQuestionAnswer";
-import { quizQuestionAnswerMarkdownUtils } from "./quizQuestionAnswerMarkdownUtils";
 import { quizFeedbackMarkdownUtils } from "./quizFeedbackMarkdownUtils";
-
-const _validFirstAnswerDelimiters = [
-  "*a)",
-  "a)",
-  "*)",
-  ")",
-  "[ ]",
-  "[]",
-  "[*]",
-  "^",
-];
-const _multipleChoicePrefix = ["a)", "*a)", "*)", ")"];
-const _multipleAnswerPrefix = ["[ ]", "[*]", "[]"];
-
-const isAnswerLine = (trimmedLine: string): boolean => {
-  return _validFirstAnswerDelimiters.some((prefix) =>
-    trimmedLine.startsWith(prefix)
-  );
-};
-
-const getAnswerStringsWithMultilineSupport = (
-  linesWithoutPoints: string[],
-  questionIndex: number
-) => {
-  const indexOfAnswerStart = linesWithoutPoints.findIndex((l) =>
-    _validFirstAnswerDelimiters.some((prefix) =>
-      l.trimStart().startsWith(prefix)
-    )
-  );
-  if (indexOfAnswerStart === -1) {
-    const debugLine = linesWithoutPoints.find((l) => l.trim().length > 0);
-    throw Error(
-      `question ${
-        questionIndex + 1
-      }: no answers when detecting question type on ${debugLine}`
-    );
-  }
-
-  const answerLinesRaw = linesWithoutPoints.slice(indexOfAnswerStart);
-
-  const answerStartPattern = /^(\*?[a-z]?\))|(?<!\S)\[\s*\]|\[\*\]|\^/;
-  const answerLines = answerLinesRaw.reduce((acc: string[], line: string) => {
-    const isNewAnswer = answerStartPattern.test(line);
-    if (isNewAnswer) {
-      acc.push(line);
-    } else if (acc.length !== 0) {
-      acc[acc.length - 1] += "\n" + line;
-    } else {
-      acc.push(line);
-    }
-    return acc;
-  }, []);
-  return answerLines;
-};
-const getQuestionType = (
-  linesWithoutPoints: string[],
-  questionIndex: number
-): QuestionType => {
-  if (linesWithoutPoints.length === 0) return QuestionType.NONE;
-  if (
-    linesWithoutPoints[linesWithoutPoints.length - 1].toLowerCase() === "essay"
-  )
-    return QuestionType.ESSAY;
-  if (
-    linesWithoutPoints[linesWithoutPoints.length - 1].toLowerCase() ===
-    "short answer"
-  )
-    return QuestionType.SHORT_ANSWER;
-  if (
-    linesWithoutPoints[linesWithoutPoints.length - 1].toLowerCase() ===
-    "short_answer"
-  )
-    return QuestionType.SHORT_ANSWER;
-  if (
-    linesWithoutPoints[linesWithoutPoints.length - 1].toLowerCase().trim() ===
-    "short_answer="
-  )
-    return QuestionType.SHORT_ANSWER_WITH_ANSWERS;
-
-  const answerLines = getAnswerStringsWithMultilineSupport(
-    linesWithoutPoints,
-    questionIndex
-  );
-  const firstAnswerLine = answerLines[0];
-  const isMultipleChoice = _multipleChoicePrefix.some((prefix) =>
-    firstAnswerLine.startsWith(prefix)
-  );
-
-  if (isMultipleChoice) return QuestionType.MULTIPLE_CHOICE;
-
-  const isMultipleAnswer = _multipleAnswerPrefix.some((prefix) =>
-    firstAnswerLine.startsWith(prefix)
-  );
-  if (isMultipleAnswer) return QuestionType.MULTIPLE_ANSWERS;
-
-  const isMatching = firstAnswerLine.startsWith("^");
-  if (isMatching) return QuestionType.MATCHING;
-
-  return QuestionType.NONE;
-};
-
-const getAnswers = (
-  linesWithoutPoints: string[],
-  questionIndex: number,
-  questionType: string
-): LocalQuizQuestionAnswer[] => {
-  if (questionType == QuestionType.SHORT_ANSWER_WITH_ANSWERS)
-    linesWithoutPoints = linesWithoutPoints.slice(
-      0,
-      linesWithoutPoints.length - 1
-    );
-  const answerLines = getAnswerStringsWithMultilineSupport(
-    linesWithoutPoints,
-    questionIndex
-  );
-
-  const answers = answerLines.map((a) =>
-    quizQuestionAnswerMarkdownUtils.parseMarkdown(a, questionType)
-  );
-  return answers;
-};
-
-const getAnswerMarkdown = (
-  question: LocalQuizQuestion,
-  answer: LocalQuizQuestionAnswer,
-  index: number
-): string => {
-  const multilineMarkdownCompatibleText = answer.text.startsWith("```")
-    ? "\n" + answer.text
-    : answer.text;
-
-  if (question.questionType === "multiple_answers") {
-    const correctIndicator = answer.correct ? "*" : " ";
-    const questionTypeIndicator = `[${correctIndicator}] `;
-
-    return `${questionTypeIndicator}${multilineMarkdownCompatibleText}`;
-  } else if (question.questionType === "matching") {
-    return `^ ${answer.text} - ${answer.matchedText}`;
-  } else {
-    const questionLetter = String.fromCharCode(97 + index);
-    const correctIndicator = answer.correct ? "*" : "";
-    const questionTypeIndicator = `${correctIndicator}${questionLetter}) `;
-
-    return `${questionTypeIndicator}${multilineMarkdownCompatibleText}`;
-  }
-};
+import {
+  getAnswerMarkdown,
+  getAnswers,
+  getQuestionType,
+  isAnswerLine,
+} from "./quizQuestionAnswerParsingUtils";
 
 export const quizQuestionMarkdownUtils = {
   toMarkdown(question: LocalQuizQuestion): string {
@@ -180,7 +38,9 @@ export const quizQuestionMarkdownUtils = {
   },
 
   parseMarkdown(input: string, questionIndex: number): LocalQuizQuestion {
-    const lines = input.trim().split("\n");
+    const lines = input
+      .trim()
+      .split("\n");
     const firstLineIsPoints = lines[0].toLowerCase().includes("points: ");
 
     const textHasPoints =
@@ -196,25 +56,12 @@ export const quizQuestionMarkdownUtils = {
 
     const linesWithoutPoints = firstLineIsPoints ? lines.slice(1) : lines;
 
-    // Extract feedback comments first
-    const {
-      correctComments,
-      incorrectComments,
-      neutralComments,
-      linesWithoutFeedback,
-    } = quizFeedbackMarkdownUtils.extractFeedback(
-      linesWithoutPoints,
-      isAnswerLine
-    );
-
-    const { linesWithoutAnswers } = linesWithoutFeedback.reduce(
+    const { linesWithoutAnswers } = linesWithoutPoints.reduce(
       ({ linesWithoutAnswers, taking }, currentLine) => {
         if (!taking)
           return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
 
-        const lineIsAnswer = _validFirstAnswerDelimiters.some((prefix) =>
-          currentLine.trimStart().startsWith(prefix)
-        );
+        const lineIsAnswer = isAnswerLine(currentLine);
         if (lineIsAnswer)
           return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
 
@@ -225,7 +72,8 @@ export const quizQuestionMarkdownUtils = {
       },
       { linesWithoutAnswers: [] as string[], taking: true }
     );
-    const questionType = getQuestionType(linesWithoutFeedback, questionIndex);
+
+    const questionType = getQuestionType(lines, questionIndex);
 
     const questionTypesWithoutAnswers = [
       "essay",
@@ -233,17 +81,20 @@ export const quizQuestionMarkdownUtils = {
       "short_answer",
     ];
 
-    const descriptionLines = questionTypesWithoutAnswers.includes(
-      questionType.toLowerCase()
-    )
+    const descriptionLines = questionTypesWithoutAnswers.includes(questionType)
       ? linesWithoutAnswers
-          .slice(0, linesWithoutFeedback.length)
+          .slice(0, linesWithoutPoints.length)
           .filter(
             (line) => !questionTypesWithoutAnswers.includes(line.toLowerCase())
           )
       : linesWithoutAnswers;
 
-    const description = descriptionLines.join("\n");
+    const {
+      correctComments,
+      incorrectComments,
+      neutralComments,
+      otherLines: descriptionWithoutFeedback,
+    } = quizFeedbackMarkdownUtils.extractFeedback(descriptionLines);
 
     const typesWithAnswers = [
       "multiple_choice",
@@ -252,7 +103,7 @@ export const quizQuestionMarkdownUtils = {
       "short_answer=",
     ];
     const answers = typesWithAnswers.includes(questionType)
-      ? getAnswers(linesWithoutFeedback, questionIndex, questionType)
+      ? getAnswers(lines, questionIndex, questionType)
       : [];
 
     const answersWithoutDistractors =
@@ -266,7 +117,7 @@ export const quizQuestionMarkdownUtils = {
         : [];
 
     const question: LocalQuizQuestion = {
-      text: description,
+      text: descriptionWithoutFeedback.join("\n"),
       questionType,
       points,
       answers: answersWithoutDistractors,

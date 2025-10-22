@@ -14,9 +14,6 @@ const parseMatchingAnswer = (input: string) => {
 };
 
 export const quizQuestionAnswerMarkdownUtils = {
-  // getHtmlText(): string {
-  //   return MarkdownService.render(this.text);
-  // }
 
   parseMarkdown(input: string, questionType: string): LocalQuizQuestionAnswer {
     const isCorrect = input.startsWith("*") || input[1] === "*";
