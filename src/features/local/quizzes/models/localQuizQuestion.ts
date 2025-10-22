@@ -12,6 +12,7 @@ export enum QuestionType {
   MATCHING = "matching",
   NONE = "",
   SHORT_ANSWER_WITH_ANSWERS = "short_answer=",
+  NUMERICAL = "numerical",
 }
 
 export const zodQuestionType = z.enum([

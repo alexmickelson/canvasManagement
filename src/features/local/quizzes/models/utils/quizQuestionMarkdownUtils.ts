@@ -1,16 +1,66 @@
 import { LocalQuizQuestion, QuestionType } from "../localQuizQuestion";
 import { quizFeedbackMarkdownUtils } from "./quizFeedbackMarkdownUtils";
-import {
-  getAnswerMarkdown,
-  getAnswers,
-  getQuestionType,
-  isAnswerLine,
-} from "./quizQuestionAnswerParsingUtils";
+import { quizQuestionAnswerMarkdownUtils } from "./quizQuestionAnswerMarkdownUtils";
+
+const splitLinesAndPoints = (input: string[]) => {
+  const firstLineIsPoints = input[0].toLowerCase().includes("points: ");
+
+  const textHasPointsLine =
+    input.length > 0 &&
+    input[0].includes(": ") &&
+    input[0].split(": ").length > 1 &&
+    !isNaN(parseFloat(input[0].split(": ")[1]));
+
+  const points =
+    firstLineIsPoints && textHasPointsLine
+      ? parseFloat(input[0].split(": ")[1])
+      : 1;
+
+  const linesWithoutPoints = firstLineIsPoints ? input.slice(1) : input;
+
+  return { points, lines: linesWithoutPoints };
+};
+
+const getLinesBeforeAnswerLines = (lines: string[]): string[] => {
+  const { linesWithoutAnswers } = lines.reduce(
+    ({ linesWithoutAnswers, taking }, currentLine) => {
+      if (!taking)
+        return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
+
+      const lineIsAnswer =
+        quizQuestionAnswerMarkdownUtils.isAnswerLine(currentLine);
+      if (lineIsAnswer)
+        return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
+
+      return {
+        linesWithoutAnswers: [...linesWithoutAnswers, currentLine],
+        taking: true,
+      };
+    },
+    { linesWithoutAnswers: [] as string[], taking: true }
+  );
+  return linesWithoutAnswers;
+};
+
+const removeQuestionTypeFromDescriptionLines = (
+  linesWithoutAnswers: string[],
+  questionType: QuestionType
+): string[] => {
+  const questionTypesWithoutAnswers = ["essay", "short answer", "short_answer"];
+
+  const descriptionLines = questionTypesWithoutAnswers.includes(questionType)
+    ? linesWithoutAnswers.filter(
+        (line) => !questionTypesWithoutAnswers.includes(line.toLowerCase())
+      )
+    : linesWithoutAnswers;
+
+  return descriptionLines;
+};
 
 export const quizQuestionMarkdownUtils = {
   toMarkdown(question: LocalQuizQuestion): string {
     const answerArray = question.answers.map((a, i) =>
-      getAnswerMarkdown(question, a, i)
+      quizQuestionAnswerMarkdownUtils.getAnswerMarkdown(question, a, i)
     );
 
     const distractorText =
@@ -38,89 +88,38 @@ export const quizQuestionMarkdownUtils = {
   },
 
   parseMarkdown(input: string, questionIndex: number): LocalQuizQuestion {
-    const lines = input
-      .trim()
-      .split("\n");
-    const firstLineIsPoints = lines[0].toLowerCase().includes("points: ");
+    const { points, lines } = splitLinesAndPoints(input.trim().split("\n"));
 
-    const textHasPoints =
-      lines.length > 0 &&
-      lines[0].includes(": ") &&
-      lines[0].split(": ").length > 1 &&
-      !isNaN(parseFloat(lines[0].split(": ")[1]));
+    const linesWithoutAnswers = getLinesBeforeAnswerLines(lines);
 
-    const points =
-      firstLineIsPoints && textHasPoints
-        ? parseFloat(lines[0].split(": ")[1])
-        : 1;
-
-    const linesWithoutPoints = firstLineIsPoints ? lines.slice(1) : lines;
-
-    const { linesWithoutAnswers } = linesWithoutPoints.reduce(
-      ({ linesWithoutAnswers, taking }, currentLine) => {
-        if (!taking)
-          return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
-
-        const lineIsAnswer = isAnswerLine(currentLine);
-        if (lineIsAnswer)
-          return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
-
-        return {
-          linesWithoutAnswers: [...linesWithoutAnswers, currentLine],
-          taking: true,
-        };
-      },
-      { linesWithoutAnswers: [] as string[], taking: true }
+    const questionType = quizQuestionAnswerMarkdownUtils.getQuestionType(
+      lines,
+      questionIndex
     );
 
-    const questionType = getQuestionType(lines, questionIndex);
-
-    const questionTypesWithoutAnswers = [
-      "essay",
-      "short answer",
-      "short_answer",
-    ];
-
-    const descriptionLines = questionTypesWithoutAnswers.includes(questionType)
-      ? linesWithoutAnswers
-          .slice(0, linesWithoutPoints.length)
-          .filter(
-            (line) => !questionTypesWithoutAnswers.includes(line.toLowerCase())
-          )
-      : linesWithoutAnswers;
+    const linesWithoutAnswersAndTypes = removeQuestionTypeFromDescriptionLines(
+      linesWithoutAnswers,
+      questionType
+    );
 
     const {
       correctComments,
       incorrectComments,
       neutralComments,
-      otherLines: descriptionWithoutFeedback,
-    } = quizFeedbackMarkdownUtils.extractFeedback(descriptionLines);
+      otherLines: descriptionLines,
+    } = quizFeedbackMarkdownUtils.extractFeedback(linesWithoutAnswersAndTypes);
 
-    const typesWithAnswers = [
-      "multiple_choice",
-      "multiple_answers",
-      "matching",
-      "short_answer=",
-    ];
-    const answers = typesWithAnswers.includes(questionType)
-      ? getAnswers(lines, questionIndex, questionType)
-      : [];
-
-    const answersWithoutDistractors =
-      questionType === QuestionType.MATCHING
-        ? answers.filter((a) => a.text)
-        : answers;
-
-    const distractors =
-      questionType === QuestionType.MATCHING
-        ? answers.filter((a) => !a.text).map((a) => a.matchedText ?? "")
-        : [];
+    const { answers, distractors } = quizQuestionAnswerMarkdownUtils.getAnswers(
+      lines,
+      questionIndex,
+      questionType
+    );
 
     const question: LocalQuizQuestion = {
-      text: descriptionWithoutFeedback.join("\n"),
+      text: descriptionLines.join("\n"),
       questionType,
       points,
-      answers: answersWithoutDistractors,
+      answers,
       matchDistractors: distractors,
       correctComments,
       incorrectComments,

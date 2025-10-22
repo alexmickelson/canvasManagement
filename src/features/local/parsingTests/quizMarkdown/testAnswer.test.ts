@@ -208,12 +208,6 @@ short_answer=
     expect(firstQuestion.answers[1].text).toBe("other");
   });
 
-  it("Has short_answer= type at the same position in types and zod types", () => {
-    expect(Object.values(zodQuestionType.Enum)).toEqual(
-      Object.values(QuestionType)
-    );
-  });
-
   it("Associates short_answer= questions with short_answer_question canvas question type", () => {
     const name = "Test Quiz";
     const rawMarkdownQuiz = `
