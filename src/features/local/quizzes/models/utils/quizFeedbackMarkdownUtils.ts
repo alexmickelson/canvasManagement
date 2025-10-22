@@ -1,36 +1,3 @@
-type FeedbackType = "+" | "-" | "...";
-
-const extractFeedbackContent = (
-  trimmedLine: string,
-  feedbackType: FeedbackType
-): string => {
-  if (trimmedLine === feedbackType) return "";
-
-  const prefixLength = feedbackType === "..." ? 4 : 2; // "... " is 4 chars, "+ " and "- " are 2
-  return trimmedLine.substring(prefixLength);
-};
-
-const saveFeedback = (
-  feedbackType: FeedbackType | null,
-  feedbackLines: string[],
-  comments: {
-    correct?: string;
-    incorrect?: string;
-    neutral?: string;
-  }
-): void => {
-  if (!feedbackType || feedbackLines.length === 0) return;
-
-  const feedbackText = feedbackLines.join("\n");
-  if (feedbackType === "+") {
-    comments.correct = feedbackText;
-  } else if (feedbackType === "-") {
-    comments.incorrect = feedbackText;
-  } else if (feedbackType === "...") {
-    comments.neutral = feedbackText;
-  }
-};
-
 type feedbackTypeOptions = "correct" | "incorrect" | "neutral" | "none";
 
 export const quizFeedbackMarkdownUtils = {
@@ -78,7 +45,7 @@ export const quizFeedbackMarkdownUtils = {
           .trim();
         currentFeedbackType = lineFeedbackType;
         comments[lineFeedbackType].push(lineWithoutIndicator);
-        
+
       } else {
         otherLines.push(line);
       }

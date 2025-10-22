@@ -17,6 +17,7 @@ export function makeQueryClient() {
         // refetchOnMount: false,
       },
       mutations: {
+        retry: 0,
         onError: (error) => {
           const message = getAxiosErrorMessage(error as AxiosError);
           console.error("Mutation error:", message);

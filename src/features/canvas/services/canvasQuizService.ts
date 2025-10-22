@@ -16,7 +16,7 @@ import {
   rateLimitAwarePost,
 } from "./canvasWebRequestUtils";
 
-export const getAnswers = (
+export const getAnswersForCanvas = (
   question: LocalQuizQuestion,
   settings: LocalCourseSettings
 ) => {
@@ -31,6 +31,13 @@ export const getAnswers = (
         answer_match_right: a.matchedText,
       };
     });
+
+  if (question.questionType === QuestionType.NUMERICAL) {
+    return question.answers.map((answer) => ({
+      numerical_answer_type: answer.numericalAnswerType,
+      exact: answer.numericAnswer,
+    }));
+  }
 
   return question.answers.map((answer) => ({
     answer_html: markdownToHTMLSafe({ markdownString: answer.text, settings }),
@@ -64,7 +71,7 @@ const createQuestionOnly = async (
       question_type: getQuestionTypeForCanvas(question),
       points_possible: question.points,
       position,
-      answers: getAnswers(question, settings),
+      answers: getAnswersForCanvas(question, settings),
       correct_comments: question.incorrectComments,
       incorrect_comments: question.incorrectComments,
       neutral_comments: question.neutralComments,

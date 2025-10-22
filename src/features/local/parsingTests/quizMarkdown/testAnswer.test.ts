@@ -1,10 +1,9 @@
 import {
   getQuestionTypeForCanvas,
-  getAnswers,
+  getAnswersForCanvas,
 } from "@/features/canvas/services/canvasQuizService";
 import {
   QuestionType,
-  zodQuestionType,
 } from "@/features/local/quizzes/models/localQuizQuestion";
 import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 import { quizQuestionMarkdownUtils } from "@/features/local/quizzes/models/utils/quizQuestionMarkdownUtils";
@@ -255,7 +254,7 @@ short_answer=
 
     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
     const firstQuestion = quiz.questions[0];
-    const answers = getAnswers(firstQuestion, {
+    const answers = getAnswersForCanvas(firstQuestion, {
       name: "",
       assignmentGroups: [],
       daysOfWeek: [],

@@ -199,6 +199,8 @@ export const quizQuestionAnswerMarkdownUtils = {
       return `${questionTypeIndicator}${multilineMarkdownCompatibleText}`;
     } else if (question.questionType === "matching") {
       return `^ ${answer.text} - ${answer.matchedText}`;
+    } else if (question.questionType === "numerical") {
+      return `= ${answer.numericAnswer}`;
     } else {
       const questionLetter = String.fromCharCode(97 + index);
       const correctIndicator = answer.correct ? "*" : "";

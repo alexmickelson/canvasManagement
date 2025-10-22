@@ -13,9 +13,8 @@ import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorage
 import {
   localPageMarkdownUtils,
 } from "@/features/local/pages/localCoursePageModels";
-import {
-  localQuizMarkdownUtils,
-} from "@/features/local/quizzes/models/localQuiz";
+import { quizMarkdownUtils } from "../quizzes/models/utils/quizMarkdownUtils";
+
 
 const getItemFileNames = async ({
   courseName,
@@ -61,7 +60,7 @@ const getItem = async <T extends CourseItemType>({
       name
     ) as CourseItemReturnType<T>;
   } else if (type === "Quiz") {
-    return localQuizMarkdownUtils.parseMarkdown(
+    return quizMarkdownUtils.parseMarkdown(
       rawFile,
       name
     ) as CourseItemReturnType<T>;

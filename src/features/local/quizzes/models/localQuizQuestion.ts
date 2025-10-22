@@ -1,40 +1,30 @@
 import { z } from "zod";
-import {
-  LocalQuizQuestionAnswer,
-  zodLocalQuizQuestionAnswer,
-} from "./localQuizQuestionAnswer";
-
-export enum QuestionType {
-  MULTIPLE_ANSWERS = "multiple_answers",
-  MULTIPLE_CHOICE = "multiple_choice",
-  ESSAY = "essay",
-  SHORT_ANSWER = "short_answer",
-  MATCHING = "matching",
-  NONE = "",
-  SHORT_ANSWER_WITH_ANSWERS = "short_answer=",
-  NUMERICAL = "numerical",
-}
+import { zodLocalQuizQuestionAnswer } from "./localQuizQuestionAnswer";
 
 export const zodQuestionType = z.enum([
-  QuestionType.MULTIPLE_ANSWERS,
-  QuestionType.MULTIPLE_CHOICE,
-  QuestionType.ESSAY,
-  QuestionType.SHORT_ANSWER,
-  QuestionType.MATCHING,
-  QuestionType.NONE,
-  QuestionType.SHORT_ANSWER_WITH_ANSWERS,
+  "multiple_answers",
+  "multiple_choice",
+  "essay",
+  "short_answer",
+  "matching",
+  "",
+  "short_answer=",
+  "numerical",
 ]);
 
-export interface LocalQuizQuestion {
-  text: string;
-  questionType: QuestionType;
-  points: number;
-  answers: LocalQuizQuestionAnswer[];
-  matchDistractors: string[];
-  correctComments?: string;
-  incorrectComments?: string;
-  neutralComments?: string;
-}
+export const QuestionType = {
+  MULTIPLE_ANSWERS: "multiple_answers",
+  MULTIPLE_CHOICE: "multiple_choice",
+  ESSAY: "essay",
+  SHORT_ANSWER: "short_answer",
+  MATCHING: "matching",
+  NONE: "",
+  SHORT_ANSWER_WITH_ANSWERS: "short_answer=",
+  NUMERICAL: "numerical",
+} as const;
+
+export type QuestionType = z.infer<typeof zodQuestionType>;
+
 export const zodLocalQuizQuestion = z.object({
   text: z.string(),
   questionType: zodQuestionType,
@@ -45,3 +35,4 @@ export const zodLocalQuizQuestion = z.object({
   incorrectComments: z.string().optional(),
   neutralComments: z.string().optional(),
 });
+export type LocalQuizQuestion = z.infer<typeof zodLocalQuizQuestion>;
