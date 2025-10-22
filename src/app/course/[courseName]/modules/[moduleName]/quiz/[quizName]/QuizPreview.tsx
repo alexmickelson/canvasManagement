@@ -89,27 +89,30 @@ function QuizQuestionPreview({ question }: { question: LocalQuizQuestion }) {
           <div>Feedback</div>
           <div className="mx-4 space-y-1">
             {question.correctComments && (
-              <div className="border-l-2 border-green-700 pl-2 py-1">
+              <div className="border-l-2 border-green-700 pl-2 py-1 flex">
                 <span className="text-green-500">+ </span>
-                <span className="text-slate-300">
-                  {question.correctComments}
-                </span>
+                <MarkdownDisplay
+                  markdown={question.correctComments}
+                  className="ms-4 mb-2"
+                />
               </div>
             )}
             {question.incorrectComments && (
-              <div className="border-l-2 border-red-700 pl-2 py-1">
+              <div className="border-l-2 border-red-700 pl-2 py-1 flex">
                 <span className="text-red-500">- </span>
-                <span className="text-slate-300">
-                  {question.incorrectComments}
-                </span>
+                <MarkdownDisplay
+                  markdown={question.incorrectComments}
+                  className="ms-4 mb-2"
+                />
               </div>
             )}
             {question.neutralComments && (
-              <div className="border-l-2 border-blue-800 pl-2 py-1">
+              <div className="border-l-2 border-blue-800 pl-2 py-1 flex">
                 <span className="text-blue-500">... </span>
-                <span className="text-slate-300">
-                  {question.neutralComments}
-                </span>
+                <MarkdownDisplay
+                  markdown={question.neutralComments}
+                  className="ms-4 mb-2"
+                />
               </div>
             )}
           </div>

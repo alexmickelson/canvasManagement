@@ -319,5 +319,6 @@ essay
     expect(firstQuestion.questionType).toBe(QuestionType.ESSAY);
     expect(firstQuestion.text).not.toContain("this is general feedback");
     expect(firstQuestion.neutralComments).toBe("this is general feedback");
+    expect(firstQuestion.neutralComments).not.toContain("...");
   });
 });

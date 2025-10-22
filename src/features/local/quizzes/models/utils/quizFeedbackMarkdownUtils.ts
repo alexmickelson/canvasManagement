@@ -70,12 +70,15 @@ export const quizFeedbackMarkdownUtils = {
           .replace(feedbackIndicators[currentFeedbackType], "")
           .trim();
         comments[currentFeedbackType].push(lineWithoutIndicator);
+
       } else if (lineFeedbackType !== "none") {
+
         const lineWithoutIndicator = line
           .replace(feedbackIndicators[lineFeedbackType], "")
           .trim();
         currentFeedbackType = lineFeedbackType;
         comments[lineFeedbackType].push(lineWithoutIndicator);
+        
       } else {
         otherLines.push(line);
       }
