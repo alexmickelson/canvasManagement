@@ -33,10 +33,33 @@ export const getAnswersForCanvas = (
     });
 
   if (question.questionType === QuestionType.NUMERICAL) {
-    return question.answers.map((answer) => ({
-      numerical_answer_type: answer.numericalAnswerType,
-      exact: answer.numericAnswer,
-    }));
+    // if (question.answers[0].numericalAnswerType === "range_answer") {
+    //   console.log(
+    //     "answer range",
+    //     question.answers.map((answer) => ({
+    //       numerical_answer_type: answer.numericalAnswerType,
+    //       start: answer.numericAnswerRangeMin,
+    //       end: answer.numericAnswerRangeMax,
+    //     }))
+    //   );
+    //   return question.answers.map((answer) => ({
+    //     numerical_answer_type: answer.numericalAnswerType,
+    //     start: answer.numericAnswerRangeMin + "",
+    //     end: answer.numericAnswerRangeMax + "",
+    //   }));
+    // }
+    return question.answers.map((answer) => {
+      if (answer.numericalAnswerType === "range_answer")
+        return {
+          numerical_answer_type: answer.numericalAnswerType,
+          answer_range_start: answer.numericAnswerRangeMin,
+          answer_range_end: answer.numericAnswerRangeMax,
+        };
+      return {
+        numerical_answer_type: answer.numericalAnswerType,
+        exact: answer.numericAnswer,
+      };
+    });
   }
 
   return question.answers.map((answer) => ({

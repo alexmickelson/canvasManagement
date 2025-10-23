@@ -15,7 +15,27 @@ const _multipleChoicePrefix = ["a)", "*a)", "*)", ")"];
 const _multipleAnswerPrefix = ["[ ]", "[*]", "[]"];
 
 const parseNumericalAnswer = (input: string): LocalQuizQuestionAnswer => {
-  const numericValue = parseFloat(input.replace(/^=\s*/, "").trim());
+  const trimmedInput = input.replace(/^=\s*/, "").trim();
+
+  // Check if it's a range answer: = [min, max]
+  const minMaxPattern = /^\[([^,]+),\s*([^\]]+)\]$/;
+  const rangeNumbericAnswerMatch = trimmedInput.match(minMaxPattern);
+
+  if (rangeNumbericAnswerMatch) {
+    const minValue = parseFloat(rangeNumbericAnswerMatch[1].trim());
+    const maxValue = parseFloat(rangeNumbericAnswerMatch[2].trim());
+    const answer: LocalQuizQuestionAnswer = {
+      correct: true,
+      text: input.trim(),
+      numericalAnswerType: "range_answer",
+      numericAnswerRangeMin: minValue,
+      numericAnswerRangeMax: maxValue,
+    };
+    return answer;
+  }
+
+  // Otherwise, it's an exact answer
+  const numericValue = parseFloat(trimmedInput);
   const answer: LocalQuizQuestionAnswer = {
     correct: true,
     text: input.trim(),
@@ -200,6 +220,9 @@ export const quizQuestionAnswerMarkdownUtils = {
     } else if (question.questionType === "matching") {
       return `^ ${answer.text} - ${answer.matchedText}`;
     } else if (question.questionType === "numerical") {
+      if (answer.numericalAnswerType === "range_answer") {
+        return `= [${answer.numericAnswerRangeMin}, ${answer.numericAnswerRangeMax}]`;
+      }
       return `= ${answer.numericAnswer}`;
     } else {
       const questionLetter = String.fromCharCode(97 + index);

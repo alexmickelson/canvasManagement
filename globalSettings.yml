@@ -21,3 +21,5 @@ courses:
     name: 1400-spring
   - path: ./1420/2024-fall/Modules/
     name: 1420_old
+  - path: ./3820_BackEnd/2025-fall/Modules/
+    name: jonathan-backend

@@ -30,6 +30,11 @@ Content-Type: application/json
 GET https://snow.instructure.com/api/v1/courses/958185/assignments
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 
+
+###
+GET https://snow.instructure.com/api/v1/courses/1155293/quizzes/4366122/questions
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
 ###
 POST https://snow.instructure.com/api/v1/courses/958185/quizzes/3358912/questions
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}

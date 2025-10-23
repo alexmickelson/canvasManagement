@@ -92,7 +92,8 @@ export const courseItemFileStorageService = {
           try {
             const item = await getItem({ courseName, moduleName, name, type });
             return item;
-          } catch {
+          } catch (e) {
+            console.log(`Error loading ${type} ${name} in module ${moduleName}:`, e);
             return null;
           }
         })

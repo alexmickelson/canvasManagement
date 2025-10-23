@@ -195,7 +195,6 @@ describe("QuizDeterministicChecks", () => {
       ],
       allowedAttempts: -1,
       showCorrectAnswers: true,
-      
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
@@ -221,13 +220,54 @@ describe("QuizDeterministicChecks", () => {
           points: 1,
           matchDistractors: [],
           answers: [
-            { text: "= 42", correct: true, numericalAnswerType: "exact_answer", numericAnswer: 42 },
+            {
+              text: "= 42",
+              correct: true,
+              numericalAnswerType: "exact_answer",
+              numericAnswer: 42,
+            },
           ],
         },
       ],
       allowedAttempts: -1,
       showCorrectAnswers: true,
-      
+    };
+
+    const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
+    const parsedQuiz = quizMarkdownUtils.parseMarkdown(quizMarkdown, name);
+
+    expect(parsedQuiz).toEqual(quiz);
+  });
+  it("SerializationIsDeterministic Numeric with range answer", () => {
+    const name = "Test Quiz";
+    const quiz: LocalQuiz = {
+      name,
+      description: "quiz description",
+      lockAt: "08/21/2023 23:59:00",
+      dueAt: "08/21/2023 23:59:00",
+      shuffleAnswers: true,
+      oneQuestionAtATime: true,
+      password: undefined,
+      localAssignmentGroupName: "Assignments",
+      questions: [
+        {
+          text: "test numeric",
+          questionType: QuestionType.NUMERICAL,
+          points: 1,
+          matchDistractors: [],
+          answers: [
+            {
+              text: "= [2, 5]",
+              correct: true,
+              numericalAnswerType: "range_answer",
+              numericAnswerRangeMin: 2,
+              numericAnswerRangeMax: 5,
+            },
+          ],
+        },
+      ],
+      allowedAttempts: -1,
+      showCorrectAnswers: true,
     };
 
     const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
