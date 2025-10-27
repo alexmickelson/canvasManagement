@@ -100,6 +100,8 @@ export function StoragePathSelector({
     setArrowUsed(false);
     setHighlightedIndex(-1);
     if (shouldFocus) {
+      // Keep the dropdown open by maintaining focus state
+      setIsFocused(true);
       setTimeout(() => inputRef.current?.focus(), 0);
     }
   };
@@ -154,7 +156,10 @@ export function StoragePathSelector({
                   className={`dropdown-option w-full px-2 py-1 cursor-pointer ${
                     highlightedIndex === idx ? "bg-blue-700 text-white" : ""
                   }`}
-                  onMouseDown={() => handleSelectFolder(option)}
+                  onMouseDown={(e) => {
+                    e.preventDefault(); // Prevent input blur
+                    handleSelectFolder(option, true);
+                  }}
                   onMouseEnter={() => setHighlightedIndex(idx)}
                 >
                   {option}

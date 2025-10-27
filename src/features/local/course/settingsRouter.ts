@@ -103,6 +103,13 @@ async function migrateCourseContent(
 ) {
   const oldCourseName = settingsFromCourseToImport.name;
   const newCourseName = settings.name;
+  console.log(
+    "migrating content from ",
+    oldCourseName,
+    "to ",
+    newCourseName
+  );
+
   const oldModules = await getModuleNamesFromFiles(oldCourseName);
   await Promise.all(
     oldModules.map(async (moduleName) => {

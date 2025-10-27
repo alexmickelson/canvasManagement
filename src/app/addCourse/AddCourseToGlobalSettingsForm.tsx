@@ -62,6 +62,7 @@ export default function AddNewCourseToGlobalSettingsForm() {
   const formIsComplete =
     selectedTerm && selectedCanvasCourse && selectedDirectory;
 
+
   return (
     <div>
       <ButtonSelect
@@ -94,11 +95,11 @@ export default function AddNewCourseToGlobalSettingsForm() {
           disabled={!formIsComplete || createCourse.isPending}
           onClick={async () => {
             if (formIsComplete) {
-              console.log("Creating course with settings:", selectedDirectory);
+              console.log("Creating course with settings:", selectedDirectory, "old course", courseToImport);
               const newSettings: LocalCourseSettings = courseToImport
                 ? {
                     ...courseToImport,
-                    name: selectedDirectory,
+                    name: name,
                     daysOfWeek: selectedDaysOfWeek,
                     canvasId: selectedCanvasCourse.id,
                     startDate: selectedTerm.start_at ?? "",
@@ -114,7 +115,7 @@ export default function AddNewCourseToGlobalSettingsForm() {
                     assets: [],
                   }
                 : {
-                    name: selectedDirectory,
+                    name: name,
                     assignmentGroups: [],
                     daysOfWeek: selectedDaysOfWeek,
                     canvasId: selectedCanvasCourse.id,
@@ -145,10 +146,10 @@ export default function AddNewCourseToGlobalSettingsForm() {
       </div>
       {createCourse.isPending && <Spinner />}
 
-      <pre>
+      {/* <pre>
         <div>Example docker compose</div>
         <code className="language-yml">{sampleCompose}</code>
-      </pre>
+      </pre> */}
     </div>
   );
 }
@@ -180,12 +181,10 @@ function OtherSettings({
   name: string;
   setName: Dispatch<SetStateAction<string>>;
 }) {
-  const { data: canvasCourses } = useCourseListInTermQuery(selectedTerm.id);
+  const { data: canvasCourses, isLoading: canvasCoursesLoading } =
+    useCourseListInTermQuery(selectedTerm.id);
   const { data: allSettings } = useLocalCoursesSettingsQuery();
   const [directory, setDirectory] = useState("./");
-  // const directoryIsCourseQuery = useDirectoryIsCourseQuery(
-  //   selectedDirectory ?? "./"
-  // );
 
   const populatedCanvasCourseIds = allSettings?.map((s) => s.canvasId) ?? [];
   const availableCourses =
@@ -204,6 +203,20 @@ function OtherSettings({
         getOptionName={(c) => c?.name ?? ""}
         center={true}
       />
+      {canvasCoursesLoading && <Spinner />}
+      {!canvasCoursesLoading && availableCourses.length === 0 && (
+        <div className="text-center text-red-300">
+          <div className="flex justify-center ">
+            <div className="text-left">
+              No available courses in this term to add. Either
+              <ol>
+                <li>all courses have already been added, or</li>
+                <li>there are no courses in this term</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      )}
 
       <StoragePathSelector
         value={directory}
