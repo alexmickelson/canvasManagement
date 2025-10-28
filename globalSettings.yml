@@ -13,3 +13,11 @@ courses:
     name: Telem and Ops
   - path: ./4850_AdvancedFE/2026-spring-alex/modules
     name: Adv Frontend Spring
+  - path: ./1400/2025_spring_alex/modules/
+    name: 1400-old
+  - path: ./1400/2026_spring_alex/modules
+    name: "1400"
+  - path: ./1405/2025_spring_alex/
+    name: 1405 old
+  - path: ./1405/2026_spring_alex
+    name: "1405"

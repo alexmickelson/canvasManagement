@@ -64,28 +64,15 @@ function CourseItem({
   const modal = useModal();
 
   return (
-    <div className="flex items-center gap-2">
-      <Link
-        href={getCourseUrl(courseName)}
-        shallow={true}
-        prefetch={true}
-        className="
-          font-bold text-xl block
-          transition-all hover:scale-105 hover:underline hover:text-slate-200
-          mb-3
-        "
-      >
-        {courseName}
-      </Link>
+    <div className="flex items-center justify-start gap-2">
       {isDeleting && (
         <Modal
           modalControl={modal}
-          buttonText="−"
+          buttonText="X"
           buttonClass="
             unstyled
             text-red-200 hover:text-red-400 
-            bg-red-950
-            font-bold text-2xl 
+            bg-red-950/50 hover:bg-red-950/70
             transition-all hover:scale-110
             mb-3
           "
@@ -128,6 +115,18 @@ function CourseItem({
           )}
         </Modal>
       )}
+      <Link
+        href={getCourseUrl(courseName)}
+        shallow={true}
+        prefetch={true}
+        className="
+          font-bold text-xl block
+          transition-all hover:scale-105 hover:underline hover:text-slate-200
+          mb-3
+        "
+      >
+        {courseName}
+      </Link>
     </div>
   );
 }

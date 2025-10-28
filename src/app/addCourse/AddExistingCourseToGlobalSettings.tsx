@@ -16,7 +16,7 @@ export const AddExistingCourseToGlobalSettings = () => {
     <div>
       <div className="flex justify-center">
         <button className="" onClick={() => setShowForm((i) => !i)}>
-          Add Existing Course
+          {showForm ? "Hide Form" : "Import Existing Course"}
         </button>
       </div>
 

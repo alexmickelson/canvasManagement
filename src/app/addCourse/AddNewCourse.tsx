@@ -11,7 +11,8 @@ export default function AddCourseToGlobalSettings() {
     <div>
       <div className="flex justify-center">
         <button className="" onClick={() => setShowForm((i) => !i)}>
-          Add New Course
+          {showForm ? "Hide Form" : "Add New Course"}
+          
         </button>
       </div>
 
