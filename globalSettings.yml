@@ -9,19 +9,7 @@ courses:
     name: UX
   - path: ./1425/2025-fall-alex/modules/
     name: "1425"
-  - path: ./1405/2025_spring_alex/
-    name: 1405_old
   - path: ./3840_Telemetry/2025_spring_alex/modules/
     name: Telem and Ops
-  - path: ./4850_AdvancedFE/2024-fall-alex/modules/
-    name: Old Adv Frontend
-  - path: ./1430/2025-spring-jonathan/Modules/
-    name: Jonathan UX
-  - path: ./1400/2025_spring_alex/modules/
-    name: 1400-spring
-  - path: ./1420/2024-fall/Modules/
-    name: 1420_old
-  - path: ./3820_BackEnd/2025-fall/Modules/
-    name: jonathan-backend
   - path: ./4850_AdvancedFE/2026-spring-alex/modules
     name: Adv Frontend Spring
