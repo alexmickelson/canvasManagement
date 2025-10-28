@@ -13,10 +13,11 @@ export default function CourseCalendar() {
     () => getDateFromStringOrThrow(settings.startDate, "course start date"),
     [settings.startDate]
   );
-  const endDateTime = useMemo(
-    () => getDateFromStringOrThrow(settings.endDate, "course end date"),
-    [settings.endDate]
-  );
+  const endDateTime = useMemo(() => {
+    const date = getDateFromStringOrThrow(settings.endDate, "course end date");
+    date.setDate(date.getDate() + 14); // buffer to make sure calendar shows week of finals and grades due
+    return date;
+  }, [settings.endDate]);
   const months = useMemo(
     () => getMonthsBetweenDates(startDateTime, endDateTime),
     [endDateTime, startDateTime]

@@ -21,3 +21,11 @@ courses:
     name: 1405 old
   - path: ./1405/2026_spring_alex
     name: "1405"
+  - path: ./1810/2026-spring-alex/modules
+    name: Web Intro Spring
+  - path: ./3840_Telemetry/2026_spring_alex
+    name: Telem and Ops New
+  - path: ./4620_Distributed/2025Spring/modules/
+    name: distributed-old
+  - path: ./4620_Distributed/2026-spring-alex/modules
+    name: Distributed
