@@ -23,3 +23,10 @@ export const useDirectoryIsCourseQuery = (folderPath: string) => {
     trpc.directories.directoryIsCourse.queryOptions({ folderPath })
   );
 };
+
+export const useDirectoryExistsQuery = (relativePath: string) => {
+  const trpc = useTRPC();
+  return useQuery(
+    trpc.directories.directoryExists.queryOptions({ relativePath })
+  );
+};

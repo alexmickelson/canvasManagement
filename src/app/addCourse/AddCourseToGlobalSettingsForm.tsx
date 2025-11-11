@@ -22,6 +22,7 @@ import {
 } from "@/features/local/course/localCourseSettings";
 import { useCourseListInTermQuery } from "@/features/canvas/hooks/canvasCourseHooks";
 import { useCanvasTermsQuery } from "@/features/canvas/hooks/canvasHooks";
+import { useDirectoryExistsQuery } from "@/features/local/utils/storageDirectoryHooks";
 
 const sampleCompose = `services:
   canvas_manager:
@@ -62,7 +63,6 @@ export default function AddNewCourseToGlobalSettingsForm() {
   const formIsComplete =
     selectedTerm && selectedCanvasCourse && selectedDirectory;
 
-
   return (
     <div>
       <ButtonSelect
@@ -95,7 +95,12 @@ export default function AddNewCourseToGlobalSettingsForm() {
           disabled={!formIsComplete || createCourse.isPending}
           onClick={async () => {
             if (formIsComplete) {
-              console.log("Creating course with settings:", selectedDirectory, "old course", courseToImport);
+              console.log(
+                "Creating course with settings:",
+                selectedDirectory,
+                "old course",
+                courseToImport
+              );
               const newSettings: LocalCourseSettings = courseToImport
                 ? {
                     ...courseToImport,
@@ -145,11 +150,6 @@ export default function AddNewCourseToGlobalSettingsForm() {
         </button>
       </div>
       {createCourse.isPending && <Spinner />}
-
-      {/* <pre>
-        <div>Example docker compose</div>
-        <code className="language-yml">{sampleCompose}</code>
-      </pre> */}
     </div>
   );
 }
@@ -185,6 +185,8 @@ function OtherSettings({
     useCourseListInTermQuery(selectedTerm.id);
   const { data: allSettings } = useLocalCoursesSettingsQuery();
   const [directory, setDirectory] = useState("./");
+  const { data: directoryExists, isLoading: directoryExistsLoading } =
+    useDirectoryExistsQuery(directory);
 
   const populatedCanvasCourseIds = allSettings?.map((s) => s.canvasId) ?? [];
   const availableCourses =
@@ -224,6 +226,15 @@ function OtherSettings({
         setLastTypedValue={setSelectedDirectory}
         label={"Storage Folder"}
       />
+      <div className="text-center mt-2 min-h-6">
+        {directoryExistsLoading && <Spinner />}
+        {!directoryExistsLoading && directoryExists && (
+          <div className="text-red-300">Directory must be a new folder</div>
+        )}
+        {!directoryExistsLoading && directoryExists === false && (
+          <div className="text-green-300">✓ New folder</div>
+        )}
+      </div>
       <br />
       <div className="flex justify-center">
         <DayOfWeekInput

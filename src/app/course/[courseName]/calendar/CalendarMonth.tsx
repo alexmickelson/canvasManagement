@@ -47,7 +47,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
               className={
                 "text-2xl transition-all duration-500 " +
                 "hover:text-slate-50 underline hover:scale-105 " +
-                "flex "
+                "flex cursor-pointer"
               }
               onClick={() => setIsExpanded((e) => !e)}
               role="button"

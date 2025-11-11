@@ -72,4 +72,15 @@ export const fileStorageService = {
     }
     return { files, folders };
   },
+
+  async directoryExists(relativePath: string): Promise<boolean> {
+    const fullPath = path.join(basePath, relativePath);
+    // Security: ensure fullPath is inside basePath
+    const resolvedBase = path.resolve(basePath);
+    const resolvedFull = path.resolve(fullPath);
+    if (!resolvedFull.startsWith(resolvedBase)) {
+      return false;
+    }
+    return await directoryOrFileExists(fullPath);
+  },
 };
