@@ -76,7 +76,7 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
             viewBox="0 0 24 24"
             width={22}
             height={22}
-            className="cursor-pointer hover:scale-125 hover:stroke-slate-300 stroke-slate-400 transition-all m-0.5"
+            className="cursor-pointer hover:scale-125 hover:stroke-slate-400 stroke-slate-500 transition-all m-0.5"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
             onClick={openModal}
