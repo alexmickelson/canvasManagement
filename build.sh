@@ -44,9 +44,9 @@ if [ "$PUSH_FLAG" = true ]; then
   echo "alexmickelson/canvas_management:$MAJOR_VERSION"
   echo "alexmickelson/canvas_management:latest"
 
-  docker push alexmickelson/canvas_management:"$VERSION"
-  docker push alexmickelson/canvas_management:"$MAJOR_VERSION"
-  docker push alexmickelson/canvas_management:latest
+  docker push -q alexmickelson/canvas_management:"$VERSION"
+  docker push -q alexmickelson/canvas_management:"$MAJOR_VERSION"
+  docker push -q alexmickelson/canvas_management:latest
 fi
 
 if [ "$TAG_FLAG" = false ] && [ "$PUSH_FLAG" = false ]; then
@@ -59,7 +59,7 @@ if [ "$TAG_FLAG" = false ] && [ "$PUSH_FLAG" = false ]; then
   echo "docker image tag canvas_management:$VERSION alexmickelson/canvas_management:$VERSION"
   echo "docker image tag canvas_management:$VERSION alexmickelson/canvas_management:$MAJOR_VERSION"
   echo "docker image tag canvas_management:latest alexmickelson/canvas_management:latest"
-  echo "docker push alexmickelson/canvas_management:$VERSION"
-  echo "docker push alexmickelson/canvas_management:$MAJOR_VERSION"
-  echo "docker push alexmickelson/canvas_management:latest"
+  echo "docker push -q alexmickelson/canvas_management:$VERSION"
+  echo "docker push -q alexmickelson/canvas_management:$MAJOR_VERSION"
+  echo "docker push -q alexmickelson/canvas_management:latest"
 fi

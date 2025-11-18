@@ -107,7 +107,7 @@ export default function ExpandableModule({
                   </ClientOnly>
                   <ExpandIcon
                     style={{
-                      ...(isExpanded ? { rotate: "-90deg" } : {}),
+                      ...(isExpanded ? { rotate: "90deg" } : {rotate: "180deg"}),
                     }}
                   />
                 </div>
