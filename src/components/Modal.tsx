@@ -25,22 +25,28 @@ export function useModal() {
 
 export default function Modal({
   children,
-  buttonText,
+  buttonText = "",
   buttonClass = "",
   modalWidth = "w-1/3",
   modalControl,
+  buttonComponent,
 }: {
   children: (props: { closeModal: () => void }) => ReactNode;
-  buttonText: string;
+  buttonText?: string;
   buttonClass?: string;
   modalWidth?: string;
   modalControl: ModalControl;
+  buttonComponent?: (props: { openModal: () => void }) => ReactNode;
 }) {
   return (
     <>
-      <button onClick={modalControl.openModal} className={buttonClass}>
-        {buttonText}
-      </button>
+      {buttonComponent ? (
+        buttonComponent({ openModal: modalControl.openModal })
+      ) : (
+        <button onClick={modalControl.openModal} className={buttonClass}>
+          {buttonText}
+        </button>
+      )}
 
       <div
         className={
