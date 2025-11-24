@@ -40,20 +40,25 @@ export function UpdateAssignmentName({
               if (name === assignmentName) closeModal();
 
               setIsLoading(true); // page refresh resets flag
-              await updateAssignment.mutateAsync({
-                assignment: assignment,
-                moduleName,
-                assignmentName: name,
-                previousModuleName: moduleName,
-                previousAssignmentName: assignmentName,
-                courseName,
-              });
+              try{
 
-              // update url (will trigger reload...)
-              router.replace(
-                getModuleItemUrl(courseName, moduleName, "assignment", name),
-                {}
-              );
+                await updateAssignment.mutateAsync({
+                  assignment: assignment,
+                  moduleName,
+                  assignmentName: name,
+                  previousModuleName: moduleName,
+                  previousAssignmentName: assignmentName,
+                  courseName,
+                });
+                
+                // update url (will trigger reload...)
+                router.replace(
+                  getModuleItemUrl(courseName, moduleName, "assignment", name),
+                  {}
+                );
+              }finally {
+                setIsLoading(false);
+              }
             }}
           >
             <TextInput

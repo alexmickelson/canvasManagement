@@ -133,6 +133,18 @@ export async function updateOrCreateAssignmentFile({
   assignmentName: string;
   assignment: LocalAssignment;
 }) {
+  const illegalCharacters = ["<", ">", ":", '"', "/", "\\", "|", "?", "*"];
+  const foundIllegalCharacters = illegalCharacters.filter((char) =>
+    assignmentName.includes(char)
+  );
+  if (foundIllegalCharacters.length > 0) {
+    throw new Error(
+      `"${assignmentName}" cannot contain the following characters: ${foundIllegalCharacters.join(
+        " "
+      )}`
+    );
+  }
+
   const courseDirectory = await getCoursePathByName(courseName);
   const folder = path.join(courseDirectory, moduleName, "assignments");
   await fs.mkdir(folder, { recursive: true });
