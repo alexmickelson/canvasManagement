@@ -21,3 +21,9 @@ courses:
     name: Telem and Ops New
   - path: ./4620_Distributed/2026-spring-alex/modules
     name: Distributed
+  - path: ./4620_Distributed/2025Spring/modules/
+    name: distributed-old
+  - path: ./3840_Telemetry/2025_spring_alex/modules/
+    name: telemetry-old
+  - path: ./3840_Telemetry/2024Spring_alex/modules/
+    name: telemetry-old-old
