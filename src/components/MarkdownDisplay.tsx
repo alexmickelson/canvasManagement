@@ -7,6 +7,7 @@ export default function MarkdownDisplay({
   markdown,
   className = "",
   replaceText = [],
+  convertImages,
 }: {
   markdown: string;
   className?: string;
@@ -14,6 +15,7 @@ export default function MarkdownDisplay({
     source: string;
     destination: string;
   }[];
+  convertImages?: boolean;
 }) {
   const { data: settings } = useLocalCourseSettingsQuery();
   return (
@@ -23,6 +25,7 @@ export default function MarkdownDisplay({
         settings={settings}
         className={className}
         replaceText={replaceText}
+        convertImages={convertImages}
       />
     </SuspenseAndErrorHandling>
   );
@@ -33,6 +36,7 @@ function DangerousInnerMarkdown({
   settings,
   className,
   replaceText,
+  convertImages,
 }: {
   markdown: string;
   settings: LocalCourseSettings;
@@ -41,6 +45,7 @@ function DangerousInnerMarkdown({
     source: string;
     destination: string;
   }[];
+  convertImages?: boolean;
 }) {
   return (
     <div
@@ -48,6 +53,7 @@ function DangerousInnerMarkdown({
       dangerouslySetInnerHTML={{
         __html: markdownToHTMLSafe({
           markdownString: markdown,
+          convertImages,
           settings,
           replaceText,
         }),

@@ -11,7 +11,7 @@ export default function LecturePreview({ lecture }: { lecture: Lecture }) {
         </div>
       </section>
       <section>
-        <MarkdownDisplay markdown={lecture.content} />
+        <MarkdownDisplay markdown={lecture.content} convertImages={false} />
       </section>
     </>
   );
