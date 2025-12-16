@@ -125,8 +125,21 @@ export function markdownToHTMLSafe({
 }
 
 export function markdownToHtmlNoImages(markdownString: string) {
-  const clean = DOMPurify.sanitize(
-    marked.parse(markdownString, { async: false, pedantic: false, gfm: true })
-  ).replaceAll(/>[^<>]*<\/math>/g, "></math>");
+  const parsedHtml = marked.parse(markdownString, {
+    async: false,
+    pedantic: false,
+    gfm: true,
+  }) as string;
+
+  // Move caption inside table
+  const htmlWithCaptionInTable = parsedHtml.replace(
+    /(<caption[^>]*>[\s\S]*?<\/caption>)\s*(<table[^>]*>)/g,
+    "$2$1"
+  );
+
+  const clean = DOMPurify.sanitize(htmlWithCaptionInTable).replaceAll(
+    />[^<>]*<\/math>/g,
+    "></math>"
+  );
   return clean;
 }
