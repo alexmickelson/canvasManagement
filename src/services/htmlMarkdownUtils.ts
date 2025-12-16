@@ -47,6 +47,20 @@ marked.use(
 
 marked.use({ extensions: [mermaidExtension] });
 
+// We use a custom renderer instead of a regex replace because regex is too aggressive.
+// It would add scope="col" to raw HTML tables (which we want to leave alone).
+// The renderer only applies to markdown tables.
+marked.use({
+  renderer: {
+    tablecell({ text, header, align }) {
+      const type = header ? "th" : "td";
+      const alignAttr = align ? ` align="${align}"` : "";
+      const scopeAttr = header ? ' scope="col"' : "";
+      return `<${type}${scopeAttr}${alignAttr}>${text}</${type}>\n`;
+    },
+  },
+});
+
 export function extractImageSources(htmlString: string) {
   const srcUrls = [];
   const regex = /<img[^>]+src=["']?([^"'>]+)["']?/g;

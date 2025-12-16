@@ -34,4 +34,53 @@ describe('markdownToHtmlNoImages', () => {
     const html = markdownToHtmlNoImages(markdown);
     expect(html).toMatch(/<table>\s*<caption style="color:red">My Table<\/caption>/);
   });
+
+  it('adds scope="col" to table headers', () => {
+    const markdown = `
+| Header 1 | Header 2 |
+| --- | --- |
+| Cell 1 | Cell 2 |`;
+    const html = markdownToHtmlNoImages(markdown);
+    expect(html).toContain('<th scope="col">Header 1</th>');
+    expect(html).toContain('<th scope="col">Header 2</th>');
+  });
+
+  it('does not add an extra empty header row', () => {
+    const markdown = `
+| Header |
+| --- |
+| Cell |`;
+    const html = markdownToHtmlNoImages(markdown);
+    expect(html).not.toContain('<th scope="col"></th>');
+    const thCount = (html.match(/<th scope="col"/g) || []).length;
+    expect(thCount).toBe(1);
+  });
+
+  it('does not add scope="col" to raw HTML tables', () => {
+    const markdown = `
+<table>
+  <thead>
+    <tr>
+      <th>Raw Header</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Raw Cell</td>
+    </tr>
+  </tbody>
+</table>
+
+| MD Header |
+| --- |
+| MD Cell |`;
+    const html = markdownToHtmlNoImages(markdown);
+    
+    // Raw table should be untouched (or at least not have scope="col" added if it wasn't there)
+    expect(html).toContain('<th>Raw Header</th>');
+    expect(html).not.toContain('<th scope="col">Raw Header</th>');
+
+    // Markdown table should have scope="col"
+    expect(html).toContain('<th scope="col">MD Header</th>');
+  });
 });
