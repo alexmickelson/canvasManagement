@@ -62,7 +62,7 @@ describe("navigationLogic", () => {
       { lectures: [{ date: "01/01/2023" }] },
       { lectures: [{ date: "01/02/2023" }, { date: "01/03/2023" }] },
     ];
-    const lectures = getOrderedLectures(weeks as any, courseName);
+    const lectures = getOrderedLectures(weeks, courseName);
     expect(lectures).toHaveLength(3);
     expect(lectures[0].url).toContain(encodeURIComponent("01/01/2023"));
     expect(lectures[0].type).toBe("lecture");
