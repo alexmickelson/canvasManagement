@@ -4,7 +4,6 @@ import {
   FeedbackDelimiters,
   defaultFeedbackDelimiters,
 } from "../quizzes/models/utils/quizFeedbackMarkdownUtils";
-import { string } from "zod";
 
 export const globalSettingsToYaml = (settings: GlobalSettings) => {
   return stringify(settings);
@@ -20,12 +19,12 @@ export const parseGlobalSettingsYaml = (yaml: string): GlobalSettings => {
   }
 };
 
-export function overriddenDefaults<T extends object>(
+export function overriddenDefaults<T>(
   defaults: T,
-  overrides: Record<string, any>,
+  overrides: Record<string, unknown>
 ): T {
   return Object.fromEntries(
-    Object.entries(defaults).map(([k, v]) => [k, overrides[k] ?? v])
+    Object.entries(defaults as Record<string, unknown>).map(([k, v]) => [k, overrides[k] ?? v])
   ) as T;
 }
 
@@ -34,7 +33,7 @@ export const getFeedbackDelimitersFromSettings = (
 ): FeedbackDelimiters => {
   return overriddenDefaults(
     defaultFeedbackDelimiters,
-    settings.options?.feedbackDelims ?? {}
+    settings.options?.feedbackDelims ?? {} as Record<string, unknown>
   );
 };
 
