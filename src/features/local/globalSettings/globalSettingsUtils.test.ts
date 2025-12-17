@@ -36,12 +36,10 @@ describe("getFeedbackDelimitersFromSettings", () => {
   it("returns custom delimiters if options are present", () => {
     const settings: GlobalSettings = {
       courses: [],
-      options: {
-        feedbackDelims: {
-          neutral: ":|",
-          correct: ":)",
-          incorrect: ":(",
-        },
+      feedbackDelims: {
+        neutral: ":|",
+        correct: ":)",
+        incorrect: ":(",
       },
     };
     const expected = {
@@ -55,10 +53,8 @@ describe("getFeedbackDelimitersFromSettings", () => {
   it("returns mixed delimiters if some options are missing", () => {
     const settings: GlobalSettings = {
       courses: [],
-      options: {
-        feedbackDelims: {
-          correct: ":)",
-        },
+      feedbackDelims: {
+        correct: ":)",
       },
     };
     const expected = {

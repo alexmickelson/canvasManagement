@@ -33,7 +33,7 @@ export const getFeedbackDelimitersFromSettings = (
 ): FeedbackDelimiters => {
   return overriddenDefaults(
     defaultFeedbackDelimiters,
-    settings.options?.feedbackDelims ?? {} as Record<string, unknown>
+    settings.feedbackDelims ?? ({} as Record<string, unknown>)
   );
 };
 

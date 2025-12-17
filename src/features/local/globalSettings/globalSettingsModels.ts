@@ -7,7 +7,7 @@ export const zodGlobalSettingsCourse = z.object({
 
 export const zodGlobalSettings = z.object({
   courses: z.array(zodGlobalSettingsCourse),
-  options: z.record(z.any()).optional(),
+  feedbackDelims: z.record(z.string()).optional(),
 });
 
 
