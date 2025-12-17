@@ -9,11 +9,15 @@ import {
   CourseItemType,
   typeToFolder,
 } from "@/features/local/course/courseItemTypes";
-import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
+import {
+  getCoursePathByName,
+  getGlobalSettings,
+} from "../globalSettings/globalSettingsFileStorageService";
 import {
   localPageMarkdownUtils,
 } from "@/features/local/pages/localCoursePageModels";
 import { quizMarkdownUtils } from "../quizzes/models/utils/quizMarkdownUtils";
+import { getFeedbackDelimitersFromSettings } from "../globalSettings/globalSettingsUtils";
 
 
 const getItemFileNames = async ({
@@ -60,9 +64,12 @@ const getItem = async <T extends CourseItemType>({
       name
     ) as CourseItemReturnType<T>;
   } else if (type === "Quiz") {
+    const globalSettings = await getGlobalSettings();
+    const delimiters = getFeedbackDelimitersFromSettings(globalSettings);
     return quizMarkdownUtils.parseMarkdown(
       rawFile,
-      name
+      name,
+      delimiters
     ) as CourseItemReturnType<T>;
   } else if (type === "Page") {
     return localPageMarkdownUtils.parseMarkdown(
