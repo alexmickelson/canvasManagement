@@ -17,6 +17,8 @@ import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
+import { useItemNavigation } from "../../../../hooks/useItemNavigation";
+import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
 
 export default function EditPageButtons({
   moduleName,
@@ -36,6 +38,11 @@ export default function EditPageButtons({
   const deletePageLocal = useDeletePageMutation();
   const modal = useModal();
   const [loading, setLoading] = useState(false);
+  const { previousUrl, nextUrl } = useItemNavigation(
+    "page",
+    pageName,
+    moduleName
+  );
 
   const pageInCanvas = canvasPages?.find((p) => p.title === pageName);
 
@@ -125,6 +132,7 @@ export default function EditPageButtons({
       <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
         Go Back
       </Link>
+      <ItemNavigationButtons previousUrl={previousUrl} nextUrl={nextUrl} />
     </div>
   );
 }

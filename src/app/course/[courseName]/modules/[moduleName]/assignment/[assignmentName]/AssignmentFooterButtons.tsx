@@ -17,6 +17,8 @@ import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useItemNavigation } from "../../../../hooks/useItemNavigation";
+import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
 
 export function AssignmentFooterButtons({
   moduleName,
@@ -42,6 +44,11 @@ export function AssignmentFooterButtons({
   const deleteLocal = useDeleteAssignmentMutation();
   const [isLoading, setIsLoading] = useState(false);
   const modal = useModal();
+  const { previousUrl, nextUrl } = useItemNavigation(
+    "assignment",
+    assignmentName,
+    moduleName
+  );
 
   const assignmentInCanvas = canvasAssignments?.find(
     (a) => a.name === assignmentName
@@ -155,6 +162,7 @@ export function AssignmentFooterButtons({
         <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
           Go Back
         </Link>
+        <ItemNavigationButtons previousUrl={previousUrl} nextUrl={nextUrl} />
       </div>
     </div>
   );
