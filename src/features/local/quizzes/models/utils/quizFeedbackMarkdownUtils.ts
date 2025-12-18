@@ -89,6 +89,8 @@ export const quizFeedbackMarkdownUtils = {
     if (neutralComments) {
       feedbackText += `${delimiters.neutral} ${neutralComments}\n`;
     }
+    // Ensure there's a blank line after feedback block so answers are separated
+    if (feedbackText) feedbackText += "\n";
     return feedbackText;
   },
 };
