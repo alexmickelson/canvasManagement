@@ -9,6 +9,9 @@
   background-color: #030712 !important;
   /* background-color: #101828 !important; */
 }
+.sticky-widget {
+  background-color: #111624 !important;
+}
 .monaco-editor {
   position: absolute !important;
 }
