@@ -1,0 +1,98 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import HomeIcon from "./icons/HomeIcon";
+import { RightSingleChevron } from "./icons/RightSingleChevron";
+
+export const BreadCrumbs = () => {
+  const pathname = usePathname();
+
+  const pathSegments = pathname?.split("/").filter(Boolean) || [];
+  const isCourseRoute = pathSegments[0] === "course";
+  const isOnCoursePage = isCourseRoute && pathSegments.length === 2;
+
+  const courseName =
+    isCourseRoute && !isOnCoursePage && pathSegments[1]
+      ? decodeURIComponent(pathSegments[1])
+      : null;
+
+  const isLectureRoute = isCourseRoute && pathSegments[2] === "lecture";
+  const isOnLecturePage = isLectureRoute && pathSegments.length === 4;
+  const lectureDate =
+    isLectureRoute && !isOnLecturePage && pathSegments[3]
+      ? decodeURIComponent(pathSegments[3])
+      : null;
+
+  const sharedBackgroundClassNames = `
+    group 
+    hover:bg-blue-900/30 
+    rounded-lg 
+    h-full 
+    flex 
+    items-center 
+    transition
+  `;
+  const sharedLinkClassNames = `
+    text-slate-300 
+    transition 
+    group-hover:text-slate-100 
+    rounded-lg 
+    h-full 
+    flex 
+    items-center 
+    px-3
+  `;
+
+  return (
+    <nav className="flex flex-row font-bold text-sm items-center">
+      <span className={sharedBackgroundClassNames}>
+        <Link
+          href="/"
+          shallow={true}
+          className="flex items-center gap-1 rounded-lg h-full "
+        >
+          <span className={sharedLinkClassNames}>
+            <HomeIcon />
+          </span>
+        </Link>
+      </span>
+
+      {courseName && (
+        <>
+          <span className="text-slate-500 cursor-default select-none">
+            <RightSingleChevron />
+          </span>
+          <span className={sharedBackgroundClassNames}>
+            <Link
+              href={`/course/${encodeURIComponent(courseName)}`}
+              shallow={true}
+              className={sharedLinkClassNames}
+            >
+              {courseName}
+            </Link>
+          </span>
+        </>
+      )}
+
+      {isLectureRoute && lectureDate && courseName && (
+        <>
+          <span className="text-slate-500 cursor-default select-none">
+            <RightSingleChevron />
+          </span>
+          <span className={sharedBackgroundClassNames}>
+            <Link
+              href={`/course/${encodeURIComponent(
+                courseName
+              )}/lecture/${encodeURIComponent(lectureDate)}`}
+              shallow={true}
+              className={sharedLinkClassNames}
+            >
+              {lectureDate}
+            </Link>
+          </span>
+        </>
+      )}
+    </nav>
+  );
+};

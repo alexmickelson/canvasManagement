@@ -1,12 +1,6 @@
 courses:
-  - path: ./4850_AdvancedFE/2025-fall-alex/modules/
-    name: Adv Frontend
   - path: ./1420/2025-fall-alex/modules/
     name: "1420"
-  - path: ./1810/2025-fall-alex/modules/
-    name: Web Intro
-  - path: ./1430/2025-fall-alex/modules/
-    name: UX
   - path: ./1425/2025-fall-alex/modules/
     name: "1425"
   - path: ./4850_AdvancedFE/2026-spring-alex/modules
@@ -25,5 +19,3 @@ courses:
     name: distributed-old
   - path: ./3840_Telemetry/2025_spring_alex/modules/
     name: telemetry-old
-  - path: ./3840_Telemetry/2024Spring_alex/modules/
-    name: telemetry-old-old

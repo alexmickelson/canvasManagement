@@ -81,19 +81,19 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
             xmlns="http://www.w3.org/2000/svg"
             onClick={openModal}
           >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
             <g
               id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             ></g>
             <g id="SVGRepo_iconCarrier">
               <path
                 d="M6 12H18M12 6V18"
                 className=" "
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               ></path>
             </g>
           </svg>

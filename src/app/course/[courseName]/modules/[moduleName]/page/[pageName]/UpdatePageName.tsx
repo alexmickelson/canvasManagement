@@ -56,6 +56,17 @@ export function UpdatePageName({
               );
             }}
           >
+            <div
+              className="
+                text-yellow-300 
+                bg-yellow-950/30 
+                border-2 
+                rounded-lg 
+                border-yellow-800 
+                p-1 text-sm mb-2"
+            >
+              Warning: does not rename in Canvas
+            </div>
             <TextInput value={name} setValue={setName} label={"Rename Page"} />
             <button className="w-full my-3">Save New Name</button>
             {isLoading && <Spinner />}
