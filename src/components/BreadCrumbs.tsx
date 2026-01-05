@@ -10,17 +10,15 @@ export const BreadCrumbs = () => {
 
   const pathSegments = pathname?.split("/").filter(Boolean) || [];
   const isCourseRoute = pathSegments[0] === "course";
-  const isOnCoursePage = isCourseRoute && pathSegments.length === 2;
 
   const courseName =
-    isCourseRoute && !isOnCoursePage && pathSegments[1]
+    isCourseRoute && pathSegments[1]
       ? decodeURIComponent(pathSegments[1])
       : null;
 
   const isLectureRoute = isCourseRoute && pathSegments[2] === "lecture";
-  const isOnLecturePage = isLectureRoute && pathSegments.length === 4;
   const lectureDate =
-    isLectureRoute && !isOnLecturePage && pathSegments[3]
+    isLectureRoute && pathSegments[3]
       ? decodeURIComponent(pathSegments[3])
       : null;
 
