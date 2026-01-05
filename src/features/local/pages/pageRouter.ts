@@ -1,11 +1,16 @@
 import publicProcedure from "../../../services/serverFunctions/publicProcedure";
 import { z } from "zod";
 import { router } from "../../../services/serverFunctions/trpcSetup";
-import { LocalCoursePage, localPageMarkdownUtils, zodLocalCoursePage } from "@/features/local/pages/localCoursePageModels";
+import {
+  LocalCoursePage,
+  localPageMarkdownUtils,
+  zodLocalCoursePage,
+} from "@/features/local/pages/localCoursePageModels";
 import { courseItemFileStorageService } from "../course/courseItemFileStorageService";
 import { promises as fs } from "fs";
 import path from "path";
 import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
+import { assertValidFileName } from "@/services/fileNameValidation";
 
 export const pageRouter = router({
   getPage: publicProcedure
@@ -115,31 +120,32 @@ export const pageRouter = router({
 });
 
 export async function updatePageFile({
-    courseName,
+  courseName,
+  moduleName,
+  pageName,
+  page,
+}: {
+  courseName: string;
+  moduleName: string;
+  pageName: string;
+  page: LocalCoursePage;
+}) {
+  assertValidFileName(pageName);
+  const courseDirectory = await getCoursePathByName(courseName);
+  const folder = path.join(courseDirectory, moduleName, "pages");
+  await fs.mkdir(folder, { recursive: true });
+
+  const filePath = path.join(
+    courseDirectory,
     moduleName,
-    pageName,
-    page,
-  }: {
-    courseName: string;
-    moduleName: string;
-    pageName: string;
-    page: LocalCoursePage;
-  }) {
-    const courseDirectory = await getCoursePathByName(courseName);
-    const folder = path.join(courseDirectory, moduleName, "pages");
-    await fs.mkdir(folder, { recursive: true });
+    "pages",
+    pageName + ".md"
+  );
 
-    const filePath = path.join(
-      courseDirectory,
-      moduleName,
-      "pages",
-      pageName + ".md"
-    );
-
-    const pageMarkdown = localPageMarkdownUtils.toMarkdown(page);
-    console.log(`Saving page ${filePath}`);
-    await fs.writeFile(filePath, pageMarkdown);
-  }
+  const pageMarkdown = localPageMarkdownUtils.toMarkdown(page);
+  console.log(`Saving page ${filePath}`);
+  await fs.writeFile(filePath, pageMarkdown);
+}
 async function deletePageFile({
   courseName,
   moduleName,

@@ -10,6 +10,7 @@ import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorage
 import { promises as fs } from "fs";
 import { courseItemFileStorageService } from "../course/courseItemFileStorageService";
 import { assignmentMarkdownSerializer } from "./models/utils/assignmentMarkdownSerializer";
+import { assertValidFileName } from "@/services/fileNameValidation";
 
 export const assignmentRouter = router({
   getAssignment: publicProcedure
@@ -133,16 +134,7 @@ export async function updateOrCreateAssignmentFile({
   assignmentName: string;
   assignment: LocalAssignment;
 }) {
-  const illegalCharacters = ["<", ">", ":", '"', "/", "\\", "|", "?", "*"];
-  const foundIllegalCharacters = illegalCharacters.filter((char) =>
-    assignmentName.includes(char)
-  );
-  if (foundIllegalCharacters.length > 0) {
-    throw new Error(
-      `"${assignmentName}" cannot contain the following characters: ${foundIllegalCharacters.join(
-        " "
-      )}`
-    );
+  assertValidFileName(assignmentName);
   }
 
   const courseDirectory = await getCoursePathByName(courseName);
