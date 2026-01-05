@@ -102,13 +102,13 @@ export default function EditPage({
     <EditLayout
       Header={<EditPageHeader pageName={pageName} moduleName={moduleName} />}
       Body={
-        <div className="columns-2 min-h-0 flex-1">
-          <div className="flex-1 h-full">
+        <div className="flex min-h-0 flex-1 gap-4 overflow-hidden">
+          <div className="flex-1 h-full min-w-0 overflow-hidden">
             <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
           </div>
-          <div className="h-full">
+          <div className="flex-1 h-full min-w-0 flex flex-col overflow-hidden">
             <div className="text-red-300">{error && error}</div>
-            <div className="h-full overflow-y-auto">
+            <div className="flex-1 overflow-y-auto">
               <br />
               <PagePreview page={page} />
             </div>

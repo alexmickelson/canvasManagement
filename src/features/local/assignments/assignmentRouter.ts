@@ -135,7 +135,6 @@ export async function updateOrCreateAssignmentFile({
   assignment: LocalAssignment;
 }) {
   assertValidFileName(assignmentName);
-  }
 
   const courseDirectory = await getCoursePathByName(courseName);
   const folder = path.join(courseDirectory, moduleName, "assignments");
