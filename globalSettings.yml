@@ -4,18 +4,20 @@ courses:
   - path: ./1425/2025-fall-alex/modules/
     name: "1425"
   - path: ./4850_AdvancedFE/2026-spring-alex/modules
-    name: Adv Frontend Spring
+    name: Adv Frontend
   - path: ./1400/2026_spring_alex/modules
     name: "1400"
   - path: ./1405/2026_spring_alex
     name: "1405"
-  - path: ./1810/2026-spring-alex/modules
-    name: Web Intro Spring
   - path: ./3840_Telemetry/2026_spring_alex
-    name: Telem and Ops New
+    name: Telem and Ops
   - path: ./4620_Distributed/2026-spring-alex/modules
     name: Distributed
   - path: ./4620_Distributed/2025Spring/modules/
     name: distributed-old
   - path: ./3840_Telemetry/2025_spring_alex/modules/
     name: telemetry-old
+  - path: ./4850_AdvancedFE/2025-fall-alex/modules/
+    name: adv-frontend-old
+  - path: ./1810/2026-spring-alex/modules/
+    name: Web Intro

@@ -22,6 +22,16 @@ export const BreadCrumbs = () => {
       ? decodeURIComponent(pathSegments[3])
       : null;
 
+  const lectureDateOnly = lectureDate
+    ? (() => {
+        const dateStr = lectureDate.split(" ")[0];
+        const date = new Date(dateStr);
+        const month = date.toLocaleDateString("en-US", { month: "short" });
+        const day = date.getDate();
+        return `${month} ${day}`;
+      })()
+    : null;
+
   const sharedBackgroundClassNames = `
     group 
     hover:bg-blue-900/30 
@@ -86,7 +96,7 @@ export const BreadCrumbs = () => {
               shallow={true}
               className={sharedLinkClassNames}
             >
-              {lectureDate}
+              {lectureDateOnly}
             </Link>
           </span>
         </>
