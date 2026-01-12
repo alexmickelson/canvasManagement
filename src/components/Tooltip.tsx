@@ -21,7 +21,7 @@ export const Tooltip: React.FC<{
         " transition-opacity duration-150 " +
         " border border-slate-700 shadow-[0px_0px_10px_5px] shadow-slate-500/20 " +
         " max-w-sm max-h-64 overflow-hidden " +
-        (visible ? " opacity-100 " : " opacity-0 pointer-events-none ")
+        (visible ? " opacity-100 " : " opacity-0 pointer-events-none hidden ")
       }
       role="tooltip"
     >

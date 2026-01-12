@@ -50,18 +50,14 @@ export default function Modal({
 
       <div
         className={
-          " fixed inset-0 flex items-center justify-center transition-all duration-400 h-screen w-screen " +
-          " bg-black" +
-          (modalControl.isOpen
-            ? " bg-opacity-50  z-50  "
-            : " bg-opacity-0  -z-50  ")
+          modalControl.isOpen
+            ? "transition-all duration-400 fixed inset-0 flex items-center justify-center h-screen bg-black/80 z-50 w-screen"
+            : "hidden h-0 w-0 p-1 -z-50"
         }
         onClick={modalControl.closeModal}
-        // if mouse up here, do not, if mouse down then still do
       >
         <div
           onClick={(e) => {
-            // e.preventDefault();
             e.stopPropagation();
           }}
           className={

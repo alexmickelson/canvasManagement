@@ -20,7 +20,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <head></head>
-      <body className="flex justify-center" suppressHydrationWarning>
+      <body className="flex justify-center h-screen" suppressHydrationWarning>
         <div className="bg-gray-950 h-screen text-slate-300 w-screen sm:p-1">
           <MyToaster />
           <Suspense>
