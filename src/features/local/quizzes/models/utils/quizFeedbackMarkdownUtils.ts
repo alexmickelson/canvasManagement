@@ -1,7 +1,22 @@
+export interface FeedbackDelimiters {
+  correct: string;
+  incorrect: string;
+  neutral: string;
+}
+
+export const defaultFeedbackDelimiters: FeedbackDelimiters = {
+  correct: "+",
+  incorrect: "-",
+  neutral: "...",
+};
+
 type feedbackTypeOptions = "correct" | "incorrect" | "neutral" | "none";
 
 export const quizFeedbackMarkdownUtils = {
-  extractFeedback(lines: string[]): {
+  extractFeedback(
+    lines: string[],
+    delimiters: FeedbackDelimiters = defaultFeedbackDelimiters
+  ): {
     correctComments?: string;
     incorrectComments?: string;
     neutralComments?: string;
@@ -15,20 +30,18 @@ export const quizFeedbackMarkdownUtils = {
 
     const otherLines: string[] = [];
 
-    const feedbackIndicators = {
-      correct: "+",
-      incorrect: "-",
-      neutral: "...",
-    };
+    const feedbackIndicators = delimiters;
 
     let currentFeedbackType: feedbackTypeOptions = "none";
 
     for (const line of lines.map((l) => l)) {
-      const lineFeedbackType: feedbackTypeOptions = line.startsWith("+")
+      const lineFeedbackType: feedbackTypeOptions = line.startsWith(
+        feedbackIndicators.correct
+      )
         ? "correct"
-        : line.startsWith("-")
+        : line.startsWith(feedbackIndicators.incorrect)
         ? "incorrect"
-        : line.startsWith("...")
+        : line.startsWith(feedbackIndicators.neutral)
         ? "neutral"
         : "none";
 
@@ -37,15 +50,12 @@ export const quizFeedbackMarkdownUtils = {
           .replace(feedbackIndicators[currentFeedbackType], "")
           .trim();
         comments[currentFeedbackType].push(lineWithoutIndicator);
-
       } else if (lineFeedbackType !== "none") {
-
         const lineWithoutIndicator = line
           .replace(feedbackIndicators[lineFeedbackType], "")
           .trim();
         currentFeedbackType = lineFeedbackType;
         comments[lineFeedbackType].push(lineWithoutIndicator);
-
       } else {
         otherLines.push(line);
       }
@@ -66,18 +76,21 @@ export const quizFeedbackMarkdownUtils = {
   formatFeedback(
     correctComments?: string,
     incorrectComments?: string,
-    neutralComments?: string
+    neutralComments?: string,
+    delimiters: FeedbackDelimiters = defaultFeedbackDelimiters
   ): string {
     let feedbackText = "";
     if (correctComments) {
-      feedbackText += `+ ${correctComments}\n`;
+      feedbackText += `${delimiters.correct} ${correctComments}\n`;
     }
     if (incorrectComments) {
-      feedbackText += `- ${incorrectComments}\n`;
+      feedbackText += `${delimiters.incorrect} ${incorrectComments}\n`;
     }
     if (neutralComments) {
-      feedbackText += `... ${neutralComments}\n`;
+      feedbackText += `${delimiters.neutral} ${neutralComments}\n`;
     }
+    // Ensure there's a blank line after feedback block so answers are separated
+    if (feedbackText) feedbackText += "\n";
     return feedbackText;
   },
 };

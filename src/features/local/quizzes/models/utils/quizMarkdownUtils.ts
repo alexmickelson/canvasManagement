@@ -4,6 +4,7 @@ import {
 } from "@/features/local/utils/timeUtils";
 import { LocalQuiz } from "../localQuiz";
 import { quizQuestionMarkdownUtils } from "./quizQuestionMarkdownUtils";
+import { FeedbackDelimiters } from "./quizFeedbackMarkdownUtils";
 
 const extractLabelValue = (input: string, label: string): string => {
   const pattern = new RegExp(`${label}: (.*?)\n`);
@@ -103,7 +104,7 @@ const getQuizWithOnlySettings = (settings: string, name: string): LocalQuiz => {
 };
 
 export const quizMarkdownUtils = {
-  toMarkdown(quiz: LocalQuiz): string {
+  toMarkdown(quiz: LocalQuiz, delimiters?: FeedbackDelimiters): string {
     if (!quiz) {
       throw Error(`quiz was undefined, cannot parse markdown`);
     }
@@ -115,7 +116,7 @@ export const quizMarkdownUtils = {
       throw Error(`quiz ${quiz.name} is probably not a quiz`);
     }
     const questionMarkdownArray = quiz.questions.map((q) =>
-      quizQuestionMarkdownUtils.toMarkdown(q)
+      quizQuestionMarkdownUtils.toMarkdown(q, delimiters)
     );
     const questionDelimiter = "\n\n---\n\n";
     const questionMarkdown = questionMarkdownArray.join(questionDelimiter);
@@ -133,7 +134,11 @@ Description: ${quiz.description}
 ${questionMarkdown}`;
   },
 
-  parseMarkdown(input: string, name: string): LocalQuiz {
+  parseMarkdown(
+    input: string,
+    name: string,
+    delimiters?: FeedbackDelimiters
+  ): LocalQuiz {
     const splitInput = input.split("---\n");
     const settings = splitInput[0];
     const quizWithoutQuestions = getQuizWithOnlySettings(settings, name);
@@ -141,7 +146,7 @@ ${questionMarkdown}`;
     const rawQuestions = splitInput.slice(1);
     const questions = rawQuestions
       .filter((str) => str.trim().length > 0)
-      .map((q, i) => quizQuestionMarkdownUtils.parseMarkdown(q, i));
+      .map((q, i) => quizQuestionMarkdownUtils.parseMarkdown(q, i, delimiters));
 
     return {
       ...quizWithoutQuestions,

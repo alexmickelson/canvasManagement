@@ -1,5 +1,8 @@
 import { LocalQuizQuestion, QuestionType } from "../localQuizQuestion";
-import { quizFeedbackMarkdownUtils } from "./quizFeedbackMarkdownUtils";
+import {
+  quizFeedbackMarkdownUtils,
+  FeedbackDelimiters,
+} from "./quizFeedbackMarkdownUtils";
 import { quizQuestionAnswerMarkdownUtils } from "./quizQuestionAnswerMarkdownUtils";
 
 const splitLinesAndPoints = (input: string[]) => {
@@ -58,7 +61,10 @@ const removeQuestionTypeFromDescriptionLines = (
 };
 
 export const quizQuestionMarkdownUtils = {
-  toMarkdown(question: LocalQuizQuestion): string {
+  toMarkdown(
+    question: LocalQuizQuestion,
+    delimiters?: FeedbackDelimiters
+  ): string {
     const answerArray = question.answers.map((a, i) =>
       quizQuestionAnswerMarkdownUtils.getAnswerMarkdown(question, a, i)
     );
@@ -72,7 +78,8 @@ export const quizQuestionMarkdownUtils = {
     const feedbackText = quizFeedbackMarkdownUtils.formatFeedback(
       question.correctComments,
       question.incorrectComments,
-      question.neutralComments
+      question.neutralComments,
+      delimiters
     );
 
     const answersText = answerArray.join("\n");
@@ -87,7 +94,11 @@ export const quizQuestionMarkdownUtils = {
     return `Points: ${question.points}\n${question.text}\n${feedbackText}${answersText}${distractorText}${questionTypeIndicator}`;
   },
 
-  parseMarkdown(input: string, questionIndex: number): LocalQuizQuestion {
+  parseMarkdown(
+    input: string,
+    questionIndex: number,
+    delimiters?: FeedbackDelimiters
+  ): LocalQuizQuestion {
     const { points, lines } = splitLinesAndPoints(input.trim().split("\n"));
 
     const linesWithoutAnswers = getLinesBeforeAnswerLines(lines);
@@ -107,7 +118,10 @@ export const quizQuestionMarkdownUtils = {
       incorrectComments,
       neutralComments,
       otherLines: descriptionLines,
-    } = quizFeedbackMarkdownUtils.extractFeedback(linesWithoutAnswersAndTypes);
+    } = quizFeedbackMarkdownUtils.extractFeedback(
+      linesWithoutAnswersAndTypes,
+      delimiters
+    );
 
     const { answers, distractors } = quizQuestionAnswerMarkdownUtils.getAnswers(
       lines,

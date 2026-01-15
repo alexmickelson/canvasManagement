@@ -15,6 +15,9 @@ import { useAuthoritativeUpdates } from "../../../../utils/useAuthoritativeUpdat
 import { extractLabelValue } from "@/features/local/assignments/models/utils/markdownUtils";
 import EditQuizHeader from "./EditQuizHeader";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { useGlobalSettingsQuery } from "@/features/local/globalSettings/globalSettingsHooks";
+import { getFeedbackDelimitersFromSettings } from "@/features/local/globalSettings/globalSettingsUtils";
+import type { GlobalSettings } from "@/features/local/globalSettings/globalSettingsModels";
 import { EditLayout } from "@/components/EditLayout";
 import { quizMarkdownUtils } from "@/features/local/quizzes/models/utils/quizMarkdownUtils";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
@@ -111,10 +114,15 @@ export default function EditQuiz({
     isFetching,
   } = useQuizQuery(moduleName, quizName);
   const updateQuizMutation = useUpdateQuizMutation();
+  const { data: globalSettings } = useGlobalSettingsQuery();
+  const feedbackDelimiters = getFeedbackDelimitersFromSettings(
+    (globalSettings ?? ({} as GlobalSettings)) as GlobalSettings
+  );
+
   const { clientIsAuthoritative, text, textUpdate, monacoKey } =
     useAuthoritativeUpdates({
       serverUpdatedAt: serverDataUpdatedAt,
-      startingText: quizMarkdownUtils.toMarkdown(quiz),
+      startingText: quizMarkdownUtils.toMarkdown(quiz, feedbackDelimiters),
     });
 
   const [error, setError] = useState("");
@@ -130,13 +138,18 @@ export default function EditQuiz({
       try {
         const name = extractLabelValue(text, "Name");
         if (
-          quizMarkdownUtils.toMarkdown(quiz) !==
+          quizMarkdownUtils.toMarkdown(quiz, feedbackDelimiters) !==
           quizMarkdownUtils.toMarkdown(
-            quizMarkdownUtils.parseMarkdown(text, name)
+            quizMarkdownUtils.parseMarkdown(text, name, feedbackDelimiters),
+            feedbackDelimiters
           )
         ) {
           if (clientIsAuthoritative) {
-            const updatedQuiz = quizMarkdownUtils.parseMarkdown(text, quizName);
+            const updatedQuiz = quizMarkdownUtils.parseMarkdown(
+              text,
+              quizName,
+              feedbackDelimiters
+            );
             await updateQuizMutation.mutateAsync({
               quiz: updatedQuiz,
               moduleName,

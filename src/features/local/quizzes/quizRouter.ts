@@ -5,11 +5,15 @@ import {
   LocalQuiz,
   zodLocalQuiz,
 } from "@/features/local/quizzes/models/localQuiz";
-import { getCoursePathByName } from "../globalSettings/globalSettingsFileStorageService";
+import {
+  getCoursePathByName,
+  getGlobalSettings,
+} from "../globalSettings/globalSettingsFileStorageService";
 import path from "path";
 import { promises as fs } from "fs";
 import { quizMarkdownUtils } from "./models/utils/quizMarkdownUtils";
 import { courseItemFileStorageService } from "../course/courseItemFileStorageService";
+import { getFeedbackDelimitersFromSettings } from "../globalSettings/globalSettingsUtils";
 import { assertValidFileName } from "@/services/fileNameValidation";
 
 export const quizRouter = router({
@@ -161,7 +165,9 @@ export async function updateQuizFile({
     quizName + ".md"
   );
 
-  const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz);
+  const globalSettings = await getGlobalSettings();
+  const delimiters = getFeedbackDelimitersFromSettings(globalSettings);
+  const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz, delimiters);
   console.log(`Saving quiz ${filePath}`);
   await fs.writeFile(filePath, quizMarkdown);
 }
