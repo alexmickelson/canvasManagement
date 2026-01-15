@@ -2,6 +2,7 @@
 import { marked } from "marked";
 import DOMPurify from "isomorphic-dompurify";
 import markedKatex from "marked-katex-extension";
+import pako from "pako";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 
 const mermaidExtension = {
@@ -22,9 +23,17 @@ const mermaidExtension = {
     }
   },
   renderer(token: { text: string }) {
-    const base64 = btoa(token.text);
-    const url = `https://mermaid.ink/img/${base64}?type=svg`;
-    console.log(token.text, url);
+    const data = JSON.stringify({
+      code: token.text,
+      mermaid: { theme: "default" },
+    });
+    const compressed = pako.deflate(data, { level: 9 });
+    const binaryString = Array.from(compressed, (byte) =>
+      String.fromCharCode(byte)
+    ).join("");
+    const base64 = btoa(binaryString).replace(/\+/g, "-").replace(/\//g, "_");
+    const url = `https://mermaid.ink/img/pako:${base64}?type=svg`;
+    // console.log(token.text, url);
     return `<img src="${url}" alt="Mermaid diagram" />`;
   },
 };
@@ -63,6 +72,8 @@ export function convertImagesToCanvasImages(
   }, {} as { [key: string]: string });
 
   for (const imageSrc of imageSources) {
+    if (imageSrc.startsWith("http://") || imageSrc.startsWith("https://"))
+      continue;
     const destinationUrl = imageLookup[imageSrc];
     if (typeof destinationUrl === "undefined") {
       console.log(
