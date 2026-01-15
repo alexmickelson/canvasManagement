@@ -15,6 +15,8 @@ import {
 import { getCourseUrl } from "@/services/urlUtils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useItemNavigation } from "../../../../hooks/useItemNavigation";
+import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
 
 export function QuizButtons({
   moduleName,
@@ -35,6 +37,11 @@ export function QuizButtons({
   const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
   const deleteLocal = useDeleteQuizMutation();
   const modal = useModal();
+  const { previousUrl, nextUrl } = useItemNavigation(
+    "quiz",
+    quizName,
+    moduleName
+  );
 
   const quizInCanvas = canvasQuizzes?.find((c) => c.title === quizName);
 
@@ -111,6 +118,7 @@ export function QuizButtons({
         <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
           Go Back
         </Link>
+        <ItemNavigationButtons previousUrl={previousUrl} nextUrl={nextUrl} />
       </div>
     </div>
   );

@@ -24,6 +24,7 @@ import { useCourseListInTermQuery } from "@/features/canvas/hooks/canvasCourseHo
 import { useCanvasTermsQuery } from "@/features/canvas/hooks/canvasHooks";
 import { useDirectoryExistsQuery } from "@/features/local/utils/storageDirectoryHooks";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const sampleCompose = `services:
   canvas_manager:
     image: alexmickelson/canvas_management:2 # pull this image regularly

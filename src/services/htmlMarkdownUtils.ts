@@ -52,14 +52,17 @@ marked.use({ extensions: [mermaidExtension] });
 // The renderer only applies to markdown tables.
 marked.use({
   renderer: {
-    tablecell({ text, header, align }) {
+    tablecell(token) {
+      const content = this.parser.parseInline(token.tokens);
+      const { header, align } = token;
       const type = header ? "th" : "td";
       const alignAttr = align ? ` align="${align}"` : "";
       const scopeAttr = header ? ' scope="col"' : "";
-      return `<${type}${scopeAttr}${alignAttr}>${text}</${type}>\n`;
+      return `<${type}${scopeAttr}${alignAttr}>${content}</${type}>\n`;
     },
   },
 });
+
 
 export function extractImageSources(htmlString: string) {
   const srcUrls = [];

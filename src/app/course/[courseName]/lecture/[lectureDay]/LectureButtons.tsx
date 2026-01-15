@@ -9,6 +9,8 @@ import { useCourseContext } from "../../context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useDeleteLectureMutation } from "@/features/local/lectures/lectureHooks";
 import Link from "next/link";
+import { useItemNavigation } from "../../hooks/useItemNavigation";
+import ItemNavigationButtons from "../../components/ItemNavigationButtons";
 
 export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
@@ -17,6 +19,7 @@ export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const modal = useModal();
   const deleteLecture = useDeleteLectureMutation();
+  const { previousUrl, nextUrl } = useItemNavigation("lecture", lectureDay);
 
   return (
     <div className="p-5 flex flex-row justify-end gap-3">
@@ -61,6 +64,7 @@ export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
       <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
         Go Back
       </Link>
+      <ItemNavigationButtons previousUrl={previousUrl} nextUrl={nextUrl} />
       {isLoading && <Spinner />}
     </div>
   );
