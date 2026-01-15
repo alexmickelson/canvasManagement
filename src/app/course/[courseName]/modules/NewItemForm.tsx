@@ -17,6 +17,7 @@ import {
   getDateFromStringOrThrow,
 } from "@/features/local/utils/timeUtils";
 import { useCreateAssignmentMutation } from "@/features/local/assignments/assignmentHooks";
+import { validateFileName } from "@/services/fileNameValidation";
 
 export default function NewItemForm({
   moduleName: defaultModuleName,
@@ -40,20 +41,6 @@ export default function NewItemForm({
 
   const [name, setName] = useState("");
   const [nameError, setNameError] = useState("");
-
-  const validateFileName = (fileName: string): string => {
-    // Check for invalid file system characters
-    const invalidChars = [":", "/", "\\", "*", '"', "<", ">", "|"];
-
-    for (const char of fileName) {
-      if (invalidChars.includes(char)) {
-        return `Name contains invalid character: "${char}". Please avoid: ${invalidChars.join(
-          " "
-        )}`;
-      }
-    }
-    return "";
-  };
 
   const handleNameChange = (newName: string) => {
     setName(newName);

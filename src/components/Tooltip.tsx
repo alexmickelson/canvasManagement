@@ -18,10 +18,10 @@ export const Tooltip: React.FC<{
         " absolute -translate-x-1/2 " +
         " bg-gray-900 text-slate-200 text-sm " +
         " rounded-md py-1 px-2 " +
-        " transition-all duration-400 " +
+        " transition-opacity duration-150 " +
         " border border-slate-700 shadow-[0px_0px_10px_5px] shadow-slate-500/20 " +
         " max-w-sm max-h-64 overflow-hidden " +
-        (visible ? "  " : " hidden -z-50 ")
+        (visible ? " opacity-100 " : " opacity-0 pointer-events-none hidden ")
       }
       role="tooltip"
     >

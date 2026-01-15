@@ -1,4 +1,5 @@
 "use client";
+import { BreadCrumbs } from "@/components/BreadCrumbs";
 import { Spinner } from "@/components/Spinner";
 import {
   useCanvasAssignmentsQuery,
@@ -19,7 +20,6 @@ import {
 } from "@/features/canvas/hooks/canvasQuizHooks";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
 
 export function CourseNavigation() {
   const { data: settings } = useLocalCourseSettingsQuery();
@@ -33,9 +33,8 @@ export function CourseNavigation() {
 
   return (
     <div className="pb-1 flex flex-row gap-3">
-      <Link href={"/"} className="btn" shallow={true}>
-        Back to Course List
-      </Link>
+      <BreadCrumbs />
+  
       <a
         href={`https://snow.instructure.com/courses/${settings.canvasId}`}
         className="btn"

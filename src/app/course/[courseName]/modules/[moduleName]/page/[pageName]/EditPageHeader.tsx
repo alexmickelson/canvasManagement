@@ -1,7 +1,6 @@
-import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
-import { getCourseUrl } from "@/services/urlUtils";
-import Link from "next/link";
 import { UpdatePageName } from "./UpdatePageName";
+import { BreadCrumbs } from "@/components/BreadCrumbs";
+import { RightSingleChevron } from "@/components/icons/RightSingleChevron";
 
 export default function EditPageHeader({
   moduleName,
@@ -10,19 +9,18 @@ export default function EditPageHeader({
   pageName: string;
   moduleName: string;
 }) {
-  const { courseName } = useCourseContext();
   return (
-    <div className="py-1 flex flex-row justify-start gap-3">
-      <Link
-        className="btn"
-        href={getCourseUrl(courseName)}
-        shallow={true}
-        prefetch={true}
-      >
-        {courseName}
-      </Link>
-      <UpdatePageName pageName={pageName} moduleName={moduleName} />
-      <div className="my-auto">{pageName}</div>
+    <div className="py-1 flex flex-row justify-between">
+      <div className="flex flex-row">
+        <BreadCrumbs />
+        <span className="text-slate-500 cursor-default select-none my-auto">
+          <RightSingleChevron />
+        </span>
+        <div className="my-auto px-3">{pageName}</div>
+      </div>
+      <div className="px-1">
+        <UpdatePageName pageName={pageName} moduleName={moduleName} />
+      </div>
     </div>
   );
 }

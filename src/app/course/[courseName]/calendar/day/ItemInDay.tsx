@@ -1,12 +1,47 @@
 import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import Link from "next/link";
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode } from "react";
 import { useCourseContext } from "../../context/courseContext";
+import { useTooltip } from "@/components/useTooltip";
+import MarkdownDisplay from "@/components/MarkdownDisplay";
 import { DraggableItem } from "../../context/drag/draggingContext";
 import ClientOnly from "@/components/ClientOnly";
 import { useDragStyleContext } from "../../context/drag/dragStyleContext";
 import { Tooltip } from "../../../../../components/Tooltip";
+
+function getPreviewContent(
+  type: "assignment" | "page" | "quiz",
+  item: IModuleItem
+): ReactNode {
+  if (type === "assignment" && "description" in item) {
+    const assignment = item as {
+      description: string;
+      githubClassroomAssignmentShareLink?: string;
+    };
+    return (
+      <MarkdownDisplay
+        markdown={assignment.description}
+        replaceText={[
+          {
+            source: "insert_github_classroom_url",
+            destination: assignment.githubClassroomAssignmentShareLink || "",
+          },
+        ]}
+      />
+    );
+  } else if (type === "page" && "text" in item) {
+    return <MarkdownDisplay markdown={item.text as string} />;
+  } else if (type === "quiz" && "questions" in item) {
+    const quiz = item as { questions: { text: string }[] };
+    return quiz.questions.map((q, i: number) => (
+      <div key={i} className="">
+        <MarkdownDisplay markdown={q.text as string} />
+      </div>
+    ));
+  }
+  return null;
+}
 
 export function ItemInDay({
   type,
@@ -23,8 +58,8 @@ export function ItemInDay({
 }) {
   const { courseName } = useCourseContext();
   const { setIsDragging } = useDragStyleContext();
-  const linkRef = useRef<HTMLAnchorElement>(null);
-  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const { visible, targetRef, showTooltip, hideTooltip } = useTooltip(500);
+
   return (
     <div className={" relative group "}>
       <Link
@@ -52,18 +87,26 @@ export function ItemInDay({
           );
           setIsDragging(true);
         }}
-        onMouseEnter={() => setTooltipVisible(true)}
-        onMouseLeave={() => setTooltipVisible(false)}
-        ref={linkRef}
+        onMouseEnter={showTooltip}
+        onMouseLeave={hideTooltip}
+        ref={targetRef}
       >
         {item.name}
       </Link>
       <ClientOnly>
-        <Tooltip
-          message={message}
-          targetRef={linkRef}
-          visible={tooltipVisible && status === "incomplete"}
-        />
+        {status === "published" ? (
+          getPreviewContent(type, item) && (
+            <Tooltip
+              message={
+                <div className="max-w-md">{getPreviewContent(type, item)}</div>
+              }
+              targetRef={targetRef}
+              visible={visible}
+            />
+          )
+        ) : (
+          <Tooltip message={message} targetRef={targetRef} visible={visible} />
+        )}
       </ClientOnly>
     </div>
   );

@@ -10,12 +10,15 @@ const collapseThreshold = 1400;
 
 export default function CollapsableSidebar() {
   const [windowCollapseRecommended, setWindowCollapseRecommended] =
-    useState(window.innerWidth <= collapseThreshold);
+    useState(false);
   const [userCollapsed, setUserCollapsed] = useState<
     "unset" | "collapsed" | "uncollapsed"
   >("unset");
 
   useEffect(() => {
+    // Initialize on mount
+    setWindowCollapseRecommended(window.innerWidth <= collapseThreshold);
+
     function handleResize() {
       if (window.innerWidth <= collapseThreshold) {
         setWindowCollapseRecommended(true);

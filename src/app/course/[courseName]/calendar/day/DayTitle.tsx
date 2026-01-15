@@ -9,7 +9,7 @@ import { getLectureForDay } from "@/features/local/utils/lectureUtils";
 import { useLecturesSuspenseQuery } from "@/features/local/lectures/lectureHooks";
 import ClientOnly from "@/components/ClientOnly";
 import { Tooltip } from "@/components/Tooltip";
-import { useRef, useState } from "react";
+import { useTooltip } from "@/components/useTooltip";
 
 export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { courseName } = useCourseContext();
@@ -17,8 +17,7 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
   const { setIsDragging } = useDragStyleContext();
   const todaysLecture = getLectureForDay(weeks, dayAsDate);
   const modal = useModal();
-  const linkRef = useRef<HTMLAnchorElement>(null);
-  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const { visible, targetRef, showTooltip, hideTooltip } = useTooltip();
 
   const lectureName = todaysLecture && (todaysLecture.name || "lecture");
 
@@ -44,9 +43,9 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
             setIsDragging(true);
           }
         }}
-        ref={linkRef}
-        onMouseEnter={() => setTooltipVisible(true)}
-        onMouseLeave={() => setTooltipVisible(false)}
+        ref={targetRef}
+        onMouseEnter={showTooltip}
+        onMouseLeave={hideTooltip}
       >
         {dayAsDate.getDate()} {lectureName}
       </Link>
@@ -65,8 +64,8 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
                 )}
               </div>
             }
-            targetRef={linkRef}
-            visible={tooltipVisible}
+            targetRef={targetRef}
+            visible={visible}
           />
         )}
       </ClientOnly>
@@ -81,19 +80,19 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
             xmlns="http://www.w3.org/2000/svg"
             onClick={openModal}
           >
-            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
             <g
               id="SVGRepo_tracerCarrier"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeLinecap="round"
+              strokeLinejoin="round"
             ></g>
             <g id="SVGRepo_iconCarrier">
               <path
                 d="M6 12H18M12 6V18"
                 className=" "
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="3"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               ></path>
             </g>
           </svg>

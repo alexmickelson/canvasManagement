@@ -40,8 +40,7 @@ export function UpdateAssignmentName({
               if (name === assignmentName) closeModal();
 
               setIsLoading(true); // page refresh resets flag
-              try{
-
+              try {
                 await updateAssignment.mutateAsync({
                   assignment: assignment,
                   moduleName,
@@ -50,17 +49,28 @@ export function UpdateAssignmentName({
                   previousAssignmentName: assignmentName,
                   courseName,
                 });
-                
+
                 // update url (will trigger reload...)
                 router.replace(
                   getModuleItemUrl(courseName, moduleName, "assignment", name),
                   {}
                 );
-              }finally {
+              } finally {
                 setIsLoading(false);
               }
             }}
           >
+            <div
+              className="
+                text-yellow-300 
+                bg-yellow-950/30 
+                border-2 
+                rounded-lg 
+                border-yellow-800 
+                p-1 text-sm mb-2"
+            >
+              Warning: does not rename in Canvas
+            </div>
             <TextInput
               value={name}
               setValue={setName}

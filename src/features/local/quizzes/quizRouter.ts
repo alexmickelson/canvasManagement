@@ -14,6 +14,7 @@ import { promises as fs } from "fs";
 import { quizMarkdownUtils } from "./models/utils/quizMarkdownUtils";
 import { courseItemFileStorageService } from "../course/courseItemFileStorageService";
 import { getFeedbackDelimitersFromSettings } from "../globalSettings/globalSettingsUtils";
+import { assertValidFileName } from "@/services/fileNameValidation";
 
 export const quizRouter = router({
   getQuiz: publicProcedure
@@ -153,6 +154,7 @@ export async function updateQuizFile({
   quizName: string;
   quiz: LocalQuiz;
 }) {
+  assertValidFileName(quizName);
   const courseDirectory = await getCoursePathByName(courseName);
   const folder = path.join(courseDirectory, moduleName, "quizzes");
   await fs.mkdir(folder, { recursive: true });
