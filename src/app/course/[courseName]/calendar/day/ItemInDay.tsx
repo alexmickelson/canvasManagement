@@ -1,7 +1,8 @@
+"use client";
 import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import { useCourseContext } from "../../context/courseContext";
 import { useTooltip } from "@/components/useTooltip";
 import MarkdownDisplay from "@/components/MarkdownDisplay";
@@ -9,6 +10,31 @@ import { DraggableItem } from "../../context/drag/draggingContext";
 import ClientOnly from "@/components/ClientOnly";
 import { useDragStyleContext } from "../../context/drag/dragStyleContext";
 import { Tooltip } from "../../../../../components/Tooltip";
+import { ContextMenu, ContextMenuItem } from "@/components/ContextMenu";
+import {
+  useCanvasAssignmentsQuery,
+  useUpdateAssignmentInCanvasMutation,
+  useDeleteAssignmentFromCanvasMutation,
+} from "@/features/canvas/hooks/canvasAssignmentHooks";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
+import {
+  useDeleteAssignmentMutation,
+  useCreateAssignmentMutation,
+} from "@/features/local/assignments/assignmentHooks";
+import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
+import { useCalendarItemsContext } from "../../context/calendarItemsContext";
+
+function getDuplicateName(name: string, existingNames: string[]): string {
+  const match = name.match(/^(.*)\s+(\d+)$/);
+  const baseName = match ? match[1] : name;
+  const startNum = match ? parseInt(match[2]) + 1 : 2;
+  let num = startNum;
+  while (existingNames.includes(`${baseName} ${num}`)) {
+    num++;
+  }
+  return `${baseName} ${num}`;
+}
 
 function getPreviewContent(
   type: "assignment" | "page" | "quiz",
@@ -60,6 +86,114 @@ export function ItemInDay({
   const { setIsDragging } = useDragStyleContext();
   const { visible, targetRef, showTooltip, hideTooltip } = useTooltip(500);
 
+  const [contextMenuPos, setContextMenuPos] = useState<{
+    x: number;
+    y: number;
+  } | null>(null);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+
+  const { data: canvasAssignments } = useCanvasAssignmentsQuery();
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const updateInCanvas = useUpdateAssignmentInCanvasMutation();
+  const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
+  const deleteLocal = useDeleteAssignmentMutation();
+  const createAssignment = useCreateAssignmentMutation();
+  const calendarItems = useCalendarItemsContext();
+
+  const assignmentInCanvas =
+    type === "assignment"
+      ? canvasAssignments?.find((a) => a.name === item.name)
+      : undefined;
+
+  const handleContextMenu = (e: React.MouseEvent) => {
+    if (type !== "assignment") return;
+    e.preventDefault();
+    e.stopPropagation();
+    setContextMenuPos({ x: e.clientX, y: e.clientY });
+    setConfirmingDelete(false);
+  };
+
+  const closeContextMenu = useCallback(() => {
+    setContextMenuPos(null);
+    setConfirmingDelete(false);
+  }, []);
+
+  const handleDuplicate = useCallback(() => {
+    const assignment = item as LocalAssignment;
+    const existingNames = Object.values(calendarItems).flatMap((modules) =>
+      (modules[moduleName]?.assignments ?? []).map((a) => a.name)
+    );
+    const newName = getDuplicateName(item.name, existingNames);
+    createAssignment.mutate({
+      courseName,
+      moduleName,
+      assignmentName: newName,
+      assignment: { ...assignment, name: newName },
+    });
+    closeContextMenu();
+  }, [
+    item,
+    calendarItems,
+    moduleName,
+    createAssignment,
+    courseName,
+    closeContextMenu,
+  ]);
+
+  const contextMenuItems: ContextMenuItem[] = confirmingDelete
+    ? [
+        { label: "Delete from disk?", disabled: true },
+        {
+          label: "Yes, delete",
+          variant: "danger",
+          onClick: () => {
+            deleteLocal.mutate({ courseName, moduleName, assignmentName: item.name });
+            closeContextMenu();
+          },
+        },
+        { label: "Cancel", onClick: closeContextMenu },
+      ]
+    : [
+        ...(assignmentInCanvas
+          ? [
+              {
+                label: "View in Canvas",
+                href: `${baseCanvasUrl}/courses/${settings.canvasId}/assignments/${assignmentInCanvas.id}`,
+              },
+              {
+                label: "Update in Canvas",
+                onClick: () => {
+                  updateInCanvas.mutate({
+                    canvasAssignmentId: assignmentInCanvas.id,
+                    assignment: item as LocalAssignment,
+                  });
+                  closeContextMenu();
+                },
+                disabled: updateInCanvas.isPending,
+              },
+              {
+                label: "Delete from Canvas",
+                variant: "danger" as const,
+                onClick: () => {
+                  deleteFromCanvas.mutate({
+                    canvasAssignmentId: assignmentInCanvas.id,
+                    assignmentName: item.name,
+                  });
+                  closeContextMenu();
+                },
+                disabled: deleteFromCanvas.isPending,
+              },
+            ]
+          : [
+              {
+                label: "Delete from Disk",
+                variant: "danger" as const,
+                onClick: () => setConfirmingDelete(true),
+              },
+            ]),
+        { label: "Duplicate", onClick: handleDuplicate },
+      ];
+
   return (
     <div className={" relative group "}>
       <Link
@@ -89,6 +223,7 @@ export function ItemInDay({
         }}
         onMouseEnter={showTooltip}
         onMouseLeave={hideTooltip}
+        onContextMenu={handleContextMenu}
         ref={targetRef}
       >
         {item.name}
@@ -106,6 +241,14 @@ export function ItemInDay({
           )
         ) : (
           <Tooltip message={message} targetRef={targetRef} visible={visible} />
+        )}
+        {contextMenuPos && type === "assignment" && (
+          <ContextMenu
+            x={contextMenuPos.x}
+            y={contextMenuPos.y}
+            items={contextMenuItems}
+            onClose={closeContextMenu}
+          />
         )}
       </ClientOnly>
     </div>
