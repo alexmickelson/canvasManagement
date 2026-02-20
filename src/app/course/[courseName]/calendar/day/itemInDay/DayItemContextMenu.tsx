@@ -115,9 +115,12 @@ export const AssignmentDayItemContextMenu: FC<{
   const dangerClasses =
     "bg-rose-900/30 hover:bg-rose-950 disabled:opacity-50 text-rose-50";
   return (
-    <Modal modalControl={modalControl}>
+    <Modal modalControl={modalControl} backgroundCoverColor="bg-black/30">
       {() => (
         <>
+        <div className="text-center p-1 text-slate-200">
+          {item.name}
+        </div>
           {confirmingDelete ? (
             <>
               <button
@@ -147,7 +150,7 @@ export const AssignmentDayItemContextMenu: FC<{
                     href={canvasUrl}
                     target="_blank"
                     rel="noreferrer"
-                    className="unstyled block px-4 py-2 hover:bg-slate-700 cursor-pointer"
+                    className="unstyled font-bold block px-3 py-1 hover:bg-slate-700 cursor-pointer"
                     onClick={handleClose}
                   >
                     View in Canvas

@@ -42,6 +42,7 @@ export default function Modal({
   modalWidth = "w-1/3",
   modalControl,
   buttonComponent,
+  backgroundCoverColor = "bg-black/80",
 }: {
   children: (props: { closeModal: () => void }) => ReactNode;
   buttonText?: string;
@@ -49,6 +50,7 @@ export default function Modal({
   modalWidth?: string;
   modalControl: ModalControl;
   buttonComponent?: (props: { openModal: () => void }) => ReactNode;
+  backgroundCoverColor?: string;
 }) {
   return (
     <>
@@ -66,7 +68,7 @@ export default function Modal({
       <div
         className={
           modalControl.isOpen
-            ? `transition-all duration-400 fixed inset-0 ${modalControl.position ? "" : "flex items-center justify-center"} h-screen bg-black/80 z-50 w-screen`
+            ? `transition-all duration-400 fixed inset-0 ${modalControl.position ? "" : "flex items-center justify-center"} h-screen ${backgroundCoverColor} z-50 w-screen`
             : "hidden h-0 w-0 p-1 -z-50"
         }
         onClick={modalControl.closeModal}
