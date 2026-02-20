@@ -5,7 +5,7 @@ import {
 } from "@/features/local/utils/timeUtils";
 import { useDraggingContext } from "../../context/drag/draggingContext";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
-import { ItemInDay } from "./ItemInDay";
+import { ItemInDay } from "./itemInDay/ItemInDay";
 import { useTodaysItems } from "./useTodaysItems";
 import { DayTitle } from "./DayTitle";
 import { getDayOfWeek } from "@/features/local/course/localCourseSettings";
@@ -13,7 +13,7 @@ import { getDayOfWeek } from "@/features/local/course/localCourseSettings";
 export default function Day({ day, month }: { day: string; month: number }) {
   const dayAsDate = getDateFromStringOrThrow(
     day,
-    "calculating same month in day"
+    "calculating same month in day",
   );
   const isToday =
     getDateOnlyMarkdownString(new Date()) ===
@@ -31,8 +31,8 @@ export default function Day({ day, month }: { day: string; month: number }) {
     (holidaysHappeningToday, holiday) => {
       const holidayDates = holiday.days.map((d) =>
         getDateOnlyMarkdownString(
-          getDateFromStringOrThrow(d, "holiday date in day component")
-        )
+          getDateFromStringOrThrow(d, "holiday date in day component"),
+        ),
       );
       const today = getDateOnlyMarkdownString(dayAsDate);
 
@@ -40,16 +40,16 @@ export default function Day({ day, month }: { day: string; month: number }) {
         return [...holidaysHappeningToday, holiday.name];
       return holidaysHappeningToday;
     },
-    [] as string[]
+    [] as string[],
   );
 
   const semesterStart = getDateFromStringOrThrow(
     settings.startDate,
-    "comparing start date in day"
+    "comparing start date in day",
   );
   const semesterEnd = getDateFromStringOrThrow(
     settings.endDate,
-    "comparing end date in day"
+    "comparing end date in day",
   );
 
   const isInSemester = semesterStart < dayAsDate && semesterEnd > dayAsDate;
@@ -90,7 +90,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
                 status={status}
                 message={message}
               />
-            )
+            ),
           )}
           {todaysQuizzes.map(({ quiz, moduleName, status, message }) => (
             <ItemInDay
