@@ -116,7 +116,7 @@ export default function EditQuiz({
   const updateQuizMutation = useUpdateQuizMutation();
   const { data: globalSettings } = useGlobalSettingsQuery();
   const feedbackDelimiters = getFeedbackDelimitersFromSettings(
-    (globalSettings ?? ({} as GlobalSettings)) as GlobalSettings
+    (globalSettings ?? ({} as GlobalSettings)) as GlobalSettings,
   );
 
   const { clientIsAuthoritative, text, textUpdate, monacoKey } =
@@ -141,14 +141,14 @@ export default function EditQuiz({
           quizMarkdownUtils.toMarkdown(quiz, feedbackDelimiters) !==
           quizMarkdownUtils.toMarkdown(
             quizMarkdownUtils.parseMarkdown(text, name, feedbackDelimiters),
-            feedbackDelimiters
+            feedbackDelimiters,
           )
         ) {
           if (clientIsAuthoritative) {
             const updatedQuiz = quizMarkdownUtils.parseMarkdown(
               text,
               quizName,
-              feedbackDelimiters
+              feedbackDelimiters,
             );
             await updateQuizMutation.mutateAsync({
               quiz: updatedQuiz,
@@ -160,7 +160,7 @@ export default function EditQuiz({
             });
           } else {
             console.log(
-              "client not authoritative, updating client with server quiz"
+              "client not authoritative, updating client with server quiz",
             );
             textUpdate(quizMarkdownUtils.toMarkdown(quiz), true);
           }
@@ -178,6 +178,7 @@ export default function EditQuiz({
   }, [
     clientIsAuthoritative,
     courseName,
+    feedbackDelimiters,
     isFetching,
     moduleName,
     quiz,

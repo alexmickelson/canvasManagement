@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useEffect, FC, useState } from "react";
+import { useEffect, FC, useState } from "react";
 import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { useCalendarItemsContext } from "../../../context/calendarItemsContext";
@@ -15,6 +15,7 @@ import {
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
 import { useCourseContext } from "../../../context/courseContext";
+import Modal, { ModalControl } from "@/components/Modal";
 
 function getDuplicateName(name: string, existingNames: string[]): string {
   const match = name.match(/^(.*)\s+(\d+)$/);
@@ -27,15 +28,12 @@ function getDuplicateName(name: string, existingNames: string[]): string {
   return `${baseName} ${num}`;
 }
 
-export const DayItemContextMenu: FC<{
-  x: number;
-  y: number;
-  onClose: () => void;
+export const AssignmentDayItemContextMenu: FC<{
+  modalControl: ModalControl;
   item: IModuleItem;
   moduleName: string;
-}> = ({ x, y, onClose, item, moduleName }) => {
+}> = ({ modalControl, item, moduleName }) => {
   const { courseName } = useCourseContext();
-  const ref = useRef<HTMLDivElement>(null);
   const calendarItems = useCalendarItemsContext();
   const createAssignment = useCreateAssignmentMutation();
   const deleteLocal = useDeleteAssignmentMutation();
@@ -55,29 +53,21 @@ export const DayItemContextMenu: FC<{
     : undefined;
 
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) {
-        setConfirmingDelete(false);
-        onClose();
-      }
-    };
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setConfirmingDelete(false);
-        onClose();
+        modalControl.closeModal();
       }
     };
-    document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
-  }, [onClose]);
+  }, [modalControl]);
 
   const handleClose = () => {
     setConfirmingDelete(false);
-    onClose();
+    modalControl.closeModal();
   };
 
   const handleDuplicate = () => {
@@ -120,85 +110,82 @@ export const DayItemContextMenu: FC<{
     }
   };
 
-  const baseButtonClasses = "unstyled w-full text-left px-4 py-2";
+  const baseButtonClasses = "w-full text-left px-4 py-2";
   const normalHoverClasses = "hover:bg-slate-700 disabled:opacity-50";
   const dangerClasses =
     "bg-rose-900/30 hover:bg-rose-950 disabled:opacity-50 text-rose-50";
   return (
-    <div
-      ref={ref}
-      className="
-        fixed z-50 bg-slate-900 border-2 border-slate-700
-        rounded shadow-xl overflow-hidden
-      "
-      style={{ left: x, top: y }}
-    >
-      {confirmingDelete ? (
+    <Modal modalControl={modalControl}>
+      {() => (
         <>
-          <button
-            disabled
-            className={`${baseButtonClasses} ${normalHoverClasses}`}
-          >
-            Delete from disk?
-          </button>
-          <button
-            onClick={handleDelete}
-            className={`${baseButtonClasses} ${dangerClasses}`}
-          >
-            Yes, delete
-          </button>
-          <button
-            onClick={handleClose}
-            className={`${baseButtonClasses} ${normalHoverClasses}`}
-          >
-            Cancel
-          </button>
-        </>
-      ) : (
-        <>
-          {canvasUrl && (
+          {confirmingDelete ? (
             <>
-              <a
-                href={canvasUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="unstyled block px-4 py-2 text-sm hover:bg-slate-700 cursor-pointer"
-                onClick={handleClose}
-              >
-                View in Canvas
-              </a>
               <button
-                onClick={handleUpdateCanvas}
-                disabled={updateInCanvas.isPending}
-                className="w-full text-left px-4 py-2 text-sm hover:bg-slate-700 disabled:opacity-50"
+                disabled
+                className={`${baseButtonClasses} ${normalHoverClasses}`}
               >
-                Update in Canvas
+                Delete from disk?
               </button>
               <button
-                onClick={handleDeleteFromCanvas}
-                disabled={deleteFromCanvas.isPending}
+                onClick={handleDelete}
                 className={`${baseButtonClasses} ${dangerClasses}`}
               >
-                Delete from Canvas
+                Yes, delete
+              </button>
+              <button
+                onClick={handleClose}
+                className={`${baseButtonClasses} ${normalHoverClasses}`}
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              {canvasUrl && (
+                <>
+                  <a
+                    href={canvasUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="unstyled block px-4 py-2 hover:bg-slate-700 cursor-pointer"
+                    onClick={handleClose}
+                  >
+                    View in Canvas
+                  </a>
+                  <button
+                    onClick={handleUpdateCanvas}
+                    disabled={updateInCanvas.isPending}
+                    className="unstyled w-full text-left px-4 py-2 hover:bg-slate-700 disabled:opacity-50"
+                  >
+                    Update in Canvas
+                  </button>
+                  <button
+                    onClick={handleDeleteFromCanvas}
+                    disabled={deleteFromCanvas.isPending}
+                    className={`unstyled ${baseButtonClasses} ${dangerClasses}`}
+                  >
+                    Delete from Canvas
+                  </button>
+                </>
+              )}
+              {!canvasUrl && (
+                <button
+                  onClick={() => setConfirmingDelete(true)}
+                  className={`unstyled ${baseButtonClasses} ${dangerClasses}`}
+                >
+                  Delete from Disk
+                </button>
+              )}
+              <button
+                onClick={handleDuplicate}
+                className={`unstyled ${baseButtonClasses} ${normalHoverClasses}`}
+              >
+                Duplicate
               </button>
             </>
           )}
-          {!canvasUrl && (
-            <button
-              onClick={() => setConfirmingDelete(true)}
-              className={`${baseButtonClasses} ${dangerClasses}`}
-            >
-              Delete from Disk
-            </button>
-          )}
-          <button
-            onClick={handleDuplicate}
-            className={`${baseButtonClasses} ${normalHoverClasses}`}
-          >
-            Duplicate
-          </button>
         </>
       )}
-    </div>
+    </Modal>
   );
 };

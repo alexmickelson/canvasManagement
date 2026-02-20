@@ -2,15 +2,16 @@
 import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import Link from "next/link";
-import { FC, ReactNode, useCallback, useState } from "react";
+import { FC, ReactNode } from "react";
 import { useCourseContext } from "../../../context/courseContext";
 import { useTooltip } from "@/components/useTooltip";
 import { DraggableItem } from "../../../context/drag/draggingContext";
 import ClientOnly from "@/components/ClientOnly";
 import { useDragStyleContext } from "../../../context/drag/dragStyleContext";
 import { Tooltip } from "../../../../../../components/Tooltip";
-import { DayItemContextMenu } from "./DayItemContextMenu";
+import { AssignmentDayItemContextMenu } from "./DayItemContextMenu";
 import { GetPreviewContent } from "./GetPreviewContent";
+import { useModal } from "@/components/Modal";
 
 export const ItemInDay: FC<{
   type: "assignment" | "page" | "quiz";
@@ -22,22 +23,14 @@ export const ItemInDay: FC<{
   const { courseName } = useCourseContext();
   const { setIsDragging } = useDragStyleContext();
   const { visible, targetRef, showTooltip, hideTooltip } = useTooltip(500);
-
-  const [contextMenuPos, setContextMenuPos] = useState<{
-    x: number;
-    y: number;
-  } | null>(null);
+  const modalControl = useModal();
 
   const handleContextMenu = (e: React.MouseEvent) => {
     if (type !== "assignment") return;
     e.preventDefault();
     e.stopPropagation();
-    setContextMenuPos({ x: e.clientX, y: e.clientY });
+    modalControl.openModal({ x: e.clientX, y: e.clientY });
   };
-
-  const closeContextMenu = useCallback(() => {
-    setContextMenuPos(null);
-  }, []);
 
   return (
     <div className={" relative group "}>
@@ -87,11 +80,9 @@ export const ItemInDay: FC<{
         ) : (
           <Tooltip message={message} targetRef={targetRef} visible={visible} />
         )}
-        {contextMenuPos && type === "assignment" && (
-          <DayItemContextMenu
-            x={contextMenuPos.x}
-            y={contextMenuPos.y}
-            onClose={closeContextMenu}
+        {type === "assignment" && (
+          <AssignmentDayItemContextMenu
+            modalControl={modalControl}
             item={item}
             moduleName={moduleName}
           />

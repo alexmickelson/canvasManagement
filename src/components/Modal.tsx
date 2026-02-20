@@ -3,23 +3,35 @@ import React, { ReactNode, useCallback, useMemo, useState } from "react";
 
 export interface ModalControl {
   isOpen: boolean;
-  openModal: () => void;
+  openModal: (position?: { x: number; y: number }) => void;
   closeModal: () => void;
+  position?: { x: number; y: number };
 }
 
 export function useModal() {
   const [isOpen, setIsOpen] = useState(false);
+  const [position, setPosition] = useState<
+    { x: number; y: number } | undefined
+  >(undefined);
 
-  const openModal = useCallback(() => setIsOpen(true), []);
-  const closeModal = useCallback(() => setIsOpen(false), []);
+  const openModal = useCallback((pos?: { x: number; y: number }) => {
+    setPosition(pos);
+    setIsOpen(true);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setIsOpen(false);
+    setPosition(undefined);
+  }, []);
 
   return useMemo(
     () => ({
       isOpen,
       openModal,
       closeModal,
+      position,
     }),
-    [closeModal, isOpen, openModal]
+    [closeModal, isOpen, openModal, position],
   );
 }
 
@@ -40,18 +52,21 @@ export default function Modal({
 }) {
   return (
     <>
-      {buttonComponent ? (
-        buttonComponent({ openModal: modalControl.openModal })
-      ) : (
-        <button onClick={modalControl.openModal} className={buttonClass}>
-          {buttonText}
-        </button>
-      )}
+      {buttonComponent
+        ? buttonComponent({ openModal: () => modalControl.openModal() })
+        : buttonText && (
+            <button
+              onClick={() => modalControl.openModal()}
+              className={buttonClass}
+            >
+              {buttonText}
+            </button>
+          )}
 
       <div
         className={
           modalControl.isOpen
-            ? "transition-all duration-400 fixed inset-0 flex items-center justify-center h-screen bg-black/80 z-50 w-screen"
+            ? `transition-all duration-400 fixed inset-0 ${modalControl.position ? "" : "flex items-center justify-center"} h-screen bg-black/80 z-50 w-screen`
             : "hidden h-0 w-0 p-1 -z-50"
         }
         onClick={modalControl.closeModal}
@@ -60,11 +75,15 @@ export default function Modal({
           onClick={(e) => {
             e.stopPropagation();
           }}
-          className={
-            ` bg-slate-800 p-6 rounded-lg shadow-lg ` +
-            modalWidth +
-            ` transition-all duration-400 ` +
-            ` ${modalControl.isOpen ? "opacity-100" : "opacity-0"}`
+          className={`bg-slate-800 ${modalControl.position ? "" : "p-6"} rounded-lg shadow-lg ${modalControl.position ? "" : modalWidth} transition-all duration-400 ${modalControl.isOpen ? "opacity-100" : "opacity-0"}`}
+          style={
+            modalControl.position
+              ? {
+                  position: "fixed",
+                  left: modalControl.position.x,
+                  top: modalControl.position.y,
+                }
+              : undefined
           }
         >
           {modalControl.isOpen &&
