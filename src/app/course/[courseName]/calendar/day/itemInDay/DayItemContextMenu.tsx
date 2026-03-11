@@ -12,11 +12,13 @@ import {
   useUpdateAssignmentInCanvasMutation,
   useDeleteAssignmentFromCanvasMutation,
   useAddAssignmentToCanvasMutation,
+  canvasAssignmentKeys,
 } from "@/features/canvas/hooks/canvasAssignmentHooks";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
 import { useCourseContext } from "../../../context/courseContext";
 import Modal, { ModalControl } from "@/components/Modal";
+import { useQueryClient } from "@tanstack/react-query";
 
 function getDuplicateName(name: string, existingNames: string[]): string {
   const match = name.match(/^(.*)\s+(\d+)$/);
@@ -34,6 +36,7 @@ export const AssignmentDayItemContextMenu: FC<{
   item: IModuleItem;
   moduleName: string;
 }> = ({ modalControl, item, moduleName }) => {
+  const queryClient = useQueryClient();
   const { courseName } = useCourseContext();
   const calendarItems = useCalendarItemsContext();
   const createAssignmentMutation = useCreateAssignmentMutation();
@@ -68,6 +71,13 @@ export const AssignmentDayItemContextMenu: FC<{
   }, [modalControl]);
 
   const handleClose = () => {
+    for (let i = 1; i <= 8; i += 2) {
+      setTimeout(() => {
+        queryClient.invalidateQueries({
+          queryKey: canvasAssignmentKeys.assignments(settings.canvasId),
+        });
+      }, i * 1000);
+    }
     setConfirmingDelete(false);
     modalControl.closeModal();
   };
@@ -88,7 +98,11 @@ export const AssignmentDayItemContextMenu: FC<{
   };
 
   const handleDelete = () => {
-    deleteLocalMutation.mutate({ courseName, moduleName, assignmentName: item.name });
+    deleteLocalMutation.mutate({
+      courseName,
+      moduleName,
+      assignmentName: item.name,
+    });
     handleClose();
   };
 
@@ -133,11 +147,7 @@ export const AssignmentDayItemContextMenu: FC<{
           <div className="flex flex-col gap-2">
             {confirmingDelete ? (
               <>
-                <div
-                  className={``}
-                >
-                  Delete from disk?
-                </div>
+                <div className={``}>Delete from disk?</div>
                 <button
                   onClick={handleClose}
                   className={`unstyled ${baseButtonClasses} ${normalButtonClass}`}

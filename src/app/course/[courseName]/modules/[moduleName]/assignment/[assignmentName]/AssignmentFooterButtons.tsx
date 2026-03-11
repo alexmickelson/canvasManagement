@@ -6,6 +6,7 @@ import {
   useAddAssignmentToCanvasMutation,
   useDeleteAssignmentFromCanvasMutation,
   useUpdateAssignmentInCanvasMutation,
+  canvasAssignmentKeys,
 } from "@/features/canvas/hooks/canvasAssignmentHooks";
 import { baseCanvasUrl } from "@/features/canvas/services/canvasServiceUtils";
 import {
@@ -19,6 +20,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function AssignmentFooterButtons({
   moduleName,
@@ -34,9 +36,10 @@ export function AssignmentFooterButtons({
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: canvasAssignments, isFetching: canvasIsFetching } =
     useCanvasAssignmentsQuery();
+  const queryClient = useQueryClient();
   const { data: assignment, isFetching } = useAssignmentQuery(
     moduleName,
-    assignmentName
+    assignmentName,
   );
   const addToCanvas = useAddAssignmentToCanvasMutation();
   const deleteFromCanvas = useDeleteAssignmentFromCanvasMutation();
@@ -47,11 +50,11 @@ export function AssignmentFooterButtons({
   const { previousUrl, nextUrl } = useItemNavigation(
     "assignment",
     assignmentName,
-    moduleName
+    moduleName,
   );
 
   const assignmentInCanvas = canvasAssignments?.find(
-    (a) => a.name === assignmentName
+    (a) => a.name === assignmentName,
   );
 
   const anythingIsLoading =
@@ -84,6 +87,17 @@ export function AssignmentFooterButtons({
             className="btn"
             target="_blank"
             href={`${baseCanvasUrl}/courses/${settings.canvasId}/assignments/${assignmentInCanvas.id}`}
+            onClick={() => {
+              for (let i = 1; i <= 8; i += 2) {
+                setTimeout(() => {
+                  queryClient.invalidateQueries({
+                    queryKey: canvasAssignmentKeys.assignments(
+                      settings.canvasId,
+                    ),
+                  });
+                }, i * 1000);
+              }
+            }}
           >
             View in Canvas
           </a>
