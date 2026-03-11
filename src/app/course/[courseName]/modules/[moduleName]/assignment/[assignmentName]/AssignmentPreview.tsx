@@ -75,14 +75,14 @@ export default function AssignmentPreview({
         {extraPoints !== 0 && (
           <h5 className="text-center">{extraPoints} Extra Credit Points</h5>
         )}
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-[auto_auto_1fr]">
           {assignment.rubric.map((rubricItem, i) => (
             <Fragment key={rubricItem.label + i}>
               <div className="text-end pe-1">
                 {rubricItemIsExtraCredit(rubricItem) ? "Extra Credit" : ""}
               </div>
               <div className="text-end pe-3">{rubricItem.points}</div>
-              <div className="col-span-2">{rubricItem.label}</div>
+              <div>{rubricItem.label}</div>
             </Fragment>
           ))}
         </div>

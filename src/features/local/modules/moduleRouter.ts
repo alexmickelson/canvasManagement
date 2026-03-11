@@ -44,6 +44,8 @@ export async function getModuleNamesFromFiles(courseName: string) {
     .map((dirent) => dirent.name);
 
   const modules = await Promise.all(modulePromises);
-  const modulesWithoutLectures = modules.filter((m) => m !== lectureFolderName);
+  const modulesWithoutLectures = modules.filter(
+    (m) => m !== lectureFolderName && !m.startsWith(".")
+  );
   return modulesWithoutLectures.sort((a, b) => a.localeCompare(b));
 }
