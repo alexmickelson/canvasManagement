@@ -12,12 +12,11 @@ export interface DraggingContextInterface {
   itemDropOnDay: (e: DragEvent, droppedOnDay: string) => void;
   itemDropOnModule: (e: DragEvent, moduleName: string) => void;
 }
-const defaultDraggingValue: DraggingContextInterface = {
+export const DraggingContext =
+  createContext<DraggingContextInterface>({
   itemDropOnDay: () => {},
   itemDropOnModule: () => {},
-};
-export const DraggingContext =
-  createContext<DraggingContextInterface>(defaultDraggingValue);
+});
 
 export function useDraggingContext() {
   return useContext(DraggingContext);

@@ -21,3 +21,5 @@ courses:
     name: adv-frontend-old
   - path: ./1810/2026-spring-alex/modules/
     name: Web Intro
+  - path: ./1810/2025-spring-alex/in-person/
+    name: web-2025
