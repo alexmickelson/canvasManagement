@@ -7,9 +7,8 @@ export const zodGlobalSettingsCourse = z.object({
 
 export const zodGlobalSettings = z.object({
   courses: z.array(zodGlobalSettingsCourse),
-  feedbackDelims: z.record(z.string()).optional(),
+  feedbackDelims: z.record(z.string(), z.string()).optional(),
 });
-
 
 export type GlobalSettings = z.infer<typeof zodGlobalSettings>;
 export type GlobalSettingsCourse = z.infer<typeof zodGlobalSettingsCourse>;

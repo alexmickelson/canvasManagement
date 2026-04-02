@@ -1,9 +1,7 @@
 import path from "path";
 import { directoryOrFileExists } from "../utils/fileSystemUtils";
 import fs from "fs/promises";
-import {
-  localAssignmentMarkdown,
-} from "@/features/local/assignments/models/localAssignment";
+import { localAssignmentMarkdown } from "@/features/local/assignments/models/localAssignment";
 import {
   CourseItemReturnType,
   CourseItemType,
@@ -13,12 +11,9 @@ import {
   getCoursePathByName,
   getGlobalSettings,
 } from "../globalSettings/globalSettingsFileStorageService";
-import {
-  localPageMarkdownUtils,
-} from "@/features/local/pages/localCoursePageModels";
+import { localPageMarkdownUtils } from "@/features/local/pages/localCoursePageModels";
 import { quizMarkdownUtils } from "../quizzes/models/utils/quizMarkdownUtils";
 import { getFeedbackDelimitersFromSettings } from "../globalSettings/globalSettingsUtils";
-
 
 const getItemFileNames = async ({
   courseName,
@@ -34,7 +29,7 @@ const getItemFileNames = async ({
   const filePath = path.join(courseDirectory, moduleName, folder);
   if (!(await directoryOrFileExists(filePath))) {
     console.log(
-      `Error loading ${type}, ${folder} folder does not exist in ${filePath}`
+      `Error loading ${type}, ${folder} folder does not exist in ${filePath}`,
     );
     await fs.mkdir(filePath);
   }
@@ -57,11 +52,14 @@ const getItem = async <T extends CourseItemType>({
   const courseDirectory = await getCoursePathByName(courseName);
   const folder = typeToFolder[type];
   const filePath = path.join(courseDirectory, moduleName, folder, name + ".md");
+  if (!(await directoryOrFileExists(filePath))) {
+    throw new Error(`${type} file not found: ${filePath}`);
+  }
   const rawFile = (await fs.readFile(filePath, "utf-8")).replace(/\r\n/g, "\n");
   if (type === "Assignment") {
     return localAssignmentMarkdown.parseMarkdown(
       rawFile,
-      name
+      name,
     ) as CourseItemReturnType<T>;
   } else if (type === "Quiz") {
     const globalSettings = await getGlobalSettings();
@@ -69,12 +67,12 @@ const getItem = async <T extends CourseItemType>({
     return quizMarkdownUtils.parseMarkdown(
       rawFile,
       name,
-      delimiters
+      delimiters,
     ) as CourseItemReturnType<T>;
   } else if (type === "Page") {
     return localPageMarkdownUtils.parseMarkdown(
       rawFile,
-      name
+      name,
     ) as CourseItemReturnType<T>;
   }
 
@@ -100,10 +98,13 @@ export const courseItemFileStorageService = {
             const item = await getItem({ courseName, moduleName, name, type });
             return item;
           } catch (e) {
-            console.log(`Error loading ${type} ${name} in module ${moduleName}:`, e);
+            console.log(
+              `Error loading ${type} ${name} in module ${moduleName}:`,
+              e,
+            );
             return null;
           }
-        })
+        }),
       )
     ).filter((a) => a !== null);
     return items;

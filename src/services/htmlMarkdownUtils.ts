@@ -1,6 +1,6 @@
 "use client";
 import { marked } from "marked";
-import DOMPurify from "isomorphic-dompurify";
+import DOMPurify from "dompurify";
 import markedKatex from "marked-katex-extension";
 import pako from "pako";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";

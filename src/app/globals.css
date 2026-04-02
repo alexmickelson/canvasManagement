@@ -2,6 +2,10 @@
 
 @import "tailwindcss";
 
+@theme {
+  --font-sans: "DM Sans", sans-serif;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -9,7 +13,6 @@
 }
 
 :root {
-  font-family: "DM Sans", sans-serif;
   @apply text-lg;
 }
 
@@ -132,11 +135,12 @@ select {
   @apply leading-tight;
 }
 
-.markdownPreview p:has(+ul) {
+.markdownPreview p:has(+ ul) {
   @apply mb-0 m-0;
 }
 
-.markdownPreview ul, .markdownPreview ol {
+.markdownPreview ul,
+.markdownPreview ol {
   @apply mb-1;
 }
 

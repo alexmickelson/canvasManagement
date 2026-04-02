@@ -1,8 +1,8 @@
 "use client";
-import React, { useRef } from "react";
-import { editor } from "monaco-editor/esm/vs/editor/editor.api";
-
+import { useRef } from "react";
+import type { editor } from "monaco-editor";
 import Editor from "@monaco-editor/react";
+import ClientOnly from "../ClientOnly";
 
 export default function InnerMonacoEditorOther({
   value,
@@ -22,6 +22,7 @@ export default function InnerMonacoEditorOther({
 
   return (
     <>
+    <ClientOnly>
       <Editor
         height="100%"
         options={{
@@ -44,6 +45,7 @@ export default function InnerMonacoEditorOther({
         defaultValue={value}
         onMount={handleEditorDidMount}
       />
+    </ClientOnly>
     </>
   );
 }

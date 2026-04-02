@@ -1,3 +1,4 @@
+"use client";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { SuspenseAndErrorHandling } from "./SuspenseAndErrorHandling";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";

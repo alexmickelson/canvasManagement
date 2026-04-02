@@ -1,8 +1,7 @@
 "use client";
 import React, { useRef, useEffect } from "react";
 import loader from "@monaco-editor/loader";
-import { editor } from "monaco-editor/esm/vs/editor/editor.api";
-
+import type { editor } from "monaco-editor";
 
 export default function InnerMonacoEditor({
   value,
@@ -38,7 +37,10 @@ export default function InnerMonacoEditor({
           };
 
           editorRef.current = monaco.editor.create(divRef.current, properties);
-          editorRef.current.onDidChangeModelContent(() => {
+          const currentEditor = editorRef.current;
+          if (!currentEditor)
+            throw new Error("Monaco editor failed to initialize");
+          currentEditor.onDidChangeModelContent(() => {
             console.log("in on change", onChange);
             onChange(editorRef.current?.getModel()?.getValue() ?? "");
           });
