@@ -2,8 +2,8 @@
 import { usePagesQueries } from "@/features/local/pages/pageHooks";
 import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import {
-  getDateFromString,
   getDateFromStringOrThrow,
+  getDateOnlyMarkdownString,
 } from "@/features/local/utils/timeUtils";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { getWeekNumber } from "../calendar/calendarMonthUtils";
@@ -87,9 +87,50 @@ export default function ExpandableModule({
         ).getTime(),
     );
 
+  const { data: settings } = useLocalCourseSettingsQuery();
+  const startDate = getDateFromStringOrThrow(
+    settings.startDate,
+    "expandable module week grouping",
+  );
+
+  const groupedItems = moduleItems.reduce(
+    (
+      groups: {
+        dateKey: string;
+        weekLabel: string;
+        items: { type: "assignment" | "quiz" | "page"; item: IModuleItem }[];
+      }[],
+      moduleItem,
+    ) => {
+      const date = getDateFromStringOrThrow(
+        moduleItem.item.dueAt,
+        "expandable module item grouping",
+      );
+      const dateKey = getDateOnlyMarkdownString(date);
+      const lastGroup = groups[groups.length - 1];
+      if (lastGroup && lastGroup.dateKey === dateKey) {
+        return [
+          ...groups.slice(0, -1),
+          { ...lastGroup, items: [...lastGroup.items, moduleItem] },
+        ];
+      }
+      const weekNum = getWeekNumber(startDate, date);
+      const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+      return [
+        ...groups,
+        {
+          dateKey,
+          weekLabel: `Week ${weekNum} - ${dayName}`,
+          items: [moduleItem],
+        },
+      ];
+    },
+    [],
+  );
+
   return (
     <div
-      className="bg-slate-800 rounded-lg border border-slate-600 mb-3"
+      className="bg-slate-800 rounded-lg border border-slate-600 mb-3 "
       onDrop={(e) => itemDropOnModule(e, moduleName)}
       onDragOver={(e) => e.preventDefault()}
     >
@@ -98,7 +139,7 @@ export default function ExpandableModule({
           <Expandable
             ExpandableElement={({ setIsExpanded, isExpanded }) => (
               <div
-                className="font-bold flex flex-row justify-between "
+                className="font-bold flex flex-row justify-between cursor-pointer "
                 role="button"
                 onClick={() => setIsExpanded((e) => !e)}
               >
@@ -160,13 +201,20 @@ export default function ExpandableModule({
                 )}
               </Modal>
               <div className="flex flex-col">
-                {moduleItems.map(({ type, item }) => (
-                  <ExpandableModuleItem
-                    key={item.name + type}
-                    type={type}
-                    item={item}
-                    moduleName={moduleName}
-                  />
+                {groupedItems.map(({ weekLabel, items }) => (
+                  <div key={weekLabel}>
+                    <div className="text-slate-500 text-sm mt-1 ps-1">
+                      {weekLabel}
+                    </div>
+                    {items.map(({ type, item }) => (
+                      <ExpandableModuleItem
+                        key={item.name + type}
+                        type={type}
+                        item={item}
+                        moduleName={moduleName}
+                      />
+                    ))}
+                  </div>
                 ))}
               </div>
             </>
@@ -187,51 +235,33 @@ function ExpandableModuleItem({
   moduleName: string;
 }) {
   const { courseName } = useCourseContext();
-  const date = getDateFromString(item.dueAt);
-  const { data: settings } = useLocalCourseSettingsQuery();
   const { setIsDragging } = useDragStyleContext();
 
-  const weekLabel = (() => {
-    if (!date) return "";
-    const startDate = getDateFromStringOrThrow(
-      settings.startDate,
-      "week label in expandable module item",
-    );
-    const weekNum = getWeekNumber(startDate, date);
-    const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
-    return `${dayName} Week ${weekNum}`;
-  })();
-
   return (
-    <div>
-      <div className="flex">
-        <div className="w-6 p-1">
-          <ItemTypeIcon type={type} />
-        </div>
-        <div className="text-end text-slate-500 me-2">{weekLabel}</div>
+    <div className="flex items-start ps-3">
+      <div className="w-6 p-1 flex-none">
+        <ItemTypeIcon type={type} />
       </div>
-      <div className=" ps-6">
-        <Link
-          href={getModuleItemUrl(courseName, moduleName, type, item.name)}
-          shallow={true}
-          className="transition-all hover:text-slate-50 hover:scale-105"
-          draggable="true"
-          onDragStart={(e) => {
-            const draggableItem: DraggableItem = {
-              type,
-              item,
-              sourceModuleName: moduleName,
-            };
-            e.dataTransfer.setData(
-              "draggableItem",
-              JSON.stringify(draggableItem),
-            );
-            setIsDragging(true);
-          }}
-        >
-          {item.name}
-        </Link>
-      </div>
+      <Link
+        href={getModuleItemUrl(courseName, moduleName, type, item.name)}
+        shallow={true}
+        className="transition-all hover:text-slate-50 hover:scale-105 ps-1"
+        draggable="true"
+        onDragStart={(e) => {
+          const draggableItem: DraggableItem = {
+            type,
+            item,
+            sourceModuleName: moduleName,
+          };
+          e.dataTransfer.setData(
+            "draggableItem",
+            JSON.stringify(draggableItem),
+          );
+          setIsDragging(true);
+        }}
+      >
+        {item.name}
+      </Link>
     </div>
   );
 }
