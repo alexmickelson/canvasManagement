@@ -83,4 +83,38 @@ describe('markdownToHtmlNoImages', () => {
     // Markdown table should have scope="col"
     expect(html).toContain('<th scope="col">MD Header</th>');
   });
+
+  it("can recognize latex with $ delims", () => {
+    const rawMarkdown = `
+This is latex: $x_2$
+    endline`;
+
+    const doc = markdownToHtmlNoImages(rawMarkdown);
+    expect(doc).not.toContain("$");
+    expect(doc).toContain("<mi>x</mi>");
+    expect(doc).not.toContain("x_2");
+  });
+
+  it("can recognize latex with $ delims and no surrounding space", () => {
+    const rawMarkdown = `
+This is latex: ($x_2$)
+    endline`;
+
+    const doc = markdownToHtmlNoImages(rawMarkdown);
+    expect(doc).not.toContain("$");
+    expect(doc).toContain("<mi>x</mi>");
+    expect(doc).not.toContain("x_2");
+  });
+
+  it("can recognize latex with $$ delims and no surrounding space", () => {
+    const rawMarkdown = `
+This is latex: ($$x_2$$)
+    endline`;
+
+    const doc = markdownToHtmlNoImages(rawMarkdown);
+    expect(doc).not.toContain("$");
+    expect(doc).toContain("<mi>x</mi>");
+    expect(doc).not.toContain("x_2");
+  });
+
 });

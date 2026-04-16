@@ -42,6 +42,7 @@ marked.use(
   markedKatex({
     throwOnError: false,
     output: "mathml",
+    nonStandard: true,
   })
 );
 
