@@ -4,8 +4,9 @@ import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import {
   getDateFromString,
   getDateFromStringOrThrow,
-  getDateOnlyMarkdownString,
 } from "@/features/local/utils/timeUtils";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
+import { getWeekNumber } from "../calendar/calendarMonthUtils";
 import { Fragment } from "react";
 import Modal, { useModal } from "../../../../components/Modal";
 import NewItemForm from "./NewItemForm";
@@ -28,6 +29,7 @@ import { useAssignmentNamesQuery } from "@/features/local/assignments/assignment
 import { useReorderCanvasModuleItemsMutation } from "@/features/canvas/hooks/canvasModuleHooks";
 import { useCanvasModulesQuery } from "@/features/canvas/hooks/canvasModuleHooks";
 import { Spinner } from "@/components/Spinner";
+import { ItemTypeIcon } from "../ItemTypeIcon";
 
 export default function ExpandableModule({
   moduleName,
@@ -45,7 +47,7 @@ export default function ExpandableModule({
         courseName,
         moduleName,
         assignmentName,
-      })
+      }),
     ),
   });
   const assignments = assignmentsQueries.map((result) => result.data);
@@ -62,14 +64,14 @@ export default function ExpandableModule({
   }[] = (assignments ?? [])
     .map(
       (
-        a
+        a,
       ): {
         type: "assignment" | "quiz" | "page";
         item: IModuleItem;
       } => ({
         type: "assignment",
         item: a,
-      })
+      }),
     )
     .concat(quizzes.map((q) => ({ type: "quiz", item: q })))
     .concat(pages.map((p) => ({ type: "page", item: p })))
@@ -77,12 +79,12 @@ export default function ExpandableModule({
       (a, b) =>
         getDateFromStringOrThrow(
           a.item.dueAt,
-          "item due date in expandable module"
+          "item due date in expandable module",
         ).getTime() -
         getDateFromStringOrThrow(
           b.item.dueAt,
-          "item due date in expandable module"
-        ).getTime()
+          "item due date in expandable module",
+        ).getTime(),
     );
 
   return (
@@ -107,7 +109,9 @@ export default function ExpandableModule({
                   </ClientOnly>
                   <ExpandIcon
                     style={{
-                      ...(isExpanded ? { rotate: "90deg" } : {rotate: "180deg"}),
+                      ...(isExpanded
+                        ? { rotate: "90deg" }
+                        : { rotate: "180deg" }),
                     }}
                   />
                 </div>
@@ -120,12 +124,12 @@ export default function ExpandableModule({
                   className=" me-3"
                   onClick={() => {
                     const canvasModuleId = canvasModules?.find(
-                      (m) => m.name === moduleName
+                      (m) => m.name === moduleName,
                     )?.id;
                     if (!canvasModuleId) {
                       console.error(
                         "Canvas module ID not found for",
-                        moduleName
+                        moduleName,
                       );
                       return;
                     }
@@ -155,7 +159,7 @@ export default function ExpandableModule({
                   </div>
                 )}
               </Modal>
-              <div className="grid grid-cols-[auto_1fr]">
+              <div className="flex flex-col">
                 {moduleItems.map(({ type, item }) => (
                   <ExpandableModuleItem
                     key={item.name + type}
@@ -184,33 +188,50 @@ function ExpandableModuleItem({
 }) {
   const { courseName } = useCourseContext();
   const date = getDateFromString(item.dueAt);
+  const { data: settings } = useLocalCourseSettingsQuery();
   const { setIsDragging } = useDragStyleContext();
 
+  const weekLabel = (() => {
+    if (!date) return "";
+    const startDate = getDateFromStringOrThrow(
+      settings.startDate,
+      "week label in expandable module item",
+    );
+    const weekNum = getWeekNumber(startDate, date);
+    const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+    return `${dayName} Week ${weekNum}`;
+  })();
+
   return (
-    <Fragment key={item.name + type}>
-      <div className="text-end text-slate-500 me-2">
-        {date && getDateOnlyMarkdownString(date)}
+    <div>
+      <div className="flex">
+        <div className="w-6 p-1">
+          <ItemTypeIcon type={type} />
+        </div>
+        <div className="text-end text-slate-500 me-2">{weekLabel}</div>
       </div>
-      <Link
-        href={getModuleItemUrl(courseName, moduleName, type, item.name)}
-        shallow={true}
-        className="transition-all hover:text-slate-50 hover:scale-105"
-        draggable="true"
-        onDragStart={(e) => {
-          const draggableItem: DraggableItem = {
-            type,
-            item,
-            sourceModuleName: moduleName,
-          };
-          e.dataTransfer.setData(
-            "draggableItem",
-            JSON.stringify(draggableItem)
-          );
-          setIsDragging(true);
-        }}
-      >
-        {item.name}
-      </Link>
-    </Fragment>
+      <div className=" ps-6">
+        <Link
+          href={getModuleItemUrl(courseName, moduleName, type, item.name)}
+          shallow={true}
+          className="transition-all hover:text-slate-50 hover:scale-105"
+          draggable="true"
+          onDragStart={(e) => {
+            const draggableItem: DraggableItem = {
+              type,
+              item,
+              sourceModuleName: moduleName,
+            };
+            e.dataTransfer.setData(
+              "draggableItem",
+              JSON.stringify(draggableItem),
+            );
+            setIsDragging(true);
+          }}
+        >
+          {item.name}
+        </Link>
+      </div>
+    </div>
   );
 }

@@ -22,7 +22,7 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const { data: settings } = useLocalCourseSettingsQuery();
   const { itemDropOnDay } = useDraggingContext();
 
-  const { todaysAssignments, todaysQuizzes, todaysPages } = useTodaysItems(day);
+  const { todaysItems } = useTodaysItems(day);
   const isInSameMonth = dayAsDate.getMonth() + 1 == month;
   const classOnThisDay = settings.daysOfWeek.includes(getDayOfWeek(dayAsDate));
 
@@ -79,35 +79,13 @@ export default function Day({ day, month }: { day: string; month: number }) {
     >
       <div className="draggingDay flex flex-col">
         <DayTitle day={day} dayAsDate={dayAsDate} />
-        <div className="flex-grow">
-          {todaysAssignments.map(
-            ({ assignment, moduleName, status, message }) => (
-              <ItemInDay
-                key={assignment.name}
-                type={"assignment"}
-                moduleName={moduleName}
-                item={assignment}
-                status={status}
-                message={message}
-              />
-            ),
-          )}
-          {todaysQuizzes.map(({ quiz, moduleName, status, message }) => (
+        <div className="grow">
+          {todaysItems.map(({ type, item, moduleName, status, message }) => (
             <ItemInDay
-              key={quiz.name}
-              type={"quiz"}
+              key={`${type}-${item.name}`}
+              type={type}
               moduleName={moduleName}
-              item={quiz}
-              status={status}
-              message={message}
-            />
-          ))}
-          {todaysPages.map(({ page, moduleName, status, message }) => (
-            <ItemInDay
-              key={page.name}
-              type={"page"}
-              moduleName={moduleName}
-              item={page}
+              item={item}
               status={status}
               message={message}
             />
