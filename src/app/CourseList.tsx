@@ -35,9 +35,9 @@ export default function CourseList() {
         {sortedDates.map((startDate) => (
           <div
             key={startDate}
-            className=" border-4 border-slate-800 rounded p-3 m-3"
+            className=" border-4 border-slate-800 rounded px-3 m-3  min-w-50"
           >
-            <div className="text-center">{getTermName(startDate)}</div>
+            <div className="text-center pb-2">{getTermName(startDate)}</div>
             {coursesByStartDate[getDateKey(startDate)].map((settings) => (
               <CourseItem
                 key={settings.name}

@@ -4,6 +4,8 @@
 
 @theme {
   --font-sans: "DM Sans", sans-serif;
+  --font-serif: "DM Sans", serif;
+  --font-mono: "DM Sans", monospace;
 }
 
 @layer utilities {

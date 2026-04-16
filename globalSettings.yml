@@ -1,8 +1,4 @@
 courses:
-  - path: ./1420/2025-fall-alex/modules/
-    name: "1420"
-  - path: ./1425/2025-fall-alex/modules/
-    name: "1425"
   - path: ./4850_AdvancedFE/2026-spring-alex/modules
     name: Adv Frontend
   - path: ./1400/2026_spring_alex/modules
@@ -13,13 +9,23 @@ courses:
     name: Telem and Ops
   - path: ./4620_Distributed/2026-spring-alex/modules
     name: Distributed
-  - path: ./4620_Distributed/2025Spring/modules/
-    name: distributed-old
-  - path: ./3840_Telemetry/2025_spring_alex/modules/
-    name: telemetry-old
-  - path: ./4850_AdvancedFE/2025-fall-alex/modules/
-    name: adv-frontend-old
   - path: ./1810/2026-spring-alex/modules/
     name: Web Intro
-  - path: ./1810/2025-spring-alex/in-person/
-    name: web-2025
+  - path: ./3840_Telemetry/2026_fall_alex/
+    name: Telem and Ops Fall
+  - path: ./1420/2025-fall-alex/modules/
+    name: 1420 old
+  - path: ./1425/2025-fall-alex/modules/
+    name: 1425 old
+  - path: ./1420/2025-spring-alex/
+    name: "1420"
+  - path: ./1425/2025-spring-alex/
+    name: "1425"
+  - path: ./4620_Distributed/2026-fall-alex/
+    name: Distributed Fall
+  - path: ./1810/2026-fall-alex/
+    name: Web Intro Fall
+  - path: ./1810/2024-spring-alex/modules_online/
+    name: old web intro online
+  - path: ./1810/2026-summer-alex-online/modules/
+    name: Web Intro Online Summer
