@@ -3,9 +3,11 @@ import { useEffect, FC, useState } from "react";
 import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { useCalendarItemsContext } from "../../../context/calendarItemsContext";
+import TextInput from "@/components/form/TextInput";
 import {
   useCreateAssignmentMutation,
   useDeleteAssignmentMutation,
+  useUpdateAssignmentMutation,
 } from "@/features/local/assignments/assignmentHooks";
 import {
   useCanvasAssignmentsQuery,
@@ -48,6 +50,9 @@ export const AssignmentDayItemContextMenu: FC<{
   const { data: settings } = useLocalCourseSettingsQuery();
 
   const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const [renaming, setRenaming] = useState(false);
+  const [newName, setNewName] = useState(item.name);
+  const updateAssignmentMutation = useUpdateAssignmentMutation();
 
   const assignmentInCanvas = canvasAssignments?.find(
     (a) => a.name === item.name,
@@ -79,7 +84,26 @@ export const AssignmentDayItemContextMenu: FC<{
       }, i * 1000);
     }
     setConfirmingDelete(false);
+    setRenaming(false);
     modalControl.closeModal();
+  };
+
+  const handleRename = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newName === item.name) {
+      handleClose();
+      return;
+    }
+    const assignment = item as LocalAssignment;
+    await updateAssignmentMutation.mutateAsync({
+      assignment: { ...assignment, name: newName },
+      moduleName,
+      assignmentName: newName,
+      previousModuleName: moduleName,
+      previousAssignmentName: item.name,
+      courseName,
+    });
+    handleClose();
   };
 
   const handleDuplicate = () => {
@@ -161,6 +185,30 @@ export const AssignmentDayItemContextMenu: FC<{
                   Yes, delete
                 </button>
               </>
+            ) : renaming ? (
+              <form onSubmit={handleRename} className="flex flex-col gap-2">
+                <TextInput
+                  value={newName}
+                  setValue={setNewName}
+                  label="New Name"
+                />
+                <button
+                  type="button"
+                  onClick={() => setRenaming(false)}
+                  className={`unstyled ${baseButtonClasses} ${normalButtonClass}`}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={
+                    updateAssignmentMutation.isPending || !newName.trim()
+                  }
+                  className={`unstyled ${baseButtonClasses} ${normalButtonClass}`}
+                >
+                  Save
+                </button>
+              </form>
             ) : (
               <>
                 {canvasUrl && (
@@ -212,6 +260,15 @@ export const AssignmentDayItemContextMenu: FC<{
                   className={`unstyled ${baseButtonClasses} ${normalButtonClass}`}
                 >
                   Duplicate
+                </button>
+                <button
+                  onClick={() => {
+                    setNewName(item.name);
+                    setRenaming(true);
+                  }}
+                  className={`unstyled ${baseButtonClasses} ${normalButtonClass}`}
+                >
+                  Rename
                 </button>
               </>
             )}
