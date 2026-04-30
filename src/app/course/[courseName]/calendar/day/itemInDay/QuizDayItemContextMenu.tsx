@@ -8,6 +8,7 @@ import {
   useCreateQuizMutation,
   useUpdateQuizMutation,
 } from "@/features/local/quizzes/quizHooks";
+import { useAddQuizToCanvasMutation } from "@/features/canvas/hooks/canvasQuizHooks";
 import { useCourseContext } from "../../../context/courseContext";
 import Modal, { ModalControl } from "@/components/Modal";
 
@@ -31,6 +32,7 @@ export const QuizDayItemContextMenu: FC<{
   const calendarItems = useCalendarItemsContext();
   const createQuizMutation = useCreateQuizMutation();
   const updateQuizMutation = useUpdateQuizMutation();
+  const addToCanvasMutation = useAddQuizToCanvasMutation();
 
   const [renaming, setRenaming] = useState(false);
   const [newName, setNewName] = useState(item.name);
@@ -73,6 +75,14 @@ export const QuizDayItemContextMenu: FC<{
     handleClose();
   };
 
+  const handleAddToCanvas = () => {
+    addToCanvasMutation.mutate({
+      quiz: item as LocalQuiz,
+      moduleName,
+    });
+    handleClose();
+  };
+
   const baseButtonClasses = " font-bold text-left py-1";
   const normalButtonClass =
     "hover:bg-blue-900   disabled:opacity-50 bg-blue-900/50 text-blue-50 border border-blue-800/70 rounded ";
@@ -107,6 +117,13 @@ export const QuizDayItemContextMenu: FC<{
               </form>
             ) : (
               <>
+                <button
+                  onClick={handleAddToCanvas}
+                  disabled={addToCanvasMutation.isPending}
+                  className={`unstyled ${baseButtonClasses} ${normalButtonClass}`}
+                >
+                  Add to Canvas
+                </button>
                 <button
                   onClick={handleDuplicate}
                   disabled={createQuizMutation.isPending}

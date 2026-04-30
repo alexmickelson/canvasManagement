@@ -11,6 +11,7 @@ import { useDragStyleContext } from "../../../context/drag/dragStyleContext";
 import { Tooltip } from "../../../../../../components/Tooltip";
 import { AssignmentDayItemContextMenu } from "./AssignmentDayItemContextMenu";
 import { QuizDayItemContextMenu } from "./QuizDayItemContextMenu";
+import { PageDayItemContextMenu } from "./PageDayItemContextMenu";
 import { GetPreviewContent } from "./GetPreviewContent";
 import { useModal } from "@/components/Modal";
 import { ItemTypeIcon } from "../../../ItemTypeIcon";
@@ -28,7 +29,7 @@ export const ItemInDay: FC<{
   const modalControl = useModal();
 
   const handleContextMenu = (e: React.MouseEvent) => {
-    if (type !== "assignment" && type !== "quiz") return;
+    if (type !== "assignment" && type !== "quiz" && type !== "page") return;
     e.preventDefault();
     e.stopPropagation();
     modalControl.openModal({ x: e.clientX, y: e.clientY });
@@ -96,6 +97,13 @@ export const ItemInDay: FC<{
         )}
         {type === "quiz" && (
           <QuizDayItemContextMenu
+            modalControl={modalControl}
+            item={item}
+            moduleName={moduleName}
+          />
+        )}
+        {type === "page" && (
+          <PageDayItemContextMenu
             modalControl={modalControl}
             item={item}
             moduleName={moduleName}
