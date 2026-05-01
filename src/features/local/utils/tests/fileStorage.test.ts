@@ -9,7 +9,6 @@ import {
   createModuleFile,
   getModuleNamesFromFiles,
 } from "@/features/local/modules/moduleRouter";
-import { getCoursePathByName } from "../../globalSettings/globalSettingsFileStorageService";
 
 describe("FileStorageTests", () => {
   beforeEach(async () => {
@@ -27,7 +26,6 @@ describe("FileStorageTests", () => {
 
   it("course settings can be saved and loaded", async () => {
     const name = "test empty course";
-    await fileStorageService.createCourseFolderForTesting(name);
     const settings: LocalCourseSettings = {
       name,
       assignmentGroups: [],
@@ -42,7 +40,7 @@ describe("FileStorageTests", () => {
       assets: [],
     };
 
-    await fileStorageService.settings.createCourseSettings(settings, await getCoursePathByName(name));
+    await fileStorageService.settings.createCourseSettings(settings, name);
     await fileStorageService.settings.updateCourseSettings(name, settings);
 
     const loadedSettings = await fileStorageService.settings.getCourseSettings({

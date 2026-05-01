@@ -1,1 +1,0 @@
-import{t as e}from"./jsx-runtime-dBoqvwbd.js";import{t}from"./localCourseSettings-CmZZoGWp.js";var n=e();function r({selectedDays:e,updateSettings:r}){return(0,n.jsx)(`div`,{className:`flex flex-row gap-3`,children:Object.values(t).map(t=>(0,n.jsx)(`button`,{role:`button`,className:e.includes(t)?``:`unstyled btn-outline `,onClick:()=>r(t),children:t},t))})}export{r as t};

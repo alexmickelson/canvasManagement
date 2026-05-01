@@ -1,1 +1,0 @@
-import{a as e,n as t,t as n}from"./jsx-runtime-dBoqvwbd.js";var r=e(t(),1),i=n();function a({children:e}){let[t,n]=(0,r.useState)(!1);return(0,r.useEffect)(()=>{n(!0)},[]),t?(0,i.jsx)(i.Fragment,{children:e}):(0,i.jsx)(i.Fragment,{})}export{a as t};

@@ -10,16 +10,16 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CourseCourseNameRouteImport } from './routes/course.$courseName'
-import { Route as CourseCourseNameIndexRouteImport } from './routes/course.$courseName.index'
-import { Route as CourseCourseNameSettingsRouteImport } from './routes/course.$courseName.settings'
+import { Route as CourseCourseNameRouteImport } from './routes/course/$courseName'
+import { Route as CourseCourseNameIndexRouteImport } from './routes/course/$courseName/index'
+import { Route as CourseCourseNameSettingsRouteImport } from './routes/course/$courseName/settings'
 import { Route as ApiTrpcSplatRouteImport } from './routes/api.trpc.$'
 import { Route as ApiCanvasSplatRouteImport } from './routes/api.canvas.$'
-import { Route as CourseCourseNameLectureLectureDayIndexRouteImport } from './routes/course.$courseName.lecture.$lectureDay.index'
-import { Route as CourseCourseNameLectureLectureDayPreviewRouteImport } from './routes/course.$courseName.lecture.$lectureDay.preview'
-import { Route as CourseCourseNameModulesModuleNameQuizQuizNameRouteImport } from './routes/course.$courseName.modules.$moduleName.quiz.$quizName'
-import { Route as CourseCourseNameModulesModuleNamePagePageNameRouteImport } from './routes/course.$courseName.modules.$moduleName.page.$pageName'
-import { Route as CourseCourseNameModulesModuleNameAssignmentAssignmentNameRouteImport } from './routes/course.$courseName.modules.$moduleName.assignment.$assignmentName'
+import { Route as CourseCourseNameLectureLectureDayIndexRouteImport } from './routes/course/$courseName/lecture/$lectureDay/index'
+import { Route as CourseCourseNameLectureLectureDayPreviewRouteImport } from './routes/course/$courseName/lecture/$lectureDay/preview'
+import { Route as CourseCourseNameModulesModuleNameQuizQuizNameRouteImport } from './routes/course/$courseName/modules/$moduleName/quiz.$quizName'
+import { Route as CourseCourseNameModulesModuleNamePagePageNameRouteImport } from './routes/course/$courseName/modules/$moduleName/page.$pageName'
+import { Route as CourseCourseNameModulesModuleNameAssignmentAssignmentNameRouteImport } from './routes/course/$courseName/modules/$moduleName/assignment.$assignmentName'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',

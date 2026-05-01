@@ -1,5 +1,0 @@
-import{t as e}from"./jsx-runtime-dBoqvwbd.js";import{t}from"./BreadCrumbs-Cg_loSdV.js";import{i as n}from"./index-DRVTVEFd.js";import{l as r,s as i}from"./localCoursesHooks-DI6irJUH.js";import{r as a}from"./lectureHooks-Cl1YoMq6.js";import{t as o}from"./LecturePreview-BscjJ_L4.js";var s=e();function c({lectureDay:e}){let{data:n}=a(),r=n.flatMap(({lectures:e})=>e.map(e=>e)).find(t=>t.date===e);return r?(0,s.jsxs)(`div`,{className:`flex h-full xl:flex-row flex-col `,children:[(0,s.jsx)(`div`,{className:`flex-shrink flex-1 pb-1 ms-3 xl:ms-0 flex flex-row flex-wrap gap-3 content-start `,children:(0,s.jsx)(t,{})}),(0,s.jsx)(`div`,{className:`flex  justify-center min-h-0 px-2`,children:(0,s.jsx)(`div`,{className:`
-            w-full max-w-screen-lg 
-            border-slate-700 border-4 rounded-md bg-gray-900/50
-            p-3 overflow-auto 
-          `,children:(0,s.jsx)(o,{lecture:r})})}),(0,s.jsx)(`div`,{className:`flex-shrink flex-1`})]}):(0,s.jsx)(`div`,{children:`lecture not found for day`})}function l(){let{lectureDay:e}=n.useParams();return(0,s.jsx)(c,{lectureDay:r(i(decodeURIComponent(e),`lecture day in lecture page`))})}export{l as component};
