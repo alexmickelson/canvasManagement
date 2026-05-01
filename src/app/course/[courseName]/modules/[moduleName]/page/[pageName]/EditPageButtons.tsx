@@ -14,8 +14,7 @@ import {
   usePageQuery,
 } from "@/features/local/pages/pageHooks";
 import { getCourseUrl } from "@/services/urlUtils";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useNavigate } from "@tanstack/react-router";
 import React, { useState } from "react";
 import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
@@ -27,7 +26,7 @@ export default function EditPageButtons({
   pageName: string;
   moduleName: string;
 }) {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: page } = usePageQuery(moduleName, pageName);
@@ -41,7 +40,7 @@ export default function EditPageButtons({
   const { previousUrl, nextUrl } = useItemNavigation(
     "page",
     pageName,
-    moduleName
+    moduleName,
   );
 
   const pageInCanvas = canvasPages?.find((p) => p.title === pageName);
@@ -116,7 +115,7 @@ export default function EditPageButtons({
                       pageName,
                       courseName,
                     });
-                    router.push(getCourseUrl(courseName));
+                    navigate({ to: getCourseUrl(courseName) });
                   }}
                   className="btn-danger"
                 >
@@ -129,7 +128,7 @@ export default function EditPageButtons({
           )}
         </Modal>
       )}
-      <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+      <Link className="btn" to={getCourseUrl(courseName)}>
         Go Back
       </Link>
       <ItemNavigationButtons previousUrl={previousUrl} nextUrl={nextUrl} />

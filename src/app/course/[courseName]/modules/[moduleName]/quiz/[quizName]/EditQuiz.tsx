@@ -5,7 +5,6 @@ import QuizPreview from "./QuizPreview";
 import { QuizButtons } from "./QuizButton";
 import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
-import { useRouter } from "next/navigation";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import {
   useQuizQuery,
@@ -105,7 +104,6 @@ export default function EditQuiz({
   quizName: string;
   moduleName: string;
 }) {
-  const router = useRouter();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { courseName } = useCourseContext();
   const {
@@ -183,7 +181,6 @@ export default function EditQuiz({
     moduleName,
     quiz,
     quizName,
-    router,
     text,
     textUpdate,
     updateQuizMutation,

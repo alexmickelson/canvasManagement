@@ -1,13 +1,11 @@
-import { NextResponse } from "next/server";
-
-export async function withErrorHandling(handler: () => Promise<Response | NextResponse>) {
+export async function withErrorHandling(handler: () => Promise<Response>) {
   try {
     return await handler();
   } catch (error) {
     console.error("Error caught in centralized handler:", error);
-    return NextResponse.json(
+    return Response.json(
       { error: (error as Error).message || "Internal Server Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

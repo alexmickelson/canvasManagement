@@ -1,11 +1,7 @@
-"use client";
-import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import "./MonacoEditor.css";
 
-const InnerMonacoEditor = dynamic(() => import("./InnerMonacoEditorOther"), {
-  ssr: false,
-});
+const InnerMonacoEditor = lazy(() => import("./InnerMonacoEditorOther"));
 
 export const MonacoEditor: React.FC<{
   value: string;
@@ -16,6 +12,8 @@ export const MonacoEditor: React.FC<{
     setSalt(Date.now());
   }, [onChange]);
   return (
+    <Suspense fallback={null}>
       <InnerMonacoEditor key={salt} value={value} onChange={onChange} />
+    </Suspense>
   );
 };

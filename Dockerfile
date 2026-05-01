@@ -24,8 +24,8 @@ COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/package.json ./
 RUN pnpm install --prod
 
-COPY --from=builder /app/src/websocket.js ./src/websocket.js
-COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/src/websocket-standalone.js ./src/websocket-standalone.js
+COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/public ./public
 
 RUN mkdir -p storage && rm -rf /app/storage/*

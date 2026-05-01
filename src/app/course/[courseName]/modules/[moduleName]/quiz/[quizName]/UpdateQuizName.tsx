@@ -7,7 +7,7 @@ import {
   useUpdateQuizMutation,
 } from "@/features/local/quizzes/quizHooks";
 import { getModuleItemUrl } from "@/services/urlUtils";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export function UpdateQuizName({
@@ -19,7 +19,7 @@ export function UpdateQuizName({
 }) {
   const modal = useModal();
   const { courseName } = useCourseContext();
-  const router = useRouter();
+  const navigate = useNavigate();
   const { data: quiz } = useQuizQuery(moduleName, quizName);
   const updateQuiz = useUpdateQuizMutation();
   const [name, setName] = useState(quiz.name);
@@ -50,10 +50,10 @@ export function UpdateQuizName({
               });
 
               // update url (will trigger reload...)
-              router.replace(
-                getModuleItemUrl(courseName, moduleName, "quiz", name),
-                {}
-              );
+              navigate({
+                to: getModuleItemUrl(courseName, moduleName, "quiz", name),
+                replace: true,
+              });
             }}
           >
             <div

@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "@tanstack/react-router";
 import HomeIcon from "./icons/HomeIcon";
 import { RightSingleChevron } from "./icons/RightSingleChevron";
 
 export const BreadCrumbs = () => {
-  const pathname = usePathname();
+  const location = useLocation();
+  const pathname = location.pathname;
 
   const pathSegments = pathname?.split("/").filter(Boolean) || [];
   const isCourseRoute = pathSegments[0] === "course";
@@ -55,11 +55,7 @@ export const BreadCrumbs = () => {
   return (
     <nav className="flex flex-row font-bold text-sm items-center">
       <span className={sharedBackgroundClassNames}>
-        <Link
-          href="/"
-          shallow={true}
-          className="flex items-center gap-1 rounded-lg h-full "
-        >
+        <Link to="/" className="flex items-center gap-1 rounded-lg h-full ">
           <span className={sharedLinkClassNames}>
             <HomeIcon />
           </span>
@@ -73,8 +69,8 @@ export const BreadCrumbs = () => {
           </span>
           <span className={sharedBackgroundClassNames}>
             <Link
-              href={`/course/${encodeURIComponent(courseName)}`}
-              shallow={true}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              to={`/course/${encodeURIComponent(courseName)}` as any}
               className={sharedLinkClassNames}
             >
               {courseName}
@@ -90,10 +86,12 @@ export const BreadCrumbs = () => {
           </span>
           <span className={sharedBackgroundClassNames}>
             <Link
-              href={`/course/${encodeURIComponent(
-                courseName
-              )}/lecture/${encodeURIComponent(lectureDate)}`}
-              shallow={true}
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              to={
+                `/course/${encodeURIComponent(
+                  courseName,
+                )}/lecture/${encodeURIComponent(lectureDate)}` as any
+              }
               className={sharedLinkClassNames}
             >
               {lectureDateOnly}

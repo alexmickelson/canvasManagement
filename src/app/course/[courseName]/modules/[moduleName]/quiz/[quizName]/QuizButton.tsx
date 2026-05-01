@@ -13,8 +13,7 @@ import {
   useQuizQuery,
 } from "@/features/local/quizzes/quizHooks";
 import { getCourseUrl } from "@/services/urlUtils";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
 
@@ -27,7 +26,7 @@ export function QuizButtons({
   moduleName: string;
   toggleHelp: () => void;
 }) {
-  const router = useRouter();
+  const navigate = useNavigate();
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const { data: canvasQuizzes } = useCanvasQuizzesQuery();
@@ -40,7 +39,7 @@ export function QuizButtons({
   const { previousUrl, nextUrl } = useItemNavigation(
     "quiz",
     quizName,
-    moduleName
+    moduleName,
   );
 
   const quizInCanvas = canvasQuizzes?.find((c) => c.title === quizName);
@@ -102,7 +101,7 @@ export function QuizButtons({
                         quizName,
                         courseName,
                       });
-                      router.push(getCourseUrl(courseName));
+                      navigate({ to: getCourseUrl(courseName) });
                     }}
                     className="btn-danger"
                   >
@@ -115,7 +114,7 @@ export function QuizButtons({
           </Modal>
         )}
 
-        <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+        <Link className="btn" to={getCourseUrl(courseName)}>
           Go Back
         </Link>
         <ItemNavigationButtons previousUrl={previousUrl} nextUrl={nextUrl} />

@@ -5,7 +5,6 @@ import PagePreview from "./PagePreview";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import EditPageButtons from "./EditPageButtons";
 import ClientOnly from "@/components/ClientOnly";
-import { useRouter } from "next/navigation";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 import EditPageHeader from "./EditPageHeader";
@@ -23,7 +22,6 @@ export default function EditPage({
   pageName: string;
   moduleName: string;
 }) {
-  const router = useRouter();
   const { courseName } = useCourseContext();
   const {
     data: page,
@@ -52,7 +50,7 @@ export default function EditPage({
       try {
         const updatedPage = localPageMarkdownUtils.parseMarkdown(
           text,
-          pageName
+          pageName,
         );
         if (
           localPageMarkdownUtils.toMarkdown(page) !==
@@ -70,7 +68,7 @@ export default function EditPage({
             });
           } else {
             console.log(
-              "client not authoritative, updating client with server page"
+              "client not authoritative, updating client with server page",
             );
             textUpdate(localPageMarkdownUtils.toMarkdown(page), true);
           }
@@ -92,7 +90,6 @@ export default function EditPage({
     moduleName,
     page,
     pageName,
-    router,
     text,
     textUpdate,
     updatePage,

@@ -15,8 +15,7 @@ import {
 } from "@/features/local/assignments/assignmentHooks";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { getCourseUrl } from "@/services/urlUtils";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Link, useNavigate, useRouter } from "@tanstack/react-router";
 import { useState } from "react";
 import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
@@ -31,6 +30,7 @@ export function AssignmentFooterButtons({
   moduleName: string;
   toggleHelp: () => void;
 }) {
+  const navigate = useNavigate();
   const router = useRouter();
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
@@ -146,14 +146,14 @@ export function AssignmentFooterButtons({
                 <div className="flex justify-around gap-3">
                   <button
                     onClick={async () => {
-                      router.push(getCourseUrl(courseName));
+                      navigate({ to: getCourseUrl(courseName) });
                       setIsLoading(true);
                       await deleteLocal.mutateAsync({
                         moduleName,
                         assignmentName,
                         courseName,
                       });
-                      router.refresh();
+                      router.invalidate();
                       // setIsLoading(false); //refreshing the router will make spinner go away
                     }}
                     disabled={deleteLocal.isPending || isLoading}
@@ -173,7 +173,7 @@ export function AssignmentFooterButtons({
             )}
           </Modal>
         )}
-        <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+        <Link className="btn" to={getCourseUrl(courseName)}>
           Go Back
         </Link>
         <ItemNavigationButtons previousUrl={previousUrl} nextUrl={nextUrl} />

@@ -11,7 +11,7 @@ import {
   groupByStartDate,
 } from "@/features/local/utils/timeUtils";
 import { getCourseUrl } from "@/services/urlUtils";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
@@ -92,7 +92,7 @@ function CourseItem({
                       globalSettings: {
                         ...globalSettings,
                         courses: globalSettings.courses.filter(
-                          (course) => course.name !== courseName
+                          (course) => course.name !== courseName,
                         ),
                       },
                     });
@@ -116,9 +116,7 @@ function CourseItem({
         </Modal>
       )}
       <Link
-        href={getCourseUrl(courseName)}
-        shallow={true}
-        prefetch={true}
+        to={getCourseUrl(courseName)}
         className="
           font-bold text-xl block
           transition-all hover:scale-105 hover:underline hover:text-slate-200

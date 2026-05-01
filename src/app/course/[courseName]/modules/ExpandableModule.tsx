@@ -17,7 +17,7 @@ import {
   DraggableItem,
   useDraggingContext,
 } from "../context/drag/draggingContext";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { getModuleItemUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../context/courseContext";
 import { Expandable } from "../../../../components/Expandable";
@@ -243,8 +243,7 @@ function ExpandableModuleItem({
         <ItemTypeIcon type={type} />
       </div>
       <Link
-        href={getModuleItemUrl(courseName, moduleName, type, item.name)}
-        shallow={true}
+        to={getModuleItemUrl(courseName, moduleName, type, item.name)}
         className="transition-all hover:text-slate-50 hover:scale-105 ps-1"
         draggable="true"
         onDragStart={(e) => {

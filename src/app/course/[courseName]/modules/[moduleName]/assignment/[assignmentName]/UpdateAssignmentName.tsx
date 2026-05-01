@@ -7,7 +7,7 @@ import {
   useUpdateAssignmentMutation,
 } from "@/features/local/assignments/assignmentHooks";
 import { getModuleItemUrl } from "@/services/urlUtils";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export function UpdateAssignmentName({
@@ -19,7 +19,7 @@ export function UpdateAssignmentName({
 }) {
   const modal = useModal();
   const { courseName } = useCourseContext();
-  const router = useRouter();
+  const navigate = useNavigate();
   const { data: assignment } = useAssignmentQuery(moduleName, assignmentName);
   const updateAssignment = useUpdateAssignmentMutation();
   const [name, setName] = useState(assignment.name);
@@ -51,10 +51,15 @@ export function UpdateAssignmentName({
                 });
 
                 // update url (will trigger reload...)
-                router.replace(
-                  getModuleItemUrl(courseName, moduleName, "assignment", name),
-                  {}
-                );
+                navigate({
+                  to: getModuleItemUrl(
+                    courseName,
+                    moduleName,
+                    "assignment",
+                    name,
+                  ),
+                  replace: true,
+                });
               } finally {
                 setIsLoading(false);
               }

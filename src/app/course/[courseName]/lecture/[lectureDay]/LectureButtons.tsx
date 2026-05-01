@@ -3,19 +3,18 @@
 import Modal, { useModal } from "@/components/Modal";
 import { Spinner } from "@/components/Spinner";
 import { getCourseUrl } from "@/services/urlUtils";
-import { useRouter } from "next/navigation";
+import { useNavigate, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useCourseContext } from "../../context/courseContext";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useDeleteLectureMutation } from "@/features/local/lectures/lectureHooks";
-import Link from "next/link";
 import { useItemNavigation } from "../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../components/ItemNavigationButtons";
 
 export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
-  const router = useRouter();
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const modal = useModal();
   const deleteLecture = useDeleteLectureMutation();
@@ -40,7 +39,7 @@ export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
                 <button
                   onClick={async () => {
                     setIsLoading(true);
-                    router.push(getCourseUrl(courseName));
+                    navigate({ to: getCourseUrl(courseName) });
                     await deleteLecture.mutateAsync({
                       courseName,
                       settings,
@@ -61,7 +60,7 @@ export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
           )}
         </Modal>
       </div>
-      <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+      <Link className="btn" to={getCourseUrl(courseName)}>
         Go Back
       </Link>
       <ItemNavigationButtons previousUrl={previousUrl} nextUrl={nextUrl} />

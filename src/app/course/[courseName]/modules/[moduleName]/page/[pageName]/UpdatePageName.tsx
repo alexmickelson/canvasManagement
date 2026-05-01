@@ -7,7 +7,7 @@ import {
   useUpdatePageMutation,
 } from "@/features/local/pages/pageHooks";
 import { getModuleItemUrl } from "@/services/urlUtils";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 
 export function UpdatePageName({
@@ -19,7 +19,7 @@ export function UpdatePageName({
 }) {
   const modal = useModal();
   const { courseName } = useCourseContext();
-  const router = useRouter();
+  const navigate = useNavigate();
   const { data: page } = usePageQuery(moduleName, pageName);
   const updatePage = useUpdatePageMutation();
   const [name, setName] = useState(page.name);
@@ -50,10 +50,10 @@ export function UpdatePageName({
               });
 
               // update url (will trigger reload...)
-              router.replace(
-                getModuleItemUrl(courseName, moduleName, "page", name),
-                {}
-              );
+              navigate({
+                to: getModuleItemUrl(courseName, moduleName, "page", name),
+                replace: true,
+              });
             }}
           >
             <div

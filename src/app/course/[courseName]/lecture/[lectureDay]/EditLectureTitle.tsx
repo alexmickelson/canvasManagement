@@ -3,7 +3,7 @@ import { getDateFromString } from "@/features/local/utils/timeUtils";
 import { getLectureWeekName } from "@/features/local/lectures/lectureUtils";
 import { getLecturePreviewUrl } from "@/services/urlUtils";
 import { useCourseContext } from "../../context/courseContext";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { getDayOfWeek } from "@/features/local/course/localCourseSettings";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
 
@@ -29,8 +29,7 @@ export default function EditLectureTitle({
       <div className="text-end my-auto flex">
         <Link
           className="btn inline text-center flex-grow m-1"
-          href={getLecturePreviewUrl(courseName, lectureDay)}
-          shallow={true}
+          to={getLecturePreviewUrl(courseName, lectureDay)}
         >
           preview
         </Link>

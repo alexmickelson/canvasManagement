@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 
 export default function ItemNavigationButtons({
   previousUrl,
@@ -10,12 +10,12 @@ export default function ItemNavigationButtons({
   return (
     <>
       {previousUrl && (
-        <Link className="btn" href={previousUrl} shallow={true}>
+        <Link className="btn" to={previousUrl}>
           Previous
         </Link>
       )}
       {nextUrl && (
-        <Link className="btn" href={nextUrl} shallow={true}>
+        <Link className="btn" to={nextUrl}>
           Next
         </Link>
       )}

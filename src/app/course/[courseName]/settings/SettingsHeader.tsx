@@ -1,7 +1,7 @@
 "use client";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { getCourseUrl } from "@/services/urlUtils";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import React from "react";
 import { useCourseContext } from "../context/courseContext";
 
@@ -12,7 +12,7 @@ export default function SettingsHeader() {
     <>
       <div className="flex flex-row justify-between">
         <div className="my-auto">
-          <Link className="btn" href={getCourseUrl(courseName)} shallow={true}>
+          <Link className="btn" to={getCourseUrl(courseName)}>
             Back To Course
           </Link>
         </div>

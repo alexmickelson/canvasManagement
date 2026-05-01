@@ -1,7 +1,7 @@
 "use client";
 import { IModuleItem } from "@/features/local/modules/IModuleItem";
 import { getModuleItemUrl } from "@/services/urlUtils";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { FC, ReactNode } from "react";
 import { useCourseContext } from "../../../context/courseContext";
 import { useTooltip } from "@/components/useTooltip";
@@ -38,8 +38,7 @@ export const ItemInDay: FC<{
   return (
     <div className={" relative group "}>
       <Link
-        href={getModuleItemUrl(courseName, moduleName, type, item.name)}
-        shallow={true}
+        to={getModuleItemUrl(courseName, moduleName, type, item.name)}
         className={
           " border rounded-sm sm:px-1 sm:mx-1 break-words mb-1 truncate sm:text-wrap text-nowrap " +
           " bg-slate-800 " +

@@ -10,7 +10,6 @@ import { useCourseContext } from "@/app/course/[courseName]/context/courseContex
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import ClientOnly from "@/components/ClientOnly";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
-import { useRouter } from "next/navigation";
 import { AssignmentFooterButtons } from "./AssignmentFooterButtons";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 import EditAssignmentHeader from "./EditAssignmentHeader";
@@ -30,7 +29,6 @@ export default function EditAssignment({
   assignmentName: string;
   moduleName: string;
 }) {
-  const router = useRouter();
   const { courseName } = useCourseContext();
   const { data: settings } = useLocalCourseSettingsQuery();
   const {
@@ -90,7 +88,7 @@ export default function EditAssignment({
               "client updated",
               clientDataUpdatedAt,
               "server updated",
-              serverUpdatedAt
+              serverUpdatedAt,
             );
             textUpdate(localAssignmentMarkdown.toMarkdown(assignment), true);
           }
@@ -113,7 +111,6 @@ export default function EditAssignment({
     courseName,
     assignmentIsFetching,
     moduleName,
-    router,
     serverUpdatedAt,
     text,
     textUpdate,

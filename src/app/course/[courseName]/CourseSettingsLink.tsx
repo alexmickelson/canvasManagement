@@ -1,7 +1,7 @@
 "use client";
 
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { useCourseContext } from "./context/courseContext";
 import { getCourseSettingsUrl } from "@/services/urlUtils";
 
@@ -12,11 +12,7 @@ export default function CourseSettingsLink() {
     <div>
       {settings.name}
 
-      <Link
-        className="mx-3 underline"
-        href={getCourseSettingsUrl(courseName)}
-        shallow={true}
-      >
+      <Link className="mx-3 underline" to={getCourseSettingsUrl(courseName)}>
         Course Settings
       </Link>
     </div>

@@ -1,9 +1,9 @@
 services:
   canvas_manager:
-    image: node
+    image: node:22
     user: "1000:1000"
     container_name: canvas-dev
-    command: npx --yes pnpm dev 
+    command: npx --yes pnpm dev
     working_dir: /app
     ports:
       - 3000:3000

@@ -1,6 +1,6 @@
 import Modal, { useModal } from "@/components/Modal";
 import { getLectureUrl } from "@/services/urlUtils";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { useCourseContext } from "../../context/courseContext";
 import NewItemForm from "../../modules/NewItemForm";
 import { DraggableItem } from "../../context/drag/draggingContext";
@@ -25,9 +25,7 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
     <div className="flex justify-between">
       <Link
         className="ms-1 me-1 truncate text-nowrap transition-all hover:font-bold hover:text-slate-300"
-        href={getLectureUrl(courseName, day)}
-        shallow={true}
-        prefetch={false}
+        to={getLectureUrl(courseName, day)}
         draggable={true}
         onDragStart={(e) => {
           if (todaysLecture) {
@@ -38,7 +36,7 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
             };
             e.dataTransfer.setData(
               "draggableItem",
-              JSON.stringify(draggableItem)
+              JSON.stringify(draggableItem),
             );
             setIsDragging(true);
           }

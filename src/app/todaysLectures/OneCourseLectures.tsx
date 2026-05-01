@@ -1,7 +1,7 @@
 "use client";
 
 import { getLecturePreviewUrl } from "@/services/urlUtils";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import { useCourseContext } from "../course/[courseName]/context/courseContext";
 import { useLecturesSuspenseQuery as useLecturesQuery } from "@/features/local/lectures/lectureHooks";
 import { getLectureForDay } from "@/features/local/utils/lectureUtils";
@@ -18,9 +18,7 @@ export default function OneCourseLectures() {
   if (!todaysLecture) return <></>;
   return (
     <Link
-      href={getLecturePreviewUrl(courseName, dayAsString)}
-      shallow={true}
-      prefetch={false}
+      to={getLecturePreviewUrl(courseName, dayAsString)}
       className="
         border-4 rounded-lg border-slate-500 
         px-3 py-1 m-3 block text-end

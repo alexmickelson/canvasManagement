@@ -1,0 +1,1 @@
+import{t as e}from"./jsx-runtime-dBoqvwbd.js";import{t}from"./courseContext-DGV-E-HY.js";var n=e();function r({localCourseName:e,children:r}){return(0,n.jsx)(t.Provider,{value:{courseName:e},children:r})}export{r as t};

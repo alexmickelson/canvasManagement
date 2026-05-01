@@ -14,7 +14,7 @@ import { CanvasCourseModel } from "@/features/canvas/models/courses/canvasCourse
 import { CanvasEnrollmentTermModel } from "@/features/canvas/models/enrollmentTerms/canvasEnrollmentTermModel";
 import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 import { getCourseUrl } from "@/services/urlUtils";
-import { useRouter } from "next/navigation";
+import { useNavigate } from "@tanstack/react-router";
 import React, { Dispatch, SetStateAction, useMemo, useState } from "react";
 import {
   DayOfWeek,
@@ -42,7 +42,7 @@ const sampleCompose = `services:
 `;
 
 export default function AddNewCourseToGlobalSettingsForm() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const today = useMemo(() => new Date(), []);
   const { data: canvasTerms } = useCanvasTermsQuery(today);
   const [selectedTerm, setSelectedTerm] = useState<
@@ -100,7 +100,7 @@ export default function AddNewCourseToGlobalSettingsForm() {
                 "Creating course with settings:",
                 selectedDirectory,
                 "old course",
-                courseToImport
+                courseToImport,
               );
               const newSettings: LocalCourseSettings = courseToImport
                 ? {
@@ -116,7 +116,7 @@ export default function AddNewCourseToGlobalSettingsForm() {
                         const { canvasId: _, ...groupWithoutCanvas } =
                           assignmentGroup;
                         return { ...groupWithoutCanvas, canvasId: undefined };
-                      }
+                      },
                     ),
                     assets: [],
                   }
@@ -143,7 +143,7 @@ export default function AddNewCourseToGlobalSettingsForm() {
                 name,
                 directory: selectedDirectory,
               });
-              router.push(getCourseUrl(name));
+              navigate({ to: getCourseUrl(name) });
             }
           }}
         >
@@ -193,7 +193,7 @@ function OtherSettings({
   const availableCourses =
     canvasCourses?.filter(
       (canvas: CanvasCourseModel) =>
-        !populatedCanvasCourseIds.includes(canvas.id)
+        !populatedCanvasCourseIds.includes(canvas.id),
     ) ?? [];
 
   return (
