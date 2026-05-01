@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "pnpm install --config.confirmModulesPurge=false && concurrently \"vite dev\" \"node src/websocket-standalone.js\"",
     "build": "vite build",
-    "start": "concurrently \"node dist/server/server.js\" \"node src/websocket-standalone.js\"",
+    "start": "concurrently \"node .output/server/index.mjs\" \"node src/websocket-standalone.js\"",
     "lint": "eslint . --config eslint.config.mjs && tsc",
     "test": "vitest"
   },
@@ -29,6 +29,7 @@
     "form-data": "^4.0.5",
     "jsdom": "^29.0.1",
     "marked-katex-extension": "^5.1.7",
+    "nitro": "3.0.260429-beta",
     "pako": "^2.1.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

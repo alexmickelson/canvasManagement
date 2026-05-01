@@ -25,7 +25,7 @@ COPY --from=builder /app/package.json ./
 RUN pnpm install --prod
 
 COPY --from=builder /app/src/websocket-standalone.js ./src/websocket-standalone.js
-COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/public ./public
 
 RUN mkdir -p storage && rm -rf /app/storage/*

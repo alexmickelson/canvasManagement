@@ -2,6 +2,8 @@ canvas-data.md
 
 .tanstack/
 dist/
+.output/
+.output/
 
 .pnpm-store/
 tmp.json

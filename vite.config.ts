@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react-oxc";
 import tailwindcss from "@tailwindcss/vite";
+import { nitro } from "nitro/vite";
 
 export default defineConfig(({ mode }) => ({
   server: {
@@ -24,6 +25,11 @@ export default defineConfig(({ mode }) => ({
   plugins: [
     tanstackStart({
       srcDirectory: "src",
+    }),
+    nitro({
+      routeRules: {
+        "/socket.io/**": { proxy: "http://localhost:3001/socket.io/**" },
+      },
     }),
     viteReact(),
     tailwindcss(),
