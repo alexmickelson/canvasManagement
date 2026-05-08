@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 
 MAJOR_VERSION="4"
 MINOR_VERSION="0"
@@ -35,7 +36,7 @@ if [ "$TAG_FLAG" = true ]; then
 
   docker image tag canvas_management:"$VERSION" alexmickelson/canvas_management:"$VERSION"
   docker image tag canvas_management:"$VERSION" alexmickelson/canvas_management:"$MAJOR_VERSION"
-  docker image tag canvas_management:latest alexmickelson/canvas_management:latest
+  docker image tag canvas_management:"$VERSION" alexmickelson/canvas_management:latest
 fi
 
 if [ "$PUSH_FLAG" = true ]; then
