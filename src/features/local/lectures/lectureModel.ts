@@ -1,13 +1,13 @@
 import { z } from "zod";
 
 export interface Lecture {
-  name: string
-  date: string
-  content: string 
+  name: string;
+  date: string;
+  content: string;
 }
 
 export const zodLecture = z.object({
   name: z.string(),
-  date: z.string(), 
-  content: z.string(),
+  date: z.string(),
+  content: z.string().describe("Lecture content in markdown"),
 });

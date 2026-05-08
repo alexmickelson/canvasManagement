@@ -23,7 +23,7 @@ export const quizRouter = router({
         courseName: z.string(),
         moduleName: z.string(),
         quizName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName, moduleName, quizName } }) => {
       return await courseItemFileStorageService.getItem({
@@ -39,7 +39,7 @@ export const quizRouter = router({
       z.object({
         courseName: z.string(),
         moduleName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName, moduleName } }) => {
       return await courseItemFileStorageService.getItems({
@@ -55,7 +55,7 @@ export const quizRouter = router({
         moduleName: z.string(),
         quizName: z.string(),
         quiz: zodLocalQuiz,
-      })
+      }),
     )
     .mutation(async ({ input: { courseName, moduleName, quizName, quiz } }) => {
       await updateQuizFile({
@@ -70,11 +70,15 @@ export const quizRouter = router({
       z.object({
         courseName: z.string(),
         moduleName: z.string(),
-        previousModuleName: z.string(),
-        previousQuizName: z.string(),
+        previousModuleName: z
+          .string()
+          .describe("Previous module name before the update"),
+        previousQuizName: z
+          .string()
+          .describe("Previous quiz name before the update"),
         quizName: z.string(),
         quiz: zodLocalQuiz,
-      })
+      }),
     )
     .mutation(
       async ({
@@ -104,7 +108,7 @@ export const quizRouter = router({
             quizName: previousQuizName,
           });
         }
-      }
+      },
     ),
   deleteQuiz: publicProcedure
     .input(
@@ -112,7 +116,7 @@ export const quizRouter = router({
         courseName: z.string(),
         moduleName: z.string(),
         quizName: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input: { courseName, moduleName, quizName } }) => {
       await deleteQuizFile({
@@ -137,7 +141,7 @@ export async function deleteQuizFile({
     courseDirectory,
     moduleName,
     "quizzes",
-    quizName + ".md"
+    quizName + ".md",
   );
   console.log("removing quiz", filePath);
   await fs.unlink(filePath);
@@ -162,7 +166,7 @@ export async function updateQuizFile({
     courseDirectory,
     moduleName,
     "quizzes",
-    quizName + ".md"
+    quizName + ".md",
   );
 
   const globalSettings = await getGlobalSettings();

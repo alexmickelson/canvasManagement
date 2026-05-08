@@ -30,9 +30,14 @@ export const zodLocalQuizQuestion = z.object({
   questionType: zodQuestionType,
   points: z.number(),
   answers: zodLocalQuizQuestionAnswer.array(),
-  matchDistractors: z.array(z.string()),
+  matchDistractors: z
+    .array(z.string())
+    .describe("Distractor terms for matching questions"),
   correctComments: z.string().optional(),
   incorrectComments: z.string().optional(),
-  neutralComments: z.string().optional(),
+  neutralComments: z
+    .string()
+    .optional()
+    .describe("Feedback shown regardless of answer"),
 });
 export type LocalQuizQuestion = z.infer<typeof zodLocalQuizQuestion>;

@@ -11,15 +11,15 @@ export interface LocalCoursePage extends IModuleItem {
 
 export const zodLocalCoursePage = z.object({
   name: z.string(),
-  text: z.string(),
-  dueAt: z.string(), // ISO 8601 date string
+  text: z.string().describe("Page content in markdown or HTML"),
+  dueAt: z.string().describe("Date used for ordering the page"),
 });
 
 export const localPageMarkdownUtils = {
   toMarkdown: (page: LocalCoursePage) => {
     const printableDueDate = verifyDateOrThrow(
       page.dueAt,
-      "page DueDateForOrdering"
+      "page DueDateForOrdering",
     );
     const settingsMarkdown = `DueDateForOrdering: ${printableDueDate}\n---\n`;
     return settingsMarkdown + page.text;

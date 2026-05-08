@@ -10,7 +10,7 @@ export const moduleRouter = router({
     .input(
       z.object({
         courseName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName } }) => {
       return await getModuleNamesFromFiles(courseName);
@@ -20,7 +20,7 @@ export const moduleRouter = router({
       z.object({
         courseName: z.string(),
         moduleName: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input: { courseName, moduleName } }) => {
       await createModuleFile(courseName, moduleName);
@@ -45,7 +45,7 @@ export async function getModuleNamesFromFiles(courseName: string) {
 
   const modules = await Promise.all(modulePromises);
   const modulesWithoutLectures = modules.filter(
-    (m) => m !== lectureFolderName && !m.startsWith(".")
+    (m) => m !== lectureFolderName && !m.startsWith("."),
   );
   return modulesWithoutLectures.sort((a, b) => a.localeCompare(b));
 }

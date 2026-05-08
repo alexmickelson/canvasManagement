@@ -14,8 +14,8 @@ export interface SimpleTimeOnly {
   minute: number;
 }
 export const zodSimpleTimeOnly = z.object({
-  hour: z.number().int().min(0).max(23), // hour should be an integer between 0 and 23
-  minute: z.number().int().min(0).max(59), // minute should be an integer between 0 and 59
+  hour: z.number().int().min(0).max(23),
+  minute: z.number().int().min(0).max(59),
 });
 
 export enum DayOfWeek {
@@ -63,25 +63,34 @@ export const zodLocalCourseSettings = z.object({
   name: z.string(),
   assignmentGroups: zodLocalAssignmentGroup.array(),
   daysOfWeek: zodDayOfWeek.array(),
-  canvasId: z.number(),
+  canvasId: z.number().describe("Canvas LMS course ID"),
   startDate: z.string(),
   endDate: z.string(),
   defaultDueTime: zodSimpleTimeOnly,
-  defaultLockHoursOffset: z.number().int().optional(),
+  defaultLockHoursOffset: z
+    .number()
+    .int()
+    .optional()
+    .describe("Hours after due time when assignments lock"),
   defaultAssignmentSubmissionTypes: zodAssignmentSubmissionType.array(),
-  defaultFileUploadTypes: z.string().array(),
+  defaultFileUploadTypes: z
+    .string()
+    .array()
+    .describe("Default allowed file upload extensions"),
   holidays: z
     .object({
       name: z.string(),
       days: z.string().array(),
     })
-    .array(),
+    .array()
+    .describe("Holiday dates to exclude from the schedule"),
   assets: z
     .object({
       sourceUrl: z.string(),
-      canvasUrl: z.string(),
+      canvasUrl: z.string().describe("Canvas URL of the asset"),
     })
-    .array(),
+    .array()
+    .describe("Asset URL mappings between source and Canvas"),
 });
 
 export function getDayOfWeek(date: Date): DayOfWeek {

@@ -7,8 +7,8 @@ export interface LocalAssignmentGroup {
   weight: number;
 }
 export const zodLocalAssignmentGroup = z.object({
-  canvasId: z.optional(z.number()),
+  canvasId: z.optional(z.number()).describe("Canvas LMS assignment group ID"),
   id: z.string(),
   name: z.string(),
-  weight: z.number(),
+  weight: z.number().describe("Weight of this group in the overall grade"),
 });

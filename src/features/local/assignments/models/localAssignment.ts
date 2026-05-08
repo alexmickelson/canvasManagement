@@ -24,14 +24,20 @@ export interface LocalAssignment extends IModuleItem {
 export const zodLocalAssignment = z.object({
   name: z.string(),
   description: z.string(),
-  lockAt: z.string().optional(),
-  dueAt: z.string(),
+  lockAt: z
+    .string()
+    .optional()
+    .describe("Date and time when the assignment locks (MM/DD/YYYY HH:MM:SS)"),
+  dueAt: z.string().describe("Due date and time (MM/DD/YYYY HH:MM:SS)"),
   localAssignmentGroupName: z.string().optional(),
   submissionTypes: zodAssignmentSubmissionType.array(),
   allowedFileUploadExtensions: z.string().array(),
   rubric: zodRubricItem.array(),
   githubClassroomAssignmentShareLink: z.string().optional(),
-  githubClassroomAssignmentLink: z.string().optional(),
+  githubClassroomAssignmentLink: z
+    .string()
+    .optional()
+    .describe("GitHub Classroom direct assignment link"),
 });
 
 export const localAssignmentMarkdown = {

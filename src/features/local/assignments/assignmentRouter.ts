@@ -19,7 +19,7 @@ export const assignmentRouter = router({
         courseName: z.string(),
         moduleName: z.string(),
         assignmentName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName, moduleName, assignmentName } }) => {
       return await courseItemFileStorageService.getItem({
@@ -34,7 +34,7 @@ export const assignmentRouter = router({
       z.object({
         courseName: z.string(),
         moduleName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName, moduleName } }) => {
       const assignments = await courseItemFileStorageService.getItems({
@@ -51,7 +51,7 @@ export const assignmentRouter = router({
         moduleName: z.string(),
         assignmentName: z.string(),
         assignment: zodLocalAssignment,
-      })
+      }),
     )
     .mutation(
       async ({
@@ -63,18 +63,22 @@ export const assignmentRouter = router({
           assignmentName,
           assignment,
         });
-      }
+      },
     ),
   updateAssignment: publicProcedure
     .input(
       z.object({
         courseName: z.string(),
         moduleName: z.string(),
-        previousModuleName: z.string(),
-        previousAssignmentName: z.string(),
+        previousModuleName: z
+          .string()
+          .describe("Previous module name before the update"),
+        previousAssignmentName: z
+          .string()
+          .describe("Previous assignment name before the update"),
         assignmentName: z.string(),
         assignment: zodLocalAssignment,
-      })
+      }),
     )
     .mutation(
       async ({
@@ -104,7 +108,7 @@ export const assignmentRouter = router({
             assignmentName: previousAssignmentName,
           });
         }
-      }
+      },
     ),
   deleteAssignment: publicProcedure
     .input(
@@ -112,7 +116,7 @@ export const assignmentRouter = router({
         courseName: z.string(),
         moduleName: z.string(),
         assignmentName: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input: { courseName, moduleName, assignmentName } }) => {
       await deleteAssignment({
@@ -144,7 +148,7 @@ export async function updateOrCreateAssignmentFile({
     courseDirectory,
     moduleName,
     "assignments",
-    assignmentName + ".md"
+    assignmentName + ".md",
   );
 
   const assignmentMarkdown =
@@ -168,7 +172,7 @@ async function deleteAssignment({
     courseDirectory,
     moduleName,
     "assignments",
-    assignmentName + ".md"
+    assignmentName + ".md",
   );
   console.log("removing assignment", filePath);
   await fs.unlink(filePath);

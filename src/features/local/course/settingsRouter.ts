@@ -34,7 +34,7 @@ export const settingsRouter = router({
     .input(
       z.object({
         courseName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName } }) => {
       const settingsList =
@@ -50,10 +50,16 @@ export const settingsRouter = router({
     .input(
       z.object({
         name: z.string(),
-        directory: z.string(),
+        directory: z
+          .string()
+          .describe("File system path for the course directory"),
         settings: zodLocalCourseSettings,
-        settingsFromCourseToImport: zodLocalCourseSettings.optional(),
-      })
+        settingsFromCourseToImport: zodLocalCourseSettings
+          .optional()
+          .describe(
+            "Course settings from an existing course to import content from",
+          ),
+      }),
     )
     .mutation(
       async ({
@@ -62,7 +68,7 @@ export const settingsRouter = router({
         console.log("creating in directory", directory);
         await fileStorageService.settings.createCourseSettings(
           settings,
-          directory
+          directory,
         );
 
         const globalSettings = await getGlobalSettings();
@@ -81,34 +87,29 @@ export const settingsRouter = router({
         if (settingsFromCourseToImport) {
           await migrateCourseContent(settingsFromCourseToImport, settings);
         }
-      }
+      },
     ),
   updateSettings: publicProcedure
     .input(
       z.object({
         settings: zodLocalCourseSettings,
-      })
+      }),
     )
     .mutation(async ({ input: { settings } }) => {
       await fileStorageService.settings.updateCourseSettings(
         settings.name,
-        settings
+        settings,
       );
     }),
 });
 
 async function migrateCourseContent(
   settingsFromCourseToImport: LocalCourseSettings,
-  settings: LocalCourseSettings
+  settings: LocalCourseSettings,
 ) {
   const oldCourseName = settingsFromCourseToImport.name;
   const newCourseName = settings.name;
-  console.log(
-    "migrating content from ",
-    oldCourseName,
-    "to ",
-    newCourseName
-  );
+  console.log("migrating content from ", oldCourseName, "to ", newCourseName);
 
   const oldModules = await getModuleNamesFromFiles(oldCourseName);
   await Promise.all(
@@ -139,7 +140,7 @@ async function migrateCourseContent(
           const newAssignment = prepAssignmentForNewSemester(
             oldAssignment,
             settingsFromCourseToImport.startDate,
-            settings.startDate
+            settings.startDate,
           );
           await updateOrCreateAssignmentFile({
             courseName: newCourseName,
@@ -147,13 +148,13 @@ async function migrateCourseContent(
             assignmentName: newAssignment.name,
             assignment: newAssignment,
           });
-        }
+        },
       );
       const updateQuizzesPromises = oldQuizzes.map(async (oldQuiz) => {
         const newQuiz = prepQuizForNewSemester(
           oldQuiz,
           settingsFromCourseToImport.startDate,
-          settings.startDate
+          settings.startDate,
         );
         await updateQuizFile({
           courseName: newCourseName,
@@ -166,7 +167,7 @@ async function migrateCourseContent(
         const newPage = prepPageForNewSemester(
           oldPage,
           settingsFromCourseToImport.startDate,
-          settings.startDate
+          settings.startDate,
         );
         await updatePageFile({
           courseName: newCourseName,
@@ -181,10 +182,10 @@ async function migrateCourseContent(
             const newLecture = prepLectureForNewSemester(
               oldLecture,
               settingsFromCourseToImport.startDate,
-              settings.startDate
+              settings.startDate,
             );
             await updateLecture(newCourseName, settings, newLecture);
-          })
+          }),
       );
 
       await Promise.all([
@@ -193,6 +194,6 @@ async function migrateCourseContent(
         ...updatePagesPromises,
         ...updateLecturePromises,
       ]);
-    })
+    }),
   );
 }

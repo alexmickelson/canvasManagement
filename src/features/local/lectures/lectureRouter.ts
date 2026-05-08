@@ -23,7 +23,7 @@ export const lectureRouter = router({
     .input(
       z.object({
         courseName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName } }) => {
       return await getLectures(courseName);
@@ -33,9 +33,12 @@ export const lectureRouter = router({
       z.object({
         courseName: z.string(),
         lecture: zodLecture,
-        previousDay: z.string().optional(),
+        previousDay: z
+          .string()
+          .optional()
+          .describe("Previous lecture date before the update"),
         settings: zodLocalCourseSettings,
-      })
+      }),
     )
     .mutation(
       async ({ input: { courseName, settings, lecture, previousDay } }) => {
@@ -44,7 +47,7 @@ export const lectureRouter = router({
         if (previousDay && previousDay !== lecture.date) {
           await deleteLecture(courseName, settings, previousDay);
         }
-      }
+      },
     ),
   deleteLecture: publicProcedure
     .input(
@@ -52,7 +55,7 @@ export const lectureRouter = router({
         courseName: z.string(),
         lectureDay: z.string(),
         settings: zodLocalCourseSettings,
-      })
+      }),
     )
     .mutation(async ({ input: { courseName, settings, lectureDay } }) => {
       await deleteLecture(courseName, settings, lectureDay);
@@ -81,14 +84,14 @@ export async function getLectures(courseName: string) {
           const fileContent = await fs.readFile(filePath, "utf-8");
           const lecture = parseLecture(fileContent);
           return lecture;
-        })
+        }),
       );
 
       return {
         weekName,
         lectures,
       };
-    })
+    }),
   );
   return lecturesByWeek;
 }
@@ -96,18 +99,18 @@ export async function getLectures(courseName: string) {
 export async function updateLecture(
   courseName: string,
   courseSettings: LocalCourseSettings,
-  lecture: Lecture
+  lecture: Lecture,
 ) {
   const courseDirectory = await getCoursePathByName(courseName);
   const courseLectureRoot = path.join(courseDirectory, lectureFolderName);
   const lectureDate = getDateFromStringOrThrow(
     lecture.date,
-    "lecture start date in update lecture"
+    "lecture start date in update lecture",
   );
 
   const weekFolderName = getLectureWeekName(
     courseSettings.startDate,
-    lecture.date
+    lecture.date,
   );
   const weekPath = path.join(courseLectureRoot, weekFolderName);
   if (!(await directoryExists(weekPath))) {
@@ -116,7 +119,7 @@ export async function updateLecture(
 
   const lecturePath = path.join(
     weekPath,
-    `${lectureDate.getDay()}-${getDayOfWeek(lectureDate)}.md`
+    `${lectureDate.getDay()}-${getDayOfWeek(lectureDate)}.md`,
   );
   const lectureContents = lectureToString(lecture);
   await fs.writeFile(lecturePath, lectureContents);
@@ -125,17 +128,17 @@ export async function updateLecture(
 export async function deleteLecture(
   courseName: string,
   courseSettings: LocalCourseSettings,
-  dayAsString: string
+  dayAsString: string,
 ) {
   console.log("deleting lecture", courseName, dayAsString);
   const lectureDate = getDateFromStringOrThrow(
     dayAsString,
-    "lecture start date in update lecture"
+    "lecture start date in update lecture",
   );
 
   const weekFolderName = getLectureWeekName(
     courseSettings.startDate,
-    dayAsString
+    dayAsString,
   );
 
   const courseDirectory = await getCoursePathByName(courseName);
@@ -143,7 +146,7 @@ export async function deleteLecture(
   const weekPath = path.join(courseLectureRoot, weekFolderName);
   const lecturePath = path.join(
     weekPath,
-    `${lectureDate.getDay()}-${getDayOfWeek(lectureDate)}.md`
+    `${lectureDate.getDay()}-${getDayOfWeek(lectureDate)}.md`,
   );
   try {
     await fs.access(lecturePath); // throws error if no file

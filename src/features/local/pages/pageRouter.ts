@@ -19,7 +19,7 @@ export const pageRouter = router({
         courseName: z.string(),
         moduleName: z.string(),
         pageName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName, moduleName, pageName } }) => {
       return await courseItemFileStorageService.getItem({
@@ -35,7 +35,7 @@ export const pageRouter = router({
       z.object({
         courseName: z.string(),
         moduleName: z.string(),
-      })
+      }),
     )
     .query(async ({ input: { courseName, moduleName } }) => {
       return await courseItemFileStorageService.getItems({
@@ -51,7 +51,7 @@ export const pageRouter = router({
         moduleName: z.string(),
         pageName: z.string(),
         page: zodLocalCoursePage,
-      })
+      }),
     )
     .mutation(async ({ input: { courseName, moduleName, pageName, page } }) => {
       await updatePageFile({
@@ -66,11 +66,15 @@ export const pageRouter = router({
       z.object({
         courseName: z.string(),
         moduleName: z.string(),
-        previousModuleName: z.string(),
-        previousPageName: z.string(),
+        previousModuleName: z
+          .string()
+          .describe("Previous module name before the update"),
+        previousPageName: z
+          .string()
+          .describe("Previous page name before the update"),
         pageName: z.string(),
         page: zodLocalCoursePage,
-      })
+      }),
     )
     .mutation(
       async ({
@@ -100,7 +104,7 @@ export const pageRouter = router({
             pageName: previousPageName,
           });
         }
-      }
+      },
     ),
   deletePage: publicProcedure
     .input(
@@ -108,7 +112,7 @@ export const pageRouter = router({
         courseName: z.string(),
         moduleName: z.string(),
         pageName: z.string(),
-      })
+      }),
     )
     .mutation(async ({ input: { courseName, moduleName, pageName } }) => {
       await deletePageFile({
@@ -139,7 +143,7 @@ export async function updatePageFile({
     courseDirectory,
     moduleName,
     "pages",
-    pageName + ".md"
+    pageName + ".md",
   );
 
   const pageMarkdown = localPageMarkdownUtils.toMarkdown(page);
@@ -160,7 +164,7 @@ async function deletePageFile({
     courseDirectory,
     moduleName,
     "pages",
-    pageName + ".md"
+    pageName + ".md",
   );
   console.log("removing page", filePath);
   await fs.unlink(filePath);
