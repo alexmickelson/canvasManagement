@@ -23,7 +23,7 @@ RUN npm install -g pnpm
 
 COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/package.json ./
-RUN pnpm install --prod
+RUN pnpm install --prod  --ignore-scripts
 
 COPY --from=builder /app/src/websocket-standalone.js ./src/websocket-standalone.js
 COPY --from=builder /app/.output ./.output
