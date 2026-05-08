@@ -12,7 +12,6 @@ import {
   QueryClientProvider,
 } from "@tanstack/react-query";
 import { createServerSideHelpers } from "@trpc/react-query/server";
-import superjson from "superjson";
 import { MyToaster } from "@/app/MyToaster";
 import { ClientCacheInvalidation } from "@/components/realtime/ClientCacheInvalidation";
 import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling";
@@ -31,7 +30,6 @@ const fetchInitialData = createServerFn({ method: "GET" }).handler(async () => {
   const trpcHelper = createServerSideHelpers({
     router: trpcAppRouter,
     ctx: createTrpcContext(),
-    transformer: superjson,
     queryClientConfig: {
       defaultOptions: {
         queries: { staleTime: Infinity },

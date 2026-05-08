@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import superjson from "superjson";
 import { httpBatchLink } from "@trpc/client";
 import { trpc, TRPCProvider } from "./trpcClient";
 import { getQueryClient } from "@/app/providersQueryClientUtils";
@@ -19,11 +18,10 @@ export default function TrpcProvider({
       links: [
         httpBatchLink({
           url,
-          transformer: superjson,
           maxURLLength: 10_000, // limit number of batched requests
         }),
       ],
-    })
+    }),
   );
 
   // return (

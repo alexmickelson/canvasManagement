@@ -11,15 +11,29 @@ import { directoryOrFileExists } from "../utils/fileSystemUtils";
 
 const courseItemTypes: CourseItemType[] = ["Assignment", "Quiz", "Page"];
 
+async function getValidatedCourseNames() {
+  const settings = await fileStorageService.settings.getAllCoursesSettings();
+  return settings.map((s) => s.name);
+}
+
+async function getValidatedModuleNames(courseName: string) {
+  const courseNames = await getValidatedCourseNames();
+  if (!courseNames.includes(courseName)) {
+    throw new Error(
+      `Course "${courseName}" not found. Available courses: ${courseNames.join(", ")}`,
+    );
+  }
+  return await getModuleNamesFromFiles(courseName);
+}
+
 export const courseRouter = router({
   listCourses: publicProcedure.query(async () => {
-    const settings = await fileStorageService.settings.getAllCoursesSettings();
-    return settings.map((s) => s.name);
+    return await getValidatedCourseNames();
   }),
   listModules: publicProcedure
     .input(z.string().describe("Course name"))
     .query(async ({ input: courseName }) => {
-      return await getModuleNamesFromFiles(courseName);
+      return await getValidatedModuleNames(courseName);
     }),
   listModuleItems: publicProcedure
     .input(
@@ -29,6 +43,12 @@ export const courseRouter = router({
       }),
     )
     .query(async ({ input: { courseName, moduleName } }) => {
+      const moduleNames = await getValidatedModuleNames(courseName);
+      if (!moduleNames.includes(moduleName)) {
+        throw new Error(
+          `Module "${moduleName}" not found in course "${courseName}". Available modules: ${moduleNames.join(", ")}`,
+        );
+      }
       const courseDirectory = await getCoursePathByName(courseName);
       const results = await Promise.all(
         courseItemTypes.map(async (type) => {

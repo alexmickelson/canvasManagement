@@ -53,7 +53,11 @@ const getItem = async <T extends CourseItemType>({
   const folder = typeToFolder[type];
   const filePath = path.join(courseDirectory, moduleName, folder, name + ".md");
   if (!(await directoryOrFileExists(filePath))) {
-    throw new Error(`${type} file not found: ${filePath}`);
+    const available = await getItemFileNames({ courseName, moduleName, type });
+    const itemList = available.length > 0 ? available.join(", ") : "(none)";
+    throw new Error(
+      `${type} "${name}" not found in module "${moduleName}" of course "${courseName}". Available ${type.toLowerCase()}s: ${itemList}`,
+    );
   }
   const rawFile = (await fs.readFile(filePath, "utf-8")).replace(/\r\n/g, "\n");
   if (type === "Assignment") {
