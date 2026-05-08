@@ -17,8 +17,9 @@ const getUrl = (splat: string | undefined, req: Request) => {
   return url;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const proxyResponseHeaders = (response: any) => {
+const proxyResponseHeaders = (response: {
+  headers: Record<string, unknown>;
+}) => {
   const headers = new Headers();
   Object.entries(response.headers).forEach(([key, value]) => {
     if (["link", "x-rate-limit-remaining"].includes(key))

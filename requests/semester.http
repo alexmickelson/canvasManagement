@@ -33,3 +33,7 @@ Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
 ###
 GET https://snow.instructure.com/api/v1/courses/960410/users?enrollment_type=student
 Authorization: Bearer {{$dotenv CANVAS_TOKEN}}
+
+###
+GET https://snow.instructure.com/api/v1/users/self
+Authorization: Bearer {{$dotenv CANVAS_TOKEN}}

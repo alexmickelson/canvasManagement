@@ -8,6 +8,9 @@ dist/
 .pnpm-store/
 tmp.json
 
+# generated
+public/openapi.json
+
 **/*.env
 .env
 
