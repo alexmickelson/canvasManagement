@@ -12,6 +12,7 @@ COPY . .
 RUN mkdir -p storage
 RUN rm -rf /app/storage/*
 ENV NEXT_PUBLIC_ENABLE_FILE_SYNC=true
+RUN pnpm generate:openapi
 RUN pnpm run build
 
 FROM node:22-alpine AS production
