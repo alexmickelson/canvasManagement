@@ -13,3 +13,6 @@ Dockerfile
 
 
 cavnas-data.md
+.tanstack/
+temp/
+storage/
