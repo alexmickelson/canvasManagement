@@ -89,12 +89,10 @@ function CourseItem({
                 <button
                   onClick={async () => {
                     await updateSettingsMutation.mutateAsync({
-                      globalSettings: {
-                        ...globalSettings,
-                        courses: globalSettings.courses.filter(
-                          (course) => course.name !== courseName,
-                        ),
-                      },
+                      ...globalSettings,
+                      courses: globalSettings.courses.filter(
+                        (course) => course.name !== courseName,
+                      ),
                     });
                     closeModal();
                   }}

@@ -9,14 +9,16 @@ import { quizRouter } from "../../features/local/quizzes/quizRouter";
 import { settingsRouter } from "../../features/local/course/settingsRouter";
 import { moduleRouter } from "@/features/local/modules/moduleRouter";
 import { canvasFileRouter } from "@/features/canvas/services/canvasFileRouter";
+import { courseRouter } from "@/features/local/course/courseRouter";
 
 export const trpcAppRouter = router({
+  course: courseRouter,
+  module: moduleRouter,
   assignment: assignmentRouter,
   lectures: lectureRouter,
   settings: settingsRouter,
   quiz: quizRouter,
   page: pageRouter,
-  module: moduleRouter,
   directories: directoriesRouter,
   canvasFile: canvasFileRouter,
   globalSettings: globalSettingsRouter,

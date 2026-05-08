@@ -13,20 +13,16 @@ export const useEmptyDirectoriesQuery = () => {
 export const useDirectoryContentsQuery = (relativePath: string) => {
   const trpc = useTRPC();
   return useQuery(
-    trpc.directories.getDirectoryContents.queryOptions({ relativePath })
+    trpc.directories.getDirectoryContents.queryOptions(relativePath),
   );
 };
 
 export const useDirectoryIsCourseQuery = (folderPath: string) => {
   const trpc = useTRPC();
-  return useQuery(
-    trpc.directories.directoryIsCourse.queryOptions({ folderPath })
-  );
+  return useQuery(trpc.directories.directoryIsCourse.queryOptions(folderPath));
 };
 
 export const useDirectoryExistsQuery = (relativePath: string) => {
   const trpc = useTRPC();
-  return useQuery(
-    trpc.directories.directoryExists.queryOptions({ relativePath })
-  );
+  return useQuery(trpc.directories.directoryExists.queryOptions(relativePath));
 };

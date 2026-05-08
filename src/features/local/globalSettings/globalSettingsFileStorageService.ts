@@ -19,7 +19,7 @@ export const getGlobalSettings = async (): Promise<GlobalSettings> => {
   } catch (err) {
     console.log(err);
     throw new Error(
-      `Global Settings file does not exist at path: ${SETTINGS_FILE_PATH}`
+      `Global Settings file does not exist at path: ${SETTINGS_FILE_PATH}`,
     );
   }
 
@@ -35,8 +35,9 @@ export const getCoursePathByName = async (courseName: string) => {
   const globalSettings = await getGlobalSettings();
   const course = globalSettings.courses.find((c) => c.name === courseName);
   if (!course) {
+    const validNames = globalSettings.courses.map((c) => c.name).join(", ");
     throw new Error(
-      `Course with name ${courseName} not found in global settings`
+      `Course with name ${courseName} not found in global settings. Valid options: ${validNames}`,
     );
   }
   return path.join(basePath, course.path);
@@ -44,7 +45,7 @@ export const getCoursePathByName = async (courseName: string) => {
 
 export const updateGlobalSettings = async (globalSettings: GlobalSettings) => {
   const globalSettingsString = globalSettingsToYaml(
-    zodGlobalSettings.parse(globalSettings)
+    zodGlobalSettings.parse(globalSettings),
   );
   await fs.writeFile(SETTINGS_FILE_PATH, globalSettingsString, "utf-8");
 };

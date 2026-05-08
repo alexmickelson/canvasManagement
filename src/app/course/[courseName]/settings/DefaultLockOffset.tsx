@@ -11,7 +11,7 @@ export default function DefaultLockOffset() {
   const { data: settings } = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const [hoursOffset, setHoursOffset] = useState(
-    settings.defaultLockHoursOffset?.toString() ?? "0"
+    settings.defaultLockHoursOffset?.toString() ?? "0",
   );
 
   useEffect(() => {
@@ -23,10 +23,8 @@ export default function DefaultLockOffset() {
           hoursNumber !== settings.defaultLockHoursOffset
         ) {
           updateSettings.mutate({
-            settings: {
-              ...settings,
-              defaultLockHoursOffset: hoursNumber,
-            },
+            ...settings,
+            defaultLockHoursOffset: hoursNumber,
           });
         }
       } catch {}

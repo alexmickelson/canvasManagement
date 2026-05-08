@@ -9,9 +9,7 @@ import {
 export const useLecturesSuspenseQuery = () => {
   const { courseName } = useCourseContext();
   const trpc = useTRPC();
-  return useSuspenseQuery(
-    trpc.lectures.getLectures.queryOptions({ courseName })
-  );
+  return useSuspenseQuery(trpc.lectures.getLectures.queryOptions(courseName));
 };
 
 export const useLectureUpdateMutation = () => {
@@ -24,7 +22,7 @@ export const useLectureUpdateMutation = () => {
           queryKey: trpc.lectures.getLectures.queryKey(),
         });
       },
-    })
+    }),
   );
 };
 
@@ -38,6 +36,6 @@ export const useDeleteLectureMutation = () => {
           queryKey: trpc.lectures.getLectures.queryKey(),
         });
       },
-    })
+    }),
   );
 };

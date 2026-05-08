@@ -20,12 +20,8 @@ import {
 
 export const lectureRouter = router({
   getLectures: publicProcedure
-    .input(
-      z.object({
-        courseName: z.string(),
-      }),
-    )
-    .query(async ({ input: { courseName } }) => {
+    .input(z.string())
+    .query(async ({ input: courseName }) => {
       return await getLectures(courseName);
     }),
   updateLecture: publicProcedure

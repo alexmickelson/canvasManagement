@@ -34,13 +34,11 @@ export default function AssignmentGroupManagement() {
           "updating",
           assignmentGroups,
           updateSettings.isPending,
-          isPending
+          isPending,
         );
         updateSettings.mutate({
-          settings: {
-            ...settings,
-            assignmentGroups,
-          },
+          ...settings,
+          assignmentGroups,
         });
       }
     }, delay);
@@ -59,8 +57,8 @@ export default function AssignmentGroupManagement() {
             setValue={(newValue) =>
               setAssignmentGroups((oldGroups) =>
                 oldGroups.map((g) =>
-                  g.id === group.id ? { ...g, name: newValue } : g
-                )
+                  g.id === group.id ? { ...g, name: newValue } : g,
+                ),
               )
             }
             label={"Group Name"}
@@ -72,8 +70,8 @@ export default function AssignmentGroupManagement() {
                 oldGroups.map((g) =>
                   g.id === group.id
                     ? { ...g, weight: parseInt(newValue || "0") }
-                    : g
-                )
+                    : g,
+                ),
               )
             }
             label={"Weight"}
@@ -115,18 +113,19 @@ export default function AssignmentGroupManagement() {
           {({ closeModal }) => (
             <div>
               <div className="text-center font-bold">
-                DANGER: updating assignment groups can delete assignments and grades from canvas.
+                DANGER: updating assignment groups can delete assignments and
+                grades from canvas.
               </div>
               <div className="text-center">
-                This is only recommended to do at the beginning of a semester. Are you sure you want to continue?
+                This is only recommended to do at the beginning of a semester.
+                Are you sure you want to continue?
               </div>
               <br />
               <div className="flex justify-around gap-3">
                 <button
                   onClick={async () => {
-                    const newSettings = await applyInCanvas.mutateAsync(
-                      settings
-                    );
+                    const newSettings =
+                      await applyInCanvas.mutateAsync(settings);
 
                     // prevent debounce from resetting
                     if (newSettings)
@@ -145,7 +144,6 @@ export default function AssignmentGroupManagement() {
             </div>
           )}
         </Modal>
-      
       </div>
       {applyInCanvas.isPending && <Spinner />}
       {applyInCanvas.isSuccess && (
@@ -172,7 +170,7 @@ export default function AssignmentGroupManagement() {
 
 function areAssignmentGroupsEqual(
   list1: LocalAssignmentGroup[],
-  list2: LocalAssignmentGroup[]
+  list2: LocalAssignmentGroup[],
 ): boolean {
   // Check if lists have the same length
   if (list1.length !== list2.length) return false;

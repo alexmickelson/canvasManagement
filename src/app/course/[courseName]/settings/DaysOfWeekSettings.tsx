@@ -19,12 +19,10 @@ export default function DaysOfWeekSettings() {
           const hasDay = settings.daysOfWeek.includes(day);
 
           updateSettings.mutate({
-            settings: {
-              ...settings,
-              daysOfWeek: hasDay
-                ? settings.daysOfWeek.filter((d) => d !== day)
-                : [day, ...settings.daysOfWeek],
-            },
+            ...settings,
+            daysOfWeek: hasDay
+              ? settings.daysOfWeek.filter((d) => d !== day)
+              : [day, ...settings.daysOfWeek],
           });
         }}
       />

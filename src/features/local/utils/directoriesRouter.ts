@@ -8,30 +8,18 @@ export const directoriesRouter = router({
     return await fileStorageService.getEmptyDirectories();
   }),
   getDirectoryContents: publicProcedure
-    .input(
-      z.object({
-        relativePath: z.string(),
-      }),
-    )
-    .query(async ({ input: { relativePath } }) => {
+    .input(z.string())
+    .query(async ({ input: relativePath }) => {
       return await fileStorageService.getDirectoryContents(relativePath);
     }),
   directoryIsCourse: publicProcedure
-    .input(
-      z.object({
-        folderPath: z.string(),
-      }),
-    )
-    .query(async ({ input: { folderPath } }) => {
+    .input(z.string())
+    .query(async ({ input: folderPath }) => {
       return await fileStorageService.settings.folderIsCourse(folderPath);
     }),
   directoryExists: publicProcedure
-    .input(
-      z.object({
-        relativePath: z.string(),
-      }),
-    )
-    .query(async ({ input: { relativePath } }) => {
+    .input(z.string())
+    .query(async ({ input: relativePath }) => {
       return await fileStorageService.directoryExists(relativePath);
     }),
 });

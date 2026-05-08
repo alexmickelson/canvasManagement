@@ -21,10 +21,8 @@ export default function DefaultFileUploadTypes() {
         JSON.stringify(defaultFileUploadTypes)
       ) {
         updateSettings.mutate({
-          settings: {
-            ...settings,
-            defaultFileUploadTypes: defaultFileUploadTypes,
-          },
+          ...settings,
+          defaultFileUploadTypes: defaultFileUploadTypes,
         });
       }
     }, 500);
@@ -41,7 +39,7 @@ export default function DefaultFileUploadTypes() {
             value={type}
             setValue={(newValue) =>
               setDefaultFileUploadTypes((oldTypes) =>
-                oldTypes.map((t, i) => (i === index ? newValue : t))
+                oldTypes.map((t, i) => (i === index ? newValue : t)),
               )
             }
             label={"Default Type " + index}

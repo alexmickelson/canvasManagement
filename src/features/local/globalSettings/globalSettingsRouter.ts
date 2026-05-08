@@ -12,12 +12,8 @@ export const globalSettingsRouter = router({
     return await getGlobalSettings();
   }),
   updateGlobalSettings: publicProcedure
-    .input(
-      z.object({
-        globalSettings: zodGlobalSettings,
-      }),
-    )
-    .mutation(async ({ input: { globalSettings } }) => {
+    .input(zodGlobalSettings)
+    .mutation(async ({ input: globalSettings }) => {
       return await updateGlobalSettings(globalSettings);
     }),
 });

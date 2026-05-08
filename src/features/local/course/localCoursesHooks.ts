@@ -16,7 +16,7 @@ export const useLocalCourseSettingsQuery = () => {
   const { courseName } = useCourseContext();
   const trpc = useTRPC();
   return useSuspenseQuery(
-    trpc.settings.courseSettings.queryOptions({ courseName })
+    trpc.settings.courseSettings.queryOptions(courseName),
   );
 };
 
@@ -37,7 +37,7 @@ export const useCreateLocalCourseMutation = () => {
           queryKey: trpc.globalSettings.getGlobalSettings.queryKey(),
         });
       },
-    })
+    }),
   );
 };
 
@@ -52,9 +52,9 @@ export const useUpdateLocalCourseSettingsMutation = () => {
           queryKey: trpc.settings.allCoursesSettings.queryKey(),
         });
         queryClient.invalidateQueries({
-          queryKey: trpc.settings.courseSettings.queryKey({ courseName }),
+          queryKey: trpc.settings.courseSettings.queryKey(courseName),
         });
       },
-    })
+    }),
   );
 };

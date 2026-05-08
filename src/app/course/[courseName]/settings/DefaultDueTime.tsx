@@ -13,7 +13,7 @@ export default function DefaultDueTime() {
   const { data: settings } = useLocalCourseSettingsQuery();
   const updateSettings = useUpdateLocalCourseSettingsMutation();
   const [haveLockOffset, setHaveLockOffset] = useState(
-    typeof settings.defaultLockHoursOffset !== "undefined"
+    typeof settings.defaultLockHoursOffset !== "undefined",
   );
   return (
     <div className={settingsBox}>
@@ -24,10 +24,8 @@ export default function DefaultDueTime() {
         setChosenTime={(simpleTime) => {
           console.log(simpleTime);
           updateSettings.mutate({
-            settings: {
-              ...settings,
-              defaultDueTime: simpleTime,
-            },
+            ...settings,
+            defaultDueTime: simpleTime,
           });
         }}
       />
@@ -36,10 +34,8 @@ export default function DefaultDueTime() {
         <button
           onClick={async () => {
             await updateSettings.mutateAsync({
-              settings: {
-                ...settings,
-                defaultLockHoursOffset: 0,
-              },
+              ...settings,
+              defaultLockHoursOffset: 0,
             });
             setHaveLockOffset(true);
           }}
@@ -55,10 +51,8 @@ export default function DefaultDueTime() {
           className="btn-danger"
           onClick={async () => {
             await updateSettings.mutateAsync({
-              settings: {
-                ...settings,
-                defaultLockHoursOffset: undefined,
-              },
+              ...settings,
+              defaultLockHoursOffset: undefined,
             });
             setHaveLockOffset(false);
           }}

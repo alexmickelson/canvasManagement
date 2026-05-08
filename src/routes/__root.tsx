@@ -44,9 +44,8 @@ const fetchInitialData = createServerFn({ method: "GET" }).handler(async () => {
   await Promise.all(
     allSettings.map(async (settings) => {
       const courseName = settings.name;
-      const moduleNames = await trpcHelper.module.getModuleNames.fetch({
-        courseName,
-      });
+      const moduleNames =
+        await trpcHelper.module.getModuleNames.fetch(courseName);
       await Promise.all([
         ...moduleNames.map((moduleName) =>
           trpcHelper.assignment.getAllAssignments.prefetch({

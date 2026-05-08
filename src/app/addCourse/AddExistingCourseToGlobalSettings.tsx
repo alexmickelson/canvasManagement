@@ -55,16 +55,14 @@ const ExistingCourseForm: FC<object> = () => {
         console.log(path);
 
         await updateSettingsMutation.mutateAsync({
-          globalSettings: {
-            ...globalSettings,
-            courses: [
-              ...globalSettings.courses,
-              {
-                name,
-                path,
-              },
-            ],
-          },
+          ...globalSettings,
+          courses: [
+            ...globalSettings.courses,
+            {
+              name,
+              path,
+            },
+          ],
         });
         setName("");
         setPath("./");

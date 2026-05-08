@@ -15,9 +15,7 @@ import {
 export const useModuleNamesQuery = () => {
   const { courseName } = useCourseContext();
   const trpc = useTRPC();
-  return useSuspenseQuery(
-    trpc.module.getModuleNames.queryOptions({ courseName })
-  );
+  return useSuspenseQuery(trpc.module.getModuleNames.queryOptions(courseName));
 };
 
 export const useCreateModuleMutation = () => {
@@ -28,10 +26,10 @@ export const useCreateModuleMutation = () => {
     trpc.module.createModule.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: trpc.module.getModuleNames.queryKey({ courseName }),
+          queryKey: trpc.module.getModuleNames.queryKey(courseName),
         });
       },
-    })
+    }),
   );
 };
 
@@ -41,19 +39,22 @@ export const useCourseQuizzesByModuleByDateQuery = () => {
   const trpc = useTRPC();
   const quizzesResults = useSuspenseQueries({
     queries: moduleNames.map((moduleName: string) =>
-      trpc.quiz.getAllQuizzes.queryOptions({ courseName, moduleName })
+      trpc.quiz.getAllQuizzes.queryOptions({ courseName, moduleName }),
     ),
   });
   const quizzes = quizzesResults.map((result) => result.data ?? []);
   const quizzesAndModules = moduleNames.flatMap(
     (moduleName: string, index: number) => {
       return quizzes[index].map((quiz) => ({ moduleName, quiz }));
-    }
+    },
   );
   const quizzesByModuleByDate = quizzesAndModules.reduce(
     (previous, { quiz, moduleName }) => {
       const dueDay = getDateOnlyMarkdownString(
-        getDateFromStringOrThrow(quiz.dueAt, "due at for quiz in items context")
+        getDateFromStringOrThrow(
+          quiz.dueAt,
+          "due at for quiz in items context",
+        ),
       );
       const previousModules = previous[dueDay] ?? {};
       const previousModule = previousModules[moduleName] ?? {
@@ -71,7 +72,7 @@ export const useCourseQuizzesByModuleByDateQuery = () => {
         },
       };
     },
-    {} as CalendarItemsInterface
+    {} as CalendarItemsInterface,
   );
   return quizzesByModuleByDate;
 };
@@ -82,19 +83,22 @@ export const useCoursePagesByModuleByDateQuery = () => {
   const trpc = useTRPC();
   const pagesResults = useSuspenseQueries({
     queries: moduleNames.map((moduleName: string) =>
-      trpc.page.getAllPages.queryOptions({ courseName, moduleName })
+      trpc.page.getAllPages.queryOptions({ courseName, moduleName }),
     ),
   });
   const pages = pagesResults.map((result) => result.data ?? []);
   const pagesAndModules = moduleNames.flatMap(
     (moduleName: string, index: number) => {
       return pages[index].map((page) => ({ moduleName, page }));
-    }
+    },
   );
   const pagesByModuleByDate = pagesAndModules.reduce(
     (previous, { page, moduleName }) => {
       const dueDay = getDateOnlyMarkdownString(
-        getDateFromStringOrThrow(page.dueAt, "due at for page in items context")
+        getDateFromStringOrThrow(
+          page.dueAt,
+          "due at for page in items context",
+        ),
       );
       const previousModules = previous[dueDay] ?? {};
       const previousModule = previousModules[moduleName] ?? {
@@ -112,7 +116,7 @@ export const useCoursePagesByModuleByDateQuery = () => {
         },
       };
     },
-    {} as CalendarItemsInterface
+    {} as CalendarItemsInterface,
   );
   return pagesByModuleByDate;
 };
@@ -123,7 +127,10 @@ export const useCourseAssignmentsByModuleByDateQuery = () => {
   const trpc = useTRPC();
   const assignmentsResults = useSuspenseQueries({
     queries: moduleNames.map((moduleName: string) =>
-      trpc.assignment.getAllAssignments.queryOptions({ courseName, moduleName })
+      trpc.assignment.getAllAssignments.queryOptions({
+        courseName,
+        moduleName,
+      }),
     ),
   });
   const assignments = assignmentsResults.map((result) => result.data);
@@ -133,15 +140,15 @@ export const useCourseAssignmentsByModuleByDateQuery = () => {
         moduleName,
         assignment,
       }));
-    }
+    },
   );
   const assignmentsByModuleByDate = assignmentsAndModules.reduce(
     (previous, { assignment, moduleName }) => {
       const dueDay = getDateOnlyMarkdownString(
         getDateFromStringOrThrow(
           assignment.dueAt,
-          "due at for assignment in items context"
-        )
+          "due at for assignment in items context",
+        ),
       );
       const previousModules = previous[dueDay] ?? {};
       const previousModule = previousModules[moduleName] ?? {
@@ -159,7 +166,7 @@ export const useCourseAssignmentsByModuleByDateQuery = () => {
         },
       };
     },
-    {} as CalendarItemsInterface
+    {} as CalendarItemsInterface,
   );
   return assignmentsByModuleByDate;
 };

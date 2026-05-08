@@ -3,7 +3,7 @@ import { LocalCourseSettings } from "@/features/local/course/localCourseSettings
 const _getDateFromAMPM = (
   datePart: string,
   timePart: string,
-  amPmPart: string
+  amPmPart: string,
 ): Date | undefined => {
   const [month, day, year] = datePart.split("/").map(Number);
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
@@ -24,7 +24,7 @@ const _getDateFromAMPM = (
 
 const _getDateFromMilitary = (
   datePart: string,
-  timePart: string
+  timePart: string,
 ): Date | undefined => {
   const [month, day, year] = datePart.split("/").map(Number);
   const [hours, minutes, seconds] = timePart.split(":").map(Number);
@@ -70,15 +70,18 @@ export const getDateFromString = (value: string): Date | undefined => {
 
 export const getDateFromStringOrThrow = (
   value: string,
-  labelForError: string
+  labelForError: string,
 ): Date => {
   const d = getDateFromString(value);
-  if (!d) throw Error(`Invalid date format for ${labelForError}, ${value}`);
+  if (!d)
+    throw Error(
+      `Invalid date format for ${labelForError}: "${value}". Valid formats: "M/D/YYYY", "M/D/YYYY HH:mm:ss", "M/D/YYYY h:mm:ss AM/PM", "YYYY-MM-DDTHH:mm:ss"`,
+    );
   return d;
 };
 
 export const verifyDateStringOrUndefined = (
-  value: string
+  value: string,
 ): string | undefined => {
   const date = getDateFromString(value);
   return date ? dateToMarkdownString(date) : undefined;
@@ -86,10 +89,13 @@ export const verifyDateStringOrUndefined = (
 
 export const verifyDateOrThrow = (
   value: string,
-  labelForError: string
+  labelForError: string,
 ): string => {
   const myDate = getDateFromString(value);
-  if (!myDate) throw new Error(`Invalid format for ${labelForError}: ${value}`);
+  if (!myDate)
+    throw new Error(
+      `Invalid format for ${labelForError}: "${value}". Valid formats: "M/D/YYYY", "M/D/YYYY HH:mm:ss", "M/D/YYYY h:mm:ss AM/PM", "YYYY-MM-DDTHH:mm:ss"`,
+    );
   return dateToMarkdownString(myDate);
 };
 
@@ -133,6 +139,6 @@ export function groupByStartDate(courses: LocalCourseSettings[]): {
     },
     {} as {
       [key: string]: LocalCourseSettings[];
-    }
+    },
   );
 }

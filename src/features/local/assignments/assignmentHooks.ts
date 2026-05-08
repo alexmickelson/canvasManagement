@@ -18,7 +18,7 @@ import {
 
 export const useAssignmentQuery = (
   moduleName: string,
-  assignmentName: string
+  assignmentName: string,
 ) => {
   const { courseName } = useCourseContext();
   const trpc = useTRPC();
@@ -27,7 +27,7 @@ export const useAssignmentQuery = (
       moduleName,
       courseName,
       assignmentName,
-    })
+    }),
   );
 };
 
@@ -47,7 +47,7 @@ export const useUpdateImageSettingsForAssignment = ({
   useEffect(() => {
     if (!enable_images) {
       console.log(
-        "not uploading images, NEXT_PUBLIC_ENABLE_FILE_SYNC is not set to true"
+        "not uploading images, NEXT_PUBLIC_ENABLE_FILE_SYNC is not set to true",
       );
       return;
     }
@@ -74,7 +74,7 @@ export const useAddNewImagesToCanvasMutation = () => {
   const { data: settings } = useLocalCourseSettingsQuery();
   const trpc = useTRPC();
   const createCanvasUrlMutation = useMutation(
-    trpc.canvasFile.getCanvasFileUrl.mutationOptions()
+    trpc.canvasFile.getCanvasFileUrl.mutationOptions(),
   );
   const updateSettings = useUpdateLocalCourseSettingsMutation();
 
@@ -83,7 +83,7 @@ export const useAddNewImagesToCanvasMutation = () => {
       const imageSources = extractImageSources(markdownString);
       // console.log("original image urls", imageSources);
       const newImages = imageSources.filter((source) =>
-        settings.assets.every((a) => a.sourceUrl !== source)
+        settings.assets.every((a) => a.sourceUrl !== source),
       );
 
       if (newImages.length === 0) {
@@ -100,13 +100,11 @@ export const useAddNewImagesToCanvasMutation = () => {
           });
           console.log("got canvas url", source, canvasUrl);
           return { sourceUrl: source, canvasUrl };
-        })
+        }),
       );
       await updateSettings.mutateAsync({
-        settings: {
-          ...settings,
-          assets: [...settings.assets, ...newAssets],
-        },
+        ...settings,
+        assets: [...settings.assets, ...newAssets],
       });
     },
   });
@@ -137,7 +135,7 @@ export const useUpdateAssignmentMutation = () => {
           assignmentName,
           previousAssignmentName,
           previousModuleName,
-        }
+        },
       ) => {
         if (moduleName !== previousModuleName) {
           queryClient.invalidateQueries({
@@ -168,7 +166,7 @@ export const useUpdateAssignmentMutation = () => {
           }),
         });
       },
-    })
+    }),
   );
 };
 
@@ -185,7 +183,7 @@ export const useCreateAssignmentMutation = () => {
           }),
         });
       },
-    })
+    }),
   );
 };
 
@@ -209,6 +207,6 @@ export const useDeleteAssignmentMutation = () => {
           }),
         });
       },
-    })
+    }),
   );
 };

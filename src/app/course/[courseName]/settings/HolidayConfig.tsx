@@ -29,15 +29,15 @@ export const holidaysAreEqual = (
   holidays2: {
     name: string;
     days: string[];
-  }[]
+  }[],
 ): boolean => {
   if (holidays1.length !== holidays2.length) return false;
 
   const sortedObj1 = [...holidays1].sort((a, b) =>
-    a.name.localeCompare(b.name)
+    a.name.localeCompare(b.name),
   );
   const sortedObj2 = [...holidays2].sort((a, b) =>
-    a.name.localeCompare(b.name)
+    a.name.localeCompare(b.name),
   );
 
   for (let i = 0; i < sortedObj1.length; i++) {
@@ -81,10 +81,8 @@ function InnerHolidayConfig() {
           console.log("different holiday configs", settings.holidays, parsed);
 
           updateSettings.mutate({
-            settings: {
-              ...settings,
-              holidays: parsed,
-            },
+            ...settings,
+            holidays: parsed,
           });
         }
       } catch {}

@@ -7,12 +7,8 @@ import { lectureFolderName } from "../lectures/lectureUtils";
 
 export const moduleRouter = router({
   getModuleNames: publicProcedure
-    .input(
-      z.object({
-        courseName: z.string(),
-      }),
-    )
-    .query(async ({ input: { courseName } }) => {
+    .input(z.string())
+    .query(async ({ input: courseName }) => {
       return await getModuleNamesFromFiles(courseName);
     }),
   createModule: publicProcedure

@@ -24,10 +24,8 @@ export default function SubmissionDefaults() {
       JSON.stringify(defaultSubmissionTypes)
     ) {
       updateSettings.mutate({
-        settings: {
-          ...settings,
-          defaultAssignmentSubmissionTypes: defaultSubmissionTypes,
-        },
+        ...settings,
+        defaultAssignmentSubmissionTypes: defaultSubmissionTypes,
       });
     }
   }, [defaultSubmissionTypes, settings, updateSettings]);
@@ -43,7 +41,7 @@ export default function SubmissionDefaults() {
             setValue={(newType) => {
               if (newType)
                 setDefaultSubmissionTypes((oldTypes) =>
-                  oldTypes.map((t, i) => (i === index ? newType : t))
+                  oldTypes.map((t, i) => (i === index ? newType : t)),
                 );
             }}
             label={""}
