@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "pnpm install --config.confirmModulesPurge=false && pnpm generate:openapi && concurrently \"vite dev\" \"node src/websocket-standalone.js\"",
-    "generate:openapi": "trpc-openapi ./src/services/serverFunctions/appRouter.ts -e trpcAppRouter -o public/openapi.json --title \"Canvas Management API\" --version \"1.0.0\" --baseUrl /api/trpc",
+    "generate:openapi": "node scripts/generate-openapi.mjs",
     "build": "vite build",
     "start": "concurrently \"node .output/server/index.mjs\" \"node src/websocket-standalone.js\"",
     "lint": "eslint . --config eslint.config.mjs && tsc",
