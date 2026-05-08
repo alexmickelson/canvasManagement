@@ -50,7 +50,7 @@
         "@vitejs/plugin-react-oxc>vite": "*"
       }
     },
-    "onlyBuiltDependencies": []
+    "onlyBuiltDependencies": ["esbuild"]
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
