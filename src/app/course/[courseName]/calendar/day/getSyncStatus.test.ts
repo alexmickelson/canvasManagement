@@ -148,7 +148,7 @@ describe("getSyncStatus - assignment", () => {
     expect(result.status).toBe("published");
   });
 
-  it("returns published when assignment group has no canvasId", () => {
+  it("returns incomplete when assignment group has no canvasId", () => {
     const settings: LocalCourseSettings = {
       ...baseSettings,
       assignmentGroups: [
@@ -167,7 +167,8 @@ describe("getSyncStatus - assignment", () => {
       type: "assignment",
       settings,
     });
-    expect(result.status).toBe("published");
+    expect(result.status).toBe("incomplete");
+    expect(result.message).toBe("assignment group not found in canvas");
   });
 
   it("returns published when local assignment group name is unset", () => {

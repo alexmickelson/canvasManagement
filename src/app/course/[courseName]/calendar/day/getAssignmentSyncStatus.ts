@@ -80,14 +80,19 @@ function checkAssignment(
   );
   if (dueLockStatus) return dueLockStatus;
 
-  const assignmentGroup = settings.assignmentGroups.find(
-    (g) => g.name === assignment.localAssignmentGroupName,
-  );
-  if (
-    assignmentGroup?.canvasId !== undefined &&
-    canvasAssignment.assignment_group_id !== assignmentGroup.canvasId
-  ) {
-    return { status: "incomplete", message: "assignment group is different" };
+  if (assignment.localAssignmentGroupName) {
+    const assignmentGroup = settings.assignmentGroups.find(
+      (g) => g.name === assignment.localAssignmentGroupName,
+    );
+    if (!assignmentGroup?.canvasId) {
+      return {
+        status: "incomplete",
+        message: "assignment group not found in canvas",
+      };
+    }
+    if (canvasAssignment.assignment_group_id !== assignmentGroup.canvasId) {
+      return { status: "incomplete", message: "assignment group is different" };
+    }
   }
 
   try {
