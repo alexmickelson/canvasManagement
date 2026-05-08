@@ -7,6 +7,7 @@ import {
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { canvasModuleService } from "../services/canvasModuleService";
 import { canvasAssignmentService } from "../services/canvasAssignmentService";
+import toast from "react-hot-toast";
 
 export const canvasAssignmentKeys = {
   assignments: (canvasCourseId: number) =>
@@ -42,14 +43,14 @@ export const useAddAssignmentToCanvasMutation = () => {
       }
 
       const assignmentGroup = settings.assignmentGroups.find(
-        (g) => g.name === assignment.localAssignmentGroupName
+        (g) => g.name === assignment.localAssignmentGroupName,
       );
 
       const canvasAssignmentId = await canvasAssignmentService.create(
         settings.canvasId,
         assignment,
         settings,
-        assignmentGroup?.canvasId
+        assignmentGroup?.canvasId,
       );
       const canvasModule = canvasModules.find((c) => c.name === moduleName);
       const moduleId = canvasModule
@@ -61,13 +62,17 @@ export const useAddAssignmentToCanvasMutation = () => {
         moduleId,
         assignment.name,
         "Assignment",
-        canvasAssignmentId
+        canvasAssignmentId,
       );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: canvasAssignmentKeys.assignments(settings.canvasId),
       });
+    },
+    onError: (error) => {
+      console.error("Failed to add assignment to Canvas:", error);
+      toast.error(error.message);
     },
   });
 };
@@ -85,20 +90,24 @@ export const useUpdateAssignmentInCanvasMutation = () => {
       canvasAssignmentId: number;
     }) => {
       const assignmentGroup = settings.assignmentGroups.find(
-        (g) => g.name === assignment.localAssignmentGroupName
+        (g) => g.name === assignment.localAssignmentGroupName,
       );
       await canvasAssignmentService.update(
         settings.canvasId,
         canvasAssignmentId,
         assignment,
         settings,
-        assignmentGroup?.canvasId
+        assignmentGroup?.canvasId,
       );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: canvasAssignmentKeys.assignments(settings.canvasId),
       });
+    },
+    onError: (error) => {
+      console.error("Failed to update assignment in Canvas:", error);
+      toast.error(error.message);
     },
   });
 };
@@ -117,7 +126,7 @@ export const useDeleteAssignmentFromCanvasMutation = () => {
       await canvasAssignmentService.delete(
         settings.canvasId,
         canvasAssignmentId,
-        assignmentName
+        assignmentName,
       );
     },
     onSuccess: () => {

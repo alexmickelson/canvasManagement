@@ -6,6 +6,11 @@ function makeQueryClient() {
       queries: {
         staleTime: 60 * 1000,
       },
+      mutations: {
+        onError: (error) => {
+          console.error("Unhandled mutation error:", error);
+        },
+      },
     },
   });
 }
