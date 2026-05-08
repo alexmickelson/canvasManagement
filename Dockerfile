@@ -6,7 +6,7 @@ RUN npm install -g pnpm
 
 COPY pnpm-lock.yaml ./
 COPY package.json ./
-RUN pnpm install --config.onlyBuiltDependencies=esbuild
+RUN pnpm install --ignore-scripts
 COPY . .
 
 RUN mkdir -p storage
