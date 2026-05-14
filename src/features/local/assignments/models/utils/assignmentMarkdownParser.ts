@@ -132,24 +132,20 @@ const parseRubricMarkdown = (rawMarkdown: string | undefined): RubricItem[] => {
     return Math.min(min, indent);
   }, Infinity);
 
-  const rubricItems: RubricItem[] = [];
-  let currentItem: RubricItem | null = null;
-
-  for (const line of lines) {
-    const indent = /^(\s*)/.exec(line)![1].length;
-    if (indent === baseIndent) {
-      if (currentItem) rubricItems.push(currentItem);
-      currentItem = parseIndividualRubricItemMarkdown(line);
-    } else {
-      if (currentItem) {
-        if (!currentItem.ratings) currentItem.ratings = [];
-        currentItem.ratings.push(parseRatingFromMarkdown(line));
+  return lines
+    .reduce<RubricItem[]>((items, line) => {
+      const indent = /^(\s*)/.exec(line)![1].length;
+      if (indent === baseIndent) {
+        return [...items, parseIndividualRubricItemMarkdown(line)];
       }
-    }
-  }
-
-  if (currentItem) rubricItems.push(currentItem);
-  return rubricItems;
+      if (items.length === 0) return items;
+      const last = items[items.length - 1];
+      const updated = {
+        ...last,
+        ratings: [...(last.ratings ?? []), parseRatingFromMarkdown(line)],
+      };
+      return [...items.slice(0, -1), updated];
+    }, []);
 };
 
 export const assignmentMarkdownParser = {
