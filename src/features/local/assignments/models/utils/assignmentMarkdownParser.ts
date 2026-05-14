@@ -4,7 +4,7 @@ import {
 } from "../../../utils/timeUtils";
 import { AssignmentSubmissionType } from "../assignmentSubmissionType";
 import { LocalAssignment } from "../localAssignment";
-import { RubricItem } from "../rubricItem";
+import { RubricItem, RubricRating } from "../rubricItem";
 import { extractLabelValue } from "./markdownUtils";
 
 const parseFileUploadExtensions = (input: string) => {
@@ -32,18 +32,26 @@ const parseFileUploadExtensions = (input: string) => {
   return allowedFileUploadExtensions;
 };
 
-const parseIndividualRubricItemMarkdown = (rawMarkdown: string) => {
-  const pointsPattern = /\s*-\s*(-?\d+(?:\.\d+)?)\s*pt(s)?:/;
+const pointsPattern = /\s*-\s*(-?\d+(?:\.\d+)?)\s*pt(s)?:/;
+
+const parseIndividualRubricItemMarkdown = (rawMarkdown: string): RubricItem => {
   const match = pointsPattern.exec(rawMarkdown);
   if (!match) {
     throw new Error(`Points not found: ${rawMarkdown}`);
   }
-
   const points = parseFloat(match[1]);
   const label = rawMarkdown.split(": ").slice(1).join(": ");
+  return { points, label };
+};
 
-  const item: RubricItem = { points, label };
-  return item;
+const parseRatingFromMarkdown = (rawMarkdown: string): RubricRating => {
+  const match = pointsPattern.exec(rawMarkdown);
+  if (!match) {
+    throw new Error(`Points not found in rating: ${rawMarkdown}`);
+  }
+  const points = parseFloat(match[1]);
+  const description = rawMarkdown.split(": ").slice(1).join(": ");
+  return { points, description };
 };
 
 const parseSettings = (input: string) => {
@@ -109,11 +117,39 @@ const parseSubmissionTypes = (input: string): AssignmentSubmissionType[] => {
   return submissionTypes;
 };
 
-const parseRubricMarkdown = (rawMarkdown: string) => {
-  if (!rawMarkdown.trim()) return [];
+const parseRubricMarkdown = (rawMarkdown: string | undefined): RubricItem[] => {
+  if (!rawMarkdown?.trim()) return [];
 
-  const lines = rawMarkdown.trim().split("\n");
-  return lines.map(parseIndividualRubricItemMarkdown);
+  const lines = rawMarkdown
+    .split("\n")
+    .filter((line) => line.trim().length > 0);
+
+  // Find the minimum indentation level among all rubric lines to establish
+  // the base indent. Lines at base indent are top-level criteria; lines
+  // with more indentation are ratings (sub-scores) for the current criterion.
+  const baseIndent = lines.reduce((min, line) => {
+    const indent = /^(\s*)/.exec(line)![1].length;
+    return Math.min(min, indent);
+  }, Infinity);
+
+  const rubricItems: RubricItem[] = [];
+  let currentItem: RubricItem | null = null;
+
+  for (const line of lines) {
+    const indent = /^(\s*)/.exec(line)![1].length;
+    if (indent === baseIndent) {
+      if (currentItem) rubricItems.push(currentItem);
+      currentItem = parseIndividualRubricItemMarkdown(line);
+    } else {
+      if (currentItem) {
+        if (!currentItem.ratings) currentItem.ratings = [];
+        currentItem.ratings.push(parseRatingFromMarkdown(line));
+      }
+    }
+  }
+
+  if (currentItem) rubricItems.push(currentItem);
+  return rubricItems;
 };
 
 export const assignmentMarkdownParser = {

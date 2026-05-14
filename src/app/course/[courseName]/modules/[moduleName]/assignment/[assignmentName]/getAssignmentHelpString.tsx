@@ -83,9 +83,34 @@ If you have mounted a folder in the /app/public/images directory, you can link t
 
 ## Rubric
 
+Each rubric item is a grading criterion worth a certain number of points.
+Use "pt" for 1 point and "pts" for multiple points.
+
 - 1pt: singular point
-- 1pts: plural points
+- 2pts: plural points
 - 10pts: (extra credit) extra credit points
-- 10pts: (Extra Credit) Caps also works`;
+- 10pts: (Extra Credit) Caps also works
+
+### Sub-scores (ratings)
+
+Indent items under a criterion with two spaces to define ratings (sub-scores).
+Ratings let graders choose a specific level instead of all-or-nothing grading.
+The criterion's top-level points value is still the maximum for that row.
+
+Example — formatting worth 10 points:
+
+- 10pts: Formatting
+  - 10pts: proper margins, font size, spacing, contrast, and headings
+  - 7pts: margins and font size correct but missing heading styles
+  - 3pts: only paragraph spacing is acceptable
+
+Example — reading response worth 5 points:
+
+- 5pts: Student response to reading
+  - 5pts: thoughtful, thorough analysis of pros and cons
+  - 3pts: multiple sentences of relevant content
+  - 1pt: submitted something
+
+Criteria without sub-scores default to Full Marks / No Marks in Canvas.`;
   return helpString;
 }

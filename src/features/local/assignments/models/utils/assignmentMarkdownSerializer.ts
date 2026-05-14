@@ -2,11 +2,17 @@ import { AssignmentSubmissionType } from "../assignmentSubmissionType";
 import { LocalAssignment } from "../localAssignment";
 import { RubricItem } from "../rubricItem";
 
+const pointsLabel = (points: number) => (points > 1 || points < -1 ? "pts" : "pt");
+
 const assignmentRubricToMarkdown = (assignment: LocalAssignment) => {
   return assignment.rubric
     .map((item: RubricItem) => {
-      const pointLabel = item.points > 1 ? "pts" : "pt";
-      return `- ${item.points}${pointLabel}: ${item.label}`;
+      const mainLine = `- ${item.points}${pointsLabel(item.points)}: ${item.label}`;
+      if (!item.ratings || item.ratings.length === 0) return mainLine;
+      const ratingsLines = item.ratings
+        .map((r) => `  - ${r.points}${pointsLabel(r.points)}: ${r.description}`)
+        .join("\n");
+      return `${mainLine}\n${ratingsLines}`;
     })
     .join("\n");
 };
