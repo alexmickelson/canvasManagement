@@ -1,7 +1,9 @@
 import { CanvasAssignment } from "@/features/canvas/models/assignments/canvasAssignment";
+import { CanvasRubricCriteria } from "@/features/canvas/models/assignments/canvasRubricCriteria";
 import { CanvasPage } from "@/features/canvas/models/pages/canvasPageModel";
 import { CanvasQuiz } from "@/features/canvas/models/quizzes/canvasQuizModel";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
+import { RubricItem } from "@/features/local/assignments/models/rubricItem";
 import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
@@ -51,6 +53,41 @@ function checkDueDateAndLock(
   return null;
 }
 
+function checkRubric(
+  localRubric: RubricItem[],
+  canvasRubric: CanvasRubricCriteria[] | undefined,
+): ItemSyncStatus | null {
+  const canvasCount = canvasRubric?.length ?? 0;
+  if (localRubric.length !== canvasCount) {
+    return { status: "incomplete", message: "rubric count is different" };
+  }
+
+  for (let i = 0; i < localRubric.length; i++) {
+    const local = localRubric[i];
+    const canvas = canvasRubric![i];
+
+    if (local.label !== canvas.description || local.points !== canvas.points) {
+      return { status: "incomplete", message: "rubric description or points is different" };
+    }
+
+    if (local.ratings && local.ratings.length > 0) {
+      const canvasRatings = canvas.ratings ?? [];
+      if (local.ratings.length !== canvasRatings.length) {
+        return { status: "incomplete", message: "rubric ratings count is different" };
+      }
+      for (let j = 0; j < local.ratings.length; j++) {
+        const lr = local.ratings[j];
+        const cr = canvasRatings[j];
+        if (lr.description !== cr.description || lr.points !== cr.points) {
+          return { status: "incomplete", message: "rubric rating description or points is different" };
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
 function checkPage(_page: LocalCoursePage, _canvasPage: CanvasPage): null {
   return null;
 }
@@ -94,6 +131,12 @@ function checkAssignment(
       return { status: "incomplete", message: "assignment group is different" };
     }
   }
+
+  const rubricStatus = checkRubric(
+    assignment.rubric,
+    canvasAssignment.rubric,
+  );
+  if (rubricStatus) return rubricStatus;
 
   try {
     const htmlIsSame = htmlIsCloseEnough(

@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { getSyncStatus } from "./getAssignmentSyncStatus";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
 import { CanvasAssignment } from "@/features/canvas/models/assignments/canvasAssignment";
+import { CanvasRubricCriteria } from "@/features/canvas/models/assignments/canvasRubricCriteria";
 import { AssignmentSubmissionType } from "@/features/local/assignments/models/assignmentSubmissionType";
 import {
   DayOfWeek,
@@ -175,6 +176,259 @@ describe("getSyncStatus - assignment", () => {
     const result = getSyncStatus({
       item: baseLocalAssignment,
       canvasItem: baseCanvasAssignment,
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("published");
+  });
+});
+
+describe("getSyncStatus - rubric comparison", () => {
+  const baseCanvasRubricItem: CanvasRubricCriteria = {
+    id: "crit-1",
+    description: "Code Quality",
+    long_description: "",
+    points: 10,
+  };
+
+  it("returns incomplete when local has rubric items but canvas has none", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [{ label: "Code Quality", points: 10 }],
+      },
+      canvasItem: { ...baseCanvasAssignment, rubric: undefined },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("incomplete");
+    expect(result.message).toBe("rubric count is different");
+  });
+
+  it("returns incomplete when rubric item counts differ", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [
+          { label: "Code Quality", points: 10 },
+          { label: "Documentation", points: 5 },
+        ],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [baseCanvasRubricItem],
+      },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("incomplete");
+    expect(result.message).toBe("rubric count is different");
+  });
+
+  it("returns incomplete when rubric item label differs", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [{ label: "Different Label", points: 10 }],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [baseCanvasRubricItem],
+      },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("incomplete");
+    expect(result.message).toBe("rubric description or points is different");
+  });
+
+  it("returns incomplete when rubric item points differ", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [{ label: "Code Quality", points: 20 }],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [baseCanvasRubricItem],
+      },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("incomplete");
+    expect(result.message).toBe("rubric description or points is different");
+  });
+
+  it("returns published when rubric items match without ratings", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [{ label: "Code Quality", points: 10 }],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [baseCanvasRubricItem],
+      },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("published");
+  });
+
+  it("returns incomplete when rubric sub-item (rating) description differs", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [
+          {
+            label: "Code Quality",
+            points: 10,
+            ratings: [
+              { points: 10, description: "Excellent" },
+              { points: 0, description: "Poor" },
+            ],
+          },
+        ],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [
+          {
+            ...baseCanvasRubricItem,
+            ratings: [
+              { id: "r1", points: 10, description: "Outstanding", long_description: "" },
+              { id: "r2", points: 0, description: "Poor", long_description: "" },
+            ],
+          },
+        ],
+      },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("incomplete");
+    expect(result.message).toBe("rubric rating description or points is different");
+  });
+
+  it("returns incomplete when rubric sub-item (rating) points differ", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [
+          {
+            label: "Code Quality",
+            points: 10,
+            ratings: [
+              { points: 10, description: "Excellent" },
+              { points: 0, description: "Poor" },
+            ],
+          },
+        ],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [
+          {
+            ...baseCanvasRubricItem,
+            ratings: [
+              { id: "r1", points: 8, description: "Excellent", long_description: "" },
+              { id: "r2", points: 0, description: "Poor", long_description: "" },
+            ],
+          },
+        ],
+      },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("incomplete");
+    expect(result.message).toBe("rubric rating description or points is different");
+  });
+
+  it("returns incomplete when rubric sub-item count differs", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [
+          {
+            label: "Code Quality",
+            points: 10,
+            ratings: [
+              { points: 10, description: "Excellent" },
+              { points: 5, description: "Partial" },
+              { points: 0, description: "Poor" },
+            ],
+          },
+        ],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [
+          {
+            ...baseCanvasRubricItem,
+            ratings: [
+              { id: "r1", points: 10, description: "Excellent", long_description: "" },
+              { id: "r2", points: 0, description: "Poor", long_description: "" },
+            ],
+          },
+        ],
+      },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("incomplete");
+    expect(result.message).toBe("rubric ratings count is different");
+  });
+
+  it("returns published when rubric items and sub-items all match", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [
+          {
+            label: "Code Quality",
+            points: 10,
+            ratings: [
+              { points: 10, description: "Excellent" },
+              { points: 0, description: "Poor" },
+            ],
+          },
+        ],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [
+          {
+            ...baseCanvasRubricItem,
+            ratings: [
+              { id: "r1", points: 10, description: "Excellent", long_description: "" },
+              { id: "r2", points: 0, description: "Poor", long_description: "" },
+            ],
+          },
+        ],
+      },
+      type: "assignment",
+      settings: baseSettings,
+    });
+    expect(result.status).toBe("published");
+  });
+
+  it("returns published when local has no ratings and canvas rubric matches label and points", () => {
+    const result = getSyncStatus({
+      item: {
+        ...baseLocalAssignment,
+        rubric: [{ label: "Code Quality", points: 10 }],
+      },
+      canvasItem: {
+        ...baseCanvasAssignment,
+        rubric: [
+          {
+            ...baseCanvasRubricItem,
+            ratings: [
+              { id: "r1", points: 10, description: "Full Marks", long_description: "" },
+              { id: "r2", points: 0, description: "No Marks", long_description: "" },
+            ],
+          },
+        ],
+      },
       type: "assignment",
       settings: baseSettings,
     });
