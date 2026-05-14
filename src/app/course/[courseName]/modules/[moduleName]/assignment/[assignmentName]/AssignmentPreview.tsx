@@ -1,9 +1,31 @@
 import MarkdownDisplay from "@/components/MarkdownDisplay";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
-import { rubricItemIsExtraCredit } from "@/features/local/assignments/models/rubricItem";
+import { RubricItem, rubricItemIsExtraCredit } from "@/features/local/assignments/models/rubricItem";
 import { assignmentPoints } from "@/features/local/assignments/models/utils/assignmentPointsUtils";
 import { formatHumanReadableDate } from "@/services/utils/dateFormat";
 import React, { Fragment } from "react";
+
+function RubricItemRow({ rubricItem }: { rubricItem: RubricItem }) {
+  const isExtraCredit = rubricItemIsExtraCredit(rubricItem);
+  return (
+    <Fragment>
+      <div className="text-end pe-1 font-medium">
+        {isExtraCredit ? "Extra Credit" : ""}
+      </div>
+      <div className="text-end pe-3 font-medium">{rubricItem.points}</div>
+      <div className="font-medium">{rubricItem.label}</div>
+      {rubricItem.ratings?.map((rating, j) => (
+        <Fragment key={j}>
+          <div />
+          <div className="text-end pe-3 ps-6 text-sm text-gray-400">
+            {rating.points}
+          </div>
+          <div className="text-sm text-gray-400">{rating.description}</div>
+        </Fragment>
+      ))}
+    </Fragment>
+  );
+}
 
 export default function AssignmentPreview({
   assignment,
@@ -77,13 +99,7 @@ export default function AssignmentPreview({
         )}
         <div className="grid grid-cols-[auto_auto_1fr]">
           {assignment.rubric.map((rubricItem, i) => (
-            <Fragment key={rubricItem.label + i}>
-              <div className="text-end pe-1">
-                {rubricItemIsExtraCredit(rubricItem) ? "Extra Credit" : ""}
-              </div>
-              <div className="text-end pe-3">{rubricItem.points}</div>
-              <div>{rubricItem.label}</div>
-            </Fragment>
+            <RubricItemRow key={rubricItem.label + i} rubricItem={rubricItem} />
           ))}
         </div>
       </section>
