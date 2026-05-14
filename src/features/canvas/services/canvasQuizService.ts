@@ -20,7 +20,8 @@ export const getAnswersForCanvas = (
   question: LocalQuizQuestion,
   settings: LocalCourseSettings
 ) => {
-  if (question.questionType === QuestionType.MATCHING)
+  if (question.questionType === QuestionType.MATCHING) {
+    const distractors = question.matchDistractors.join("\n");
     return question.answers.map((a) => {
       const text =
         question.questionType === QuestionType.MATCHING
@@ -29,8 +30,12 @@ export const getAnswersForCanvas = (
       return {
         answer_match_left: text,
         answer_match_right: a.matchedText,
+        ...(distractors
+          ? { matching_answer_incorrect_matches: distractors }
+          : {}),
       };
     });
+  }
 
   if (question.questionType === QuestionType.NUMERICAL) {
     // if (question.answers[0].numericalAnswerType === "range_answer") {
@@ -94,6 +99,13 @@ const createQuestionOnly = async (
       question_type: getQuestionTypeForCanvas(question),
       points_possible: question.points,
       position,
+      ...(question.questionType === QuestionType.MATCHING &&
+      question.matchDistractors.length > 0
+        ? {
+            matching_answer_incorrect_matches:
+              question.matchDistractors.join("\n"),
+          }
+        : {}),
       answers: getAnswersForCanvas(question, settings),
       correct_comments: question.incorrectComments,
       incorrect_comments: question.incorrectComments,

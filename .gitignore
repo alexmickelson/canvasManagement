@@ -54,3 +54,4 @@ storage/
 temp/
 .claude/
 guide.md
+.codex
