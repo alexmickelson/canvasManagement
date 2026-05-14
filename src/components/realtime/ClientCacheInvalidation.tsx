@@ -112,7 +112,7 @@ const useFilePathInvalidation = () => {
           queryKey: trpc.settings.allCoursesSettings.queryKey(),
         });
         queryClient.invalidateQueries({
-          queryKey: trpc.settings.courseSettings.queryKey({ courseName }),
+          queryKey: trpc.settings.courseSettings.queryKey(courseName),
         });
         return;
       }
@@ -120,7 +120,7 @@ const useFilePathInvalidation = () => {
       if (moduleOrLectures === "00 - lectures") {
         console.log("lecture updated on FS ", allParts);
         queryClient.invalidateQueries({
-          queryKey: trpc.lectures.getLectures.queryKey({ courseName }),
+          queryKey: trpc.lectures.getLectures.queryKey(courseName),
         });
         return;
       }

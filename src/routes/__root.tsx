@@ -63,7 +63,7 @@ const fetchInitialData = createServerFn({ method: "GET" }).handler(async () => {
 
   await Promise.all(
     allSettings.map((settings) =>
-      trpcHelper.lectures.getLectures.fetch({ courseName: settings.name }),
+      trpcHelper.lectures.getLectures.fetch(settings.name),
     ),
   );
 
