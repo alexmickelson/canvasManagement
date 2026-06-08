@@ -11,7 +11,6 @@ import {
   useUpdateQuizMutation,
 } from "@/features/local/quizzes/quizHooks";
 import { useAuthoritativeUpdates } from "../../../../utils/useAuthoritativeUpdates";
-import { extractLabelValue } from "@/features/local/assignments/models/utils/markdownUtils";
 import EditQuizHeader from "./EditQuizHeader";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useGlobalSettingsQuery } from "@/features/local/globalSettings/globalSettingsHooks";
@@ -134,20 +133,23 @@ export default function EditQuiz({
         return;
       }
       try {
-        const name = extractLabelValue(text, "Name");
-        if (
-          quizMarkdownUtils.toMarkdown(quiz, feedbackDelimiters) !==
-          quizMarkdownUtils.toMarkdown(
-            quizMarkdownUtils.parseMarkdown(text, name, feedbackDelimiters),
-            feedbackDelimiters,
-          )
-        ) {
+        const updatedQuiz = quizMarkdownUtils.parseMarkdown(
+          text,
+          quizName,
+          feedbackDelimiters,
+        );
+        quizMarkdownUtils.assertCanRoundTrip(updatedQuiz, feedbackDelimiters);
+
+        const serverMarkdown = quizMarkdownUtils.toMarkdown(
+          quiz,
+          feedbackDelimiters,
+        );
+        const updatedMarkdown = quizMarkdownUtils.toMarkdown(
+          updatedQuiz,
+          feedbackDelimiters,
+        );
+        if (serverMarkdown !== updatedMarkdown) {
           if (clientIsAuthoritative) {
-            const updatedQuiz = quizMarkdownUtils.parseMarkdown(
-              text,
-              quizName,
-              feedbackDelimiters,
-            );
             await updateQuizMutation.mutateAsync({
               quiz: updatedQuiz,
               moduleName,
@@ -160,7 +162,7 @@ export default function EditQuiz({
             console.log(
               "client not authoritative, updating client with server quiz",
             );
-            textUpdate(quizMarkdownUtils.toMarkdown(quiz), true);
+            textUpdate(serverMarkdown, true);
           }
         }
         setError("");

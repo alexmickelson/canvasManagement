@@ -171,7 +171,7 @@ export async function updateQuizFile({
 
   const globalSettings = await getGlobalSettings();
   const delimiters = getFeedbackDelimitersFromSettings(globalSettings);
-  const quizMarkdown = quizMarkdownUtils.toMarkdown(quiz, delimiters);
+  const quizMarkdown = quizMarkdownUtils.assertCanRoundTrip(quiz, delimiters);
   console.log(`Saving quiz ${filePath}`);
   await fs.writeFile(filePath, quizMarkdown);
 }

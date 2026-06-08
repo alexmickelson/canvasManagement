@@ -134,6 +134,30 @@ Description: ${quiz.description}
 ${questionMarkdown}`;
   },
 
+  assertCanRoundTrip(
+    quiz: LocalQuiz,
+    delimiters?: FeedbackDelimiters
+  ): string {
+    const markdown = quizMarkdownUtils.toMarkdown(quiz, delimiters);
+    const reparsedQuiz = quizMarkdownUtils.parseMarkdown(
+      markdown,
+      quiz.name,
+      delimiters
+    );
+    const reparsedMarkdown = quizMarkdownUtils.toMarkdown(
+      reparsedQuiz,
+      delimiters
+    );
+
+    if (markdown !== reparsedMarkdown) {
+      throw new Error(
+        "Quiz markdown could not be parsed safely. Fix the quiz formatting before saving."
+      );
+    }
+
+    return markdown;
+  },
+
   parseMarkdown(
     input: string,
     name: string,
