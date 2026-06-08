@@ -77,18 +77,30 @@ const getAnswerStringsWithMultilineSupport = (
 
   const answerLinesRaw = linesWithoutPoints.slice(indexOfAnswerStart);
 
-  const answerStartPattern = /^(\*?[a-z]?\))|(?<!\S)\[\s*\]|\[\*\]|\^/;
-  const answerLines = answerLinesRaw.reduce((acc: string[], line: string) => {
-    const isNewAnswer = answerStartPattern.test(line);
-    if (isNewAnswer) {
-      acc.push(line);
-    } else if (acc.length !== 0) {
-      acc[acc.length - 1] += "\n" + line;
-    } else {
-      acc.push(line);
-    }
-    return acc;
-  }, []);
+  const answerStartPattern = /^(\*?[a-z]?\)|\[\s*\]|\[\*\]|\^)/;
+  const { answerLines } = answerLinesRaw.reduce(
+    (acc, line: string) => {
+      const trimmedLine = line.trimStart();
+      const isFenceLine = trimmedLine.startsWith("```");
+      const isNewAnswer =
+        !acc.inFence && answerStartPattern.test(trimmedLine);
+
+      const answerLines = [...acc.answerLines];
+      if (isNewAnswer) {
+        answerLines.push(line);
+      } else if (answerLines.length !== 0) {
+        answerLines[answerLines.length - 1] += "\n" + line;
+      } else {
+        answerLines.push(line);
+      }
+
+      return {
+        answerLines,
+        inFence: isFenceLine ? !acc.inFence : acc.inFence,
+      };
+    },
+    { answerLines: [] as string[], inFence: false }
+  );
   return answerLines;
 };
 
@@ -106,7 +118,7 @@ export const quizQuestionAnswerMarkdownUtils = {
       return parseMatchingAnswer(input);
     }
 
-    const startingQuestionPattern = /^(\*?[a-z]?\))|\[\s*\]|\[\*\]|\^ /;
+    const startingQuestionPattern = /^(\*?[a-z]?\)|\[\s*\]|\[\*\]|\^ )/;
 
     let replaceCount = 0;
     const text = input
@@ -121,7 +133,7 @@ export const quizQuestionAnswerMarkdownUtils = {
   },
   isAnswerLine: (trimmedLine: string): boolean => {
     return _validFirstAnswerDelimiters.some((prefix) =>
-      trimmedLine.startsWith(prefix)
+      trimmedLine.trimStart().startsWith(prefix)
     );
   },
   getQuestionType: (

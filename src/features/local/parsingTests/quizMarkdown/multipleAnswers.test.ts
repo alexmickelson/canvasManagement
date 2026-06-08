@@ -78,6 +78,98 @@ Which events are triggered when the user clicks on an input field?
     expect(firstQuestion.answers[3].text).toBe("submit");
   });
 
+  it("can parse multiple answers with markdown code blocks", () => {
+    const rawMarkdownQuestion = `Points: 2
+You are building a music playlist application.
+
+Which code would be appropriate to write inside playlists-ui.js?
+
+[*]
+\`\`\`js
+const playlistContainerElement =
+    document.getElementById("playlist-container");
+\`\`\`
+[*]
+\`\`\`js
+playlistContainerElement.append(songElement);
+\`\`\`
+[*]
+\`\`\`js
+saveButtonElement.addEventListener(
+    "click",
+    handleSave
+);
+\`\`\`
+[ ]
+\`\`\`js
+function validatePlaylistName(name) {
+    return "";
+}
+\`\`\`
+[ ]
+\`\`\`js
+let playlists = [];
+\`\`\`
+[ ]
+\`\`\`js
+function addPlaylist(playlist) {
+}
+\`\`\``;
+
+    const question = quizQuestionMarkdownUtils.parseMarkdown(
+      rawMarkdownQuestion,
+      0
+    );
+
+    expect(question.points).toBe(2);
+    expect(question.questionType).toBe(QuestionType.MULTIPLE_ANSWERS);
+    expect(question.answers).toEqual([
+      {
+        correct: true,
+        text: `\`\`\`js
+const playlistContainerElement =
+    document.getElementById("playlist-container");
+\`\`\``,
+      },
+      {
+        correct: true,
+        text: `\`\`\`js
+playlistContainerElement.append(songElement);
+\`\`\``,
+      },
+      {
+        correct: true,
+        text: `\`\`\`js
+saveButtonElement.addEventListener(
+    "click",
+    handleSave
+);
+\`\`\``,
+      },
+      {
+        correct: false,
+        text: `\`\`\`js
+function validatePlaylistName(name) {
+    return "";
+}
+\`\`\``,
+      },
+      {
+        correct: false,
+        text: `\`\`\`js
+let playlists = [];
+\`\`\``,
+      },
+      {
+        correct: false,
+        text: `\`\`\`js
+function addPlaylist(playlist) {
+}
+\`\`\``,
+      },
+    ]);
+  });
+
   it("can parse question with multiple answers without a space in false answers", () => {
     const name = "Test Quiz";
     const rawMarkdownQuiz = `
