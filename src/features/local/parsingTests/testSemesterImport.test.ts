@@ -39,9 +39,40 @@ other stuff below`,
     expect(sanitizedAssignment.description).toEqual(`
 ## test description 
 
-[GitHub Classroom Assignment](insert_github_classroom_url)
+[GitHub Classroom Assignment](insert_classroom_url)
 
 other stuff below`);
+  });
+
+  it("can sanitize assignment classroom50 url and keep the slug", () => {
+    const assignment: LocalAssignment = {
+      name: "test assignment",
+      description: `
+[Accept the assignment](https://classroom50.org/my-org/my-classroom/my-slug)
+
+other stuff below`,
+      dueAt: "08/21/2023 23:59:00",
+      lockAt: "08/21/2023 23:59:00",
+      submissionTypes: [],
+      localAssignmentGroupName: "Final Project",
+      rubric: [],
+      allowedFileUploadExtensions: [],
+      classroom50Slug: "my-slug",
+    };
+    const oldSemesterStartDate = "08/26/2023 23:59:00";
+    const newSemesterStartDate = "01/08/2024 23:59:00";
+
+    const sanitizedAssignment = prepAssignmentForNewSemester(
+      assignment,
+      oldSemesterStartDate,
+      newSemesterStartDate
+    );
+
+    expect(sanitizedAssignment.description).toEqual(`
+[Accept the assignment](insert_classroom_url)
+
+other stuff below`);
+    expect(sanitizedAssignment.classroom50Slug).toEqual("my-slug");
   });
 
   it("can sanitize assignment github classroom repo url 2", () => {
@@ -67,7 +98,7 @@ other stuff below`,
     );
 
     expect(sanitizedAssignment.description).toEqual(`
-<insert_github_classroom_url>
+<insert_classroom_url>
 other stuff below`);
   });
 
@@ -92,7 +123,7 @@ other stuff below`);
     );
 
     expect(sanitizedAssignment.description).toEqual(
-      `insert_github_classroom_url other things`
+      `insert_classroom_url other things`
     );
   });
 });

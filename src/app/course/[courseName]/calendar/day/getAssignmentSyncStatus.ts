@@ -12,6 +12,7 @@ import {
   getDateFromStringOrThrow,
 } from "@/features/local/utils/timeUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
+import { getClassroomReplaceText } from "@/features/local/classroom50/classroom50UrlUtils";
 import { htmlIsCloseEnough } from "@/services/utils/htmlIsCloseEnough";
 
 export type ItemSyncStatus = {
@@ -143,12 +144,7 @@ function checkAssignment(
       markdownToHTMLSafe({
         markdownString: assignment.description,
         settings,
-        replaceText: [
-          {
-            source: "insert_github_classroom_url",
-            destination: assignment.githubClassroomAssignmentShareLink || "",
-          },
-        ],
+        replaceText: getClassroomReplaceText({ assignment, settings }),
       }),
       canvasAssignment.description,
     );

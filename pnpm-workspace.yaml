@@ -1,0 +1,9 @@
+allowBuilds:
+  esbuild: true
+peerDependencyRules:
+  allowedVersions:
+    "eslint-plugin-import>eslint": "*"
+    "eslint-plugin-react-hooks>eslint": "*"
+    "eslint-plugin-jsx-a11y>eslint": "*"
+    "eslint-plugin-react>eslint": "*"
+    "@vitejs/plugin-react-oxc>vite": "*"

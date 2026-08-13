@@ -85,7 +85,7 @@ export const useSetAssignmentGroupsMutation = (canvasId: number) => {
         assignmentGroups: updatedGroups,
       };
 
-      await updateSettingsMutation.mutateAsync({ settings: updatedSettings });
+      await updateSettingsMutation.mutateAsync(updatedSettings);
       return updatedSettings;
     },
   });

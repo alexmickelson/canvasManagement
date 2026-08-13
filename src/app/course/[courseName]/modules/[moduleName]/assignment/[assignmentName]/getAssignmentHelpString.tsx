@@ -57,23 +57,27 @@ flowchart TD
 
 ## LaTeX Math
 
-**Inline math:** The Fibonacci sequence is defined as: \$F(n) = F(n-1) + F(n-2)\$ where \$F(0) = 0\$ and \$F(1) = 1\$.
+**Inline math:** The Fibonacci sequence is defined as: $F(n) = F(n-1) + F(n-2)$ where $F(0) = 0$ and $F(1) = 1$.
 
 **Block math:**
-\$\$F(n) = F(n-1) + F(n-2)\$\$
+$$F(n) = F(n-1) + F(n-2)$$
 
 **Complex equations:**
-\$\$
+$$
 F(n) = \\begin{cases} 
 0 & \\text{if } n = 0 \\\\
 1 & \\text{if } n = 1 \\\\
 F(n-1) + F(n-2) & \\text{if } n > 1
 \\end{cases}
-\$\$
+$$
 
-## github classroom links will be replaced by the GithubClassroomAssignmentShareLink setting
+## classroom links are derived from the course's Classroom 50 settings + this assignment's Classroom50Slug
 
-[Github Classroom](insert_github_classroom_url)
+Classroom50Slug: my-assignment-slug (goes in the settings block above the ---)
+
+[Accept the assignment](insert_classroom_url)
+
+(the legacy insert_github_classroom_url token also resolves to the same url)
 
 ## Files
 

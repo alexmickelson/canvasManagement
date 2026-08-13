@@ -20,6 +20,7 @@ import { useState } from "react";
 import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
 import { useQueryClient } from "@tanstack/react-query";
+import { Classroom50AssignmentPanel } from "./Classroom50AssignmentPanel";
 
 export function AssignmentFooterButtons({
   moduleName,
@@ -47,6 +48,7 @@ export function AssignmentFooterButtons({
   const deleteLocal = useDeleteAssignmentMutation();
   const [isLoading, setIsLoading] = useState(false);
   const modal = useModal();
+  const classroom50Modal = useModal();
   const { previousUrl, nextUrl } = useItemNavigation(
     "assignment",
     assignmentName,
@@ -73,6 +75,20 @@ export function AssignmentFooterButtons({
         {anythingIsLoading && <Spinner />}
         {assignmentInCanvas && !assignmentInCanvas?.published && (
           <div className="text-rose-300 my-auto">Not Published</div>
+        )}
+        {settings.classroom50 && (
+          <Modal
+            modalControl={classroom50Modal}
+            buttonText="Classroom 50"
+            modalWidth="w-1/2"
+          >
+            {() => (
+              <Classroom50AssignmentPanel
+                moduleName={moduleName}
+                assignmentName={assignmentName}
+              />
+            )}
+          </Modal>
         )}
         {!assignmentInCanvas && (
           <button

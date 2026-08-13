@@ -144,7 +144,7 @@ Description:
 ---
 Match the following terms & definitions
 
-^ git add \-\-all - start tracking all files in the current directory and subdirectories
+^ git add --all - start tracking all files in the current directory and subdirectories
 `;
 
     const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);

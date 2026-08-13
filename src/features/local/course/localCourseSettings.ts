@@ -57,6 +57,11 @@ export interface LocalCourseSettings {
     sourceUrl: string;
     canvasUrl: string;
   }[];
+  classroom50?: {
+    org: string;
+    classroom: string;
+    baseUrl?: string;
+  };
 }
 
 export const zodLocalCourseSettings = z.object({
@@ -91,6 +96,21 @@ export const zodLocalCourseSettings = z.object({
     })
     .array()
     .describe("Asset URL mappings between source and Canvas"),
+  classroom50: z
+    .object({
+      org: z.string().describe("GitHub organization hosting the classroom"),
+      classroom: z
+        .string()
+        .describe("Classroom 50 classroom short-name within the organization"),
+      baseUrl: z
+        .string()
+        .optional()
+        .describe(
+          "Base URL of the Classroom 50 web app, defaults to https://classroom50.org"
+        ),
+    })
+    .optional()
+    .describe("Classroom 50 (classroom50.org) integration for this course"),
 });
 
 export function getDayOfWeek(date: Date): DayOfWeek {

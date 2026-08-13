@@ -12,9 +12,9 @@ describe("FileStorageTests", () => {
     process.env.GLOBAL_SETTINGS = `courses:
       - path: testCourse
         name: testCourse`;
+    // only clean this file's course folder, other test files share the storage root
     try {
-      await fs.access(storageDirectory);
-      await fs.rm(storageDirectory, { recursive: true });
+      await fs.rm(`${storageDirectory}/testCourse`, { recursive: true });
     } catch {}
     await fs.mkdir(storageDirectory, { recursive: true });
   });

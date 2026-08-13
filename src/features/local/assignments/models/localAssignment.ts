@@ -17,8 +17,7 @@ export interface LocalAssignment extends IModuleItem {
   submissionTypes: AssignmentSubmissionType[];
   allowedFileUploadExtensions: string[];
   rubric: RubricItem[];
-  githubClassroomAssignmentShareLink?: string;
-  githubClassroomAssignmentLink?: string;
+  classroom50Slug?: string;
 }
 
 export const zodLocalAssignment = z.object({
@@ -33,11 +32,12 @@ export const zodLocalAssignment = z.object({
   submissionTypes: zodAssignmentSubmissionType.array(),
   allowedFileUploadExtensions: z.string().array(),
   rubric: zodRubricItem.array(),
-  githubClassroomAssignmentShareLink: z.string().optional(),
-  githubClassroomAssignmentLink: z
+  classroom50Slug: z
     .string()
     .optional()
-    .describe("GitHub Classroom direct assignment link"),
+    .describe(
+      "Classroom 50 assignment slug; the student accept URL is derived from course classroom50 settings + this slug"
+    ),
 });
 
 export const localAssignmentMarkdown = {

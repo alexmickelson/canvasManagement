@@ -20,6 +20,7 @@ export const getGlobalSettings = async (): Promise<GlobalSettings> => {
     console.log(err);
     throw new Error(
       `Global Settings file does not exist at path: ${SETTINGS_FILE_PATH}`,
+      { cause: err },
     );
   }
 

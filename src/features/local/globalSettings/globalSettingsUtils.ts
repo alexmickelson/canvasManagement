@@ -15,7 +15,9 @@ export const parseGlobalSettingsYaml = (yaml: string): GlobalSettings => {
     return zodGlobalSettings.parse(parsed);
   } catch (e) {
     console.error("Error parsing global settings YAML:", e);
-    throw new Error(`Error parsing global settings, got ${yaml}, ${e}`);
+    throw new Error(`Error parsing global settings, got ${yaml}, ${e}`, {
+      cause: e,
+    });
   }
 };
 

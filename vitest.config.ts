@@ -12,9 +12,7 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     pool: "forks",
-    forks: {
-      execArgv: ["--max-old-space-size=4096"],
-    },
+    execArgv: ["--max-old-space-size=4096"],
     exclude: ["**/.pnpm-store/**", "**/node_modules/**", "**/dist/**"],
     env: {
       STORAGE_DIRECTORY: "/tmp/canvasManagerTests",

@@ -8,6 +8,7 @@ import { getRubricCriterion } from "./canvasRubricUtils";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 import { axiosClient } from "@/services/axiosUtils";
 import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
+import { getClassroomReplaceText } from "@/features/local/classroom50/classroom50UrlUtils";
 import { rateLimitAwarePost } from "./canvasWebRequestUtils";
 
 export const canvasAssignmentService = {
@@ -33,13 +34,11 @@ export const canvasAssignmentService = {
     const content = markdownToHTMLSafe({
       markdownString: localAssignment.description,
       settings,
-      replaceText: [
-        {
-          source: "insert_github_classroom_url",
-          destination: localAssignment.githubClassroomAssignmentShareLink || "",
-          strict: true,
-        },
-      ],
+      replaceText: getClassroomReplaceText({
+        assignment: localAssignment,
+        settings,
+        strict: true,
+      }),
     });
 
     const body = {
@@ -90,14 +89,11 @@ export const canvasAssignmentService = {
         description: markdownToHTMLSafe({
           markdownString: localAssignment.description,
           settings,
-          replaceText: [
-            {
-              source: "insert_github_classroom_url",
-              destination:
-                localAssignment.githubClassroomAssignmentShareLink || "",
-              strict: true,
-            },
-          ],
+          replaceText: getClassroomReplaceText({
+            assignment: localAssignment,
+            settings,
+            strict: true,
+          }),
         }),
         due_at: getDateFromString(localAssignment.dueAt)?.toISOString(),
         lock_at:

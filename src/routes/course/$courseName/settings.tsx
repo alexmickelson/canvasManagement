@@ -8,7 +8,7 @@ export const Route = createFileRoute("/course/$courseName/settings")({
 function SettingsPage() {
   return (
     <div className="flex justify-center h-full overflow-auto pt-5">
-      <div className="w-fit">
+      <div className="w-full max-w-3xl min-w-0 px-3">
         <AllSettings />
         <br />
         <br />

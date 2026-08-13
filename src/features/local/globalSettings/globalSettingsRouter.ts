@@ -1,5 +1,4 @@
 import { router } from "../../../services/serverFunctions/trpcSetup";
-import z from "zod";
 import publicProcedure from "../../../services/serverFunctions/publicProcedure";
 import {
   getGlobalSettings,

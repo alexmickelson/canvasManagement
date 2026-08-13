@@ -6,7 +6,7 @@ services:
     ports:
       - 3000:3000
     env_file:
-      - .env
+      - .env # needs CANVAS_TOKEN, and GH_TOKEN for the Classroom 50 buttons
     environment:
       - storageDirectory=/app/storage
       - TZ=America/Denver

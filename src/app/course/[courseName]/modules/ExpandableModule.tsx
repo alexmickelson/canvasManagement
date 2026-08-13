@@ -7,7 +7,6 @@ import {
 } from "@/features/local/utils/timeUtils";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { getWeekNumber } from "../calendar/calendarMonthUtils";
-import { Fragment } from "react";
 import Modal, { useModal } from "../../../../components/Modal";
 import NewItemForm from "./NewItemForm";
 import { ModuleCanvasStatus } from "./ModuleCanvasStatus";

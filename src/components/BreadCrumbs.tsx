@@ -32,6 +32,13 @@ export const BreadCrumbs = () => {
       })()
     : null;
 
+  const lectureUrl =
+    courseName && lectureDate
+      ? `/course/${encodeURIComponent(courseName)}/lecture/${encodeURIComponent(
+          lectureDate
+        )}`
+      : "";
+
   const sharedBackgroundClassNames = `
     group 
     hover:bg-blue-900/30 
@@ -87,11 +94,7 @@ export const BreadCrumbs = () => {
           <span className={sharedBackgroundClassNames}>
             <Link
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              to={
-                `/course/${encodeURIComponent(
-                  courseName,
-                )}/lecture/${encodeURIComponent(lectureDate)}` as any
-              }
+              to={lectureUrl as any}
               className={sharedLinkClassNames}
             >
               {lectureDateOnly}

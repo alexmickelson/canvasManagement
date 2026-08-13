@@ -48,7 +48,6 @@ export default function InnerMonacoEditor({
           console.log("second render of init");
         }
       });
-    } else if (!divRef.current) {
     }
   }, [onChange, value]);
 

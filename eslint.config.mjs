@@ -1,22 +1,30 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import js from "@eslint/js";
+import globals from "globals";
+import reactHooks from "eslint-plugin-react-hooks";
+import tseslint from "typescript-eslint";
+import prettier from "eslint-config-prettier";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
+export default tseslint.config(
   {
-    ignores: ["**/node_modules/**", "**/.next/**", "storage/**"],
+    ignores: [
+      "**/node_modules/**",
+      ".output/**",
+      ".nitro/**",
+      ".pnpm-store/**",
+      "storage/**",
+      "public/**",
+      "src/routeTree.gen.ts",
+    ],
   },
-  ...compat.config({
-    extends: ["next/core-web-vitals", "next/typescript", "prettier"],
+  js.configs.recommended,
+  tseslint.configs.recommended,
+  reactHooks.configs.flat.recommended,
+  prettier,
+  {
+    languageOptions: {
+      globals: { ...globals.browser, ...globals.node },
+    },
     rules: {
-      "react-refresh/only-export-components": "off", // Disabled the rule
       "@typescript-eslint/no-unused-vars": [
         "warn",
         {
@@ -24,9 +32,14 @@ const eslintConfig = [
           varsIgnorePattern: "^_|error",
         },
       ],
-      "jsx-a11y/no-access-key": "off",
+      // intentional in debounced effects and test cleanup
+      "no-empty": ["error", { allowEmptyCatch: true }],
+      // react compiler rules, new in eslint-plugin-react-hooks 7. they flag real
+      // issues in older components, but fixing them means reworking those
+      // components, so they stay warnings until someone does that
+      "react-hooks/refs": "warn",
+      "react-hooks/purity": "warn",
+      "react-hooks/set-state-in-effect": "warn",
     },
-  }),
-];
-
-export default eslintConfig;
+  }
+);

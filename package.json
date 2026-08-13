@@ -40,22 +40,9 @@
     "ws": "^8.20.0",
     "zod": "^4.4.3"
   },
-  "pnpm": {
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "eslint-plugin-import>eslint": "*",
-        "eslint-plugin-react-hooks>eslint": "*",
-        "eslint-plugin-jsx-a11y>eslint": "*",
-        "eslint-plugin-react>eslint": "*",
-        "@vitejs/plugin-react-oxc>vite": "*"
-      }
-    },
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
-  },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
     "@monaco-editor/loader": "^1.7.0",
     "@monaco-editor/react": "^4.7.0",
     "@rolldown/binding-linux-x64-gnu": "1.0.0-rc.17",
@@ -71,6 +58,7 @@
     "eslint": "^10.3.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.11.0",
     "isomorphic-dompurify": "^3.12.0",
     "marked": "^17.0.6",
     "monaco-editor": "^0.55.1",
@@ -80,6 +68,7 @@
     "socket.io-client": "^4.8.3",
     "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.67.0",
     "vitest": "^4.1.5",
     "yaml": "^2.8.4"
   }

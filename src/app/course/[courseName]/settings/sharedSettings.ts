@@ -1,1 +1,1 @@
-export const settingsBox = "border w-full p-3 m-3 rounded-md border-slate-500"
+export const settingsBox = "border w-full p-3 my-3 rounded-md border-slate-500"

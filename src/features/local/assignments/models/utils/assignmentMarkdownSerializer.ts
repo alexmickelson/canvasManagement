@@ -35,8 +35,7 @@ const settingsToMarkdown = (assignment: LocalAssignment) => {
     `LockAt: ${printableLockAt}`,
     `DueAt: ${printableDueDate}`,
     `AssignmentGroupName: ${assignment.localAssignmentGroupName}`,
-    `GithubClassroomAssignmentLink: ${assignment.githubClassroomAssignmentLink ?? ""}`,
-    `GithubClassroomAssignmentShareLink: ${assignment.githubClassroomAssignmentShareLink ?? ""}`,
+    `Classroom50Slug: ${assignment.classroom50Slug ?? ""}`,
     `SubmissionTypes:\n${submissionTypesMarkdown}`,
     `AllowedFileUploadExtensions:\n${allowedFileUploadExtensionsMarkdown}`,
   ];

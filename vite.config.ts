@@ -4,7 +4,7 @@ import viteReact from "@vitejs/plugin-react-oxc";
 import tailwindcss from "@tailwindcss/vite";
 import { nitro } from "nitro/vite";
 
-export default defineConfig(({ mode }) => ({
+export default defineConfig(() => ({
   server: {
     port: 3000,
     host: true,

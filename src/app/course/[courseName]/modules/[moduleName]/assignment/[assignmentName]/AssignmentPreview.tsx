@@ -1,5 +1,7 @@
 import MarkdownDisplay from "@/components/MarkdownDisplay";
 import { LocalAssignment } from "@/features/local/assignments/models/localAssignment";
+import { getClassroomReplaceText } from "@/features/local/classroom50/classroom50UrlUtils";
+import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { RubricItem, rubricItemIsExtraCredit } from "@/features/local/assignments/models/rubricItem";
 import { assignmentPoints } from "@/features/local/assignments/models/utils/assignmentPointsUtils";
 import { formatHumanReadableDate } from "@/services/utils/dateFormat";
@@ -32,6 +34,7 @@ export default function AssignmentPreview({
 }: {
   assignment: LocalAssignment;
 }) {
+  const { data: settings } = useLocalCourseSettingsQuery();
   const totalPoints = assignmentPoints(assignment.rubric);
   const extraPoints = assignment.rubric.reduce(
     (sum, cur) => (rubricItemIsExtraCredit(cur) ? sum + cur.points : sum),
@@ -83,12 +86,7 @@ export default function AssignmentPreview({
       <section>
         <MarkdownDisplay
           markdown={assignment.description}
-          replaceText={[
-            {
-              source: "insert_github_classroom_url",
-              destination: assignment.githubClassroomAssignmentShareLink || "",
-            },
-          ]}
+          replaceText={getClassroomReplaceText({ assignment, settings })}
         />
       </section>
       <hr />

@@ -2,6 +2,7 @@ import { LocalCoursePage } from "@/features/local/pages/localCoursePageModels";
 import { LocalAssignment } from "../assignments/models/localAssignment";
 import { Lecture } from "../lectures/lectureModel";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
+import { classroomUrlToken } from "../classroom50/classroom50UrlUtils";
 import { getDateFromStringOrThrow, dateToMarkdownString } from "./timeUtils";
 
 export const prepAssignmentForNewSemester = (
@@ -26,8 +27,6 @@ export const prepAssignmentForNewSemester = (
       oldSemesterStartDate,
       newSemesterStartDate
     ),
-    githubClassroomAssignmentLink: undefined,
-    githubClassroomAssignmentShareLink: undefined,
   };
 };
 
@@ -87,13 +86,12 @@ export const prepLectureForNewSemester = (
 };
 
 const replaceClassroomUrl = (value: string) => {
-  const classroomPattern =
-    /https:\/\/classroom\.github\.com\/[a-zA-Z0-9\/._-]+/g;
-  const withoutGithubClassroom = value.replace(
-    classroomPattern,
-    "insert_github_classroom_url"
-  );
-  return withoutGithubClassroom;
+  const githubClassroomPattern =
+    /https:\/\/classroom\.github\.com\/[a-zA-Z0-9/._-]+/g;
+  const classroom50Pattern = /https:\/\/classroom50\.org\/[a-zA-Z0-9/._-]+/g;
+  return value
+    .replace(githubClassroomPattern, classroomUrlToken)
+    .replace(classroom50Pattern, classroomUrlToken);
 };
 
 const newDateOffset = (

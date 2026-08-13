@@ -178,7 +178,7 @@ describe("AssignmentMarkdownTests", () => {
     expect(parsedAssignment).toEqual(assignment);
   });
 
-  it("assignment with githubClassroomAssignmentShareLink and githubClassroomAssignmentLink can be parsed", () => {
+  it("assignment with classroom50Slug can be parsed", () => {
     const name = "test assignment";
     const assignment: LocalAssignment = {
       name,
@@ -189,8 +189,7 @@ describe("AssignmentMarkdownTests", () => {
       localAssignmentGroupName: "Final Project",
       rubric: [],
       allowedFileUploadExtensions: [],
-      githubClassroomAssignmentShareLink: "https://github.com/share-link",
-      githubClassroomAssignmentLink: "https://github.com/assignment-link",
+      classroom50Slug: "test-assignment",
     };
 
     const assignmentMarkdown =
@@ -200,16 +199,11 @@ describe("AssignmentMarkdownTests", () => {
       name
     );
 
-    expect(parsedAssignment.githubClassroomAssignmentShareLink).toEqual(
-      "https://github.com/share-link"
-    );
-    expect(parsedAssignment.githubClassroomAssignmentLink).toEqual(
-      "https://github.com/assignment-link"
-    );
+    expect(parsedAssignment.classroom50Slug).toEqual("test-assignment");
     expect(parsedAssignment).toEqual(assignment);
   });
 
-  it("assignment without githubClassroomAssignmentShareLink and githubClassroomAssignmentLink can be parsed", () => {
+  it("assignment without classroom50Slug can be parsed", () => {
     const name = "test assignment";
     const assignment: LocalAssignment = {
       name,
@@ -229,8 +223,34 @@ describe("AssignmentMarkdownTests", () => {
       name
     );
 
-    expect(parsedAssignment.githubClassroomAssignmentShareLink).toBeUndefined();
-    expect(parsedAssignment.githubClassroomAssignmentLink).toBeUndefined();
+    expect(parsedAssignment.classroom50Slug).toBeUndefined();
     expect(parsedAssignment).toEqual(assignment);
+  });
+
+  it("legacy github classroom header lines are ignored", () => {
+    const name = "test assignment";
+    const markdownWithLegacyLines = `LockAt: 08/21/2023 23:59:00
+DueAt: 08/21/2023 23:59:00
+AssignmentGroupName: Final Project
+GithubClassroomAssignmentLink: https://classroom.github.com/old
+GithubClassroomAssignmentShareLink: https://classroom.github.com/a/abc
+SubmissionTypes:
+- online_upload
+AllowedFileUploadExtensions:
+---
+
+here is the description
+
+## Rubric
+
+`;
+    const parsedAssignment = assignmentMarkdownParser.parseMarkdown(
+      markdownWithLegacyLines,
+      name
+    );
+
+    expect(parsedAssignment.classroom50Slug).toBeUndefined();
+    expect(parsedAssignment.dueAt).toEqual("08/21/2023 23:59:00");
+    expect(parsedAssignment.description).toEqual("here is the description");
   });
 });
