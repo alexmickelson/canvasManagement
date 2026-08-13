@@ -1,5 +1,6 @@
 allowBuilds:
-  esbuild: true
+  esbuild: false
+minimumReleaseAge: 1440
 peerDependencyRules:
   allowedVersions:
     "eslint-plugin-import>eslint": "*"

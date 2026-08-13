@@ -59,43 +59,73 @@ const parseMatchingAnswer = (input: string) => {
 
 const getAnswerStringsWithMultilineSupport = (
   linesWithoutPoints: string[],
-  questionIndex: number
+  questionIndex: number,
 ) => {
-  const indexOfAnswerStart = linesWithoutPoints.findIndex((l) =>
-    _validFirstAnswerDelimiters.some((prefix) =>
-      l.trimStart().startsWith(prefix)
-    )
-  );
+  const indexOfAnswerStart = (() => {
+    let inFence = false;
+    for (let i = 0; i < linesWithoutPoints.length; i++) {
+      const l = linesWithoutPoints[i];
+      const trimmedLine = l.trimStart();
+
+      // Skip fence toggling inside code blocks
+      if (trimmedLine.startsWith("```")) {
+        inFence = !inFence;
+        continue;
+      }
+
+      // Don't match answer delimiters inside code blocks
+      if (
+        !inFence &&
+        _validFirstAnswerDelimiters.some((prefix) =>
+          trimmedLine.startsWith(prefix),
+        )
+      ) {
+        return i;
+      }
+    }
+    return -1;
+  })();
   if (indexOfAnswerStart === -1) {
     const debugLine = linesWithoutPoints.find((l) => l.trim().length > 0);
     throw Error(
       `question ${
         questionIndex + 1
-      }: no answers when detecting question type on ${debugLine}`
+      }: no answers when detecting question type on ${debugLine}`,
     );
   }
 
   const answerLinesRaw = linesWithoutPoints.slice(indexOfAnswerStart);
 
-  const answerStartPattern = /^(\*?[a-z]?\))|(?<!\S)\[\s*\]|\[\*\]|\^/;
-  const answerLines = answerLinesRaw.reduce((acc: string[], line: string) => {
-    const isNewAnswer = answerStartPattern.test(line);
-    if (isNewAnswer) {
-      acc.push(line);
-    } else if (acc.length !== 0) {
-      acc[acc.length - 1] += "\n" + line;
-    } else {
-      acc.push(line);
-    }
-    return acc;
-  }, []);
+  const answerStartPattern = /^(\*?[a-z]?\)|\[\s*\]|\[\*\]|\^)/;
+  const { answerLines } = answerLinesRaw.reduce(
+    (acc, line: string) => {
+      const trimmedLine = line.trimStart();
+      const isFenceLine = trimmedLine.startsWith("```");
+      const isNewAnswer = !acc.inFence && answerStartPattern.test(trimmedLine);
+
+      const answerLines = [...acc.answerLines];
+      if (isNewAnswer) {
+        answerLines.push(line);
+      } else if (answerLines.length !== 0) {
+        answerLines[answerLines.length - 1] += "\n" + line;
+      } else {
+        answerLines.push(line);
+      }
+
+      return {
+        answerLines,
+        inFence: isFenceLine ? !acc.inFence : acc.inFence,
+      };
+    },
+    { answerLines: [] as string[], inFence: false },
+  );
   return answerLines;
 };
 
 export const quizQuestionAnswerMarkdownUtils = {
   parseMarkdown(
     input: string,
-    questionType: QuestionType
+    questionType: QuestionType,
   ): LocalQuizQuestionAnswer {
     if (questionType === QuestionType.NUMERICAL) {
       return parseNumericalAnswer(input);
@@ -106,7 +136,7 @@ export const quizQuestionAnswerMarkdownUtils = {
       return parseMatchingAnswer(input);
     }
 
-    const startingQuestionPattern = /^(\*?[a-z]?\))|\[\s*\]|\[\*\]|\^ /;
+    const startingQuestionPattern = /^(\*?[a-z]?\)|\[\s*\]|\[\*\]|\^ )/;
 
     let replaceCount = 0;
     const text = input
@@ -121,12 +151,12 @@ export const quizQuestionAnswerMarkdownUtils = {
   },
   isAnswerLine: (trimmedLine: string): boolean => {
     return _validFirstAnswerDelimiters.some((prefix) =>
-      trimmedLine.startsWith(prefix)
+      trimmedLine.trimStart().startsWith(prefix),
     );
   },
   getQuestionType: (
     linesWithoutPoints: string[],
-    questionIndex: number // needed for debug logging
+    questionIndex: number, // needed for debug logging
   ): QuestionType => {
     const lastLine = linesWithoutPoints[linesWithoutPoints.length - 1]
       .toLowerCase()
@@ -141,17 +171,17 @@ export const quizQuestionAnswerMarkdownUtils = {
 
     const answerLines = getAnswerStringsWithMultilineSupport(
       linesWithoutPoints,
-      questionIndex
+      questionIndex,
     );
     const firstAnswerLine = answerLines[0];
     const isMultipleChoice = _multipleChoicePrefix.some((prefix) =>
-      firstAnswerLine.startsWith(prefix)
+      firstAnswerLine.startsWith(prefix),
     );
 
     if (isMultipleChoice) return QuestionType.MULTIPLE_CHOICE;
 
     const isMultipleAnswer = _multipleAnswerPrefix.some((prefix) =>
-      firstAnswerLine.startsWith(prefix)
+      firstAnswerLine.startsWith(prefix),
     );
     if (isMultipleAnswer) return QuestionType.MULTIPLE_ANSWERS;
 
@@ -163,7 +193,7 @@ export const quizQuestionAnswerMarkdownUtils = {
   getAnswers: (
     linesWithoutPoints: string[],
     questionIndex: number,
-    questionType: QuestionType
+    questionType: QuestionType,
   ): { answers: LocalQuizQuestionAnswer[]; distractors: string[] } => {
     const typesWithAnswers: QuestionType[] = [
       QuestionType.MULTIPLE_CHOICE,
@@ -179,16 +209,16 @@ export const quizQuestionAnswerMarkdownUtils = {
     if (questionType == QuestionType.SHORT_ANSWER_WITH_ANSWERS)
       linesWithoutPoints = linesWithoutPoints.slice(
         0,
-        linesWithoutPoints.length - 1
+        linesWithoutPoints.length - 1,
       );
 
     const answerLines = getAnswerStringsWithMultilineSupport(
       linesWithoutPoints,
-      questionIndex
+      questionIndex,
     );
 
     const allAnswers = answerLines.map((a) =>
-      quizQuestionAnswerMarkdownUtils.parseMarkdown(a, questionType)
+      quizQuestionAnswerMarkdownUtils.parseMarkdown(a, questionType),
     );
 
     // For matching questions, separate answers from distractors
@@ -206,7 +236,7 @@ export const quizQuestionAnswerMarkdownUtils = {
   getAnswerMarkdown: (
     question: LocalQuizQuestion,
     answer: LocalQuizQuestionAnswer,
-    index: number
+    index: number,
   ): string => {
     const multilineMarkdownCompatibleText = answer.text.startsWith("```")
       ? "\n" + answer.text

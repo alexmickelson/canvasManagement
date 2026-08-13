@@ -26,34 +26,37 @@ const splitLinesAndPoints = (input: string[]) => {
 
 const getLinesBeforeAnswerLines = (lines: string[]): string[] => {
   const { linesWithoutAnswers } = lines.reduce(
-    ({ linesWithoutAnswers, taking }, currentLine) => {
-      if (!taking)
-        return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
+    ({ linesWithoutAnswers, taking, inFence }, currentLine) => {
+      if (!taking) return { linesWithoutAnswers, taking: false, inFence };
 
+      const trimmedLine = currentLine.trimStart();
+      const isFenceLine = trimmedLine.startsWith("```");
+
+      // Don't treat answer delimiters inside code blocks as real answers
       const lineIsAnswer =
-        quizQuestionAnswerMarkdownUtils.isAnswerLine(currentLine);
-      if (lineIsAnswer)
-        return { linesWithoutAnswers: linesWithoutAnswers, taking: false };
+        !inFence && quizQuestionAnswerMarkdownUtils.isAnswerLine(currentLine);
+      if (lineIsAnswer) return { linesWithoutAnswers, taking: false, inFence };
 
       return {
         linesWithoutAnswers: [...linesWithoutAnswers, currentLine],
         taking: true,
+        inFence: isFenceLine ? !inFence : inFence,
       };
     },
-    { linesWithoutAnswers: [] as string[], taking: true }
+    { linesWithoutAnswers: [] as string[], taking: true, inFence: false },
   );
   return linesWithoutAnswers;
 };
 
 const removeQuestionTypeFromDescriptionLines = (
   linesWithoutAnswers: string[],
-  questionType: QuestionType
+  questionType: QuestionType,
 ): string[] => {
   const questionTypesWithoutAnswers = ["essay", "short answer", "short_answer"];
 
   const descriptionLines = questionTypesWithoutAnswers.includes(questionType)
     ? linesWithoutAnswers.filter(
-        (line) => !questionTypesWithoutAnswers.includes(line.toLowerCase())
+        (line) => !questionTypesWithoutAnswers.includes(line.toLowerCase()),
       )
     : linesWithoutAnswers;
 
@@ -63,15 +66,15 @@ const removeQuestionTypeFromDescriptionLines = (
 export const quizQuestionMarkdownUtils = {
   toMarkdown(
     question: LocalQuizQuestion,
-    delimiters?: FeedbackDelimiters
+    delimiters?: FeedbackDelimiters,
   ): string {
     const answerArray = question.answers.map((a, i) =>
-      quizQuestionAnswerMarkdownUtils.getAnswerMarkdown(question, a, i)
+      quizQuestionAnswerMarkdownUtils.getAnswerMarkdown(question, a, i),
     );
 
     const distractorText =
       question.questionType === QuestionType.MATCHING
-        ? question.matchDistractors?.map((d) => `\n^ - ${d}`).join("") ?? ""
+        ? (question.matchDistractors?.map((d) => `\n^ - ${d}`).join("") ?? "")
         : "";
 
     // Build feedback lines
@@ -79,7 +82,7 @@ export const quizQuestionMarkdownUtils = {
       question.correctComments,
       question.incorrectComments,
       question.neutralComments,
-      delimiters
+      delimiters,
     );
 
     const answersText = answerArray.join("\n");
@@ -88,8 +91,8 @@ export const quizQuestionMarkdownUtils = {
       question.questionType === "short_answer"
         ? question.questionType
         : question.questionType === QuestionType.SHORT_ANSWER_WITH_ANSWERS
-        ? `\n${QuestionType.SHORT_ANSWER_WITH_ANSWERS}`
-        : "";
+          ? `\n${QuestionType.SHORT_ANSWER_WITH_ANSWERS}`
+          : "";
 
     return `Points: ${question.points}\n${question.text}\n${feedbackText}${answersText}${distractorText}${questionTypeIndicator}`;
   },
@@ -97,7 +100,7 @@ export const quizQuestionMarkdownUtils = {
   parseMarkdown(
     input: string,
     questionIndex: number,
-    delimiters?: FeedbackDelimiters
+    delimiters?: FeedbackDelimiters,
   ): LocalQuizQuestion {
     const { points, lines } = splitLinesAndPoints(input.trim().split("\n"));
 
@@ -105,12 +108,12 @@ export const quizQuestionMarkdownUtils = {
 
     const questionType = quizQuestionAnswerMarkdownUtils.getQuestionType(
       lines,
-      questionIndex
+      questionIndex,
     );
 
     const linesWithoutAnswersAndTypes = removeQuestionTypeFromDescriptionLines(
       linesWithoutAnswers,
-      questionType
+      questionType,
     );
 
     const {
@@ -120,13 +123,13 @@ export const quizQuestionMarkdownUtils = {
       otherLines: descriptionLines,
     } = quizFeedbackMarkdownUtils.extractFeedback(
       linesWithoutAnswersAndTypes,
-      delimiters
+      delimiters,
     );
 
     const { answers, distractors } = quizQuestionAnswerMarkdownUtils.getAnswers(
       lines,
       questionIndex,
-      questionType
+      questionType,
     );
 
     const question: LocalQuizQuestion = {
