@@ -59,9 +59,9 @@ function Classroom50Status() {
       classroom found — {status.assignmentSlugs.length} assignment
       {status.assignmentSlugs.length === 1 ? "" : "s"}
       {typeof status.rosterCount === "number" &&
-        `, roster ${status.rosterCount} student${
+        `, ${status.rosterCount} student${
           status.rosterCount === 1 ? "" : "s"
-        }`}
+        } in roster`}
     </div>
   );
 }
