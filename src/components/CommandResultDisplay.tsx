@@ -1,4 +1,5 @@
 "use client";
+import { isAuthFailureResult } from "@/features/local/classroom50/classroom50SetupUtils";
 import { Classroom50CommandResult } from "@/features/local/classroom50/classroom50Types";
 
 export default function CommandResultDisplay({
@@ -28,6 +29,13 @@ export default function CommandResultDisplay({
         <pre className="overflow-x-auto mt-1 text-rose-300">
           {result.stderr}
         </pre>
+      )}
+      {isAuthFailureResult(result) && (
+        <div className="mt-1 text-amber-300">
+          This ran on the canvasManager server, not on your machine — its
+          GH_TOKEN is missing or was rejected. The Classroom 50 setup wizard on
+          the course settings page has the steps to fix it.
+        </div>
       )}
     </div>
   );

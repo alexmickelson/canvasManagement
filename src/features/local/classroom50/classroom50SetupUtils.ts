@@ -1,5 +1,7 @@
 // pure helpers for the classroom 50 setup wizard, safe to import client-side
 
+import { Classroom50CommandResult } from "./classroom50Types";
+
 export const requiredGhScopes = ["admin:org", "repo", "workflow"];
 
 // classroom 50 short-name rules
@@ -37,6 +39,27 @@ export const parseGhAuthStatus = (output: string): GhAuthStatus => {
     missingScopes,
   };
 };
+
+// gh, gh-teacher, and the github api each phrase "no usable token" differently.
+// used to turn a raw command failure into the GH_TOKEN setup instructions
+const authFailurePatterns = [
+  /not signed in to/i,
+  /not logged in/i,
+  /gh (teacher |auth )?login/i,
+  /requires authentication/i,
+  /bad credentials/i,
+  /HTTP 401/i,
+];
+
+export const isAuthFailureOutput = (output: string) =>
+  authFailurePatterns.some((pattern) => pattern.test(output));
+
+export const isAuthFailureResult = (
+  result: Classroom50CommandResult | undefined
+) =>
+  !!result &&
+  result.exitCode !== 0 &&
+  isAuthFailureOutput(`${result.stderr}\n${result.stdout}`);
 
 export const extensionListIncludesTeacher = (output: string) =>
   /\bgh-teacher\b/.test(output);

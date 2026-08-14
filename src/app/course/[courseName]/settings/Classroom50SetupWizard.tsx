@@ -10,12 +10,12 @@ import {
   useCreateClassroom50ClassroomMutation,
 } from "@/features/local/classroom50/classroom50Hooks";
 import {
-  ghTokenCreationUrl,
   githubEducationUrl,
   newOrgUrl,
   suggestClassroomShortName,
   suggestTerm,
 } from "@/features/local/classroom50/classroom50SetupUtils";
+import { GhTokenInstructions } from "./Classroom50AuthHelp";
 import {
   useLocalCourseSettingsQuery,
   useUpdateLocalCourseSettingsMutation,
@@ -53,33 +53,6 @@ function CheckRow({
         <div className="ms-6 mt-1 text-sm text-slate-400">{children}</div>
       )}
     </div>
-  );
-}
-
-function GhTokenInstructions() {
-  return (
-    <ol className="list-decimal ms-5 my-1 flex flex-col gap-1">
-      <li>
-        <a
-          href={ghTokenCreationUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="underline"
-        >
-          Create a GitHub token
-        </a>{" "}
-        — the link pre-selects the needed scopes (admin:org, repo, workflow).
-        Pick an expiration, click <b>Generate token</b>, and copy it.
-      </li>
-      <li>
-        Add it to the <code>.env</code> file next to CANVAS_TOKEN:
-        <CopyableCommand command="GH_TOKEN=paste-your-token-here" />
-      </li>
-      <li>
-        Restart the server (<code>./run.sh</code> for dev, or restart the
-        container in production).
-      </li>
-    </ol>
   );
 }
 
@@ -246,9 +219,16 @@ export default function Classroom50SetupWizard({
                       (missingScopes.length > 0
                         ? ` — token may be missing scopes: ${missingScopes.join(", ")}`
                         : "")
-                    : "Not signed in to GitHub"
+                    : env.data.ghTokenSet
+                      ? "GitHub rejected the server's GH_TOKEN — expired, revoked, or wrong scopes"
+                      : "The server has no GH_TOKEN, so it cannot talk to GitHub"
                 }
               >
+                <p>
+                  The server runs these commands inside its own container, so
+                  the token has to be in the server&apos;s environment — signing
+                  in with gh on your machine does not help.
+                </p>
                 <GhTokenInstructions />
                 <p>
                   (or, when developing directly on your machine:{" "}

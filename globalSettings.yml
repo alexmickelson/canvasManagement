@@ -15,5 +15,5 @@ courses:
     name: Mobile ('26 Spring)
   - path: ./3630_Mobile/2026-fall-jonathan/Modules/
     name: Mobile ('26 Fall)
-  - path: ./4620_Distributed/2026-fall-jonathan/
+  - path: ./4620_Distributed/2026-fall-jonathan/Modules/
     name: Distributed

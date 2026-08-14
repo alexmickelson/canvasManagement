@@ -35,6 +35,11 @@ const getClassroom50Config = async (courseName: string) => {
   return { settings, org, classroom };
 };
 
+// gh reads GH_TOKEN first, then GITHUB_TOKEN. knowing whether the server has
+// one at all is the difference between "add a token" and "your token is bad"
+const ghTokenIsSet = () =>
+  !!(process.env.GH_TOKEN?.trim() || process.env.GITHUB_TOKEN?.trim());
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const tryParseJson = (value: string): any => {
   try {
@@ -97,6 +102,7 @@ export const classroom50Router = router({
         classroomFound,
         assignmentSlugs,
         rosterCount,
+        ghTokenSet: ghTokenIsSet(),
         results: [classroomResult, assignmentResult, rosterResult],
       };
     }),
@@ -104,7 +110,11 @@ export const classroom50Router = router({
   getEnvironmentStatus: publicProcedure.query(async () => {
     const version = await runGhCommand(["--version"], { timeoutMs: 20_000 });
     if (version.exitCode !== 0)
-      return { ghInstalled: false as const, results: [version] };
+      return {
+        ghInstalled: false as const,
+        ghTokenSet: ghTokenIsSet(),
+        results: [version],
+      };
 
     const [extensions, authStatus, apiUser] = await Promise.all([
       runGhCommand(["extension", "list"], { timeoutMs: 20_000 }),
@@ -114,6 +124,7 @@ export const classroom50Router = router({
 
     return {
       ghInstalled: true as const,
+      ghTokenSet: ghTokenIsSet(),
       ghVersion: version.stdout.split("\n")[0]?.trim(),
       // gh exits non-zero when no extensions are installed at all
       extensionInstalled: extensionListIncludesTeacher(

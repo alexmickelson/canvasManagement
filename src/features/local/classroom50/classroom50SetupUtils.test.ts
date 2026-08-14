@@ -1,12 +1,64 @@
 import { describe, it, expect } from "vitest";
 import {
   extensionListIncludesTeacher,
+  isAuthFailureResult,
   parseClassroomList,
   parseGhAuthStatus,
   parseOrgMemberships,
   suggestClassroomShortName,
   suggestTerm,
 } from "./classroom50SetupUtils";
+import { Classroom50CommandResult } from "./classroom50Types";
+
+const commandResult = (
+  overrides: Partial<Classroom50CommandResult>
+): Classroom50CommandResult => ({
+  command: "gh teacher roster list snow-fall-2026 distributed --json",
+  stdout: "",
+  stderr: "",
+  exitCode: 1,
+  durationMs: 10,
+  ...overrides,
+});
+
+describe("isAuthFailureResult", () => {
+  it("catches the gh-teacher not signed in message", () => {
+    expect(
+      isAuthFailureResult(
+        commandResult({
+          stderr:
+            "gh-teacher: not signed in to github.com; run `gh teacher login` from an interactive terminal to authenticate",
+        })
+      )
+    ).toBe(true);
+  });
+
+  it("catches gh's own logged out message and api 401s", () => {
+    expect(
+      isAuthFailureResult(
+        commandResult({
+          stderr:
+            "You are not logged into any GitHub hosts. To log in, run: gh auth login",
+        })
+      )
+    ).toBe(true);
+    expect(
+      isAuthFailureResult(
+        commandResult({ stderr: "gh: Bad credentials (HTTP 401)" })
+      )
+    ).toBe(true);
+  });
+
+  it("ignores other failures and successes", () => {
+    expect(
+      isAuthFailureResult(
+        commandResult({ stderr: "classroom 'distributed' not found in org" })
+      )
+    ).toBe(false);
+    expect(isAuthFailureResult(commandResult({ exitCode: 0 }))).toBe(false);
+    expect(isAuthFailureResult(undefined)).toBe(false);
+  });
+});
 
 describe("parseGhAuthStatus", () => {
   it("parses a logged in status with scopes", () => {

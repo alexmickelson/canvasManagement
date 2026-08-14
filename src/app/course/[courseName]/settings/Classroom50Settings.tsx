@@ -22,7 +22,9 @@ import { settingsBox } from "./sharedSettings";
 import Classroom50SetupWizard, {
   CreateClassroomForm,
 } from "./Classroom50SetupWizard";
+import Classroom50AuthHelp from "./Classroom50AuthHelp";
 import { RosterSyncSummaryData } from "@/features/local/classroom50/classroom50Types";
+import { isAuthFailureResult } from "@/features/local/classroom50/classroom50SetupUtils";
 
 function Classroom50Status() {
   const statusQuery = useClassroom50StatusQuery();
@@ -36,6 +38,16 @@ function Classroom50Status() {
     );
   const status = statusQuery.data;
   if (!status || !status.configured) return null;
+  // an unauthenticated server also "cannot find" the classroom, so say which
+  // one it is instead of sending them off to check the org and short name
+  if (status.results.some(isAuthFailureResult))
+    return (
+      <div className="text-rose-300">
+        {status.ghTokenSet
+          ? "GitHub rejected the server's GH_TOKEN"
+          : "the server has no GH_TOKEN"}
+      </div>
+    );
   if (!status.classroomFound)
     return (
       <div className="text-rose-300">
@@ -184,8 +196,11 @@ function ConfiguredActions() {
   const statusQuery = useClassroom50StatusQuery();
   const localCommands = getClassroom50LocalCommands(settings);
 
-  const classroomMissing =
-    !!statusQuery.data?.configured && !statusQuery.data.classroomFound;
+  const status = statusQuery.data?.configured ? statusQuery.data : undefined;
+  const notAuthenticated =
+    (status?.results.some(isAuthFailureResult) ?? false) ||
+    isAuthFailureResult(syncRoster.data?.rosterResult);
+  const classroomMissing = !!status && !status.classroomFound;
 
   return (
     <>
@@ -217,7 +232,11 @@ function ConfiguredActions() {
         />
       )}
 
-      {classroomMissing && settings.classroom50 && (
+      {notAuthenticated && (
+        <Classroom50AuthHelp ghTokenSet={status?.ghTokenSet} />
+      )}
+
+      {classroomMissing && !notAuthenticated && settings.classroom50 && (
         <div className="mt-2">
           <div className="text-slate-400 text-sm">
             New semester? Create this semester&apos;s classroom in{" "}
