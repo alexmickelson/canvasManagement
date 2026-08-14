@@ -10,21 +10,26 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as CourseCourseNameRouteImport } from './routes/course/$courseName'
 import { Route as ApiCoursesRouteImport } from './routes/api/courses'
+import { Route as CourseCourseNameRouteImport } from './routes/course/$courseName'
+import { Route as ApiCanvasSplatRouteImport } from './routes/api.canvas.$'
+import { Route as ApiTrpcSplatRouteImport } from './routes/api.trpc.$'
 import { Route as CourseCourseNameIndexRouteImport } from './routes/course/$courseName/index'
 import { Route as CourseCourseNameSettingsRouteImport } from './routes/course/$courseName/settings'
-import { Route as ApiTrpcSplatRouteImport } from './routes/api.trpc.$'
-import { Route as ApiCanvasSplatRouteImport } from './routes/api.canvas.$'
 import { Route as CourseCourseNameLectureLectureDayIndexRouteImport } from './routes/course/$courseName/lecture/$lectureDay/index'
 import { Route as CourseCourseNameLectureLectureDayPreviewRouteImport } from './routes/course/$courseName/lecture/$lectureDay/preview'
-import { Route as CourseCourseNameModulesModuleNameQuizQuizNameRouteImport } from './routes/course/$courseName/modules/$moduleName/quiz.$quizName'
-import { Route as CourseCourseNameModulesModuleNamePagePageNameRouteImport } from './routes/course/$courseName/modules/$moduleName/page.$pageName'
 import { Route as CourseCourseNameModulesModuleNameAssignmentAssignmentNameRouteImport } from './routes/course/$courseName/modules/$moduleName/assignment.$assignmentName'
+import { Route as CourseCourseNameModulesModuleNamePagePageNameRouteImport } from './routes/course/$courseName/modules/$moduleName/page.$pageName'
+import { Route as CourseCourseNameModulesModuleNameQuizQuizNameRouteImport } from './routes/course/$courseName/modules/$moduleName/quiz.$quizName'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCoursesRoute = ApiCoursesRouteImport.update({
+  id: '/api/courses',
+  path: '/api/courses',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CourseCourseNameRoute = CourseCourseNameRouteImport.update({
@@ -32,9 +37,14 @@ const CourseCourseNameRoute = CourseCourseNameRouteImport.update({
   path: '/course/$courseName',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ApiCoursesRoute = ApiCoursesRouteImport.update({
-  id: '/api/courses',
-  path: '/api/courses',
+const ApiCanvasSplatRoute = ApiCanvasSplatRouteImport.update({
+  id: '/api/canvas/$',
+  path: '/api/canvas/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
+  id: '/api/trpc/$',
+  path: '/api/trpc/$',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CourseCourseNameIndexRoute = CourseCourseNameIndexRouteImport.update({
@@ -48,16 +58,6 @@ const CourseCourseNameSettingsRoute =
     path: '/settings',
     getParentRoute: () => CourseCourseNameRoute,
   } as any)
-const ApiTrpcSplatRoute = ApiTrpcSplatRouteImport.update({
-  id: '/api/trpc/$',
-  path: '/api/trpc/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiCanvasSplatRoute = ApiCanvasSplatRouteImport.update({
-  id: '/api/canvas/$',
-  path: '/api/canvas/$',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const CourseCourseNameLectureLectureDayIndexRoute =
   CourseCourseNameLectureLectureDayIndexRouteImport.update({
     id: '/lecture/$lectureDay/',
@@ -70,10 +70,10 @@ const CourseCourseNameLectureLectureDayPreviewRoute =
     path: '/lecture/$lectureDay/preview',
     getParentRoute: () => CourseCourseNameRoute,
   } as any)
-const CourseCourseNameModulesModuleNameQuizQuizNameRoute =
-  CourseCourseNameModulesModuleNameQuizQuizNameRouteImport.update({
-    id: '/modules/$moduleName/quiz/$quizName',
-    path: '/modules/$moduleName/quiz/$quizName',
+const CourseCourseNameModulesModuleNameAssignmentAssignmentNameRoute =
+  CourseCourseNameModulesModuleNameAssignmentAssignmentNameRouteImport.update({
+    id: '/modules/$moduleName/assignment/$assignmentName',
+    path: '/modules/$moduleName/assignment/$assignmentName',
     getParentRoute: () => CourseCourseNameRoute,
   } as any)
 const CourseCourseNameModulesModuleNamePagePageNameRoute =
@@ -82,10 +82,10 @@ const CourseCourseNameModulesModuleNamePagePageNameRoute =
     path: '/modules/$moduleName/page/$pageName',
     getParentRoute: () => CourseCourseNameRoute,
   } as any)
-const CourseCourseNameModulesModuleNameAssignmentAssignmentNameRoute =
-  CourseCourseNameModulesModuleNameAssignmentAssignmentNameRouteImport.update({
-    id: '/modules/$moduleName/assignment/$assignmentName',
-    path: '/modules/$moduleName/assignment/$assignmentName',
+const CourseCourseNameModulesModuleNameQuizQuizNameRoute =
+  CourseCourseNameModulesModuleNameQuizQuizNameRouteImport.update({
+    id: '/modules/$moduleName/quiz/$quizName',
+    path: '/modules/$moduleName/quiz/$quizName',
     getParentRoute: () => CourseCourseNameRoute,
   } as any)
 
@@ -192,6 +192,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/courses': {
+      id: '/api/courses'
+      path: '/api/courses'
+      fullPath: '/api/courses'
+      preLoaderRoute: typeof ApiCoursesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/course/$courseName': {
       id: '/course/$courseName'
       path: '/course/$courseName'
@@ -199,11 +206,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseCourseNameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/api/courses': {
-      id: '/api/courses'
-      path: '/api/courses'
-      fullPath: '/api/courses'
-      preLoaderRoute: typeof ApiCoursesRouteImport
+    '/api/canvas/$': {
+      id: '/api/canvas/$'
+      path: '/api/canvas/$'
+      fullPath: '/api/canvas/$'
+      preLoaderRoute: typeof ApiCanvasSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/trpc/$': {
+      id: '/api/trpc/$'
+      path: '/api/trpc/$'
+      fullPath: '/api/trpc/$'
+      preLoaderRoute: typeof ApiTrpcSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/course/$courseName/': {
@@ -220,20 +234,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseCourseNameSettingsRouteImport
       parentRoute: typeof CourseCourseNameRoute
     }
-    '/api/trpc/$': {
-      id: '/api/trpc/$'
-      path: '/api/trpc/$'
-      fullPath: '/api/trpc/$'
-      preLoaderRoute: typeof ApiTrpcSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/canvas/$': {
-      id: '/api/canvas/$'
-      path: '/api/canvas/$'
-      fullPath: '/api/canvas/$'
-      preLoaderRoute: typeof ApiCanvasSplatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/course/$courseName/lecture/$lectureDay/': {
       id: '/course/$courseName/lecture/$lectureDay/'
       path: '/lecture/$lectureDay'
@@ -248,11 +248,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseCourseNameLectureLectureDayPreviewRouteImport
       parentRoute: typeof CourseCourseNameRoute
     }
-    '/course/$courseName/modules/$moduleName/quiz/$quizName': {
-      id: '/course/$courseName/modules/$moduleName/quiz/$quizName'
-      path: '/modules/$moduleName/quiz/$quizName'
-      fullPath: '/course/$courseName/modules/$moduleName/quiz/$quizName'
-      preLoaderRoute: typeof CourseCourseNameModulesModuleNameQuizQuizNameRouteImport
+    '/course/$courseName/modules/$moduleName/assignment/$assignmentName': {
+      id: '/course/$courseName/modules/$moduleName/assignment/$assignmentName'
+      path: '/modules/$moduleName/assignment/$assignmentName'
+      fullPath: '/course/$courseName/modules/$moduleName/assignment/$assignmentName'
+      preLoaderRoute: typeof CourseCourseNameModulesModuleNameAssignmentAssignmentNameRouteImport
       parentRoute: typeof CourseCourseNameRoute
     }
     '/course/$courseName/modules/$moduleName/page/$pageName': {
@@ -262,11 +262,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CourseCourseNameModulesModuleNamePagePageNameRouteImport
       parentRoute: typeof CourseCourseNameRoute
     }
-    '/course/$courseName/modules/$moduleName/assignment/$assignmentName': {
-      id: '/course/$courseName/modules/$moduleName/assignment/$assignmentName'
-      path: '/modules/$moduleName/assignment/$assignmentName'
-      fullPath: '/course/$courseName/modules/$moduleName/assignment/$assignmentName'
-      preLoaderRoute: typeof CourseCourseNameModulesModuleNameAssignmentAssignmentNameRouteImport
+    '/course/$courseName/modules/$moduleName/quiz/$quizName': {
+      id: '/course/$courseName/modules/$moduleName/quiz/$quizName'
+      path: '/modules/$moduleName/quiz/$quizName'
+      fullPath: '/course/$courseName/modules/$moduleName/quiz/$quizName'
+      preLoaderRoute: typeof CourseCourseNameModulesModuleNameQuizQuizNameRouteImport
       parentRoute: typeof CourseCourseNameRoute
     }
   }

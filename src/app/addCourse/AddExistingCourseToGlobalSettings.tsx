@@ -9,6 +9,10 @@ import {
 } from "@/features/local/globalSettings/globalSettingsHooks";
 import { useDirectoryIsCourseQuery } from "@/features/local/utils/storageDirectoryHooks";
 import { FC, useEffect, useRef, useState } from "react";
+import {
+  DuplicateCourseNameWarning,
+  useCourseWithSameName,
+} from "./DuplicateCourseNameWarning";
 
 export const AddExistingCourseToGlobalSettings = () => {
   const [showForm, setShowForm] = useState(false);
@@ -38,6 +42,7 @@ const ExistingCourseForm: FC<object> = () => {
   const directoryIsCourseQuery = useDirectoryIsCourseQuery(path);
   const { data: globalSettings } = useGlobalSettingsQuery();
   const updateSettingsMutation = useUpdateGlobalSettingsMutation();
+  const nameIsTaken = !!useCourseWithSameName(name);
 
   // Focus name input when directory becomes a valid course
   useEffect(() => {
@@ -53,6 +58,8 @@ const ExistingCourseForm: FC<object> = () => {
       onSubmit={async (e) => {
         e.preventDefault();
         console.log(path);
+
+        if (nameIsTaken) return;
 
         await updateSettingsMutation.mutateAsync({
           ...globalSettings,
@@ -102,8 +109,11 @@ const ExistingCourseForm: FC<object> = () => {
             label={"Display Name"}
             inputRef={nameInputRef}
           />
+          <DuplicateCourseNameWarning name={name} />
           <div className="text-center">
-            <button className="text-center mt-3">Save</button>
+            <button className="text-center mt-3" disabled={nameIsTaken}>
+              Save
+            </button>
           </div>
         </>
       )}

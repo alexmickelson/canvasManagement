@@ -1,6 +1,10 @@
 allowBuilds:
   esbuild: false
 minimumReleaseAge: 1440
+overrides:
+  # monaco-editor pins an old dompurify with an xss advisory; force it onto the
+  # patched line the rest of the tree already uses
+  dompurify: ">=3.4.12"
 peerDependencyRules:
   allowedVersions:
     "eslint-plugin-import>eslint": "*"

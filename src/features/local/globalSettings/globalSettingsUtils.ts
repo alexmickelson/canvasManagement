@@ -1,4 +1,8 @@
-import { GlobalSettings, zodGlobalSettings } from "./globalSettingsModels";
+import {
+  GlobalSettings,
+  GlobalSettingsCourse,
+  zodGlobalSettings,
+} from "./globalSettingsModels";
 import { parse, stringify } from "yaml";
 import {
   FeedbackDelimiters,
@@ -11,13 +15,72 @@ export const globalSettingsToYaml = (settings: GlobalSettings) => {
 
 export const parseGlobalSettingsYaml = (yaml: string): GlobalSettings => {
   const parsed = parse(yaml);
+  let settings: GlobalSettings;
   try {
-    return zodGlobalSettings.parse(parsed);
+    settings = zodGlobalSettings.parse(parsed);
   } catch (e) {
     console.error("Error parsing global settings YAML:", e);
     throw new Error(`Error parsing global settings, got ${yaml}, ${e}`, {
       cause: e,
     });
+  }
+
+  // checked outside the try so the explanation is not buried in a dump of the
+  // whole yaml file
+  assertUniqueCourseNames(settings.courses);
+
+  return settings;
+};
+
+export type DuplicateCourseName = {
+  name: string;
+  paths: string[];
+};
+
+export const findDuplicateCourseNames = (
+  courses: readonly GlobalSettingsCourse[]
+): DuplicateCourseName[] => {
+  const pathsByName = new Map<string, string[]>();
+  for (const course of courses) {
+    const paths = pathsByName.get(course.name);
+    if (paths) paths.push(course.path);
+    else pathsByName.set(course.name, [course.path]);
+  }
+
+  return [...pathsByName.entries()]
+    .filter(([, paths]) => paths.length > 1)
+    .map(([name, paths]) => ({ name, paths }));
+};
+
+export const whyCourseNamesMustBeUnique =
+  "A course name is the id canvas manager looks a course up by. The name in " +
+  "the url is matched against globalSettings.yml to find the course folder, " +
+  "and that folder's settings.yml is where the canvasId comes from. The " +
+  "lookup takes the first match, so when two courses share a name only the " +
+  "first one can ever be opened, and edits and canvas uploads meant for the " +
+  "other one are silently applied to the first course and pushed to its " +
+  "canvas id instead.";
+
+export const duplicateCourseNamesMessage = (
+  duplicates: readonly DuplicateCourseName[]
+) =>
+  [
+    ...duplicates.map(
+      (duplicate) =>
+        `Duplicate course name "${duplicate.name}" in globalSettings.yml, ` +
+        `used by ${duplicate.paths.length} courses:\n` +
+        duplicate.paths.map((path) => `  - ${path}`).join("\n")
+    ),
+    whyCourseNamesMustBeUnique,
+    "Give every course in globalSettings.yml a distinct name.",
+  ].join("\n\n");
+
+export const assertUniqueCourseNames = (
+  courses: readonly GlobalSettingsCourse[]
+) => {
+  const duplicates = findDuplicateCourseNames(courses);
+  if (duplicates.length > 0) {
+    throw new Error(duplicateCourseNamesMessage(duplicates));
   }
 };
 

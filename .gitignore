@@ -52,5 +52,10 @@ next-env.d.ts
 
 storage/
 temp/
-.claude/
+# ignore local claude config (settings.local.json etc) but share the skills,
+# which document how to run and drive this app. the parent must be .claude/*
+# rather than .claude/ — git cannot re-include anything under an excluded
+# directory
+.claude/*
+!.claude/skills/
 guide.md

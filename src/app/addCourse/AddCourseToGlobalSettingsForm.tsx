@@ -23,6 +23,10 @@ import {
 import { useCourseListInTermQuery } from "@/features/canvas/hooks/canvasCourseHooks";
 import { useCanvasTermsQuery } from "@/features/canvas/hooks/canvasHooks";
 import { useDirectoryExistsQuery } from "@/features/local/utils/storageDirectoryHooks";
+import {
+  DuplicateCourseNameWarning,
+  useCourseWithSameName,
+} from "./DuplicateCourseNameWarning";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const sampleCompose = `services:
@@ -60,9 +64,10 @@ export default function AddNewCourseToGlobalSettingsForm() {
   >();
   const [name, setName] = useState("");
   const createCourse = useCreateLocalCourseMutation();
+  const nameIsTaken = !!useCourseWithSameName(name);
 
   const formIsComplete =
-    selectedTerm && selectedCanvasCourse && selectedDirectory;
+    selectedTerm && selectedCanvasCourse && selectedDirectory && !nameIsTaken;
 
   return (
     <div>
@@ -259,6 +264,7 @@ function OtherSettings({
         getOptionName={(c) => c.name}
       />
       <TextInput value={name} setValue={setName} label={"Display Name"} />
+      <DuplicateCourseNameWarning name={name} />
       <div className="px-5">
         Assignments, Quizzes, Pages, and Lectures will have their due dates
         moved based on how far they are from the start of the semester.

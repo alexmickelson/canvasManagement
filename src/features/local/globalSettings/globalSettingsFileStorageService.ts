@@ -8,6 +8,7 @@ import {
 import {
   parseGlobalSettingsYaml,
   globalSettingsToYaml,
+  assertUniqueCourseNames,
 } from "@/features/local/globalSettings/globalSettingsUtils";
 
 const SETTINGS_FILE_PATH =
@@ -45,8 +46,11 @@ export const getCoursePathByName = async (courseName: string) => {
 };
 
 export const updateGlobalSettings = async (globalSettings: GlobalSettings) => {
-  const globalSettingsString = globalSettingsToYaml(
-    zodGlobalSettings.parse(globalSettings),
-  );
+  const validatedSettings = zodGlobalSettings.parse(globalSettings);
+
+  // refuse to write a file we would refuse to read back
+  assertUniqueCourseNames(validatedSettings.courses);
+
+  const globalSettingsString = globalSettingsToYaml(validatedSettings);
   await fs.writeFile(SETTINGS_FILE_PATH, globalSettingsString, "utf-8");
 };
