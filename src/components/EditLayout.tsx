@@ -1,25 +1,6 @@
 "use client";
-import {
-  createContext,
-  FC,
-  ReactNode,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-
-// Lets buttons rendered inside the mobile actions menu close it after a tap
-// (e.g. Toggle Help, whose effect would otherwise be hidden behind the menu).
-// Outside the menu, closeMenu is a no-op.
-const ActionsMenuContext = createContext<{ closeMenu: () => void }>({
-  closeMenu: () => {},
-});
-
-export function useActionsMenu() {
-  return useContext(ActionsMenuContext);
-}
+import { FC, ReactNode, useEffect, useRef, useState } from "react";
+import { MobileActionsMenu } from "./MobileActionsMenu";
 
 const helpSplitStorageKey = "editorHelpSplit";
 
@@ -33,7 +14,6 @@ export const EditLayout: FC<{
   Footer: ReactNode;
 }> = ({ Header, HeaderActions, Help, onCloseHelp, Editor, Preview, Footer }) => {
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
-  const [menuOpen, setMenuOpen] = useState(false);
   // mobile-only: height of the help pane, adjustable via the drag handle
   const [helpHeight, setHelpHeight] = useState<number | null>(() => {
     if (typeof window === "undefined") return null;
@@ -50,10 +30,6 @@ export const EditLayout: FC<{
       bodyRef.current.style.setProperty("--help-h", `${helpHeight}px`);
     }
   }, [helpHeight]);
-  const menuContext = useMemo(
-    () => ({ closeMenu: () => setMenuOpen(false) }),
-    [],
-  );
 
   const toggleButtonClass = (active: boolean) =>
     "unstyled btn-thin px-2 py-0.5 text-sm " +
@@ -81,13 +57,10 @@ export const EditLayout: FC<{
           {HeaderActions && (
             <div className="max-md:hidden flex-none px-1">{HeaderActions}</div>
           )}
-          <button
-            className="md:hidden unstyled flex-none px-2 text-slate-300 text-xl leading-none"
-            onClick={() => setMenuOpen(true)}
-            aria-label="actions menu"
-          >
-            ☰
-          </button>
+          <MobileActionsMenu>
+            {HeaderActions && <div>{HeaderActions}</div>}
+            {Footer}
+          </MobileActionsMenu>
         </div>
       </div>
       <div
@@ -155,22 +128,6 @@ export const EditLayout: FC<{
         </div>
       </div>
       <div className="max-md:hidden">{Footer}</div>
-      {menuOpen && (
-        <div
-          className="md:hidden fixed inset-0 z-50 bg-black/40"
-          onClick={() => setMenuOpen(false)}
-        >
-          <div
-            className="actions-menu absolute top-11 right-1 w-64 max-w-[calc(100vw-0.5rem)] max-h-[80vh] overflow-y-auto bg-gray-900 border border-slate-700 rounded-xl shadow-lg shadow-black/50 p-2 flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <ActionsMenuContext.Provider value={menuContext}>
-              {HeaderActions && <div>{HeaderActions}</div>}
-              {Footer}
-            </ActionsMenuContext.Provider>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

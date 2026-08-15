@@ -16,7 +16,7 @@ import { getCourseUrl } from "@/services/urlUtils";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
-import { useActionsMenu } from "@/components/EditLayout";
+import { useActionsMenu } from "@/components/MobileActionsMenu";
 
 export function QuizButtons({
   moduleName,

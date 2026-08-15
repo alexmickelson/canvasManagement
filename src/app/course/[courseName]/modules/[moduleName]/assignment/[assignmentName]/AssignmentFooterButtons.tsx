@@ -21,7 +21,7 @@ import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
 import { useQueryClient } from "@tanstack/react-query";
 import { Classroom50AssignmentPanel } from "./Classroom50AssignmentPanel";
-import { useActionsMenu } from "@/components/EditLayout";
+import { useActionsMenu } from "@/components/MobileActionsMenu";
 
 export function AssignmentFooterButtons({
   moduleName,

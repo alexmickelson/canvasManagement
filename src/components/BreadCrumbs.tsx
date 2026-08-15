@@ -77,7 +77,7 @@ export const BreadCrumbs = () => {
           <span
             className={
               sharedBackgroundClassNames +
-              " min-w-20 max-md:max-w-28 overflow-hidden"
+              " min-w-20 overflow-hidden"
             }
           >
             <Link

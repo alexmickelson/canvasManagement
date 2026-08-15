@@ -9,7 +9,13 @@ import RightChevron from "@/components/icons/RightChevron";
 const collapseThreshold = 1400;
 const mobileThreshold = 640;
 
-export default function CollapsableSidebar() {
+export default function CollapsableSidebar({
+  mobileOpen = false,
+  onMobileClose,
+}: {
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}) {
   const [windowCollapseRecommended, setWindowCollapseRecommended] =
     useState(false);
   const [isMobile, setIsMobile] = useState(false);
@@ -51,17 +57,12 @@ export default function CollapsableSidebar() {
   };
 
   if (isMobile) {
-    return collapsed ? (
-      <button
-        className="fixed bottom-4 right-4 z-40 rounded-full px-4 py-3 shadow-lg shadow-black/50"
-        onClick={toggleCollapsed}
-      >
-        Modules
-      </button>
-    ) : (
+    // opened from the "Modules" item in the course page's hamburger menu
+    if (!mobileOpen) return null;
+    return (
       <div className="fixed inset-0 z-40 bg-gray-950 flex flex-col">
         <div className="flex flex-row justify-between items-center p-2">
-          <button onClick={toggleCollapsed}>Close</button>
+          <button onClick={onMobileClose}>Close</button>
           <CourseSettingsLink />
         </div>
         <div className="flex-1 overflow-y-auto p-3">
