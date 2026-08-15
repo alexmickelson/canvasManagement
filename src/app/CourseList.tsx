@@ -22,7 +22,7 @@ export default function CourseList() {
 
   const coursesByStartDate = groupByStartDate(allSettings);
 
-  const sortedDates = Object.keys(coursesByStartDate).sort();
+  const sortedDates = Object.keys(coursesByStartDate).sort().reverse();
 
   return (
     <div>
