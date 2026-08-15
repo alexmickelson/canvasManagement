@@ -13,7 +13,6 @@ import { rateLimitAwarePost } from "./canvasWebRequestUtils";
 
 export const canvasAssignmentService = {
   async getAll(courseId: number): Promise<CanvasAssignment[]> {
-    console.log("getting canvas assignments");
     const url = `${canvasApi}/courses/${courseId}/assignments`; //per_page=100
     const assignments = await paginatedRequest<CanvasAssignment[]>({ url });
     return assignments.map((a) => ({

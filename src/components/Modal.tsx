@@ -77,13 +77,15 @@ export default function Modal({
           onClick={(e) => {
             e.stopPropagation();
           }}
-          className={`bg-slate-800 ${modalControl.position ? "" : "p-6"} rounded-lg shadow-lg ${modalControl.position ? "" : modalWidth} transition-all duration-400 ${modalControl.isOpen ? "opacity-100" : "opacity-0"}`}
+          className={`bg-slate-800 ${modalControl.position ? "" : "p-6"} rounded-lg shadow-lg ${modalControl.position ? "" : modalWidth} min-w-[min(20rem,100vw-1rem)] max-w-[calc(100vw-1rem)] max-h-[90vh] overflow-y-auto transition-all duration-400 ${modalControl.isOpen ? "opacity-100" : "opacity-0"}`}
           style={
             modalControl.position
               ? {
                   position: "fixed",
-                  left: modalControl.position.x,
-                  top: modalControl.position.y,
+                  // clamp so context menus opened near the right/bottom edge
+                  // stay on screen (matters most on small viewports)
+                  left: `min(${modalControl.position.x}px, calc(100vw - 15rem))`,
+                  top: `min(${modalControl.position.y}px, calc(100vh - 16rem))`,
                 }
               : undefined
           }

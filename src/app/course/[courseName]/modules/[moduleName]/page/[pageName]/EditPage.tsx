@@ -8,6 +8,7 @@ import ClientOnly from "@/components/ClientOnly";
 import { useCourseContext } from "@/app/course/[courseName]/context/courseContext";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 import EditPageHeader from "./EditPageHeader";
+import { UpdatePageName } from "./UpdatePageName";
 import { EditLayout } from "@/components/EditLayout";
 import { localPageMarkdownUtils } from "@/features/local/pages/localCoursePageModels";
 import {
@@ -97,18 +98,17 @@ export default function EditPage({
 
   return (
     <EditLayout
-      Header={<EditPageHeader pageName={pageName} moduleName={moduleName} />}
-      Body={
-        <div className="flex min-h-0 flex-1 gap-4 overflow-hidden">
-          <div className="flex-1 h-full min-w-0 overflow-hidden">
-            <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
-          </div>
-          <div className="flex-1 h-full min-w-0 flex flex-col overflow-hidden">
-            <div className="text-red-300">{error && error}</div>
-            <div className="flex-1 overflow-y-auto">
-              <br />
-              <PagePreview page={page} />
-            </div>
+      Header={<EditPageHeader pageName={pageName} />}
+      HeaderActions={
+        <UpdatePageName pageName={pageName} moduleName={moduleName} />
+      }
+      Editor={<MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />}
+      Preview={
+        <div className="h-full flex flex-col overflow-hidden">
+          <div className="text-red-300">{error && error}</div>
+          <div className="flex-1 overflow-y-auto">
+            <br />
+            <PagePreview page={page} />
           </div>
         </div>
       }

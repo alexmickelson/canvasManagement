@@ -8,7 +8,7 @@ export function DayOfWeekInput({
   updateSettings: (day: DayOfWeek) => void;
 }) {
   return (
-    <div className="flex flex-row gap-3">
+    <div className="flex flex-row flex-wrap gap-2 sm:gap-3">
       {Object.values(DayOfWeek).map((day) => {
         const hasDay = selectedDays.includes(day);
         return (
@@ -18,7 +18,8 @@ export function DayOfWeekInput({
             className={hasDay ? "" : "unstyled btn-outline "}
             onClick={() => updateSettings(day)}
           >
-            {day}
+            <span className="sm:hidden">{day.slice(0, 3)}</span>
+            <span className="hidden sm:inline">{day}</span>
           </button>
         );
       })}

@@ -1,26 +1,14 @@
-import { UpdatePageName } from "./UpdatePageName";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
 import { RightSingleChevron } from "@/components/icons/RightSingleChevron";
 
-export default function EditPageHeader({
-  moduleName,
-  pageName,
-}: {
-  pageName: string;
-  moduleName: string;
-}) {
+export default function EditPageHeader({ pageName }: { pageName: string }) {
   return (
-    <div className="py-1 flex flex-row justify-between">
-      <div className="flex flex-row">
-        <BreadCrumbs />
-        <span className="text-slate-500 cursor-default select-none my-auto">
-          <RightSingleChevron />
-        </span>
-        <div className="my-auto px-3">{pageName}</div>
-      </div>
-      <div className="px-1">
-        <UpdatePageName pageName={pageName} moduleName={moduleName} />
-      </div>
+    <div className="flex flex-row items-center min-w-0">
+      <BreadCrumbs />
+      <span className="text-slate-500 cursor-default select-none my-auto">
+        <RightSingleChevron />
+      </span>
+      <div className="my-auto px-3 truncate min-w-10 flex-auto">{pageName}</div>
     </div>
   );
 }

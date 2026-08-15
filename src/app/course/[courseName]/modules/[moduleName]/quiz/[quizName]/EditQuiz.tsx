@@ -12,6 +12,7 @@ import {
 } from "@/features/local/quizzes/quizHooks";
 import { useAuthoritativeUpdates } from "../../../../utils/useAuthoritativeUpdates";
 import EditQuizHeader from "./EditQuizHeader";
+import { UpdateQuizName } from "./UpdateQuizName";
 import { useLocalCourseSettingsQuery } from "@/features/local/course/localCoursesHooks";
 import { useGlobalSettingsQuery } from "@/features/local/globalSettings/globalSettingsHooks";
 import { getFeedbackDelimitersFromSettings } from "@/features/local/globalSettings/globalSettingsUtils";
@@ -190,21 +191,23 @@ export default function EditQuiz({
 
   return (
     <EditLayout
-      Header={<EditQuizHeader moduleName={moduleName} quizName={quizName} />}
-      Body={
+      Header={<EditQuizHeader quizName={quizName} />}
+      HeaderActions={
+        <UpdateQuizName quizName={quizName} moduleName={moduleName} />
+      }
+      Help={
+        showHelp ? (
+          <pre>
+            <code>{helpString(settings)}</code>
+          </pre>
+        ) : undefined
+      }
+      onCloseHelp={() => setShowHelp(false)}
+      Editor={<MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />}
+      Preview={
         <>
-          {showHelp && (
-            <pre className=" max-w-96 h-full overflow-y-auto">
-              <code>{helpString(settings)}</code>
-            </pre>
-          )}
-          <div className="flex-1 h-full">
-            <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
-          </div>
-          <div className="flex-1 h-full">
-            <div className="text-red-300">{error && error}</div>
-            <QuizPreview moduleName={moduleName} quizName={quizName} />
-          </div>
+          <div className="text-red-300">{error && error}</div>
+          <QuizPreview moduleName={moduleName} quizName={quizName} />
         </>
       }
       Footer={

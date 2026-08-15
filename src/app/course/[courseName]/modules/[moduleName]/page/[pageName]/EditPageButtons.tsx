@@ -51,7 +51,7 @@ export default function EditPageButtons({
     deletePageInCanvas.isPending;
 
   return (
-    <div className="p-5 flex justify-end flex-row gap-x-3">
+    <div className="p-5 max-md:p-2 flex justify-end flex-row flex-wrap gap-x-3 gap-y-1">
       {requestIsPending && <Spinner />}
       {!pageInCanvas && (
         <button

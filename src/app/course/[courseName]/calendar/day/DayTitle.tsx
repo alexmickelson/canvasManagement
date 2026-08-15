@@ -45,6 +45,9 @@ export function DayTitle({ day, dayAsDate }: { day: string; dayAsDate: Date }) {
         onMouseEnter={showTooltip}
         onMouseLeave={hideTooltip}
       >
+        <span className="md:hidden">
+          {dayAsDate.toLocaleString("default", { weekday: "short" })}{" "}
+        </span>
         {dayAsDate.getDate()} {lectureName}
       </Link>
       <ClientOnly>

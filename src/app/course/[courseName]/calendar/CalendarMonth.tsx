@@ -60,7 +60,7 @@ export const CalendarMonth = ({ month }: { month: CalendarMonthModel }) => {
           </div>
         )}
       >
-        <div className="grid grid-cols-7 text-center fw-bold ms-3">
+        <div className="hidden md:grid grid-cols-7 text-center fw-bold ms-3">
           {weekDaysList.map((day) => (
             <div key={day} className={""}>
               <span className="hidden xl:inline">{day}</span>

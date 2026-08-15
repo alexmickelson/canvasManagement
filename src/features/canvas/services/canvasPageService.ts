@@ -8,7 +8,6 @@ import { markdownToHTMLSafe } from "@/services/htmlMarkdownUtils";
 
 export const canvasPageService = {
   async getAll(courseId: number): Promise<CanvasPage[]> {
-    console.log("requesting pages");
     try {
       const url = `${canvasApi}/courses/${courseId}/pages`;
       const pages = await paginatedRequest<CanvasPage[]>({

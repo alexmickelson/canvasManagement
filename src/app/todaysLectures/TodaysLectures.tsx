@@ -10,7 +10,7 @@ export default function TodaysLectures() {
   const { data: allSettings } = useLocalCoursesSettingsQuery();
   return (
     <div className="w-full">
-      <div className="flex justify-around w-full">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap justify-around w-full gap-3">
         <SuspenseAndErrorHandling>
           {allSettings.map((settings) => (
             <Fragment key={settings.name}>

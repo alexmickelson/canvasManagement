@@ -74,13 +74,18 @@ export const BreadCrumbs = () => {
           <span className="text-slate-500 cursor-default select-none">
             <RightSingleChevron />
           </span>
-          <span className={sharedBackgroundClassNames}>
+          <span
+            className={
+              sharedBackgroundClassNames +
+              " min-w-20 max-md:max-w-28 overflow-hidden"
+            }
+          >
             <Link
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               to={`/course/${encodeURIComponent(courseName)}` as any}
-              className={sharedLinkClassNames}
+              className={sharedLinkClassNames + " min-w-0"}
             >
-              {courseName}
+              <span className="truncate">{courseName}</span>
             </Link>
           </span>
         </>

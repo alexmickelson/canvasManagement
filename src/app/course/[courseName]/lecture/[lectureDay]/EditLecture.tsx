@@ -17,6 +17,8 @@ import { useLocalCourseSettingsQuery } from "@/features/local/course/localCourse
 import { Lecture } from "@/features/local/lectures/lectureModel";
 import { useAuthoritativeUpdates } from "../../utils/useAuthoritativeUpdates";
 import { EditLayout } from "@/components/EditLayout";
+import { Link } from "@tanstack/react-router";
+import { getLecturePreviewUrl } from "@/services/urlUtils";
 
 export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   const { courseName } = useCourseContext();
@@ -89,15 +91,19 @@ export default function EditLecture({ lectureDay }: { lectureDay: string }) {
   return (
     <EditLayout
       Header={<EditLectureTitle lectureDay={lectureDay} />}
-      Body={
-        <div className="sm:columns-2 min-h-0 flex-1">
-          <div className="flex-1 h-full">
-            <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
-          </div>
-          <div className="h-full sm:block none overflow-auto">
-            <div className="text-red-300">{error && error}</div>
-            {lecture && <LecturePreview lecture={lecture} />}
-          </div>
+      HeaderActions={
+        <Link
+          className="btn inline text-center flex-grow m-1"
+          to={getLecturePreviewUrl(courseName, lectureDay)}
+        >
+          preview
+        </Link>
+      }
+      Editor={<MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />}
+      Preview={
+        <div className="h-full overflow-auto">
+          <div className="text-red-300">{error && error}</div>
+          {lecture && <LecturePreview lecture={lecture} />}
         </div>
       }
       Footer={<LectureButtons lectureDay={lectureDay} />}

@@ -21,6 +21,7 @@ import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
 import { useQueryClient } from "@tanstack/react-query";
 import { Classroom50AssignmentPanel } from "./Classroom50AssignmentPanel";
+import { useActionsMenu } from "@/components/EditLayout";
 
 export function AssignmentFooterButtons({
   moduleName,
@@ -47,6 +48,7 @@ export function AssignmentFooterButtons({
   const updateAssignment = useUpdateAssignmentInCanvasMutation();
   const deleteLocal = useDeleteAssignmentMutation();
   const [isLoading, setIsLoading] = useState(false);
+  const { closeMenu } = useActionsMenu();
   const modal = useModal();
   const classroom50Modal = useModal();
   const { previousUrl, nextUrl } = useItemNavigation(
@@ -67,11 +69,18 @@ export function AssignmentFooterButtons({
     updateAssignment.isPending;
 
   return (
-    <div className="p-5 flex flex-row justify-between gap-3">
+    <div className="p-5 max-md:p-2 flex flex-row flex-wrap justify-between gap-3">
       <div>
-        <button onClick={toggleHelp}>Toggle Help</button>
+        <button
+          onClick={() => {
+            toggleHelp();
+            closeMenu();
+          }}
+        >
+          Toggle Help
+        </button>
       </div>
-      <div className="flex flex-row gap-3 justify-end">
+      <div className="flex flex-row flex-wrap gap-3 justify-end">
         {anythingIsLoading && <Spinner />}
         {assignmentInCanvas && !assignmentInCanvas?.published && (
           <div className="text-rose-300 my-auto">Not Published</div>
@@ -104,6 +113,7 @@ export function AssignmentFooterButtons({
             target="_blank"
             href={`${baseCanvasUrl}/courses/${settings.canvasId}/assignments/${assignmentInCanvas.id}`}
             onClick={() => {
+              closeMenu();
               for (let i = 1; i <= 8; i += 2) {
                 setTimeout(() => {
                   queryClient.invalidateQueries({

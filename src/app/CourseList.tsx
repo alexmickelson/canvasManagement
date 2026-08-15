@@ -31,11 +31,11 @@ export default function CourseList() {
         value={isDeleting}
         onChange={(set) => setIsDeleting(set)}
       />
-      <div className="flex flex-row ">
+      <div className="flex flex-col sm:flex-row sm:flex-wrap sm:justify-center">
         {sortedDates.map((startDate) => (
           <div
             key={startDate}
-            className=" border-4 border-slate-800 rounded px-3 m-3  min-w-50"
+            className=" border-4 border-slate-800 rounded px-3 m-3  sm:min-w-50"
           >
             <div className="text-center pb-2">{getTermName(startDate)}</div>
             {coursesByStartDate[getDateKey(startDate)].map((settings) => (

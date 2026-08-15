@@ -10,9 +10,9 @@ export default function SettingsHeader() {
   const { data: settings } = useLocalCourseSettingsQuery();
   return (
     <>
-      <div className="flex flex-row justify-between">
+      <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div className="my-auto">
-          <Link className="btn" to={getCourseUrl(courseName)}>
+          <Link className="btn whitespace-nowrap" to={getCourseUrl(courseName)}>
             Back To Course
           </Link>
         </div>
@@ -20,7 +20,7 @@ export default function SettingsHeader() {
           {settings.name}{" "}
           <span className="text-slate-500 text-xl"> settings</span>
         </h3>
-        <div></div>
+        <div className="hidden sm:block"></div>
       </div>
       <hr />
     </>

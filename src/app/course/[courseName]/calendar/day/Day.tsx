@@ -66,10 +66,15 @@ export default function Day({ day, month }: { day: string; month: number }) {
   const monthClass =
     isInSameMonth && !isToday ? " border border-slate-700 " : " ";
 
+  // on mobile days stack in a single column, so out-of-month filler days
+  // would show up twice (once in each adjacent month) — hide them there
+  const mobileVisibilityClass = isInSameMonth ? " " : " hidden md:block ";
+
   return (
     <div
       className={
         " rounded-lg sm:m-1 m-0.5 min-h-10 " +
+        mobileVisibilityClass +
         meetingClasses +
         monthClass +
         todayClasses

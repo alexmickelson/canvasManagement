@@ -27,18 +27,14 @@ export default function CourseCalendar() {
   useEffect(() => {
     const storageKey = `courseScroll-${settings.name}`;
     const scrollValue = localStorage.getItem(storageKey);
-    console.log("resetting scroll", scrollValue, divRef.current);
 
     const yValue = scrollValue ? parseInt(scrollValue) : 0;
 
-    if (!divRef.current) console.log("cannot scroll, ref is null");
-    else {
-      divRef.current.scroll({
-        top: yValue,
-        left: 0,
-        // behavior: "smooth"
-      });
-    }
+    divRef.current?.scroll({
+      top: yValue,
+      left: 0,
+      // behavior: "smooth"
+    });
   }, [settings.name]);
 
   return (

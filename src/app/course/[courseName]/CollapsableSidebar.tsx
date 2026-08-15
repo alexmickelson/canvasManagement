@@ -7,10 +7,12 @@ import LeftChevron from "@/components/icons/LeftChevron";
 import RightChevron from "@/components/icons/RightChevron";
 
 const collapseThreshold = 1400;
+const mobileThreshold = 640;
 
 export default function CollapsableSidebar() {
   const [windowCollapseRecommended, setWindowCollapseRecommended] =
     useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const [userCollapsed, setUserCollapsed] = useState<
     "unset" | "collapsed" | "uncollapsed"
   >("unset");
@@ -18,6 +20,7 @@ export default function CollapsableSidebar() {
   useEffect(() => {
     // Initialize on mount
     setWindowCollapseRecommended(window.innerWidth <= collapseThreshold);
+    setIsMobile(window.innerWidth < mobileThreshold);
 
     function handleResize() {
       if (window.innerWidth <= collapseThreshold) {
@@ -25,6 +28,7 @@ export default function CollapsableSidebar() {
       } else {
         setWindowCollapseRecommended(false);
       }
+      setIsMobile(window.innerWidth < mobileThreshold);
     }
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -37,6 +41,36 @@ export default function CollapsableSidebar() {
     collapsed = userCollapsed === "collapsed";
   }
 
+  const toggleCollapsed = () => {
+    setUserCollapsed((prev) => {
+      if (prev === "unset") {
+        return collapsed ? "uncollapsed" : "collapsed";
+      }
+      return prev === "collapsed" ? "uncollapsed" : "collapsed";
+    });
+  };
+
+  if (isMobile) {
+    return collapsed ? (
+      <button
+        className="fixed bottom-4 right-4 z-40 rounded-full px-4 py-3 shadow-lg shadow-black/50"
+        onClick={toggleCollapsed}
+      >
+        Modules
+      </button>
+    ) : (
+      <div className="fixed inset-0 z-40 bg-gray-950 flex flex-col">
+        <div className="flex flex-row justify-between items-center p-2">
+          <button onClick={toggleCollapsed}>Close</button>
+          <CourseSettingsLink />
+        </div>
+        <div className="flex-1 overflow-y-auto p-3">
+          <ModuleList />
+        </div>
+      </div>
+    );
+  }
+
   const widthClass = collapsed ? "w-0" : "w-96";
   const visibilityClass = collapsed ? "invisible " : "visible";
 
@@ -44,16 +78,7 @@ export default function CollapsableSidebar() {
     <div className="h-full flex flex-col">
       <div className="flex flex-row justify-between mb-2">
         <div className="visible mx-3 mt-2">
-          <button
-            onClick={() => {
-              setUserCollapsed((prev) => {
-                if (prev === "unset") {
-                  return collapsed ? "uncollapsed" : "collapsed";
-                }
-                return prev === "collapsed" ? "uncollapsed" : "collapsed";
-              });
-            }}
-          >
+          <button onClick={toggleCollapsed}>
             {collapsed ? <LeftChevron /> : <RightChevron />}
           </button>
         </div>

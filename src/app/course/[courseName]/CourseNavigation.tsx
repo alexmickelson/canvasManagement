@@ -32,7 +32,7 @@ export function CourseNavigation() {
   const canvasQuizzesQuery = useCanvasQuizzesQuery();
 
   return (
-    <div className="pb-1 flex flex-row gap-3">
+    <div className="pb-1 flex flex-row flex-wrap items-center gap-x-3 gap-y-1">
       <BreadCrumbs />
   
       <a

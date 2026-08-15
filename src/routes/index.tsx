@@ -11,7 +11,7 @@ export const Route = createFileRoute("/")({
 function Home() {
   return (
     <main className="h-full flex justify-center overflow-auto">
-      <div className="xl:w-[900px] mx-auto">
+      <div className="w-full xl:w-[900px] mx-auto px-3">
         <br />
         <br />
         <br />

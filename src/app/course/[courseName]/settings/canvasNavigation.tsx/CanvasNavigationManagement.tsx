@@ -52,7 +52,7 @@ export const CanvasNavigationManagement = () => {
 
   return (
     <div className=" mx-auto p-4">
-      <div className="flex justify-between">
+      <div className="flex justify-between flex-wrap gap-2">
         <h2 className="text-xl font-bold mb-4">
           Manage Course Navigation Tabs
         </h2>
@@ -71,7 +71,7 @@ export const CanvasNavigationManagement = () => {
         </div>
       </div>
       <div className="flex justify-center ">
-        <ul className="w-md h-[800px] overflow-y-auto rounded bg-slate-950 p-4 border border-slate-700">
+        <ul className="w-full max-w-md h-[60vh] sm:h-[800px] overflow-y-auto rounded bg-slate-950 p-4 border border-slate-700">
           {[...tabs]
             .sort((a, b) => a.position - b.position)
             .map((tab, idx) => (

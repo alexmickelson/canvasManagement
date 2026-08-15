@@ -21,7 +21,7 @@ export default function LectureButtons({ lectureDay }: { lectureDay: string }) {
   const { previousUrl, nextUrl } = useItemNavigation("lecture", lectureDay);
 
   return (
-    <div className="p-5 flex flex-row justify-end gap-3">
+    <div className="p-5 max-md:p-2 flex flex-row flex-wrap justify-end gap-3">
       <div>
         <Modal
           modalControl={modal}

@@ -1,6 +1,6 @@
 "use client";
 import { marked } from "marked";
-import DOMPurify from "dompurify";
+import DOMPurify from "isomorphic-dompurify";
 import markedKatex from "marked-katex-extension";
 import pako from "pako";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
@@ -97,11 +97,10 @@ export function convertImagesToCanvasImages(
       console.log(
         `No image in settings for ${imageSrc}, do you have NEXT_PUBLIC_ENABLE_FILE_SYNC=true in your settings?`
       );
+      // leave the original src alone rather than replacing it with the
+      // string "undefined", which the browser would request as a real URL
+      continue;
     }
-    // could error check here, but better to just not display an image...
-    // if (typeof destinationUrl === "undefined") {
-    //   throw `cannot convert to html, no canvas url for ${imageSrc} in settings`;
-    // }
     mutableHtml = mutableHtml.replaceAll(imageSrc, destinationUrl);
   }
   return mutableHtml;

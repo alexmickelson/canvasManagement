@@ -53,7 +53,6 @@ export const useUpdateImageSettingsForAssignment = ({
     }
 
     if (isPending) {
-      console.log("not updating image assets, still loading");
       return;
     }
     setIsPending(true);
@@ -87,7 +86,6 @@ export const useAddNewImagesToCanvasMutation = () => {
       );
 
       if (newImages.length === 0) {
-        console.log("no new images to upload");
         return;
       }
 

@@ -274,12 +274,12 @@ export default function Classroom50Settings() {
 
   return (
     <div className={settingsBox}>
-      <div className="flex flex-row items-baseline">
+      <div className="flex flex-row items-baseline flex-wrap gap-x-2">
         <div className="flex-1" />
         <h5 className="text-center">Classroom 50</h5>
         <div className="flex-1 text-end">
           <button
-            className="unstyled text-sm text-slate-400 hover:text-slate-200"
+            className="unstyled text-sm text-slate-400 hover:text-slate-200 whitespace-nowrap"
             onClick={() => setMode(mode === "wizard" ? "manual" : "wizard")}
           >
             {mode === "wizard" ? "enter settings manually" : "setup wizard"}

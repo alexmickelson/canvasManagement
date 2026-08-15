@@ -16,6 +16,7 @@ import { getCourseUrl } from "@/services/urlUtils";
 import { Link, useNavigate } from "@tanstack/react-router";
 import { useItemNavigation } from "../../../../hooks/useItemNavigation";
 import ItemNavigationButtons from "../../../../components/ItemNavigationButtons";
+import { useActionsMenu } from "@/components/EditLayout";
 
 export function QuizButtons({
   moduleName,
@@ -36,6 +37,7 @@ export function QuizButtons({
   const deleteFromCanvas = useDeleteQuizFromCanvasMutation();
   const deleteLocal = useDeleteQuizMutation();
   const modal = useModal();
+  const { closeMenu } = useActionsMenu();
   const { previousUrl, nextUrl } = useItemNavigation(
     "quiz",
     quizName,
@@ -45,11 +47,18 @@ export function QuizButtons({
   const quizInCanvas = canvasQuizzes?.find((c) => c.title === quizName);
 
   return (
-    <div className="p-5 flex flex-row justify-between">
+    <div className="p-5 max-md:p-2 flex flex-row flex-wrap gap-3 justify-between">
       <div>
-        <button onClick={toggleHelp}>Toggle Help</button>
+        <button
+          onClick={() => {
+            toggleHelp();
+            closeMenu();
+          }}
+        >
+          Toggle Help
+        </button>
       </div>
-      <div className="flex flex-row gap-3 justify-end">
+      <div className="flex flex-row flex-wrap gap-3 justify-end">
         {(addToCanvas.isPending || deleteFromCanvas.isPending) && <Spinner />}
         {quizInCanvas && !quizInCanvas.published && (
           <div className="text-rose-300 my-auto">Not Published</div>
@@ -67,6 +76,7 @@ export function QuizButtons({
             className="btn"
             target="_blank"
             href={`${baseCanvasUrl}/courses/${settings.canvasId}/quizzes/${quizInCanvas.id}`}
+            onClick={closeMenu}
           >
             View in Canvas
           </a>

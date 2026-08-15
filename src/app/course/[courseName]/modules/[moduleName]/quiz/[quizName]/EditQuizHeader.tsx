@@ -1,26 +1,14 @@
 import { RightSingleChevron } from "@/components/icons/RightSingleChevron";
-import { UpdateQuizName } from "./UpdateQuizName";
 import { BreadCrumbs } from "@/components/BreadCrumbs";
 
-export default function EditQuizHeader({
-  moduleName,
-  quizName,
-}: {
-  quizName: string;
-  moduleName: string;
-}) {
+export default function EditQuizHeader({ quizName }: { quizName: string }) {
   return (
-    <div className="py-1 flex flex-row justify-between">
-      <div className="flex flex-row">
-        <BreadCrumbs />
-        <span className="text-slate-500 cursor-default select-none my-auto">
-          <RightSingleChevron />
-        </span>
-        <div className="my-auto px-3">{quizName}</div>
-      </div>
-      <div className="px-1">
-        <UpdateQuizName quizName={quizName} moduleName={moduleName} />
-      </div>
+    <div className="flex flex-row items-center min-w-0">
+      <BreadCrumbs />
+      <span className="text-slate-500 cursor-default select-none my-auto">
+        <RightSingleChevron />
+      </span>
+      <div className="my-auto px-3 truncate min-w-10 flex-auto">{quizName}</div>
     </div>
   );
 }

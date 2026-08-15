@@ -13,6 +13,7 @@ import { SuspenseAndErrorHandling } from "@/components/SuspenseAndErrorHandling"
 import { AssignmentFooterButtons } from "./AssignmentFooterButtons";
 import { useAuthoritativeUpdates } from "@/app/course/[courseName]/utils/useAuthoritativeUpdates";
 import EditAssignmentHeader from "./EditAssignmentHeader";
+import { UpdateAssignmentName } from "./UpdateAssignmentName";
 import { Spinner } from "@/components/Spinner";
 import { getAssignmentHelpString } from "./getAssignmentHelpString";
 import { EditLayout } from "@/components/EditLayout";
@@ -119,54 +120,54 @@ export default function EditAssignment({
 
   return (
     <EditLayout
-      Header={
-        <EditAssignmentHeader
-          moduleName={moduleName}
+      Header={<EditAssignmentHeader assignmentName={assignmentName} />}
+      HeaderActions={
+        <UpdateAssignmentName
           assignmentName={assignmentName}
+          moduleName={moduleName}
         />
       }
-      Body={
+      Help={
+        showHelp ? (
+          <>
+            <pre>
+              <code>{getAssignmentHelpString(settings)}</code>
+            </pre>
+            <a
+              href="https://www.markdownguide.org/cheat-sheet/"
+              target="_blank"
+              className="text-blue-400 underline"
+            >
+              Markdown Cheat Sheet
+            </a>
+            <a
+              href="https://mermaid.live/edit"
+              target="_blank"
+              className="text-blue-400 underline ps-3"
+            >
+              Mermaid Live Editor
+            </a>
+          </>
+        ) : undefined
+      }
+      onCloseHelp={() => setShowHelp(false)}
+      Editor={<MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />}
+      Preview={
         <>
-          {showHelp && (
-            <div className=" max-w-96 flex-1 h-full overflow-y-auto">
-              <pre>
-                <code>{getAssignmentHelpString(settings)}</code>
-              </pre>
-              <a
-                href="https://www.markdownguide.org/cheat-sheet/"
-                target="_blank"
-                className="text-blue-400 underline"
-              >
-                Markdown Cheat Sheet
-              </a>
-              <a
-                href="https://mermaid.live/edit"
-                target="_blank"
-                className="text-blue-400 underline ps-3"
-              >
-                Mermaid Live Editor
-              </a>
-            </div>
-          )}
-          <div className="flex-1 h-full">
-            <MonacoEditor key={monacoKey} value={text} onChange={textUpdate} />
-          </div>
-          <div className="flex-1 h-full">
-            <div className="text-red-300">{error && error}</div>
+          <div className="text-red-300">{error && error}</div>
 
-            <div className="px-3 h-full ">
-              <ClientOnly>
-                <SuspenseAndErrorHandling showToast={false}>
-                  {imageUpdateIsPending && (
-                    <div className="flex justify-center">
-                      <Spinner /> images being uploaded to canvas
-                    </div>
-                  )}
+          <div className="px-3 h-full ">
+            <ClientOnly>
+              <SuspenseAndErrorHandling showToast={false}>
+                {imageUpdateIsPending && (
+                  <div className="flex justify-center">
+                    <Spinner /> images being uploaded to canvas
+                  </div>
+                )}
 
-                  <AssignmentPreview assignment={assignment} />
-                </SuspenseAndErrorHandling>
-              </ClientOnly>
-            </div>
+                <AssignmentPreview assignment={assignment} />
+              </SuspenseAndErrorHandling>
+            </ClientOnly>
           </div>
         </>
       }
