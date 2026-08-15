@@ -4,6 +4,7 @@ import {
   FC,
   ReactNode,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -20,6 +21,8 @@ export function useActionsMenu() {
   return useContext(ActionsMenuContext);
 }
 
+const helpSplitStorageKey = "editorHelpSplit";
+
 export const EditLayout: FC<{
   Header: ReactNode;
   HeaderActions?: ReactNode;
@@ -32,8 +35,21 @@ export const EditLayout: FC<{
   const [mobileView, setMobileView] = useState<"edit" | "preview">("edit");
   const [menuOpen, setMenuOpen] = useState(false);
   // mobile-only: height of the help pane, adjustable via the drag handle
-  const [helpHeight, setHelpHeight] = useState<number | null>(null);
+  const [helpHeight, setHelpHeight] = useState<number | null>(() => {
+    if (typeof window === "undefined") return null;
+    const stored = parseInt(localStorage.getItem(helpSplitStorageKey) ?? "");
+    return Number.isNaN(stored) ? null : stored;
+  });
   const bodyRef = useRef<HTMLDivElement | null>(null);
+
+  // applied imperatively: React adopts server-rendered attributes during
+  // hydration, so a style prop set from localStorage-initialized state would
+  // never reach the DOM
+  useEffect(() => {
+    if (bodyRef.current && helpHeight !== null) {
+      bodyRef.current.style.setProperty("--help-h", `${helpHeight}px`);
+    }
+  }, [helpHeight]);
   const menuContext = useMemo(
     () => ({ closeMenu: () => setMenuOpen(false) }),
     [],
@@ -77,11 +93,6 @@ export const EditLayout: FC<{
       <div
         ref={bodyRef}
         className="min-h-0 flex flex-row max-md:flex-col w-full flex-grow"
-        style={
-          helpHeight !== null
-            ? ({ "--help-h": `${helpHeight}px` } as React.CSSProperties)
-            : undefined
-        }
       >
         {Help && (
           <div className="md:max-w-96 md:flex-1 max-md:flex-none max-md:h-[var(--help-h,50vh)] min-w-0 overflow-y-auto">
@@ -115,6 +126,7 @@ export const EditLayout: FC<{
                 rect.height - 80,
               );
               setHelpHeight(clamped);
+              localStorage.setItem(helpSplitStorageKey, String(clamped));
             }}
             onPointerUp={(e) => {
               e.currentTarget.releasePointerCapture(e.pointerId);
