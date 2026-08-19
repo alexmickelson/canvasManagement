@@ -80,7 +80,9 @@ export const assertUniqueCourseNames = (
 ) => {
   const duplicates = findDuplicateCourseNames(courses);
   if (duplicates.length > 0) {
-    throw new Error(duplicateCourseNamesMessage(duplicates));
+    const message = duplicateCourseNamesMessage(duplicates);
+    console.error("Error in global settings:", message);
+    throw new Error(message);
   }
 };
 

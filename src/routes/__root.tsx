@@ -19,7 +19,27 @@ import TrpcProvider from "@/services/serverFunctions/TrpcProvider";
 import { getQueryClient } from "@/app/providersQueryClientUtils";
 import appCss from "@/app/globals.css?url";
 
-const fetchInitialData = createServerFn({ method: "GET" }).handler(async () => {
+type InitialData = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dehydratedState?: any;
+  // error messages thrown while loading settings (e.g. a duplicate course
+  // name in globalSettings.yml) are stripped from server errors before they
+  // reach the browser, so catch them here and return them as data instead
+  startupError?: string;
+};
+
+const fetchInitialData = createServerFn({ method: "GET" }).handler(
+  async (): Promise<InitialData> => {
+    try {
+      return { dehydratedState: await prefetchAllCourseData() };
+    } catch (e) {
+      console.error("Canvas Manager failed to load initial data:", e);
+      return { startupError: e instanceof Error ? e.message : String(e) };
+    }
+  },
+);
+
+const prefetchAllCourseData = async () => {
   const { trpcAppRouter } =
     await import("@/services/serverFunctions/appRouter");
   const { createTrpcContext } =
@@ -69,7 +89,7 @@ const fetchInitialData = createServerFn({ method: "GET" }).handler(async () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return dehydrate(trpcHelper.queryClient) as any;
-});
+};
 
 export const Route = createRootRoute({
   head: () => ({
@@ -83,15 +103,59 @@ export const Route = createRootRoute({
       { rel: "icon", href: "/favicon.ico" },
     ],
   }),
-  loader: async () => {
-    return { dehydratedState: await fetchInitialData() };
+  loader: async (): Promise<InitialData> => {
+    return await fetchInitialData();
   },
   component: RootComponent,
+  errorComponent: ({ error }) => (
+    <ErrorShell
+      title="Something went wrong"
+      message={error.message || String(error)}
+    />
+  ),
 });
 
+function ErrorShell({ title, message }: { title: string; message: string }) {
+  return (
+    <html lang="en">
+      <head>
+        <HeadContent />
+      </head>
+      <body className="flex justify-center min-h-screen" suppressHydrationWarning>
+        <div className="bg-gray-950 min-h-screen text-slate-300 w-screen p-6 sm:p-10">
+          <h1 className="text-2xl font-bold text-rose-400 mb-4">{title}</h1>
+          <pre className="whitespace-pre-wrap bg-gray-900 border border-rose-900 rounded-md p-4 mb-4 text-sm">
+            {message || "No error message was provided. Check the server logs."}
+          </pre>
+          <p className="mb-4 text-slate-400">
+            This error also appears in the server logs. After fixing the
+            problem, reload the page.
+          </p>
+          <button
+            className="bg-slate-800 hover:bg-slate-700 rounded-md px-4 py-2"
+            onClick={() => window.location.reload()}
+          >
+            Reload
+          </button>
+        </div>
+        <Scripts />
+      </body>
+    </html>
+  );
+}
+
 function RootComponent() {
-  const { dehydratedState } = Route.useLoaderData();
+  const { dehydratedState, startupError } = Route.useLoaderData();
   const queryClient = getQueryClient();
+
+  if (startupError !== undefined) {
+    return (
+      <ErrorShell
+        title="Canvas Manager could not start"
+        message={startupError}
+      />
+    );
+  }
 
   return (
     <html lang="en">

@@ -10,11 +10,9 @@ const handler = async (request: Request) => {
     router: trpcAppRouter,
     createContext: createTrpcContext,
     onError({ error, path, input }) {
-      if (error.code === "BAD_REQUEST") {
-        console.error(
-          `[tRPC BAD_REQUEST] ${path ?? "unknown"} | input: ${JSON.stringify(input)} | ${error.message}`,
-        );
-      }
+      console.error(
+        `[tRPC ${error.code}] ${path ?? "unknown"} | input: ${JSON.stringify(input)} | ${error.message}`,
+      );
     },
   });
 };
