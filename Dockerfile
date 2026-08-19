@@ -2,6 +2,9 @@ FROM node:22-alpine AS builder
 
 WORKDIR /app
 
+ENV CI=true
+ENV pnpm_config_ignore_scripts=true
+
 RUN npm install -g pnpm
 
 COPY pnpm-lock.yaml ./
@@ -39,6 +42,7 @@ RUN chown -R node:node /home/node/.local
 
 COPY --from=builder /app/pnpm-lock.yaml ./
 COPY --from=builder /app/package.json ./
+COPY --from=builder /app/pnpn-workspace.yaml ./
 RUN pnpm install --prod  --ignore-scripts
 
 COPY --from=builder /app/src/websocket-standalone.js ./src/websocket-standalone.js
@@ -46,5 +50,6 @@ COPY --from=builder /app/.output ./.output
 COPY --from=builder /app/public ./public
 
 RUN mkdir -p storage && rm -rf /app/storage/*
+RUN chown -R node:node /app
 
 CMD [ "pnpm", "run", "start" ]
