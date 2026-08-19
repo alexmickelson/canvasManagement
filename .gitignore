@@ -59,3 +59,4 @@ temp/
 .claude/*
 !.claude/skills/
 guide.md
+.codex

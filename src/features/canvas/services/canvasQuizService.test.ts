@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { canvasQuizService } from "./canvasQuizService";
+import { canvasQuizService, getAnswersForCanvas } from "./canvasQuizService";
 import { CanvasQuizQuestion } from "@/features/canvas/models/quizzes/canvasQuizQuestionModel";
 import { LocalQuiz } from "@/features/local/quizzes/models/localQuiz";
 import { QuestionType } from "@/features/local/quizzes/models/localQuizQuestion";
@@ -16,6 +16,11 @@ vi.mock("@/services/axiosUtils", () => ({
 vi.mock("./canvasServiceUtils", () => ({
   canvasApi: "https://test.instructure.com/api/v1",
   paginatedRequest: vi.fn(),
+}));
+
+vi.mock("./canvasWebRequestUtils", () => ({
+  rateLimitAwarePost: vi.fn(),
+  rateLimitAwareDelete: vi.fn(),
 }));
 
 vi.mock("./canvasAssignmentService", () => ({
@@ -220,6 +225,91 @@ describe("canvasQuizService", () => {
       expect(result[0].position).toBe(1);
       expect(result[1].position).toBe(2);
       expect(result[2].position).toBe(3);
+    });
+  });
+
+  describe("getAnswersForCanvas", () => {
+    it("includes matching distractors", () => {
+      const answers = getAnswersForCanvas(
+        {
+          text: "Match the following terms",
+          questionType: QuestionType.MATCHING,
+          points: 2,
+          answers: [
+            {
+              text: "statement",
+              matchedText: "a single command to be executed",
+              correct: true,
+            },
+          ],
+          matchDistractors: ["reserved word"],
+        },
+        {} as never
+      );
+
+      expect(answers).toEqual([
+        {
+          answer_match_left: "statement",
+          answer_match_right: "a single command to be executed",
+          matching_answer_incorrect_matches: "reserved word",
+        },
+      ]);
+    });
+  });
+
+  describe("create", () => {
+    it("sends matching distractors on the question payload", async () => {
+      const { rateLimitAwarePost } = await import("./canvasWebRequestUtils");
+
+      vi.spyOn(canvasQuizService, "getQuizQuestions").mockResolvedValue([]);
+      vi.mocked(rateLimitAwarePost).mockImplementation(async () => ({
+        data: { id: 1 },
+      }) as never);
+
+      await canvasQuizService.create(
+        42,
+        {
+          name: "Matching Quiz",
+          description: "",
+          dueAt: "2023-12-01T23:59:00Z",
+          shuffleAnswers: false,
+          showCorrectAnswers: true,
+          oneQuestionAtATime: false,
+          allowedAttempts: 1,
+          questions: [
+            {
+              text: "Match the following terms",
+              questionType: QuestionType.MATCHING,
+              points: 2,
+              answers: [
+                {
+                  text: "statement",
+                  matchedText: "a single command to be executed",
+                  correct: true,
+                },
+              ],
+              matchDistractors: ["reserved word"],
+            },
+          ],
+        } as LocalQuiz,
+        {} as never
+      );
+
+      const questionRequest = vi
+        .mocked(rateLimitAwarePost)
+        .mock.calls.find(([url]) => url.endsWith("/questions"));
+
+      const questionPayload = questionRequest?.[1] as
+        | {
+            question?: {
+              matching_answer_incorrect_matches?: string;
+            };
+          }
+        | undefined;
+
+      expect(questionPayload?.question?.matching_answer_incorrect_matches).toBe(
+        "reserved word"
+      );
     });
   });
 });
