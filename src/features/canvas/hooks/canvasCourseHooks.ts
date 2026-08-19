@@ -1,7 +1,7 @@
 import { CanvasAssignmentGroup } from "@/features/canvas/models/assignments/canvasAssignmentGroup";
 import { CanvasCourseModel } from "@/features/canvas/models/courses/canvasCourseModel";
 import { LocalAssignmentGroup } from "@/features/local/assignments/models/localAssignmentGroup";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { LocalCourseSettings } from "@/features/local/course/localCourseSettings";
 import { useUpdateLocalCourseSettingsMutation } from "@/features/local/course/localCoursesHooks";
 import { canvasAssignmentGroupService } from "../services/canvasAssignmentGroupService";
@@ -27,14 +27,12 @@ export const useCourseListInTermQuery = (canvasTermId: number | undefined) =>
   });
 
 export const useSetAssignmentGroupsMutation = (canvasId: number) => {
+  const queryClient = useQueryClient();
   const updateSettingsMutation = useUpdateLocalCourseSettingsMutation();
-  const { data: canvasAssignmentGroups } = useAssignmentGroupsQuery(canvasId);
   return useMutation({
     mutationFn: async (settings: LocalCourseSettings) => {
-      if (typeof canvasAssignmentGroups === "undefined") {
-        console.log("cannot apply groups if no groups loaded");
-        return;
-      }
+      const canvasAssignmentGroups =
+        await canvasAssignmentGroupService.getAll(canvasId);
       const localAssignmentGroups = settings.assignmentGroups;
 
       const localNames = localAssignmentGroups.map((g) => g.name);
@@ -87,6 +85,11 @@ export const useSetAssignmentGroupsMutation = (canvasId: number) => {
 
       await updateSettingsMutation.mutateAsync(updatedSettings);
       return updatedSettings;
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: canvasCourseKeys.assignmentGroups(canvasId),
+      });
     },
   });
 };
