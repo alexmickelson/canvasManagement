@@ -11,6 +11,7 @@ SubmissionTypes:
 - ${AssignmentSubmissionType.ONLINE_TEXT_ENTRY}
 - ${AssignmentSubmissionType.ONLINE_UPLOAD}
 - ${AssignmentSubmissionType.DISCUSSION_TOPIC}
+- ${AssignmentSubmissionType.ON_PAPER}
 AllowedFileUploadExtensions:
 - pdf
 - jpg
