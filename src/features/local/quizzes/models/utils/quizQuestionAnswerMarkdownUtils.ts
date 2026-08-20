@@ -96,7 +96,7 @@ const getAnswerStringsWithMultilineSupport = (
 
   const answerLinesRaw = linesWithoutPoints.slice(indexOfAnswerStart);
 
-  const answerStartPattern = /^(\*?[a-z]?\)|\[\s*\]|\[\*\]|\^)/;
+  const answerStartPattern = /^(\*?[a-z]?\)|\[\s*\]|\[\*\]|\^|=)/;
   const { answerLines } = answerLinesRaw.reduce(
     (acc, line: string) => {
       const trimmedLine = line.trimStart();
@@ -129,6 +129,17 @@ export const quizQuestionAnswerMarkdownUtils = {
   ): LocalQuizQuestionAnswer {
     if (questionType === QuestionType.NUMERICAL) {
       return parseNumericalAnswer(input);
+    }
+
+    // every listed answer on a short_answer= question is an accepted response
+    if (
+      questionType === QuestionType.SHORT_ANSWER_WITH_ANSWERS &&
+      input.trimStart().startsWith("=")
+    ) {
+      return {
+        correct: true,
+        text: input.trimStart().replace(/^=\s*/, "").trim(),
+      };
     }
 
     const isCorrect = input.startsWith("*") || input[1] === "*";

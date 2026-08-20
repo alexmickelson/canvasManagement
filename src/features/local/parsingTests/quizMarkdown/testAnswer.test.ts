@@ -207,6 +207,72 @@ short_answer=
     expect(firstQuestion.answers[1].text).toBe("other");
   });
 
+  it("Can parse short answer with = prefixed answers", () => {
+    const name = "Test Quiz";
+    const rawMarkdownQuiz = `
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: description
+---
+What is 2+2?
+= four
+= 4
+short_answer=
+`;
+
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
+    const firstQuestion = quiz.questions[0];
+    expect(firstQuestion.questionType).toBe(
+      QuestionType.SHORT_ANSWER_WITH_ANSWERS
+    );
+    expect(firstQuestion.text).toBe("What is 2+2?");
+    expect(firstQuestion.answers.length).toBe(2);
+    expect(firstQuestion.answers[0].text).toBe("four");
+    expect(firstQuestion.answers[0].correct).toBe(true);
+    expect(firstQuestion.answers[1].text).toBe("4");
+    expect(firstQuestion.answers[1].correct).toBe(true);
+  });
+
+  it("short_answer= with = prefixed answers round trips to *a) syntax", () => {
+    const name = "Test Quiz";
+    const rawMarkdownQuiz = `
+ShuffleAnswers: true
+OneQuestionAtATime: false
+DueAt: 08/21/2023 23:59:00
+LockAt: 08/21/2023 23:59:00
+AssignmentGroup: Assignments
+AllowedAttempts: -1
+Description: description
+---
+What is 2+2?
+= four
+= 4
+short_answer=
+`;
+
+    const quiz = quizMarkdownUtils.parseMarkdown(rawMarkdownQuiz, name);
+    const firstQuestion = quiz.questions[0];
+
+    const questionMarkdown =
+      quizQuestionMarkdownUtils.toMarkdown(firstQuestion);
+    const expectedMarkdown = `Points: 1
+What is 2+2?
+*a) four
+*b) 4
+short_answer=`;
+    expect(questionMarkdown).toContain(expectedMarkdown);
+
+    const reparsed = quizQuestionMarkdownUtils.parseMarkdown(
+      questionMarkdown,
+      0
+    );
+    expect(reparsed.answers).toEqual(firstQuestion.answers);
+  });
+
   it("Associates short_answer= questions with short_answer_question canvas question type", () => {
     const name = "Test Quiz";
     const rawMarkdownQuiz = `
