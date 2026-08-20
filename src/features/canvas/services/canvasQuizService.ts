@@ -107,7 +107,7 @@ const createQuestionOnly = async (
           }
         : {}),
       answers: getAnswersForCanvas(question, settings),
-      correct_comments: question.incorrectComments,
+      correct_comments: question.correctComments,
       incorrect_comments: question.incorrectComments,
       neutral_comments: question.neutralComments,
     },
